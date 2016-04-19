@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{1ED3438E-43D2-4A42-BB16-84ED99D29161}</ProjectGuid>
+    <ProjectGuid>{8833BF6E-806F-483D-BA70-FF92B09E625D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Markify.Models</RootNamespace>
-    <AssemblyName>Markify.Models</AssemblyName>
+    <RootNamespace>Markify.Converter</RootNamespace>
+    <AssemblyName>Markify.Converter</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -41,14 +41,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Definition.cs" />
-    <Compile Include="MethodDefinition.cs" />
-    <Compile Include="ParameterDefinition.cs" />
-    <Compile Include="ParameterModifier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PropertyDefinition.cs" />
-    <Compile Include="StructuralDefinition.cs" />
-    <Compile Include="TypeDefinition.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Markify.Models\Markify.Models.csproj">
+      <Project>{1ed3438e-43d2-4a42-bb16-84ed99d29161}</Project>
+      <Name>Markify.Models</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
