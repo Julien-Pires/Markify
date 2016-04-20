@@ -7,8 +7,8 @@
     <ProjectGuid>{8833BF6E-806F-483D-BA70-FF92B09E625D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Markify.Converter</RootNamespace>
-    <AssemblyName>Markify.Converter</AssemblyName>
+    <RootNamespace>Markify.Processors</RootNamespace>
+    <AssemblyName>Markify.Processors</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IProjectProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

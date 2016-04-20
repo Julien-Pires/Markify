@@ -1,4 +1,4 @@
-﻿namespace Markify.Models
+﻿namespace Markify.Models.Definitions
 {
     public sealed class ParameterDefinition : Definition
     {
