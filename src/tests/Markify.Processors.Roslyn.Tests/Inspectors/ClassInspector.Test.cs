@@ -1,6 +1,6 @@
 ﻿namespace Markify.Processors.Roslyn.Tests.Inspectors
 {
-    public partial class TypeInspector_Test
+    public partial class ClassInspector_Test
     {
          
     }

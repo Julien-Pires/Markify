@@ -1,6 +1,5 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using System.IO;
 using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CSharp;
 using Ploeh.AutoFixture;
 
 namespace Markify.Processors.Roslyn.Tests.Fixtures
@@ -17,7 +16,7 @@ namespace Markify.Processors.Roslyn.Tests.Fixtures
 
         public SyntaxTreeCustomization(string sourceFile)
         {
-            _sourceFile = sourceFile;
+            _sourceFile = Path.Combine(SourceHelper.SourceFolder, sourceFile);
         }
 
         #endregion
@@ -26,7 +25,7 @@ namespace Markify.Processors.Roslyn.Tests.Fixtures
 
         public void Customize(IFixture fixture)
         {
-            fixture.Register(() => CSharpSyntaxTree.ParseText(""));
+            fixture.Register(() => CSharpSyntaxTree.ParseText(File.ReadAllText(_sourceFile)));
         }
 
         #endregion

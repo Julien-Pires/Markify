@@ -2,7 +2,7 @@
 
 namespace Markify.Processors.Roslyn.Models
 {
-    public sealed class TypeRepresentation
+    public class TypeRepresentation : IItemRepresentation
     {
         #region Properties
 
@@ -10,23 +10,21 @@ namespace Markify.Processors.Roslyn.Models
 
         public string Name { get; }
 
-        public StructureKind Structure { get; }
+        public StructureKind Kind { get; }
 
-        public bool IsSealed { get; set; }
+        public string AccessModifiers { get; set; }
 
-        public bool IsAbstract { get; set; }
-
-        public bool IsStatic { get; set; }
+        public string[] Modifiers { get; set; }
 
         #endregion
 
         #region Constructors
 
-        public TypeRepresentation(string fullname, string name, StructureKind structure)
+        public TypeRepresentation(string fullname, string name, StructureKind kind)
         {
             Fullname = fullname;
             Name = name;
-            Structure = structure;
+            Kind = kind;
         }
 
         #endregion

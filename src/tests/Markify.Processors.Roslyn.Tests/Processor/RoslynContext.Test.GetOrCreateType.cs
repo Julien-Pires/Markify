@@ -62,7 +62,7 @@ namespace Markify.Processors.Roslyn.Tests
             Assert.NotNull(type);
             Assert.Equal(fullname, type.Fullname);
             Assert.Equal(name, type.Name);
-            Assert.Equal(structure, type.Structure);
+            Assert.Equal(structure, type.Kind);
         }
 
         [Theory]

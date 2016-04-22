@@ -1,6 +1,6 @@
 ﻿namespace Markify.Processors.Roslyn.Models
 {
-    public sealed class NamespaceRepresentation
+    public sealed class NamespaceRepresentation : IItemRepresentation
     {
         #region Properties
 

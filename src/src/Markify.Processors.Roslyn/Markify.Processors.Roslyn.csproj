@@ -94,7 +94,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Inspectors\ISyntaxTreeInspector.cs" />
-    <Compile Include="Inspectors\TypeInspector.cs" />
+    <Compile Include="Inspectors\ClassInspector.cs" />
+    <Compile Include="Models\IItemRepresentation.cs" />
     <Compile Include="Models\NamespaceRepresentation.cs" />
     <Compile Include="RoslynContext.cs" />
     <Compile Include="Models\TypeRepresentation.cs" />
