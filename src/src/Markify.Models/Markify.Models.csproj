@@ -46,6 +46,7 @@
     <Compile Include="Definitions\MethodDefinition.cs" />
     <Compile Include="Definitions\ParameterDefinition.cs" />
     <Compile Include="Definitions\ParameterModifier.cs" />
+    <Compile Include="Definitions\StructureKind.cs" />
     <Compile Include="ProjectContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Definitions\PropertyDefinition.cs" />
