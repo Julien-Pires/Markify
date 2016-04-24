@@ -1,0 +1,4 @@
+﻿public sealed class SealedClass
+{
+         
+}

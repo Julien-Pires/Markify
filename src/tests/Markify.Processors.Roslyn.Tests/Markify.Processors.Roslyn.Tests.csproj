@@ -120,6 +120,36 @@
     <Content Include="Projects\Source\Class\NestedClass.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Projects\Source\Class\InternalClass.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Projects\Source\Class\PrivateClass.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Projects\Source\Class\ProtectedClass.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Projects\Source\Class\ProtectedInternalClass.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Projects\Source\Class\AbstractClass.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Projects\Source\Class\AbstractPartialClass.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Projects\Source\Class\PartialClass.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Projects\Source\Class\SealedClass.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Projects\Source\Class\SealedPartialClass.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Projects\Source\Class\StaticClass.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Processor\RoslyProcessor.Test.cs" />
     <Compile Include="Fixtures\SyntaxTreeAutoDataAttribute.cs" />
