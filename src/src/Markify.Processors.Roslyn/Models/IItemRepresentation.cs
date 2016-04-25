@@ -4,7 +4,7 @@
     {
         #region Properties
 
-        string Fullname { get; }
+        Fullname Fullname { get; }
 
         #endregion
     }

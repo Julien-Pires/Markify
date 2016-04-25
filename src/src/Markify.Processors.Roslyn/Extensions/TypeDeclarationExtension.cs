@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
-
+using Markify.Processors.Roslyn.Models;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -23,32 +23,32 @@ namespace Markify.Processors.Roslyn.Extensions
 
         #region Type Declaration Extension
 
-        public static string GetFullname(this BaseTypeDeclarationSyntax typeDeclaration)
+        public static Fullname GetFullname(this BaseTypeDeclarationSyntax typeDeclaration)
         {
-            string fullname = typeDeclaration.Identifier.ToString();
-            if (typeDeclaration.Parent == null)
-                return fullname;
-
             Stack<SyntaxNode> parents = new Stack<SyntaxNode>();
-            parents.Push(typeDeclaration.Parent);
+            parents.Push(typeDeclaration);
+
+            List<string> nameParts = new List<string>();
             while (parents.Count > 0)
             {
                 SyntaxNode currentParent = parents.Pop();
                 BaseTypeDeclarationSyntax parentType = currentParent as BaseTypeDeclarationSyntax;
                 if (parentType != null)
                 {
-                    fullname = $"{parentType.Identifier}.{fullname}";
+                    nameParts.Add(parentType.Identifier.ToString());
                     parents.Push(parentType.Parent);
                 }
                 else
                 {
                     NamespaceDeclarationSyntax parentNamespace = currentParent as NamespaceDeclarationSyntax;
                     if (parentNamespace != null)
-                        fullname = $"{parentNamespace.Name}.{fullname}";
+                        nameParts.Add(parentNamespace.Name.ToString());
                 }
             }
 
-            return fullname;
+            nameParts.Reverse();
+
+            return new Fullname(nameParts.AsReadOnly());
         }
 
         public static IEnumerable<string> GetAccessModifiers(this BaseTypeDeclarationSyntax typeDeclaration)

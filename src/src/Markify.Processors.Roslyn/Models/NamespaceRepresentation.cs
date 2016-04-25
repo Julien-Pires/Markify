@@ -4,13 +4,13 @@
     {
         #region Properties
 
-        public string Fullname { get; }
+        public Fullname Fullname { get; }
 
         #endregion
 
         #region Constructors
 
-        public NamespaceRepresentation(string fullname)
+        public NamespaceRepresentation(Fullname fullname)
         {
             Fullname = fullname;
         }

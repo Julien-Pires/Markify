@@ -92,8 +92,6 @@
     <Compile Include="Fixtures\SyntaxTreeInlineAutoDataAttribute.cs" />
     <Compile Include="Inspectors\ClassInspector.Test.cs" />
     <Compile Include="Inspectors\ClassInspector.Test.Inspect.cs" />
-    <Compile Include="Processor\RoslynContext.Test.cs" />
-    <Compile Include="Processor\RoslynContext.Test.GetOrCreateType.cs" />
     <Compile Include="Processor\RoslyProcessor.Test.Process.cs" />
     <Compile Include="Project.cs" />
     <Content Include="Projects\Source\EmptySource.cs">

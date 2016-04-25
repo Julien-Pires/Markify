@@ -79,6 +79,31 @@ namespace Markify.Processors.Roslyn.Tests.Inspectors
 
         #endregion
 
+        #region Names
+
+        [Theory]
+        [SyntaxTreeInlineAutoData("Class/AbstractClass.cs", "AbstractClass")]
+        [SyntaxTreeInlineAutoData("Class/InternalClass.cs", "InternalClass")]
+        public void Inspect_WithCorrectName(string name, ClassInspector inspector, SyntaxTree tree)
+        {
+            StructureContainer[] classes = inspector.Inspect(tree).ToArray();
+
+            Assert.Equal(name, classes.First().Representation.Name);
+        }
+
+        [Theory]
+        [SyntaxTreeInlineAutoData("Class/AbstractClass.cs", "AbstractClass")]
+        [SyntaxTreeInlineAutoData("Class/ProtectedClass.cs", "ProtectedFoo.ProtectedClass")]
+        [SyntaxTreeInlineAutoData("Class/VariousContextClass.cs", "FooSpace.InsideNamespaceClass")]
+        public void Inspect_WithCorrectFullname(string fullname, ClassInspector inspector, SyntaxTree tree)
+        {
+            StructureContainer[] classes = inspector.Inspect(tree).ToArray();
+
+            Assert.NotNull(classes.SingleOrDefault(c => c.Fullname == fullname));
+        }
+
+        #endregion
+
         #endregion
     }
 }

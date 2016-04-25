@@ -6,7 +6,7 @@
 
         public TypeRepresentation Representation { get; }
 
-        public string Fullname => Representation.Fullname;
+        public Fullname Fullname => Representation.Fullname;
 
         #endregion
 

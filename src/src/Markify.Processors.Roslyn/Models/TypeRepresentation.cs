@@ -6,7 +6,7 @@ namespace Markify.Processors.Roslyn.Models
     {
         #region Properties
 
-        public string Fullname { get; }
+        public Fullname Fullname { get; }
 
         public string Name { get; }
 
@@ -20,7 +20,7 @@ namespace Markify.Processors.Roslyn.Models
 
         #region Constructors
 
-        public TypeRepresentation(string fullname, string name, StructureKind kind)
+        public TypeRepresentation(Fullname fullname, string name, StructureKind kind)
         {
             Fullname = fullname;
             Name = name;
