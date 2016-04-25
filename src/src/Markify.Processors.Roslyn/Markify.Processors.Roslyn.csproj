@@ -96,7 +96,9 @@
     <Compile Include="Inspectors\ISyntaxTreeInspector.cs" />
     <Compile Include="Inspectors\ClassInspector.cs" />
     <Compile Include="Models\IItemRepresentation.cs" />
+    <Compile Include="Models\ITypeContainer.cs" />
     <Compile Include="Models\NamespaceRepresentation.cs" />
+    <Compile Include="Models\StructureContainer.cs" />
     <Compile Include="RoslynContext.cs" />
     <Compile Include="Models\TypeRepresentation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

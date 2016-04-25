@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Collections.Generic;
 using Markify.Models.Definitions;
 using Markify.Processors.Roslyn.Inspectors;
 using Markify.Processors.Roslyn.Models;
@@ -23,10 +22,10 @@ namespace Markify.Processors.Roslyn.Tests.Inspectors
         [SyntaxTreeInlineAutoData("Class/NestedClass.cs", 2)]
         public void Inspect_WhenUsingSourceFile_WithSuccess(int count, ClassInspector inspector, SyntaxTree tree)
         {
-            TypeRepresentation[] classes = inspector.Inspect(tree).ToArray();
+            StructureContainer[] classes = inspector.Inspect(tree).ToArray();
 
             Assert.Equal(count, classes.Length);
-            Assert.True(classes.All(c => c.Kind == StructureKind.Class));
+            Assert.True(classes.All(c => c.Representation.Kind == StructureKind.Class));
         }
 
         #endregion
@@ -42,9 +41,9 @@ namespace Markify.Processors.Roslyn.Tests.Inspectors
         public void Inspect_WhenClassHasAccessModifier_WithCorrectAccessModifier(string modifier, string className,
             ClassInspector inspector, SyntaxTree tree)
         {
-            TypeRepresentation[] classes = inspector.Inspect(tree).ToArray();
+            StructureContainer[] classes = inspector.Inspect(tree).ToArray();
 
-            Assert.Equal(modifier, classes.First(c => c.Name == className).AccessModifiers);
+            Assert.Equal(modifier, classes.First(c => c.Representation.Name == className).Representation.AccessModifiers);
         }
 
         #endregion
@@ -56,12 +55,12 @@ namespace Markify.Processors.Roslyn.Tests.Inspectors
         [SyntaxTreeInlineAutoData("Class/SealedClass.cs", "sealed")]
         [SyntaxTreeInlineAutoData("Class/PartialClass.cs", "partial")]
         [SyntaxTreeInlineAutoData("Class/StaticClass.cs", "static")]
-        public void Inspect_WhenClasHasModifiers_WithCorrectModifier(string modifier,
+        public void Inspect_WhenClassHasSingleModifier_WithCorrectModifier(string modifier,
             ClassInspector inspector, SyntaxTree tree)
         {
-            TypeRepresentation[] classes = inspector.Inspect(tree).ToArray();
+            StructureContainer[] classes = inspector.Inspect(tree).ToArray();
 
-            Assert.NotNull(classes.First().Modifiers.SingleOrDefault(c => c == modifier));
+            Assert.NotNull(classes.First().Representation.Modifiers.SingleOrDefault(c => c == modifier));
         }
 
         [Theory]
@@ -71,11 +70,11 @@ namespace Markify.Processors.Roslyn.Tests.Inspectors
             ClassInspector inspector, SyntaxTree tree)
         {
             string[] modifiers = modifier.Split(' ');
-            TypeRepresentation[] classes = inspector.Inspect(tree).ToArray();
-            TypeRepresentation type = classes.First();
+            StructureContainer[] classes = inspector.Inspect(tree).ToArray();
+            StructureContainer type = classes.First();
 
-            Assert.True((modifiers.Length == type.Modifiers.Length) && 
-                (modifiers.Intersect(type.Modifiers).Count() == modifiers.Length));
+            Assert.True((modifiers.Length == type.Representation.Modifiers.Length) && 
+                (modifiers.Intersect(type.Representation.Modifiers).Count() == modifiers.Length));
         }
 
         #endregion

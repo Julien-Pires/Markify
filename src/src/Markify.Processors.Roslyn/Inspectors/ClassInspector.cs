@@ -10,22 +10,24 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Markify.Processors.Roslyn.Inspectors
 {
-    public sealed class ClassInspector : ISyntaxTreeInspector<TypeRepresentation>
+    public sealed class ClassInspector : ISyntaxTreeInspector<StructureContainer>
     {
         #region Inspect Methods
 
-        public IEnumerable<TypeRepresentation> Inspect(SyntaxTree tree)
+        public IEnumerable<StructureContainer> Inspect(SyntaxTree tree)
         {
             var root = tree.GetRoot();
             var classes = root.DescendantNodes().OfType<ClassDeclarationSyntax>();
             foreach (var classDeclaration in classes)
             {
-                yield return new TypeRepresentation(classDeclaration.GetFullname(),
+                var representation = new TypeRepresentation(classDeclaration.GetFullname(),
                     classDeclaration.Identifier.ToString(), StructureKind.Class)
                 {
                     AccessModifiers = string.Join(" ", classDeclaration.GetAccessModifiers()),
                     Modifiers = classDeclaration.GetExtraModifiers().ToArray()
                 };
+
+                yield return new StructureContainer(representation);
             }
         }
 
