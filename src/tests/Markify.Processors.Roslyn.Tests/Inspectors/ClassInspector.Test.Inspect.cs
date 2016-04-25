@@ -15,46 +15,13 @@ namespace Markify.Processors.Roslyn.Tests.Inspectors
 
         #region Detect Classes
 
-        [Theory, SyntaxTreeAutoData("EmptySource.cs")]
-        public void Inspect_WhenEmptySource_WithNoResult(ClassInspector inspector, SyntaxTree tree)
-        {
-            IEnumerable<TypeRepresentation> classes = inspector.Inspect(tree);
-
-            Assert.Equal(0, classes.Count());
-        }
-
-        [Theory, SyntaxTreeAutoData("Class/SingleClass.cs")]
-        public void Inspect_WhenSourceHasOneClass_WithOneResult(ClassInspector inspector, SyntaxTree tree)
-        {
-            TypeRepresentation[] classes = inspector.Inspect(tree).ToArray();
-
-            Assert.Equal(1, classes.Length);
-            Assert.True(classes.All(c => c.Kind == StructureKind.Class));
-        }
-
         [Theory]
+        [SyntaxTreeInlineAutoData("EmptySource.cs", 0)]
+        [SyntaxTreeInlineAutoData("Class/SingleClass.cs", 1)]
         [SyntaxTreeInlineAutoData("Class/MultipleClass.cs", 2)]
-        public void Inspect_WhenSourceHasMultipleClass_WithResults(int count, ClassInspector inspector, SyntaxTree tree)
-        {
-            TypeRepresentation[] classes = inspector.Inspect(tree).ToArray();
-
-            Assert.Equal(count, classes.Length);
-            Assert.True(classes.All(c => c.Kind == StructureKind.Class));
-        }
-
-        [Theory]
         [SyntaxTreeInlineAutoData("Class/VariousContextClass.cs", 2)]
-        public void Inspect_WhenClassContextIsDifferent_WithResults(int count, ClassInspector inspector, SyntaxTree tree)
-        {
-            TypeRepresentation[] classes = inspector.Inspect(tree).ToArray();
-
-            Assert.Equal(count, classes.Length);
-            Assert.True(classes.All(c => c.Kind == StructureKind.Class));
-        }
-
-        [Theory]
         [SyntaxTreeInlineAutoData("Class/NestedClass.cs", 2)]
-        public void Inspect_WhenClassIsNested_WithResults(int count, ClassInspector inspector, SyntaxTree tree)
+        public void Inspect_WhenUsingSourceFile_WithSuccess(int count, ClassInspector inspector, SyntaxTree tree)
         {
             TypeRepresentation[] classes = inspector.Inspect(tree).ToArray();
 
