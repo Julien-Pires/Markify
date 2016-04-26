@@ -22,7 +22,7 @@ namespace Markify.Processors.Roslyn.Tests.Inspectors
         [SyntaxTreeInlineAutoData("Class/NestedClass.cs", 2)]
         public void Inspect_WhenUsingSourceFile_WithSuccess(int count, ClassInspector inspector, SyntaxTree tree)
         {
-            StructureContainer[] classes = inspector.Inspect(tree).ToArray();
+            StructureContainer[] classes = inspector.Inspect(tree.GetRoot()).ToArray();
 
             Assert.Equal(count, classes.Length);
             Assert.True(classes.All(c => c.Representation.Kind == StructureKind.Class));
@@ -41,7 +41,7 @@ namespace Markify.Processors.Roslyn.Tests.Inspectors
         public void Inspect_WhenClassHasAccessModifier_WithCorrectAccessModifier(string modifier, string className,
             ClassInspector inspector, SyntaxTree tree)
         {
-            StructureContainer[] classes = inspector.Inspect(tree).ToArray();
+            StructureContainer[] classes = inspector.Inspect(tree.GetRoot()).ToArray();
 
             Assert.Equal(modifier, classes.First(c => c.Representation.Name == className).Representation.AccessModifiers);
         }
@@ -58,7 +58,7 @@ namespace Markify.Processors.Roslyn.Tests.Inspectors
         public void Inspect_WhenClassHasSingleModifier_WithCorrectModifier(string modifier,
             ClassInspector inspector, SyntaxTree tree)
         {
-            StructureContainer[] classes = inspector.Inspect(tree).ToArray();
+            StructureContainer[] classes = inspector.Inspect(tree.GetRoot()).ToArray();
 
             Assert.NotNull(classes.First().Representation.Modifiers.SingleOrDefault(c => c == modifier));
         }
@@ -70,7 +70,7 @@ namespace Markify.Processors.Roslyn.Tests.Inspectors
             ClassInspector inspector, SyntaxTree tree)
         {
             string[] modifiers = modifier.Split(' ');
-            StructureContainer[] classes = inspector.Inspect(tree).ToArray();
+            StructureContainer[] classes = inspector.Inspect(tree.GetRoot()).ToArray();
             StructureContainer type = classes.First();
 
             Assert.True((modifiers.Length == type.Representation.Modifiers.Length) && 
@@ -86,7 +86,7 @@ namespace Markify.Processors.Roslyn.Tests.Inspectors
         [SyntaxTreeInlineAutoData("Class/InternalClass.cs", "InternalClass")]
         public void Inspect_WithCorrectName(string name, ClassInspector inspector, SyntaxTree tree)
         {
-            StructureContainer[] classes = inspector.Inspect(tree).ToArray();
+            StructureContainer[] classes = inspector.Inspect(tree.GetRoot()).ToArray();
 
             Assert.Equal(name, classes.First().Representation.Name);
         }
@@ -97,7 +97,7 @@ namespace Markify.Processors.Roslyn.Tests.Inspectors
         [SyntaxTreeInlineAutoData("Class/VariousContextClass.cs", "FooSpace.InsideNamespaceClass")]
         public void Inspect_WithCorrectFullname(string fullname, ClassInspector inspector, SyntaxTree tree)
         {
-            StructureContainer[] classes = inspector.Inspect(tree).ToArray();
+            StructureContainer[] classes = inspector.Inspect(tree.GetRoot()).ToArray();
 
             Assert.NotNull(classes.SingleOrDefault(c => c.Fullname == fullname));
         }

@@ -93,12 +93,13 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Inspectors\GenericParameterInspector.cs" />
     <Compile Include="Inspectors\ISyntaxTreeInspector.cs" />
     <Compile Include="Inspectors\ClassInspector.cs" />
     <Compile Include="Models\Fullname.cs" />
     <Compile Include="Models\IItemRepresentation.cs" />
     <Compile Include="Models\ITypeContainer.cs" />
-    <Compile Include="Models\NamespaceRepresentation.cs" />
+    <Compile Include="Models\GenericParameterRepresentation.cs" />
     <Compile Include="Models\StructureContainer.cs" />
     <Compile Include="Models\TypeRepresentation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

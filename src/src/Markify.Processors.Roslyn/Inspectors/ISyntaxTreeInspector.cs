@@ -9,7 +9,7 @@ namespace Markify.Processors.Roslyn.Inspectors
     {
         #region Methods
 
-        IEnumerable<T> Inspect(SyntaxTree tree);
+        IEnumerable<T> Inspect(SyntaxNode node);
 
         #endregion
     }

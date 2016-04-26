@@ -14,10 +14,9 @@ namespace Markify.Processors.Roslyn.Inspectors
     {
         #region Inspect Methods
 
-        public IEnumerable<StructureContainer> Inspect(SyntaxTree tree)
+        public IEnumerable<StructureContainer> Inspect(SyntaxNode node)
         {
-            var root = tree.GetRoot();
-            var classes = root.DescendantNodes().OfType<ClassDeclarationSyntax>();
+            var classes = node.DescendantNodes().OfType<ClassDeclarationSyntax>();
             foreach (var classDeclaration in classes)
             {
                 var representation = new TypeRepresentation(classDeclaration.GetFullname(),
