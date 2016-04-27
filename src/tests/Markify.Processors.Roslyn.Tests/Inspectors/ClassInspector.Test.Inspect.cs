@@ -124,6 +124,40 @@ namespace Markify.Processors.Roslyn.Tests.Inspectors
 
         #endregion
 
+        #region Detect Inheritance
+
+        [Theory]
+        [SyntaxTreeInlineAutoData("Class/SingleClass.cs", "SingleClassWithoutNamespace", 0)]
+        [SyntaxTreeInlineAutoData("Class/InheritedClass.cs", "InheritClass", 1)]
+        [SyntaxTreeInlineAutoData("Class/InheritedClass.cs", "ImplementInterfaceClass", 1)]
+        [SyntaxTreeInlineAutoData("Class/InheritedClass.cs", "ImplementGenInterfaceClass", 2)]
+        [SyntaxTreeInlineAutoData("Class/InheritedClass.cs", "MixedInheritanceClass", 3)]
+        public void Inspect_WhenClassInherit_WithExactBaseType(string className, int count,
+            ISyntaxTreeInspector<StructureContainer> inspector, SyntaxTree tree)
+        {
+            StructureContainer[] classes = inspector.Inspect(tree.GetRoot()).ToArray();
+            TypeRepresentation type = classes.First(c => c.Representation.Name == className).Representation;
+
+            Assert.Equal(count, type.BaseTypes.Count());
+        }
+
+        [Theory]
+        [SyntaxTreeInlineAutoData("Class/InheritedClass.cs", "InheritClass", "Exception")]
+        [SyntaxTreeInlineAutoData("Class/InheritedClass.cs", "ImplementInterfaceClass", "IDisposable")]
+        [SyntaxTreeInlineAutoData("Class/InheritedClass.cs", "ImplementGenInterfaceClass", "IList<String>")]
+        [SyntaxTreeInlineAutoData("Class/InheritedClass.cs", "MixedInheritanceClass", "Exception")]
+        [SyntaxTreeInlineAutoData("Class/InheritedClass.cs", "MixedInheritanceClass", "IDisposable")]
+        public void Inspect_WhenClassInherit_WithBaseTypeExist(string className, string baseType, 
+            ISyntaxTreeInspector<StructureContainer> inspector, SyntaxTree tree)
+        {
+            StructureContainer[] classes = inspector.Inspect(tree.GetRoot()).ToArray();
+            TypeRepresentation type = classes.First(c => c.Representation.Name == className).Representation;
+
+            Assert.True(type.BaseTypes.Any(c => c == baseType));
+        }
+
+        #endregion
+
         #endregion
     }
 }

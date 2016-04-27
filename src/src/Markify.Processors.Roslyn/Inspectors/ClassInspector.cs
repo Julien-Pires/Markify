@@ -39,7 +39,8 @@ namespace Markify.Processors.Roslyn.Inspectors
                 {
                     AccessModifiers = classDeclaration.GetAccessModifiers(),
                     Modifiers = classDeclaration.GetExtraModifiers(),
-                    GenericParameters = _genericsInspector.Inspect(classDeclaration)
+                    GenericParameters = _genericsInspector.Inspect(classDeclaration),
+                    BaseTypes = classDeclaration.GetBaseTypes()
                 };
 
                 result.Add(new StructureContainer(representation));

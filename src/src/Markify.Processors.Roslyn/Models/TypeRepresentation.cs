@@ -14,6 +14,7 @@ namespace Markify.Processors.Roslyn.Models
         private IEnumerable<GenericParameterRepresentation> _genericParameters = ImmutableList<GenericParameterRepresentation>.Empty;
         private IEnumerable<string> _accessModifiers = ImmutableList<string>.Empty;
         private IEnumerable<string> _modifiers = ImmutableList<string>.Empty;
+        private IEnumerable<string> _baseTypes = ImmutableList<string>.Empty;
 
         #endregion
 
@@ -41,6 +42,12 @@ namespace Markify.Processors.Roslyn.Models
         {
             get { return _genericParameters; }
             set { _genericParameters = value ?? ImmutableList<GenericParameterRepresentation>.Empty; }
+        }
+
+        public IEnumerable<string> BaseTypes
+        {
+            get { return _baseTypes; }
+            set { _baseTypes = value ?? ImmutableList<string>.Empty; }
         }
 
         #endregion

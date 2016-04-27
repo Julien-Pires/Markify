@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 
 using Markify.Processors.Roslyn.Models;
 
@@ -61,6 +63,19 @@ namespace Markify.Processors.Roslyn.Extensions
         public static IEnumerable<string> GetExtraModifiers(this BaseTypeDeclarationSyntax typeNode)
         {
             return ModifiersFactory.GetExtraModifiers(TypeDeclarationAdapterFactory.Create(typeNode));
+        }
+
+        #endregion
+
+        #region Type Inheritance
+
+        public static IEnumerable<string> GetBaseTypes(this BaseTypeDeclarationSyntax typeNode)
+        {
+            BaseListSyntax baseList = typeNode.BaseList;
+            if (baseList == null)
+                return ImmutableArray<string>.Empty;
+
+            return ImmutableList.Create<string>().AddRange(baseList.Types.Select(c => c.Type.ToString()));
         }
 
         #endregion
