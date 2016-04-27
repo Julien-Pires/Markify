@@ -9,8 +9,6 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-using Ploeh.AutoFixture.Xunit2;
-
 using Xunit;
 
 namespace Markify.Processors.Roslyn.Tests.Inspectors
@@ -28,14 +26,14 @@ namespace Markify.Processors.Roslyn.Tests.Inspectors
 
         #region Arguments Validation
 
-        [Theory, AutoData]
-        public void Inspect_WithNullNode_ThrowException(GenericParameterInspector inspector)
+        [Theory, SyntaxTreeAutoData]
+        public void Inspect_WithNullNode_ThrowException(ISyntaxTreeInspector<GenericParameterRepresentation> inspector)
         {
             Assert.Throws<ArgumentNullException>(() => inspector.Inspect(null));
         }
 
-        [Theory, AutoData]
-        public void Inspect_WithNoGenericNode_ThrowException(GenericParameterInspector inspector)
+        [Theory, SyntaxTreeAutoData]
+        public void Inspect_WithNoGenericNode_ThrowException(ISyntaxTreeInspector<GenericParameterRepresentation> inspector)
         {
             Assert.Throws<ArgumentException>(() => inspector.Inspect(SyntaxFactory.IdentifierName("Foo")));
         }
@@ -50,8 +48,8 @@ namespace Markify.Processors.Roslyn.Tests.Inspectors
         [SyntaxTreeInlineAutoData("Generics/GenericDelegate.cs", 1)]
         [SyntaxTreeInlineAutoData("Generics/GenericInterface.cs", 2)]
         [SyntaxTreeInlineAutoData("Generics/GenericStruct.cs", 1)]
-        public void Inspect_WhenTypeHasGenerics_WithExactParameters(int count, GenericParameterInspector inspector, 
-            SyntaxTree tree)
+        public void Inspect_WhenTypeHasGenerics_WithExactParameters(int count, 
+            ISyntaxTreeInspector<GenericParameterRepresentation> inspector, SyntaxTree tree)
         {
             var node = GetTypeNode(tree.GetRoot());
             GenericParameterRepresentation[] generics = inspector.Inspect(node).ToArray();
@@ -63,7 +61,7 @@ namespace Markify.Processors.Roslyn.Tests.Inspectors
         [SyntaxTreeInlineAutoData("Generics/GenericClass.cs", "T")]
         [SyntaxTreeInlineAutoData("Generics/GenericInterface.cs", "T")]
         [SyntaxTreeInlineAutoData("Generics/GenericInterface.cs", "Y")]
-        public void Inspect_WithCorrectName(string name, GenericParameterInspector inspector,
+        public void Inspect_WithCorrectName(string name, ISyntaxTreeInspector<GenericParameterRepresentation> inspector,
             SyntaxTree tree)
         {
             var node = GetTypeNode(tree.GetRoot());
@@ -81,7 +79,7 @@ namespace Markify.Processors.Roslyn.Tests.Inspectors
         [SyntaxTreeInlineAutoData("Generics/GenericInterface.cs", "out", "Y")]
         [SyntaxTreeInlineAutoData("Generics/GenericInterface.cs", "in", "T")]
         public void Inspect_WhenHasModifier_WithExactModifiers(string modifier, string parameter,
-            GenericParameterInspector inspector, SyntaxTree tree)
+            ISyntaxTreeInspector<GenericParameterRepresentation> inspector, SyntaxTree tree)
         {
             var node = GetTypeNode(tree.GetRoot());
             GenericParameterRepresentation[] generics = inspector.Inspect(node).ToArray();
@@ -99,7 +97,7 @@ namespace Markify.Processors.Roslyn.Tests.Inspectors
         [SyntaxTreeInlineAutoData("Generics/GenericInterface.cs", 0, "T")]
         [SyntaxTreeInlineAutoData("Generics/GenericStruct.cs", 1, "T")]
         public void Inspect_WhenHasConstraints_WithAllConstraints(int count, string parameter,
-            GenericParameterInspector inspector, SyntaxTree tree)
+            ISyntaxTreeInspector<GenericParameterRepresentation> inspector, SyntaxTree tree)
         {
             var node = GetTypeNode(tree.GetRoot());
             GenericParameterRepresentation[] generics = inspector.Inspect(node).ToArray();

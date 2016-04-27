@@ -1,6 +1,8 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
+
 using Markify.Processors.Roslyn.Models;
+
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -21,35 +23,49 @@ namespace Markify.Processors.Roslyn.Extensions
 
         #endregion
 
-        #region Type Declaration Extension
+        #region Type Naming
 
         public static Fullname GetFullname(this BaseTypeDeclarationSyntax typeDeclaration)
         {
+            return GetNodeFullname(typeDeclaration);
+        }
+
+        private static Fullname GetNodeFullname(SyntaxNode node)
+        {
             Stack<SyntaxNode> parents = new Stack<SyntaxNode>();
-            parents.Push(typeDeclaration);
+            parents.Push(node);
 
             List<string> nameParts = new List<string>();
             while (parents.Count > 0)
             {
                 SyntaxNode currentParent = parents.Pop();
-                BaseTypeDeclarationSyntax parentType = currentParent as BaseTypeDeclarationSyntax;
-                if (parentType != null)
+                NamespaceDeclarationSyntax parentNamespace = currentParent as NamespaceDeclarationSyntax;
+                if(parentNamespace == null)
                 {
-                    nameParts.Add(parentType.Identifier.ToString());
-                    parents.Push(parentType.Parent);
+                    ITypeDeclarationAdapter type = TypeDeclarationAdapterFactory.Create(currentParent);
+                    if (type != null)
+                    {
+                        nameParts.Add(type.GetName());
+                        parents.Push(currentParent.Parent);
+                    }
                 }
                 else
-                {
-                    NamespaceDeclarationSyntax parentNamespace = currentParent as NamespaceDeclarationSyntax;
-                    if (parentNamespace != null)
-                        nameParts.Add(parentNamespace.Name.ToString());
-                }
+                    nameParts.Add(parentNamespace.Name.ToString());
             }
 
             nameParts.Reverse();
 
             return new Fullname(nameParts.AsReadOnly());
         }
+
+        internal static string GetName(this ITypeDeclarationAdapter typeAdapter)
+        {
+            return typeAdapter.ParameterList != null ? $"{typeAdapter.Name}'{typeAdapter.ParameterList.Parameters.Count}" : typeAdapter.Name;
+        }
+
+        #endregion
+
+        #region Type Modifiers
 
         public static IEnumerable<string> GetAccessModifiers(this BaseTypeDeclarationSyntax typeDeclaration)
         {

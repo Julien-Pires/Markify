@@ -1,9 +1,12 @@
 ﻿using System.Linq;
+
 using Markify.Models.Definitions;
-using Markify.Processors.Roslyn.Inspectors;
 using Markify.Processors.Roslyn.Models;
+using Markify.Processors.Roslyn.Inspectors;
 using Markify.Processors.Roslyn.Tests.Fixtures;
+
 using Microsoft.CodeAnalysis;
+
 using Xunit;
 
 namespace Markify.Processors.Roslyn.Tests.Inspectors
@@ -20,7 +23,7 @@ namespace Markify.Processors.Roslyn.Tests.Inspectors
         [SyntaxTreeInlineAutoData("Class/MultipleClass.cs", 2)]
         [SyntaxTreeInlineAutoData("Class/VariousContextClass.cs", 2)]
         [SyntaxTreeInlineAutoData("Class/NestedClass.cs", 2)]
-        public void Inspect_WhenUsingSourceFile_WithSuccess(int count, ClassInspector inspector, SyntaxTree tree)
+        public void Inspect_WhenUsingSourceFile_WithSuccess(int count, ISyntaxTreeInspector<StructureContainer> inspector, SyntaxTree tree)
         {
             StructureContainer[] classes = inspector.Inspect(tree.GetRoot()).ToArray();
 
@@ -39,7 +42,7 @@ namespace Markify.Processors.Roslyn.Tests.Inspectors
         [SyntaxTreeInlineAutoData("Class/ProtectedInternalClass.cs", "protected internal", "ProtectedInternalClass")]
         [SyntaxTreeInlineAutoData("Class/PrivateClass.cs", "private", "PrivateClass")]
         public void Inspect_WhenClassHasAccessModifier_WithCorrectAccessModifier(string modifier, string className,
-            ClassInspector inspector, SyntaxTree tree)
+            ISyntaxTreeInspector<StructureContainer> inspector, SyntaxTree tree)
         {
             StructureContainer[] classes = inspector.Inspect(tree.GetRoot()).ToArray();
 
@@ -56,7 +59,7 @@ namespace Markify.Processors.Roslyn.Tests.Inspectors
         [SyntaxTreeInlineAutoData("Class/PartialClass.cs", "partial")]
         [SyntaxTreeInlineAutoData("Class/StaticClass.cs", "static")]
         public void Inspect_WhenClassHasSingleModifier_WithCorrectModifier(string modifier,
-            ClassInspector inspector, SyntaxTree tree)
+            ISyntaxTreeInspector<StructureContainer> inspector, SyntaxTree tree)
         {
             StructureContainer[] classes = inspector.Inspect(tree.GetRoot()).ToArray();
 
@@ -67,7 +70,7 @@ namespace Markify.Processors.Roslyn.Tests.Inspectors
         [SyntaxTreeInlineAutoData("Class/AbstractPartialClass.cs", "abstract partial")]
         [SyntaxTreeInlineAutoData("Class/SealedPartialClass.cs", "sealed partial")]
         public void Inspect_WhenClassHasMultipleModifiers_WithCorrectModifiers(string modifier,
-            ClassInspector inspector, SyntaxTree tree)
+            ISyntaxTreeInspector<StructureContainer> inspector, SyntaxTree tree)
         {
             string[] modifiers = modifier.Split(' ');
             StructureContainer[] classes = inspector.Inspect(tree.GetRoot()).ToArray();
@@ -79,12 +82,27 @@ namespace Markify.Processors.Roslyn.Tests.Inspectors
 
         #endregion
 
-        #region Names
+        #region Detect Generics
+
+        [Theory]
+        [SyntaxTreeInlineAutoData("Class/SingleClass.cs", 0)]
+        [SyntaxTreeInlineAutoData("Generics/GenericClass.cs", 2)]
+        public void Inspect_WhenClassIsGeneric_WithAllParameters(int count, ISyntaxTreeInspector<StructureContainer> inspector, SyntaxTree tree)
+        {
+            StructureContainer[] classes = inspector.Inspect(tree.GetRoot()).ToArray();
+
+            Assert.Equal(count, classes.First().Representation.GenericParameters.Count());
+        }
+
+        #endregion
+
+        #region Detect Names
 
         [Theory]
         [SyntaxTreeInlineAutoData("Class/AbstractClass.cs", "AbstractClass")]
         [SyntaxTreeInlineAutoData("Class/InternalClass.cs", "InternalClass")]
-        public void Inspect_WithCorrectName(string name, ClassInspector inspector, SyntaxTree tree)
+        [SyntaxTreeInlineAutoData("Generics/GenericClass.cs", "GenericClass'2")]
+        public void Inspect_WithCorrectName(string name, ISyntaxTreeInspector<StructureContainer> inspector, SyntaxTree tree)
         {
             StructureContainer[] classes = inspector.Inspect(tree.GetRoot()).ToArray();
 
@@ -95,7 +113,8 @@ namespace Markify.Processors.Roslyn.Tests.Inspectors
         [SyntaxTreeInlineAutoData("Class/AbstractClass.cs", "AbstractClass")]
         [SyntaxTreeInlineAutoData("Class/ProtectedClass.cs", "ProtectedFoo.ProtectedClass")]
         [SyntaxTreeInlineAutoData("Class/VariousContextClass.cs", "FooSpace.InsideNamespaceClass")]
-        public void Inspect_WithCorrectFullname(string fullname, ClassInspector inspector, SyntaxTree tree)
+        [SyntaxTreeInlineAutoData("Generics/GenericClass.cs", "GenericClass'2")]
+        public void Inspect_WithCorrectFullname(string fullname, ISyntaxTreeInspector<StructureContainer> inspector, SyntaxTree tree)
         {
             StructureContainer[] classes = inspector.Inspect(tree.GetRoot()).ToArray();
 

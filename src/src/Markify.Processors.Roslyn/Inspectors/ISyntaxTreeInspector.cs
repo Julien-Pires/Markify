@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+
 using Markify.Processors.Roslyn.Models;
+
 using Microsoft.CodeAnalysis;
 
 namespace Markify.Processors.Roslyn.Inspectors

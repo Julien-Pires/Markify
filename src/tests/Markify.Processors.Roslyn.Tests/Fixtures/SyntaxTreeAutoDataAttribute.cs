@@ -7,6 +7,10 @@ namespace Markify.Processors.Roslyn.Tests.Fixtures
     {
         #region Constructors
 
+        public SyntaxTreeAutoDataAttribute() : this(null)
+        {
+        }
+
         public SyntaxTreeAutoDataAttribute(string sourceFile) 
             : base(new Fixture().Customize(new SyntaxTreeCustomization(sourceFile)))
         {

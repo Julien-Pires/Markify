@@ -12,18 +12,33 @@ namespace Markify.Processors.Roslyn.Inspectors
 {
     public sealed class ClassInspector : ISyntaxTreeInspector<StructureContainer>
     {
+        #region Fields
+
+        private readonly ISyntaxTreeInspector<GenericParameterRepresentation> _genericsInspector;
+
+        #endregion
+
+        #region Constructors
+
+        public ClassInspector(ISyntaxTreeInspector<GenericParameterRepresentation> genericsInspector)
+        {
+            _genericsInspector = genericsInspector;
+        }
+
+        #endregion
+
         #region Inspect Methods
 
         public IEnumerable<StructureContainer> Inspect(SyntaxNode node)
         {
-            var classes = node.DescendantNodes().OfType<ClassDeclarationSyntax>();
-            foreach (var classDeclaration in classes)
+            IEnumerable<ClassDeclarationSyntax> classes = node.DescendantNodes().OfType<ClassDeclarationSyntax>();
+            foreach (ClassDeclarationSyntax classDeclaration in classes)
             {
-                var representation = new TypeRepresentation(classDeclaration.GetFullname(),
-                    classDeclaration.Identifier.ToString(), StructureKind.Class)
+                TypeRepresentation representation = new TypeRepresentation(classDeclaration.GetFullname(), StructureKind.Class)
                 {
                     AccessModifiers = string.Join(" ", classDeclaration.GetAccessModifiers()),
-                    Modifiers = classDeclaration.GetExtraModifiers().ToArray()
+                    Modifiers = classDeclaration.GetExtraModifiers().ToArray(),
+                    GenericParameters = _genericsInspector.Inspect(classDeclaration)
                 };
 
                 yield return new StructureContainer(representation);
