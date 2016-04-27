@@ -100,6 +100,7 @@
     <Compile Include="Inspectors\GenericParameterInspector.cs" />
     <Compile Include="Inspectors\ISyntaxTreeInspector.cs" />
     <Compile Include="Inspectors\ClassInspector.cs" />
+    <Compile Include="Extensions\ModifiersFactory.cs" />
     <Compile Include="Models\Fullname.cs" />
     <Compile Include="Models\IItemRepresentation.cs" />
     <Compile Include="Models\ITypeContainer.cs" />

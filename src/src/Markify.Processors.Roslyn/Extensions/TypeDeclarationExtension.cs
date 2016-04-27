@@ -1,28 +1,14 @@
-﻿using System.Linq;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 using Markify.Processors.Roslyn.Models;
 
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Markify.Processors.Roslyn.Extensions
 {
     public static class TypeDeclarationExtension
     {
-        #region Fields
-
-        private static readonly SyntaxKind[] AccessModifiers =
-        {
-            SyntaxKind.PublicKeyword,
-            SyntaxKind.ProtectedKeyword,
-            SyntaxKind.InternalKeyword,
-            SyntaxKind.PrivateKeyword
-        };
-
-        #endregion
-
         #region Type Naming
 
         public static Fullname GetFullname(this BaseTypeDeclarationSyntax typeDeclaration)
@@ -43,11 +29,11 @@ namespace Markify.Processors.Roslyn.Extensions
                 if(parentNamespace == null)
                 {
                     ITypeDeclarationAdapter type = TypeDeclarationAdapterFactory.Create(currentParent);
-                    if (type != null)
-                    {
-                        nameParts.Add(type.GetName());
-                        parents.Push(currentParent.Parent);
-                    }
+                    if (type == null)
+                        continue;
+
+                    nameParts.Add(type.GetName());
+                    parents.Push(currentParent.Parent);
                 }
                 else
                     nameParts.Add(parentNamespace.Name.ToString());
@@ -67,14 +53,14 @@ namespace Markify.Processors.Roslyn.Extensions
 
         #region Type Modifiers
 
-        public static IEnumerable<string> GetAccessModifiers(this BaseTypeDeclarationSyntax typeDeclaration)
+        public static IEnumerable<string> GetAccessModifiers(this BaseTypeDeclarationSyntax typeNode)
         {
-            return typeDeclaration.Modifiers.Where(c => AccessModifiers.Contains(c.Kind())).Select(c => c.ToString());
+            return ModifiersFactory.GetAccessModifiers(TypeDeclarationAdapterFactory.Create(typeNode));
         }
 
-        public static IEnumerable<string> GetExtraModifiers(this BaseTypeDeclarationSyntax typeDeclaration)
+        public static IEnumerable<string> GetExtraModifiers(this BaseTypeDeclarationSyntax typeNode)
         {
-            return typeDeclaration.Modifiers.Where(c => !AccessModifiers.Contains(c.Kind())).Select(c => c.ToString());
+            return ModifiersFactory.GetExtraModifiers(TypeDeclarationAdapterFactory.Create(typeNode));
         }
 
         #endregion

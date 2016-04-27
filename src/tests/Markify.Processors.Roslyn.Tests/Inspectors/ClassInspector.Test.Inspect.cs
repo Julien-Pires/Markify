@@ -46,7 +46,8 @@ namespace Markify.Processors.Roslyn.Tests.Inspectors
         {
             StructureContainer[] classes = inspector.Inspect(tree.GetRoot()).ToArray();
 
-            Assert.Equal(modifier, classes.First(c => c.Representation.Name == className).Representation.AccessModifiers);
+            Assert.Equal(modifier, 
+                string.Join(" ", classes.First(c => c.Representation.Name == className).Representation.AccessModifiers));
         }
 
         #endregion
@@ -76,7 +77,7 @@ namespace Markify.Processors.Roslyn.Tests.Inspectors
             StructureContainer[] classes = inspector.Inspect(tree.GetRoot()).ToArray();
             StructureContainer type = classes.First();
 
-            Assert.True((modifiers.Length == type.Representation.Modifiers.Length) && 
+            Assert.True((modifiers.Length == type.Representation.Modifiers.Count()) && 
                 (modifiers.Intersect(type.Representation.Modifiers).Count() == modifiers.Length));
         }
 

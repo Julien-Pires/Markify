@@ -19,6 +19,8 @@ namespace Markify.Processors.Roslyn.Extensions
 
         public SyntaxList<TypeParameterConstraintClauseSyntax> ConstraintClauses => _node.ConstraintClauses;
 
+        public SyntaxTokenList Modifiers => _node.Modifiers;
+
         #endregion
 
         #region Constructors

@@ -13,6 +13,8 @@ namespace Markify.Processors.Roslyn.Extensions
 
         SyntaxList<TypeParameterConstraintClauseSyntax> ConstraintClauses { get; }
 
+        SyntaxTokenList Modifiers { get; }
+
         #endregion
     }
 }

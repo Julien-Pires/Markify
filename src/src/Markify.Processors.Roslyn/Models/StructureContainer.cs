@@ -4,9 +4,9 @@
     {
         #region Properties
 
-        public TypeRepresentation Representation { get; }
-
         public Fullname Fullname => Representation.Fullname;
+
+        public TypeRepresentation Representation { get; }
 
         #endregion
 

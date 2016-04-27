@@ -8,7 +8,7 @@ namespace Markify.Processors.Roslyn.Models
         #region Fields
 
         private string _modifier;
-        private IEnumerable<string> _constraints = ImmutableArray.Create<string>();
+        private IEnumerable<string> _constraints = ImmutableList<string>.Empty;
 
         #endregion
 
@@ -25,7 +25,7 @@ namespace Markify.Processors.Roslyn.Models
         public IEnumerable<string> Constraints
         {
             get { return _constraints; }
-            set { _constraints = value ?? ImmutableArray<string>.Empty; }
+            set { _constraints = value ?? ImmutableList<string>.Empty; }
         }
 
         #endregion

@@ -32,11 +32,11 @@ namespace Markify.Processors.Roslyn.Inspectors
             {
                 string name = parameter.Identifier.ToString();
                 TypeParameterConstraintClauseSyntax constraintClause = typeAdapter.ConstraintClauses.FirstOrDefault(c => c.Name.ToString() == name);
-                ImmutableArray<string> constraints = ImmutableArray.Create<string>();
+                ImmutableList<string> constraints = ImmutableList.Create<string>();
                 if (constraintClause != null)
                     constraints = constraintClause.Constraints.Aggregate(constraints, (current, constraint) => current.Add(constraint.ToString()));
 
-                Fullname fullname = new Fullname(ImmutableArray.Create(name));
+                Fullname fullname = new Fullname(ImmutableList.Create(name));
                 genericParameters.Add(new GenericParameterRepresentation(fullname)
                 {
                     Modifier = parameter.VarianceKeyword.Text,

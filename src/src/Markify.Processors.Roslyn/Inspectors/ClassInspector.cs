@@ -31,18 +31,21 @@ namespace Markify.Processors.Roslyn.Inspectors
 
         public IEnumerable<StructureContainer> Inspect(SyntaxNode node)
         {
+            List<StructureContainer> result = new List<StructureContainer>();
             IEnumerable<ClassDeclarationSyntax> classes = node.DescendantNodes().OfType<ClassDeclarationSyntax>();
             foreach (ClassDeclarationSyntax classDeclaration in classes)
             {
                 TypeRepresentation representation = new TypeRepresentation(classDeclaration.GetFullname(), StructureKind.Class)
                 {
-                    AccessModifiers = string.Join(" ", classDeclaration.GetAccessModifiers()),
-                    Modifiers = classDeclaration.GetExtraModifiers().ToArray(),
+                    AccessModifiers = classDeclaration.GetAccessModifiers(),
+                    Modifiers = classDeclaration.GetExtraModifiers(),
                     GenericParameters = _genericsInspector.Inspect(classDeclaration)
                 };
 
-                yield return new StructureContainer(representation);
+                result.Add(new StructureContainer(representation));
             }
+
+            return result.AsReadOnly();
         }
 
         #endregion
