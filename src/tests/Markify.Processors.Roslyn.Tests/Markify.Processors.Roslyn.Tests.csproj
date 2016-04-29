@@ -87,111 +87,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Fixtures\SourceHelper.cs" />
-    <Compile Include="Fixtures\SyntaxTreeCustomization.cs" />
-    <Compile Include="Fixtures\SyntaxTreeInlineAutoDataAttribute.cs" />
     <Compile Include="Inspectors\ClassInspector.Test.cs" />
     <Compile Include="Inspectors\ClassInspector.Test.Inspect.cs" />
     <Compile Include="Inspectors\GenericParameterInspector.Inspect.Test.cs" />
     <Compile Include="Inspectors\GenericParameterInspector.Test.cs" />
-    <Compile Include="Processor\RoslyProcessor.Test.Process.cs" />
     <Compile Include="Project.cs" />
-    <Content Include="Projects\Source\EmptySource.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Projects\Source\Class\SingleClass.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Projects\Source\SingleDelegate.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Projects\Source\SingleEnum.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Projects\Source\SingleStruct.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Projects\Source\Class\MultipleClass.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Projects\Source\Class\VariousContextClass.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Projects\Source\Class\NestedClass.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Projects\Source\Class\InternalClass.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Projects\Source\Class\PrivateClass.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Projects\Source\Class\ProtectedClass.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Projects\Source\Class\ProtectedInternalClass.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Projects\Source\Class\AbstractClass.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Projects\Source\Class\AbstractPartialClass.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Projects\Source\Class\PartialClass.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Projects\Source\Class\SealedClass.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Projects\Source\Class\SealedPartialClass.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Projects\Source\Class\StaticClass.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Projects\Source\Generics\GenericClass.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Projects\Source\Generics\GenericDelegate.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Projects\Source\Generics\GenericInterface.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Projects\Source\Generics\GenericStruct.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Projects\Source\Class\InheritedClass.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Processor\RoslyProcessor.Test.cs" />
-    <Compile Include="Fixtures\SyntaxTreeAutoDataAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Projects\NoSource_Project.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Projects\EmptySource_Project.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Projects\Class_Project.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Projects\DuplicateClass_Project.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Projects\WithoutNamespace_Project.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Projects\ProjectTemplate.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Markify.Models\Markify.Models.csproj">

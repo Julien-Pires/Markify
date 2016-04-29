@@ -7,16 +7,16 @@
     type Fullname = list<string>
     type Modifier = string
 
-    type ConstraintsList = seq<string>
+    type ConstraintsList = list<string>
     type GenericParameterRepresentation = {
         Fullname: Fullname
         Modifier: Modifier
         Constraints: ConstraintsList
     }
 
-    type BaseTypesList = seq<string>
-    type ModifiersList = seq<Modifier>
-    type GenericParametersList = seq<GenericParameterRepresentation>
+    type BaseTypesList = list<string>
+    type ModifiersList = list<Modifier>
+    type GenericParametersList = list<GenericParameterRepresentation>
     type TypeRepresentation = {
         Fullname: Fullname
         Kind: StructureKind

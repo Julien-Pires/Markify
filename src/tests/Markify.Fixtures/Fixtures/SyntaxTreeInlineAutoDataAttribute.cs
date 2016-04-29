@@ -1,7 +1,10 @@
-﻿using Ploeh.AutoFixture.Xunit2;
+﻿using System;
 
-namespace Markify.Processors.Roslyn.Tests.Fixtures
+using Ploeh.AutoFixture.Xunit2;
+
+namespace Markify.Fixtures
 {
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
     public class SyntaxTreeInlineAutoDataAttribute : InlineAutoDataAttribute
     {
         #region Constructors

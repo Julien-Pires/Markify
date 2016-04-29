@@ -4,10 +4,7 @@ using Microsoft.CodeAnalysis.CSharp;
 
 using Ploeh.AutoFixture;
 
-using Markify.Processors.Roslyn.Models;
-using Markify.Processors.Roslyn.Inspectors;
-
-namespace Markify.Processors.Roslyn.Tests.Fixtures
+namespace Markify.Fixtures
 {
     public class SyntaxTreeCustomization : ICustomization
     {
@@ -38,9 +35,6 @@ namespace Markify.Processors.Roslyn.Tests.Fixtures
                 else
                     return CSharpSyntaxTree.Create(SyntaxFactory.EmptyStatement());
             });
-
-            fixture.Register<ISyntaxTreeInspector<StructureContainer>>(() => new ClassInspector(new GenericParameterInspector()));
-            fixture.Register<ISyntaxTreeInspector<GenericParameterRepresentation>>(() => new GenericParameterInspector());
         }
 
         #endregion

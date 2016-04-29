@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace Markify.Processors.Roslyn.Tests.Fixtures
+namespace Markify.Fixtures
 {
     public static class SourceHelper
     {
