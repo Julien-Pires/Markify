@@ -1,6 +1,5 @@
 ﻿module Representation
     open System.Linq
-    open System.Collections.Generic
 
     type StructureKind =  Class = 0 | Struct = 1 | Interface = 2 | Delegate = 3 | Enum = 4
 
