@@ -128,49 +128,7 @@
     <Compile Include="Fixtures\SyntaxTreeAutoDataAttribute.cs" />
     <Compile Include="Fixtures\SyntaxTreeCustomization.cs" />
     <Compile Include="Fixtures\SyntaxTreeInlineAutoDataAttribute.cs" />
-    <Content Include="Projects\Source\Class\AbstractClass.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Projects\Source\Class\AbstractPartialClass.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Projects\Source\Class\InheritedClass.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Projects\Source\Class\InternalClass.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Projects\Source\Class\MultipleClass.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Projects\Source\Class\NestedClass.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Projects\Source\Class\PartialClass.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Projects\Source\Class\PrivateClass.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Projects\Source\Class\ProtectedClass.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Projects\Source\Class\ProtectedInternalClass.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Projects\Source\Class\SealedClass.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Projects\Source\Class\SealedPartialClass.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Projects\Source\Class\SingleClass.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Projects\Source\Class\StaticClass.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Projects\Source\Class\VariousContextClass.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Projects\Source\EmptySource.cs">
@@ -188,13 +146,13 @@
     <Content Include="Projects\Source\Generics\GenericStruct.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Projects\Source\SingleDelegate.cs">
+    <Content Include="Projects\Source\Class\AccessModifier.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Projects\Source\SingleEnum.cs">
+    <Content Include="Projects\Source\Class\AdditionnalModifier.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Projects\Source\SingleStruct.cs">
+    <Content Include="Projects\Source\Class\ClassSamples.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Compile Include="Properties\AssemblyInfo.cs" />

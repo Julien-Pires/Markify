@@ -12,10 +12,7 @@
 
     [<Theory>]
     [<SyntaxTreeInlineAutoData("EmptySource.cs", 0)>]
-    [<SyntaxTreeInlineAutoData("Class/SingleClass.cs", 1)>]
-    [<SyntaxTreeInlineAutoData("Class/MultipleClass.cs", 2)>]
-    [<SyntaxTreeInlineAutoData("Class/VariousContextClass.cs", 2)>]
-    [<SyntaxTreeInlineAutoData("Class/NestedClass.cs", 2)>]
+    [<SyntaxTreeInlineAutoData("Class/ClassSamples.cs", 4)>]
     let ``Inspect_WhenVariousContexts_WithSuccess`` (count, tree: SyntaxTree) = 
         let classes = inspectClass (tree.GetRoot())
 
@@ -23,11 +20,11 @@
         Assert.True (query { for c in classes do all (c.Representation.Kind = StructureKind.Class) })
     
     [<Theory>]
-    [<SyntaxTreeInlineAutoData("Class/SingleClass.cs", "public", "SingleClassWithoutNamespace")>]
-    [<SyntaxTreeInlineAutoData("Class/InternalClass.cs", "internal", "InternalClass")>]
-    [<SyntaxTreeInlineAutoData("Class/ProtectedClass.cs", "protected", "ProtectedClass")>]
-    [<SyntaxTreeInlineAutoData("Class/ProtectedInternalClass.cs", "protected internal", "ProtectedInternalClass")>]
-    [<SyntaxTreeInlineAutoData("Class/PrivateClass.cs", "private", "PrivateClass")>]
+    [<SyntaxTreeInlineAutoData("Class/AccessModifier.cs", "public", "PublicClass")>]
+    [<SyntaxTreeInlineAutoData("Class/AccessModifier.cs", "internal", "InternalClass")>]
+    [<SyntaxTreeInlineAutoData("Class/AccessModifier.cs", "protected", "ProtectedClass")>]
+    [<SyntaxTreeInlineAutoData("Class/AccessModifier.cs", "protected internal", "ProtectedInternalClass")>]
+    [<SyntaxTreeInlineAutoData("Class/AccessModifier.cs", "private", "PrivateClass")>]
     let ``Inspect_WhenClassHasAccessModifier_WithCorrectAccessModifier`` (modifier, className, tree: SyntaxTree) =
         let testClass = 
             inspectClass (tree.GetRoot())
@@ -36,70 +33,68 @@
         Assert.Equal (modifier, String.Join (" ", testClass.Representation.AccessModifiers))
 
     [<Theory>]
-    [<SyntaxTreeInlineAutoData("Class/AbstractClass.cs", "abstract")>]
-    [<SyntaxTreeInlineAutoData("Class/SealedClass.cs", "sealed")>]
-    [<SyntaxTreeInlineAutoData("Class/PartialClass.cs", "partial")>]
-    [<SyntaxTreeInlineAutoData("Class/StaticClass.cs", "static")>]
-    let ``Inspect_WhenClassHasSingleModifier_WithCorrectModifier`` (modifier, tree: SyntaxTree) =
+    [<SyntaxTreeInlineAutoData("Class/AdditionnalModifier.cs", "abstract", "AbstractClass")>]
+    [<SyntaxTreeInlineAutoData("Class/AdditionnalModifier.cs", "sealed", "SealedClass")>]
+    [<SyntaxTreeInlineAutoData("Class/AdditionnalModifier.cs", "partial", "PartialClass")>]
+    [<SyntaxTreeInlineAutoData("Class/AdditionnalModifier.cs", "static", "StaticClass")>]
+    let ``Inspect_WhenClassHasSingleModifier_WithCorrectModifier`` (modifier, className, tree: SyntaxTree) =
         let classModifier =
             inspectClass (tree.GetRoot())
-            |> List.item 0
+            |> Seq.find (fun c -> Name c.Representation = className)
             |> (fun c -> c.Representation.AdditionalModifiers)
             |> (fun c -> List.item 0 c)
 
         Assert.Equal (classModifier, modifier)
 
     [<Theory>]
-    [<SyntaxTreeInlineAutoData("Class/AbstractPartialClass.cs", "abstract partial")>]
-    [<SyntaxTreeInlineAutoData("Class/SealedPartialClass.cs", "sealed partial")>]
-    let ``Inspect_WhenClassHasMultipleModifiers_WithCorrectModifiers`` (modifier: string, tree: SyntaxTree) =
+    [<SyntaxTreeInlineAutoData("Class/AdditionnalModifier.cs", "abstract partial", "AbstractPartialClass")>]
+    [<SyntaxTreeInlineAutoData("Class/AdditionnalModifier.cs", "sealed partial", "SealedPartialClass")>]
+    let ``Inspect_WhenClassHasMultipleModifiers_WithCorrectModifiers`` (modifier: string, className, tree: SyntaxTree) =
         let inputModifiers = modifier.Split [|' '|]
         let testModifiers =
             inspectClass (tree.GetRoot())
-            |> List.item 0
+            |> Seq.find (fun c -> Name c.Representation = className)
             |> (fun c -> c.Representation.AdditionalModifiers)
 
         Assert.Equal (testModifiers.Length, inputModifiers.Length)
         Assert.Equal (inputModifiers.Intersect(testModifiers).Count(), inputModifiers.Length)
 
     [<Theory>]
-    [<SyntaxTreeInlineAutoData("Class/SingleClass.cs", 0)>]
-    [<SyntaxTreeInlineAutoData("Generics/GenericClass.cs", 2)>]
-    let ``Inspect_WhenClassIsGeneric_WithAllParameters`` (count, tree: SyntaxTree) =
+    [<SyntaxTreeInlineAutoData("Class/ClassSamples.cs", 0, "SingleClass")>]
+    [<SyntaxTreeInlineAutoData("Generics/GenericClass.cs", 2, "GenericClass")>]
+    let ``Inspect_WhenClassIsGeneric_WithAllParameters`` (count, className, tree: SyntaxTree) =
         let parameters =
             inspectClass (tree.GetRoot())
-            |> List.item 0
+            |> Seq.find (fun c -> Name c.Representation = className)
             |> (fun c -> c.Representation.GenericParameters)
 
         Assert.Equal (count, parameters.Length)
 
     [<Theory>]
-    [<SyntaxTreeInlineAutoData("Class/AbstractClass.cs", "AbstractClass")>]
-    [<SyntaxTreeInlineAutoData("Class/InternalClass.cs", "InternalClass")>]
+    [<SyntaxTreeInlineAutoData("Class/ClassSamples.cs", "ParentClass")>]
+    [<SyntaxTreeInlineAutoData("Class/ClassSamples.cs", "InNamespaceClass")>]
     [<SyntaxTreeInlineAutoData("Generics/GenericClass.cs", "GenericClass'2")>]
-    let ``Inspect_WithCorrectName`` (name, tree: SyntaxTree) =
-        let className = 
+    let ``Inspect_WithCorrectName`` (className, tree: SyntaxTree) =
+        let testClass = 
             inspectClass (tree.GetRoot())
-            |> List.item 0
-            |> (fun c -> Name c.Representation)
+            |> Seq.tryFind (fun c -> Name c.Representation = className)
 
-        Assert.Equal (name, className)
+        Assert.True (testClass.IsSome)
     
     [<Theory>]
-    [<SyntaxTreeInlineAutoData("Class/AbstractClass.cs", "AbstractClass")>]
-    [<SyntaxTreeInlineAutoData("Class/ProtectedClass.cs", "ProtectedFoo.ProtectedClass")>]
-    [<SyntaxTreeInlineAutoData("Class/VariousContextClass.cs", "FooSpace.InsideNamespaceClass")>]
-    [<SyntaxTreeInlineAutoData("Generics/GenericClass.cs", "GenericClass'2")>]
-    let ``Inspect_WithCorrectFullname`` (fullname: string, tree: SyntaxTree) =
-        let classFullname = 
+    [<SyntaxTreeInlineAutoData("Class/ClassSamples.cs", "SingleClass", "SingleClass")>]
+    [<SyntaxTreeInlineAutoData("Class/ClassSamples.cs", "NestedClass","ParentClass.NestedClass")>]
+    [<SyntaxTreeInlineAutoData("Class/ClassSamples.cs", "InNamespaceClass","FooSpace.InNamespaceClass")>]
+    [<SyntaxTreeInlineAutoData("Generics/GenericClass.cs", "GenericClass'2","GenericClass'2")>]
+    let ``Inspect_WithCorrectFullname`` (className, fullname, tree: SyntaxTree) =
+        let testClass = 
             inspectClass (tree.GetRoot())
-            |> List.item 0
-            |> (fun c -> Fullname c)
+            |> Seq.find (fun c -> Name c.Representation = className)
 
-        Assert.Equal (fullname, String.Join (".", classFullname))
+        Assert.Equal (fullname, String.Join (".", Fullname testClass))
 
     [<Theory>]
-    [<SyntaxTreeInlineAutoData("Class/SingleClass.cs", "SingleClassWithoutNamespace", 0)>]
+    [<SyntaxTreeInlineAutoData("Class/ClassSamples.cs", "SingleClass", 0)>]
     [<SyntaxTreeInlineAutoData("Class/InheritedClass.cs", "InheritClass", 1)>]
     [<SyntaxTreeInlineAutoData("Class/InheritedClass.cs", "ImplementInterfaceClass", 1)>]
     [<SyntaxTreeInlineAutoData("Class/InheritedClass.cs", "ImplementGenInterfaceClass", 2)>]
