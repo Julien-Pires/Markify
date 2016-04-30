@@ -1,4 +1,4 @@
-﻿module RoslynInspector
+﻿module RoslynInspector_InspectClass
     open System
     open System.Linq
     open Microsoft.CodeAnalysis

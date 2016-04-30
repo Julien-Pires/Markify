@@ -24,38 +24,9 @@ namespace Markify.Processors.Roslyn.Tests.Inspectors
 
         #endregion
 
-        #region Arguments Validation
-
-        [Theory, SyntaxTreeAutoData]
-        public void Inspect_WithNullNode_ThrowException(ISyntaxTreeInspector<GenericParameterRepresentation> inspector)
-        {
-            Assert.Throws<ArgumentNullException>(() => inspector.Inspect(null));
-        }
-
-        [Theory, SyntaxTreeAutoData]
-        public void Inspect_WithNoGenericNode_ThrowException(ISyntaxTreeInspector<GenericParameterRepresentation> inspector)
-        {
-            Assert.Throws<ArgumentException>(() => inspector.Inspect(SyntaxFactory.IdentifierName("Foo")));
-        }
-
-        #endregion
-
         #region Detect Parameters
 
-        [Theory]
-        [SyntaxTreeInlineAutoData("Class/SingleClass.cs", 0)]
-        [SyntaxTreeInlineAutoData("Generics/GenericClass.cs", 2)]
-        [SyntaxTreeInlineAutoData("Generics/GenericDelegate.cs", 1)]
-        [SyntaxTreeInlineAutoData("Generics/GenericInterface.cs", 2)]
-        [SyntaxTreeInlineAutoData("Generics/GenericStruct.cs", 1)]
-        public void Inspect_WhenTypeHasGenerics_WithExactParameters(int count, 
-            ISyntaxTreeInspector<GenericParameterRepresentation> inspector, SyntaxTree tree)
-        {
-            var node = GetTypeNode(tree.GetRoot());
-            GenericParameterRepresentation[] generics = inspector.Inspect(node).ToArray();
-
-            Assert.Equal(count, generics.Length);
-        }
+        
 
         [Theory]
         [SyntaxTreeInlineAutoData("Generics/GenericClass.cs", "T")]

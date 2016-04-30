@@ -87,11 +87,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Inspectors\ClassInspector.Test.cs" />
-    <Compile Include="Inspectors\ClassInspector.Test.Inspect.cs" />
     <Compile Include="Inspectors\GenericParameterInspector.Inspect.Test.cs" />
-    <Compile Include="Inspectors\GenericParameterInspector.Test.cs" />
-    <Compile Include="Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

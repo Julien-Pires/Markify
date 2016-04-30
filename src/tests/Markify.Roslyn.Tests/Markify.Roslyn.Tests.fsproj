@@ -54,11 +54,12 @@
   </Choose>
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
-    <Compile Include="AssemblyInfo.fs" />
-    <None Include="Script.fsx" />
-    <Content Include="packages.config" />
-    <Compile Include="RoslynInspector.Tests.fs" />
     <Content Include="app.config" />
+    <Content Include="packages.config" />
+    <None Include="Script.fsx" />
+    <Compile Include="AssemblyInfo.fs" />
+    <Compile Include="RoslynInspector.InspectClass.Tests.fs" />
+    <Compile Include="RoslynInspector.InspectGenericParameters.Tests.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Core">
