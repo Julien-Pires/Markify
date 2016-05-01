@@ -33,7 +33,7 @@
         Assert.Throws<ArgumentException> (fun () -> inspectGenerics node |> ignore);
 
     [<Theory>]
-    [<SyntaxTreeInlineAutoData("Class/SingleClass.cs", 0, "")>]
+    [<SyntaxTreeInlineAutoData("Class/ClassSamples.cs", 0, "SingleClass")>]
     [<SyntaxTreeInlineAutoData("Generics/GenericClass.cs", 2, "")>]
     [<SyntaxTreeInlineAutoData("Generics/GenericDelegate.cs", 1, "")>]
     [<SyntaxTreeInlineAutoData("Generics/GenericInterface.cs", 2, "")>]
