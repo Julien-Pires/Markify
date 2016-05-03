@@ -91,7 +91,7 @@
             inspectClass (tree.GetRoot())
             |> Seq.find (fun c -> Name c.Representation = className)
 
-        Assert.Equal (fullname, String.Join (".", Fullname testClass))
+        Assert.Equal (fullname, toString (Fullname testClass))
 
     [<Theory>]
     [<SyntaxTreeInlineAutoData("Class/ClassSamples.cs", "SingleClass", 0)>]

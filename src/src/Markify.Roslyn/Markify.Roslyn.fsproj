@@ -50,12 +50,13 @@
   </Choose>
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
-    <Compile Include="AssemblyInfo.fs" />
     <None Include="Script.fsx" />
+    <Content Include="packages.config" />
+    <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Representation.fs" />
     <Compile Include="Container.fs" />
+    <Compile Include="RoslynExtensionPattern.fs" />
     <Compile Include="RoslynExtension.fs" />
-    <Content Include="packages.config" />
     <Compile Include="Inspectors.fs" />
   </ItemGroup>
   <ItemGroup>

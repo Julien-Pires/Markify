@@ -28,4 +28,4 @@
 
     let Name (representation: TypeRepresentation) = representation.Fullname.Last()
 
-    let toString (fullname: Fullname) = String.Join ("", fullname)
+    let toString (fullname: Fullname) = String.Join (".", fullname)
