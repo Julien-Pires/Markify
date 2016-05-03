@@ -1,4 +1,5 @@
 ﻿module Representation
+    open System
     open System.Linq
 
     type StructureKind =  Class = 0 | Struct = 1 | Interface = 2 | Delegate = 3 | Enum = 4
@@ -9,7 +10,7 @@
     type ConstraintsList = list<string>
     type GenericParameterRepresentation = {
         Fullname: Fullname
-        Modifier: Modifier
+        Modifier: Modifier option
         Constraints: ConstraintsList
     }
 
@@ -27,3 +28,4 @@
 
     let Name (representation: TypeRepresentation) = representation.Fullname.Last()
 
+    let toString (fullname: Fullname) = String.Join ("", fullname)
