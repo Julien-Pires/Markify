@@ -61,7 +61,7 @@
 
     [<Theory>]
     [<SyntaxTreeInlineAutoData("Class/ClassSamples.cs", 0, "SingleClass")>]
-    [<SyntaxTreeInlineAutoData("Generics/GenericClass.cs", 2, "GenericClass")>]
+    [<SyntaxTreeInlineAutoData("Generics/GenericClass.cs", 2, "GenericClass`2")>]
     let ``Inspect_WhenClassIsGeneric_WithAllParameters`` (count, className, tree: SyntaxTree) =
         let parameters =
             inspectClass (tree.GetRoot())
@@ -73,7 +73,7 @@
     [<Theory>]
     [<SyntaxTreeInlineAutoData("Class/ClassSamples.cs", "ParentClass")>]
     [<SyntaxTreeInlineAutoData("Class/ClassSamples.cs", "InNamespaceClass")>]
-    [<SyntaxTreeInlineAutoData("Generics/GenericClass.cs", "GenericClass'2")>]
+    [<SyntaxTreeInlineAutoData("Generics/GenericClass.cs", "GenericClass`2")>]
     let ``Inspect_WithCorrectName`` (className, tree: SyntaxTree) =
         let testClass = 
             inspectClass (tree.GetRoot())
@@ -85,7 +85,7 @@
     [<SyntaxTreeInlineAutoData("Class/ClassSamples.cs", "SingleClass", "SingleClass")>]
     [<SyntaxTreeInlineAutoData("Class/ClassSamples.cs", "NestedClass","ParentClass.NestedClass")>]
     [<SyntaxTreeInlineAutoData("Class/ClassSamples.cs", "InNamespaceClass","FooSpace.InNamespaceClass")>]
-    [<SyntaxTreeInlineAutoData("Generics/GenericClass.cs", "GenericClass'2","GenericClass'2")>]
+    [<SyntaxTreeInlineAutoData("Generics/GenericClass.cs", "GenericClass`2","GenericClass`2")>]
     let ``Inspect_WithCorrectFullname`` (className, fullname, tree: SyntaxTree) =
         let testClass = 
             inspectClass (tree.GetRoot())
