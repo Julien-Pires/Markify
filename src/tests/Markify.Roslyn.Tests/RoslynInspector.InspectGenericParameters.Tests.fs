@@ -31,7 +31,7 @@
     let ``Inspect_WithNoGenericNode_ThrowException`` =
         let node = SyntaxFactory.IdentifierName ("Foo")
 
-        Assert.Throws<ArgumentException> (fun () -> inspectGenerics node |> ignore);
+        Assert.Throws<ArgumentException> (fun () -> inspectGenerics node |> ignore)
 
     [<Theory>]
     [<SyntaxTreeInlineAutoData("Class/ClassSamples.cs", 0, "SingleClass")>]
@@ -45,7 +45,7 @@
             ||> getGenericNode
             |> inspectGenerics
 
-        Assert.Equal (count, parameters.Length)
+        Assert.Equal (count, Seq.length parameters)
 
     [<Theory>]
     [<SyntaxTreeInlineAutoData("Generics/GenericClass.cs", "T", "GenericClass")>]
@@ -77,7 +77,7 @@
             |> Seq.tryFind(fun c -> toString c.Fullname = parameterName)
 
         Assert.True (parameter.IsSome)
-        Assert.Equal (optModifier, parameter.Value.Modifier);
+        Assert.Equal (optModifier, parameter.Value.Modifier)
 
     [<Theory>]
     [<SyntaxTreeInlineAutoData("Generics/GenericClass.cs", 2, "T", "GenericClass")>]
@@ -92,4 +92,4 @@
             |> Seq.tryFind(fun c -> toString c.Fullname = parameterName)
 
         Assert.True (parameter.IsSome)
-        Assert.Equal(count, parameter.Value.Constraints.Length);
+        Assert.Equal(count, Seq.length parameter.Value.Constraints)

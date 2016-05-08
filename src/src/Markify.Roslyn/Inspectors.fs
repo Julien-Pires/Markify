@@ -15,15 +15,15 @@
                 | _ -> false)
             |> Seq.map(fun c ->
                 {
-                    Fullname = getFullname c;
+                    Fullname = fullname c;
                     Kind = StructureKind.Class;
-                    AccessModifiers = [];
-                    AdditionalModifiers = [];
+                    AccessModifiers = accessModifiers c;
+                    AdditionalModifiers = additionalModifiers c;
                     GenericParameters = [];
-                    BaseTypes = [];
+                    BaseTypes = baseTypes c;
                 })
             |> Seq.map(fun c -> { Representation = c })
 
         Seq.toList f
 
-    let inspectGenerics node : GenericParametersList = []
+    let inspectGenerics node : GenericParametersList = Seq.empty<GenericParameterRepresentation>

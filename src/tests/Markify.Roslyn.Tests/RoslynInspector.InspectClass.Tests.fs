@@ -42,7 +42,7 @@
             inspectClass (tree.GetRoot())
             |> Seq.find (fun c -> Name c.Representation = className)
             |> (fun c -> c.Representation.AdditionalModifiers)
-            |> (fun c -> List.item 0 c)
+            |> (fun c -> Seq.item 0 c)
 
         Assert.Equal (classModifier, modifier)
 
@@ -56,7 +56,7 @@
             |> Seq.find (fun c -> Name c.Representation = className)
             |> (fun c -> c.Representation.AdditionalModifiers)
 
-        Assert.Equal (testModifiers.Length, inputModifiers.Length)
+        Assert.Equal (testModifiers.Count(), inputModifiers.Length)
         Assert.Equal (inputModifiers.Intersect(testModifiers).Count(), inputModifiers.Length)
 
     [<Theory>]
@@ -68,7 +68,7 @@
             |> Seq.find (fun c -> Name c.Representation = className)
             |> (fun c -> c.Representation.GenericParameters)
 
-        Assert.Equal (count, parameters.Length)
+        Assert.Equal (count, parameters.Count())
 
     [<Theory>]
     [<SyntaxTreeInlineAutoData("Class/ClassSamples.cs", "ParentClass")>]
@@ -105,7 +105,7 @@
             |> Seq.find (fun c -> Name c.Representation = className)
             |> (fun c -> c.Representation.BaseTypes)
 
-        Assert.Equal (count, baseTypes.Length)
+        Assert.Equal (count, baseTypes.Count())
 
     [<Theory>]
     [<SyntaxTreeInlineAutoData("Class/InheritedClass.cs", "InheritClass", "Exception")>]
