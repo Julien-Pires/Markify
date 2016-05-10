@@ -1,4 +1,4 @@
-﻿using Markify.Models.Definitions;
+﻿using Markify.Models;
 
 namespace Markify.Processors
 {
@@ -6,7 +6,7 @@ namespace Markify.Processors
     {
         #region Methods
 
-        AssemblyDefinition Process();
+        LibraryDefinition Process(ProjectContext project);
 
         #endregion
     }

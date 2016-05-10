@@ -6,13 +6,17 @@ namespace Markify.Models.Definitions
     {
         #region Properties
 
-        public IList<ParameterDefinition> GenericParameters => new List<ParameterDefinition>();
+        public IEnumerable<string> AccessModifiers { get; }
 
-        public IList<PropertyDefinition> Fields => new List<PropertyDefinition>();
+        public IEnumerable<string> Modifiers { get; } 
 
-        public IList<PropertyDefinition> Properties => new List<PropertyDefinition>();
+        public IEnumerable<ParameterDefinition> GenericParameters { get; }
 
-        public IList<MethodDefinition> Methods => new List<MethodDefinition>();
+        public IEnumerable<PropertyDefinition> Fields { get; }
+
+        public IEnumerable<PropertyDefinition> Properties { get; }
+
+        public IEnumerable<MethodDefinition> Methods { get; }
 
         #endregion
 

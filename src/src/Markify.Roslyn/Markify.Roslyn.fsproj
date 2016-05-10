@@ -57,6 +57,7 @@
     <Compile Include="Container.fs" />
     <Compile Include="RoslynExtension.fs" />
     <Compile Include="Inspectors.fs" />
+    <Compile Include="processor.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CodeAnalysis">
@@ -122,6 +123,18 @@
       <HintPath>..\..\packages\System.Reflection.Metadata.1.2.0\lib\portable-net45+win8\System.Reflection.Metadata.dll</HintPath>
       <Private>True</Private>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Markify.Converter\Markify.Processors.csproj">
+      <Name>Markify.Processors</Name>
+      <Project>{8833bf6e-806f-483d-ba70-ff92b09e625d}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Markify.Models\Markify.Models.csproj">
+      <Name>Markify.Models</Name>
+      <Project>{1ed3438e-43d2-4a42-bb16-84ed99d29161}</Project>
+      <Private>True</Private>
+    </ProjectReference>
   </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
