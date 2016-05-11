@@ -1,4 +1,4 @@
-﻿module Processor_Process_Types_Modifiers_Tests
+﻿module Roslyn_Processor_Process_Types_Modifiers_Tests
     open Processor
     open Markify.Models
     open Markify.Processors
@@ -13,7 +13,7 @@
     [<ProjectContextInlineAutoData([|"Class/AccessModifier.cs"|], "protected", "ProtectedClass")>]
     [<ProjectContextInlineAutoData([|"Class/AccessModifier.cs"|], "protected internal", "ProtectedInternalClass")>]
     [<ProjectContextInlineAutoData([|"Class/AccessModifier.cs"|], "private", "PrivateClass")>]
-    let ``Process project with types that have single access modifiers`` (modifier: string, name, sut: RoslynProcessor, project: ProjectContext) =
+    let ``Process project with types that have access modifiers`` (modifier: string, name, sut: RoslynProcessor, project: ProjectContext) =
         let expectedModifiers = modifier.Split [|' '|]
 
         let typeDef = 

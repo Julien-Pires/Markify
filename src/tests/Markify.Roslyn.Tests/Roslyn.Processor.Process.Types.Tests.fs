@@ -1,4 +1,4 @@
-﻿module Processor_Process_Types_Tests
+﻿module Roslyn_Processor_Process_Types_Tests
     open Processor
     open Markify.Models
     open Markify.Processors
@@ -29,16 +29,15 @@
         test <@ typeDef.IsSome @>
     
     [<Theory>]
-    [<ProjectContextInlineAutoData([|"Class/ClassSamples.cs"|], "SingleClass", "SingleClass")>]
-    [<ProjectContextInlineAutoData([|"Class/ClassSamples.cs"|], "NestedClass","ParentClass.NestedClass")>]
-    [<ProjectContextInlineAutoData([|"Class/ClassSamples.cs"|], "InNamespaceClass","FooSpace.InNamespaceClass")>]
-    [<ProjectContextInlineAutoData([|"Generics/GenericClass.cs"|], "GenericClass`2","GenericClass`2")>]
-    let ``Process project with types with correct fullname`` (name, fullname, sut: RoslynProcessor, project: ProjectContext) =
+    [<ProjectContextInlineAutoData([|"Class/ClassSamples.cs"|], "SingleClass")>]
+    [<ProjectContextInlineAutoData([|"Class/ClassSamples.cs"|], "ParentClass.NestedClass")>]
+    [<ProjectContextInlineAutoData([|"Class/ClassSamples.cs"|], "FooSpace.InNamespaceClass")>]
+    [<ProjectContextInlineAutoData([|"Generics/GenericClass.cs"|], "GenericClass`2")>]
+    let ``Process project with types with correct fullname`` (fullname, sut: RoslynProcessor, project: ProjectContext) =
         let typeDef = 
             (sut :> IProjectProcessor)
             |> (fun c -> c.Process(project))
             |> (fun c -> c.Types)
-            |> Seq.tryFind (fun c -> c.MemberName = name)
+            |> Seq.tryFind (fun c -> c.Fullname = fullname)
 
         test <@ typeDef.IsSome @>
-        test <@ fullname = typeDef.Value.Fullname @>

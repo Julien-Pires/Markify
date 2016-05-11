@@ -1,10 +1,14 @@
-﻿namespace Markify.Models.Definitions
+﻿using System.Collections.Generic;
+
+namespace Markify.Models.Definitions
 {
     public sealed class ParameterDefinition : Definition
     {
         #region Properties
 
-        public ParameterModifier Modifier { get; set; }
+        public ParameterModifier Modifier { get; }
+
+        public IEnumerable<string> Constraints { get; }
 
         #endregion
 

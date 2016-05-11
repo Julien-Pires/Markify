@@ -1,4 +1,4 @@
-﻿module Processor_Process_Types_Inheritance_Tests
+﻿module Roslyn_Processor_Process_Types_Inheritance_Tests
     open Processor
     open Markify.Models
     open Markify.Processors
@@ -10,9 +10,7 @@
     [<Theory>]
     [<ProjectContextInlineAutoData([|"Class/ClassSamples.cs"|], "SingleClass", 0)>]
     [<ProjectContextInlineAutoData([|"Class/InheritedClass.cs"|], "InheritClass", 1)>]
-    [<ProjectContextInlineAutoData([|"Class/InheritedClass.cs"|], "ImplementInterfaceClass", 1)>]
     [<ProjectContextInlineAutoData([|"Class/InheritedClass.cs"|], "ImplementGenInterfaceClass", 2)>]
-    [<ProjectContextInlineAutoData([|"Class/InheritedClass.cs"|], "MixedInheritanceClass", 3)>]
     let ``Process project with type with inheritance tree`` (name, count, sut: RoslynProcessor, project: ProjectContext) =
         let typeDef = 
             (sut :> IProjectProcessor)
@@ -24,18 +22,15 @@
 
     [<Theory>]
     [<ProjectContextInlineAutoData([|"Class/InheritedClass.cs"|], "InheritClass", "Exception")>]
-    [<ProjectContextInlineAutoData([|"Class/InheritedClass.cs"|], "ImplementInterfaceClass", "IDisposable")>]
-    [<ProjectContextInlineAutoData([|"Class/InheritedClass.cs"|], "ImplementGenInterfaceClass", "IList<String>")>]
-    [<ProjectContextInlineAutoData([|"Class/InheritedClass.cs"|], "MixedInheritanceClass", "Exception")>]
-    [<ProjectContextInlineAutoData([|"Class/InheritedClass.cs"|], "MixedInheritanceClass", "IDisposable")>]
-    let ``Process project with type with multiple inheritance`` (name, expectedType, sut: RoslynProcessor, project: ProjectContext) =
+    [<ProjectContextInlineAutoData([|"Class/InheritedClass.cs"|], "MixedInheritanceClass", "IDisposable Exception")>]
+    let ``Process project with type with multiple inheritance`` (name, typeNames: string, sut: RoslynProcessor, project: ProjectContext) =
+        let expectedBaseTypes = typeNames.Split [|' '|]
+
         let typeDef = 
             (sut :> IProjectProcessor)
             |> (fun c -> c.Process(project))
             |> (fun c -> c.Types)
             |> Seq.find (fun c -> c.MemberName = name)
-        let foundType =
-            typeDef.BaseTypes
-            |> Seq.tryFind (fun c -> c = expectedType)
+        let baseTypes = typeDef.BaseTypes |> Seq.filter (fun c -> Seq.contains c expectedBaseTypes)
 
-        test <@ foundType.IsSome @>
+        test <@ Seq.length expectedBaseTypes = Seq.length baseTypes @>
