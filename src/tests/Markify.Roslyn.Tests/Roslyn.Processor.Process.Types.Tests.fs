@@ -16,6 +16,17 @@
         test <@ count = Seq.length library.Types @>
 
     [<Theory>]
+    [<ProjectContextInlineAutoData([|"Class/ClassSamples.cs"; "Class/ClassSamples.cs"|], "ParentClass")>]
+    let ``Process project without duplicate types`` (fullname, sut: RoslynProcessor, project: ProjectContext) =
+        let typeDef = 
+            (sut :> IProjectProcessor)
+            |> (fun c -> c.Process(project))
+            |> (fun c -> c.Types)
+            |> Seq.filter (fun c -> c.Fullname = fullname)
+
+        test <@ Seq.length typeDef = 1 @>
+
+    [<Theory>]
     [<ProjectContextInlineAutoData([|"Class/ClassSamples.cs"|], "ParentClass")>]
     [<ProjectContextInlineAutoData([|"Class/ClassSamples.cs"|], "InNamespaceClass")>]
     [<ProjectContextInlineAutoData([|"Generics/GenericClass.cs"|], "GenericClass`2")>]

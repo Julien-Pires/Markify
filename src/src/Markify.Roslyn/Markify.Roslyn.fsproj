@@ -55,7 +55,8 @@
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Representation.fs" />
     <Compile Include="Container.fs" />
-    <Compile Include="RoslynExtension.fs" />
+    <Compile Include="SyntaxNodeExtension.fs" />
+    <Compile Include="TypeExtension.fs" />
     <Compile Include="Inspectors.fs" />
     <Compile Include="processor.fs" />
   </ItemGroup>
