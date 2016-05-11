@@ -38,3 +38,18 @@
             |> Seq.find (fun c -> c.MemberName = name)
 
         test <@ Seq.contains modifier typeDef.Modifiers @>
+
+    [<Theory>]
+    [<ProjectContextInlineAutoData([|"Class/AdditionnalModifier.cs"|], "abstract partial", "AbstractPartialClass")>]
+    [<ProjectContextInlineAutoData([|"Class/AdditionnalModifier.cs"|], "sealed partial", "SealedPartialClass")>]
+    let ``Process project with types that have multiple modifiers`` (modifier: string, name, sut: RoslynProcessor, project: ProjectContext) =
+        let expectedModifiers = modifier.Split [|' '|]
+
+        let typeDef = 
+            (sut :> IProjectProcessor)
+            |> (fun c -> c.Process(project))
+            |> (fun c -> c.Types)
+            |> Seq.find (fun c -> c.MemberName = name)
+        let possessedModifiers = Seq.filter (fun c -> Seq.contains c expectedModifiers) typeDef.Modifiers
+
+        test <@ Seq.length possessedModifiers = Seq.length expectedModifiers @>

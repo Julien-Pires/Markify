@@ -58,11 +58,11 @@
     <Content Include="packages.config" />
     <None Include="Script.fsx" />
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="RoslynInspector.InspectClass.Tests.fs" />
     <Compile Include="RoslynInspector.InspectGenericParameters.Tests.fs" />
     <Compile Include="Processor.Process.Types.Tests.fs" />
     <Compile Include="Processor.Process.Types.Generics.Tests.fs" />
     <Compile Include="Processor.Process.Types.Modifiers.Tests.fs" />
+    <Compile Include="Processor.Process.Types.Inheritance.Tests.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Core">
@@ -99,11 +99,11 @@
     </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="Ploeh.AutoFixture">
-      <HintPath>..\..\packages\AutoFixture.3.45.1\lib\net40\Ploeh.AutoFixture.dll</HintPath>
+      <HintPath>..\..\packages\AutoFixture.3.45.2\lib\net40\Ploeh.AutoFixture.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Ploeh.AutoFixture.Xunit2">
-      <HintPath>..\..\packages\AutoFixture.Xunit2.3.45.1\lib\net45\Ploeh.AutoFixture.Xunit2.dll</HintPath>
+      <HintPath>..\..\packages\AutoFixture.Xunit2.3.45.2\lib\net45\Ploeh.AutoFixture.Xunit2.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />

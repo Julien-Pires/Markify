@@ -18,6 +18,8 @@ namespace Markify.Models.Definitions
 
         public IEnumerable<MethodDefinition> Methods { get; }
 
+        public IEnumerable<string> BaseTypes { get; }
+
         #endregion
 
         #region Constructors
