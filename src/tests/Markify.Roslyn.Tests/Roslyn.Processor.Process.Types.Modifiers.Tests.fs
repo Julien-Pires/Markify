@@ -20,7 +20,7 @@
             (sut :> IProjectProcessor)
             |> (fun c -> c.Process(project))
             |> (fun c -> c.Types)
-            |> Seq.find (fun c -> c.MemberName = name)
+            |> Seq.find (fun c -> c.Name = name)
         let possessedModifiers = Seq.filter (fun c -> Seq.contains c expectedModifiers) typeDef.AccessModifiers
 
         test <@ Seq.length possessedModifiers = Seq.length expectedModifiers @>
@@ -35,7 +35,7 @@
             (sut :> IProjectProcessor)
             |> (fun c -> c.Process(project))
             |> (fun c -> c.Types)
-            |> Seq.find (fun c -> c.MemberName = name)
+            |> Seq.find (fun c -> c.Name = name)
 
         test <@ Seq.contains modifier typeDef.Modifiers @>
 
@@ -49,7 +49,7 @@
             (sut :> IProjectProcessor)
             |> (fun c -> c.Process(project))
             |> (fun c -> c.Types)
-            |> Seq.find (fun c -> c.MemberName = name)
+            |> Seq.find (fun c -> c.Name = name)
         let possessedModifiers = Seq.filter (fun c -> Seq.contains c expectedModifiers) typeDef.Modifiers
 
         test <@ Seq.length possessedModifiers = Seq.length expectedModifiers @>

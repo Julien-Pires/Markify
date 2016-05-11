@@ -24,7 +24,7 @@
             (sut :> IProjectProcessor)
             |> (fun c -> c.Process(project))
             |> (fun c -> c.Types)
-            |> Seq.tryFind (fun c -> c.MemberName = name)
+            |> Seq.tryFind (fun c -> c.Name = name)
 
         test <@ typeDef.IsSome @>
     

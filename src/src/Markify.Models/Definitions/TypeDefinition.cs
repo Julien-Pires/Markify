@@ -2,7 +2,7 @@
 
 namespace Markify.Models.Definitions
 {
-    public sealed class TypeDefinition : StructuralDefinition
+    public sealed class TypeDefinition : Definition
     {
         #region Properties
 
@@ -11,12 +11,6 @@ namespace Markify.Models.Definitions
         public IEnumerable<string> Modifiers { get; } 
 
         public IEnumerable<ParameterDefinition> GenericParameters { get; }
-
-        public IEnumerable<PropertyDefinition> Fields { get; }
-
-        public IEnumerable<PropertyDefinition> Properties { get; }
-
-        public IEnumerable<MethodDefinition> Methods { get; }
 
         public IEnumerable<string> BaseTypes { get; }
 

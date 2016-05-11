@@ -15,7 +15,7 @@
             (sut :> IProjectProcessor)
             |> (fun c -> c.Process(project))
             |> (fun c -> c.Types)
-            |> Seq.find (fun c -> c.MemberName = name)
+            |> Seq.find (fun c -> c.Name = name)
 
         test <@ count = Seq.length typeDef.GenericParameters @>
 
@@ -26,10 +26,10 @@
             (sut :> IProjectProcessor)
             |> (fun c -> c.Process(project))
             |> (fun c -> c.Types)
-            |> Seq.find (fun c -> c.MemberName = name)
+            |> Seq.find (fun c -> c.Name = name)
         let parameter =
             typeDef.GenericParameters
-            |> Seq.tryFind (fun c -> c.MemberName = parameterName)
+            |> Seq.tryFind (fun c -> c.Name = parameterName)
 
         test <@ parameter.IsSome @>
     
@@ -45,12 +45,12 @@
             (sut :> IProjectProcessor)
             |> (fun c -> c.Process(project))
             |> (fun c -> c.Types)
-            |> Seq.find (fun c -> c.MemberName = name)
+            |> Seq.find (fun c -> c.Name = name)
         let parameter =
             typeDef.GenericParameters
-            |> Seq.find (fun c -> c.MemberName = parameterName)
+            |> Seq.find (fun c -> c.Name = parameterName)
 
-        test <@ expectedModifier = Some(parameter.MemberName) @>
+        test <@ expectedModifier = Some(parameter.Name) @>
 
     [<Theory>]
     [<ProjectContextInlineAutoData([|"Generics/GenericClass.cs"|], 2, "T", "GenericClass")>]
@@ -59,10 +59,10 @@
             (sut :> IProjectProcessor)
             |> (fun c -> c.Process(project))
             |> (fun c -> c.Types)
-            |> Seq.find (fun c -> c.MemberName = name)
+            |> Seq.find (fun c -> c.Name = name)
         let parameter =
             typeDef.GenericParameters
-            |> Seq.find (fun c -> c.MemberName = parameterName)
+            |> Seq.find (fun c -> c.Name = parameterName)
 
         test <@ count = Seq.length parameter.Constraints @>
 
@@ -75,10 +75,10 @@
             (sut :> IProjectProcessor)
             |> (fun c -> c.Process(project))
             |> (fun c -> c.Types)
-            |> Seq.find (fun c -> c.MemberName = name)
+            |> Seq.find (fun c -> c.Name = name)
         let parameter =
             typeDef.GenericParameters
-            |> Seq.find (fun c -> c.MemberName = parameterName)
+            |> Seq.find (fun c -> c.Name = parameterName)
         let parameterConstraints = parameter.Constraints |> Seq.filter (fun c -> Seq.contains c expectedConstraints)
 
         test <@ Seq.length expectedConstraints = Seq.length parameterConstraints @>

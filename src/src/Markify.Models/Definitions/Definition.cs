@@ -6,9 +6,7 @@
 
         public string Fullname { get; }
 
-        public string MemberName { get; set; }
-
-        public string Summary { get; set; }
+        public string Name { get; }
 
         #endregion
 
@@ -16,7 +14,7 @@
 
         protected Definition(string name)
         {
-            Fullname = MemberName = name;
+            Fullname = Name = name;
         }
 
         #endregion

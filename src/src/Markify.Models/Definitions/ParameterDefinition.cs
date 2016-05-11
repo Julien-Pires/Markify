@@ -6,7 +6,7 @@ namespace Markify.Models.Definitions
     {
         #region Properties
 
-        public ParameterModifier Modifier { get; }
+        public string Modifier { get; }
 
         public IEnumerable<string> Constraints { get; }
 

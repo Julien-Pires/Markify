@@ -16,7 +16,7 @@
             (sut :> IProjectProcessor)
             |> (fun c -> c.Process(project))
             |> (fun c -> c.Types)
-            |> Seq.find (fun c -> c.MemberName = name)
+            |> Seq.find (fun c -> c.Name = name)
 
         test <@ count = Seq.length typeDef.BaseTypes @>
 
@@ -30,7 +30,7 @@
             (sut :> IProjectProcessor)
             |> (fun c -> c.Process(project))
             |> (fun c -> c.Types)
-            |> Seq.find (fun c -> c.MemberName = name)
+            |> Seq.find (fun c -> c.Name = name)
         let baseTypes = typeDef.BaseTypes |> Seq.filter (fun c -> Seq.contains c expectedBaseTypes)
 
         test <@ Seq.length expectedBaseTypes = Seq.length baseTypes @>
