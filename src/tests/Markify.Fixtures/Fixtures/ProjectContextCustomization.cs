@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-using Markify.Models;
+using static Markify.Models.Context;
 
-using Moq;
 using Ploeh.AutoFixture;
 
 namespace Markify.Fixtures
@@ -30,10 +29,7 @@ namespace Markify.Fixtures
         public void Customize(IFixture fixture)
         {
             var files = _sourceFiles.Select(c => new Uri(c));
-            var project = new Mock<ProjectContext>();
-            project.SetupGet(c => c.Files).Returns(files);
-
-            fixture.Register(() => project.Object);
+            fixture.Register(() => new ProjectContext(files));
         }
 
         #endregion

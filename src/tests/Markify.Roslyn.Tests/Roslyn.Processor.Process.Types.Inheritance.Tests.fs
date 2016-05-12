@@ -1,6 +1,7 @@
 ﻿module Roslyn_Processor_Process_Types_Inheritance_Tests
     open Processor
-    open Markify.Models
+    open Markify.Models.Context
+    open Markify.Models.Definitions
     open Markify.Processors
 
     open Xunit
@@ -16,7 +17,7 @@
             (sut :> IProjectProcessor)
             |> (fun c -> c.Process(project))
             |> (fun c -> c.Types)
-            |> Seq.find (fun c -> c.Name = name)
+            |> Seq.find (fun c -> c.Identity.Name = name)
 
         test <@ count = Seq.length typeDef.BaseTypes @>
 
@@ -30,7 +31,7 @@
             (sut :> IProjectProcessor)
             |> (fun c -> c.Process(project))
             |> (fun c -> c.Types)
-            |> Seq.find (fun c -> c.Name = name)
+            |> Seq.find (fun c -> c.Identity.Name = name)
         let baseTypes = typeDef.BaseTypes |> Seq.filter (fun c -> Seq.contains c expectedBaseTypes)
 
         test <@ Seq.length expectedBaseTypes = Seq.length baseTypes @>

@@ -45,7 +45,7 @@
     <Compile Include="Definitions\Definition.cs" />
     <Compile Include="Definitions\ParameterDefinition.cs" />
     <Compile Include="Definitions\StructureKind.cs" />
-    <Compile Include="LibraryDefinition.cs" />
+    <Compile Include="Definitions\LibraryDefinition.cs" />
     <Compile Include="ProjectContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Definitions\TypeDefinition.cs" />

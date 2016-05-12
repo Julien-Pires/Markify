@@ -1,6 +1,7 @@
 ﻿module Roslyn_Processor_Process_Types_Generics_Tests
     open Processor
-    open Markify.Models
+    open Markify.Models.Context
+    open Markify.Models.Definitions
     open Markify.Processors
 
     open Xunit
@@ -15,9 +16,9 @@
             (sut :> IProjectProcessor)
             |> (fun c -> c.Process(project))
             |> (fun c -> c.Types)
-            |> Seq.find (fun c -> c.Name = name)
+            |> Seq.find (fun c -> c.Identity.Name = name)
 
-        test <@ count = Seq.length typeDef.GenericParameters @>
+        test <@ count = Seq.length typeDef.Parameters @>
 
     [<Theory>]
     [<ProjectContextInlineAutoData([|"Generics/GenericClass.cs"|], "T", "GenericClass`2")>]
@@ -26,10 +27,10 @@
             (sut :> IProjectProcessor)
             |> (fun c -> c.Process(project))
             |> (fun c -> c.Types)
-            |> Seq.find (fun c -> c.Name = name)
+            |> Seq.find (fun c -> c.Identity.Name = name)
         let parameter =
-            typeDef.GenericParameters
-            |> Seq.tryFind (fun c -> c.Name = parameterName)
+            typeDef.Parameters
+            |> Seq.tryFind (fun c -> c.Identity.Name = parameterName)
 
         test <@ parameter.IsSome @>
     
@@ -45,12 +46,12 @@
             (sut :> IProjectProcessor)
             |> (fun c -> c.Process(project))
             |> (fun c -> c.Types)
-            |> Seq.find (fun c -> c.Name = name)
+            |> Seq.find (fun c -> c.Identity.Name = name)
         let parameter =
-            typeDef.GenericParameters
-            |> Seq.find (fun c -> c.Name = parameterName)
+            typeDef.Parameters
+            |> Seq.find (fun c -> c.Identity.Name = parameterName)
 
-        test <@ expectedModifier = Some(parameter.Name) @>
+        test <@ expectedModifier = Some(parameter.Identity.Name) @>
 
     [<Theory>]
     [<ProjectContextInlineAutoData([|"Generics/GenericClass.cs"|], 2, "T", "GenericClass")>]
@@ -59,10 +60,10 @@
             (sut :> IProjectProcessor)
             |> (fun c -> c.Process(project))
             |> (fun c -> c.Types)
-            |> Seq.find (fun c -> c.Name = name)
+            |> Seq.find (fun c -> c.Identity.Name = name)
         let parameter =
-            typeDef.GenericParameters
-            |> Seq.find (fun c -> c.Name = parameterName)
+            typeDef.Parameters
+            |> Seq.find (fun c -> c.Identity.Name = parameterName)
 
         test <@ count = Seq.length parameter.Constraints @>
 
@@ -75,10 +76,10 @@
             (sut :> IProjectProcessor)
             |> (fun c -> c.Process(project))
             |> (fun c -> c.Types)
-            |> Seq.find (fun c -> c.Name = name)
+            |> Seq.find (fun c -> c.Identity.Name = name)
         let parameter =
-            typeDef.GenericParameters
-            |> Seq.find (fun c -> c.Name = parameterName)
+            typeDef.Parameters
+            |> Seq.find (fun c -> c.Identity.Name = parameterName)
         let parameterConstraints = parameter.Constraints |> Seq.filter (fun c -> Seq.contains c expectedConstraints)
 
         test <@ Seq.length expectedConstraints = Seq.length parameterConstraints @>

@@ -1,8 +1,9 @@
 ﻿module Container
     open Representation
 
-    type StructureContainer = {
+    type TypeContainer = {
         Representation: TypeRepresentation
     }
+    type TypeContainerList = TypeContainer seq
 
-    let Fullname (container: StructureContainer) = container.Representation.Fullname
+    let Fullname (container: TypeContainer) = container.Representation.Fullname

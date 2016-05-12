@@ -1,4 +1,5 @@
-﻿using Markify.Models;
+﻿using static Markify.Models.Context;
+using static Markify.Models.Definitions;
 
 namespace Markify.Processors
 {

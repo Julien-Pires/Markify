@@ -45,8 +45,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Markify.Models\Markify.Models.csproj">
-      <Project>{1ed3438e-43d2-4a42-bb16-84ed99d29161}</Project>
+    <ProjectReference Include="..\Markify.Models\Markify.Models.fsproj">
+      <Project>{2a8dfdc1-8752-4784-b962-6d0b9ad1541a}</Project>
       <Name>Markify.Models</Name>
     </ProjectReference>
   </ItemGroup>

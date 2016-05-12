@@ -163,9 +163,9 @@
       <Project>{8833bf6e-806f-483d-ba70-ff92b09e625d}</Project>
       <Private>True</Private>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\Markify.Models\Markify.Models.csproj">
+    <ProjectReference Include="..\..\src\Markify.Models\Markify.Models.fsproj">
       <Name>Markify.Models</Name>
-      <Project>{1ed3438e-43d2-4a42-bb16-84ed99d29161}</Project>
+      <Project>{2a8dfdc1-8752-4784-b962-6d0b9ad1541a}</Project>
       <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\src\Markify.Roslyn\Markify.Roslyn.fsproj">

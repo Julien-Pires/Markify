@@ -1,14 +1,10 @@
 ﻿using System.Collections.Generic;
 
-using Markify.Models.Definitions;
-
-namespace Markify.Models
+namespace Markify.Models.Definitions
 {
     public sealed class LibraryDefinition
     {
         #region Properties
-
-        public IEnumerable<AssemblyDefinition> Assemblies { get; }
 
         public IEnumerable<TypeDefinition> Types { get; } 
 

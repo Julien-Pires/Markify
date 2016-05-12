@@ -1,6 +1,7 @@
 ﻿module Roslyn_Processor_Process_Types_Tests
     open Processor
-    open Markify.Models
+    open Markify.Models.Context
+    open Markify.Models.Definitions
     open Markify.Processors
 
     open Xunit
@@ -22,7 +23,7 @@
             (sut :> IProjectProcessor)
             |> (fun c -> c.Process(project))
             |> (fun c -> c.Types)
-            |> Seq.filter (fun c -> c.Fullname = fullname)
+            |> Seq.filter (fun c -> c.Identity.Fullname = fullname)
 
         test <@ Seq.length typeDef = 1 @>
 
@@ -35,7 +36,7 @@
             (sut :> IProjectProcessor)
             |> (fun c -> c.Process(project))
             |> (fun c -> c.Types)
-            |> Seq.tryFind (fun c -> c.Name = name)
+            |> Seq.tryFind (fun c -> c.Identity.Name = name)
 
         test <@ typeDef.IsSome @>
     
@@ -49,6 +50,6 @@
             (sut :> IProjectProcessor)
             |> (fun c -> c.Process(project))
             |> (fun c -> c.Types)
-            |> Seq.tryFind (fun c -> c.Fullname = fullname)
+            |> Seq.tryFind (fun c -> c.Identity.Fullname = fullname)
 
         test <@ typeDef.IsSome @>
