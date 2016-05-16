@@ -1,12 +1,11 @@
 ﻿module Inspectors
-    open Container
-    open Representation
     open TypeExtension
     open SyntaxNodeExtension
+    open Markify.Models.Definitions
 
     open Microsoft.CodeAnalysis
 
-    let searchType (node: SyntaxNode) : TypeContainerList =
+    let searchTypes (node: SyntaxNode) =
         node.DescendantNodes()
         |> Seq.filter(fun c -> 
             match c with
@@ -14,11 +13,10 @@
             | _ -> false)
         |> Seq.map(fun c ->
             {
-                Fullname = fullname c;
+                Identity = { Fullname = fullname c; Name = (name c).Value };
                 Kind = StructureKind.Class;
                 AccessModifiers = accessModifiers c;
-                AdditionalModifiers = additionalModifiers c;
-                GenericParameters = [];
+                Modifiers = additionalModifiers c;
+                Parameters = [];
                 BaseTypes = baseTypes c;
             })
-        |> Seq.map(fun c -> { Representation = c })

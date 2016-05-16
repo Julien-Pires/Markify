@@ -1,6 +1,6 @@
 ﻿module TypeExtension
-    open Representation
     open SyntaxNodeExtension
+    open Markify.Models.Definitions
 
     open Microsoft.CodeAnalysis
     open Microsoft.CodeAnalysis.CSharp
@@ -21,20 +21,18 @@
         | NamespaceNode n -> Some(n.Name.ToString())
         | _ -> None
 
-    let fullname (node : SyntaxNode) : Fullname =
-        let rec loopParentNode (innerNode: SyntaxNode) acc: Fullname =
+    let fullname (node : SyntaxNode) : DefinitionFullname =
+        let rec loopParentNode (innerNode: SyntaxNode) acc =
             match innerNode with
-            | TypeNode t -> 
+            | TypeNode t ->
                 acc
-                |> Seq.append (Seq.singleton (name innerNode).Value)
+                |> sprintf "%s.%s" (name innerNode).Value
                 |> loopParentNode innerNode.Parent
-            | NamespaceNode n -> 
-                acc
-                |> Seq.append (Seq.singleton (name n).Value)
+            | NamespaceNode n -> sprintf "%s.%s" (name n).Value acc
             | null -> acc
             | _ -> loopParentNode innerNode.Parent acc
 
-        loopParentNode node Seq.empty<string>
+        loopParentNode node ""
 
     let accessModifiers (node : SyntaxNode) = 
         match node with
