@@ -53,13 +53,13 @@
     <None Include="Script.fsx" />
     <Content Include="packages.config" />
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="SyntaxNodeExtension.fs" />
-    <Compile Include="TypeExtension.fs" />
-    <Compile Include="Inspectors.fs" />
-    <Compile Include="processor.fs" />
     <Compile Include="IOWorkflow.fs" />
     <Compile Include="IOProvider.fs" />
+    <Compile Include="SyntaxNodeExtension.fs" />
+    <Compile Include="TypeExtension.fs" />
     <Compile Include="SourceProvider.fs" />
+    <Compile Include="Inspectors.fs" />
+    <Compile Include="processor.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CodeAnalysis">

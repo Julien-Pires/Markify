@@ -7,4 +7,6 @@
     type RoslynProcessor() =
         interface IProjectProcessor with
             member this.Process (project : ProjectContext) : LibraryDefinition =
-                
+                { 
+                    Types = Seq.empty<TypeDefinition> 
+                }

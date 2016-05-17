@@ -1,8 +1,9 @@
-﻿module IOProvider
+﻿namespace Markify.Roslyn.IO
+
+module IOProvider =
     open System
     open System.IO
     open System.Security
-    open Markify.Roslyn.IO
 
     type IOErrors =
     | IOError
