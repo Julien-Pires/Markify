@@ -44,7 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="IOWorkflow.fs" />
+    <Compile Include="IOBuilder.fs" />
     <Compile Include="IO.fs" />
   </ItemGroup>
   <PropertyGroup>

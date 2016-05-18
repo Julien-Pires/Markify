@@ -1,60 +1,63 @@
 ﻿module IO_Tests
+    open System
+    open System.IO
+    open System.Reflection
     open Markify.Core.IO
 
     open Xunit
     open Swensen.Unquote
 
-    let isSuccess ioResult =
+    let getSuccess ioResult =
         match ioResult with
-        | Success s -> true
-        | _ -> false
+        | Success s -> Some s
+        | _ -> None
 
-    let isIOError ioResult =
+    let getFailure ioResult = 
         match ioResult with
-        | Failure f ->
-            match f with
-            | Error e -> true
-            | _ -> false
-        | _ -> false
+        | Failure f -> Some f
+        | _ -> None
 
-    let isIOException ioResult = 
-        match ioResult with
-        | Failure f ->
-            match f with
-            | Exception e -> true
-            | _ -> false
-        | _ -> false
+    let getFullpath path =
+        let dir = new UriBuilder(Assembly.GetExecutingAssembly().CodeBase)
+        let cleanDir = Path.GetDirectoryName (Uri.UnescapeDataString dir.Path)
+        Path.Combine (cleanDir, path)
 
     [<Theory>]
     [<InlineData("", false)>]
     [<InlineData("foo.txt", false)>]
     [<InlineData("Foo/Bar/FooBar.txt", false)>]
-    [<InlineData("Pojects/Source/EmptySource.cs", true)>]
+    [<InlineData("Projects/Source/EmptySource.cs", true)>]
     let ``Detect file exists with correct value`` (path, exists) =
         let actual = IO.fileExists path
 
         test <@ Success exists = actual @>
 
     [<Theory>]
-    [<InlineData("Pojects/Class_Project.xml")>]
-    [<InlineData("Pojects/Source/EmptySource.cs")>]
+    [<InlineData("Projects/Class_Project.xml")>]
+    [<InlineData("Projects/Source/EmptySource.cs")>]
     let ``Read text file when file exists with success`` (path) =
         let actual = IO.readFile path
 
-        test <@ true = isSuccess actual @>
+        test <@ (getSuccess actual).IsSome @>
 
     [<Theory>]
     [<InlineData("Foo.txt")>]
     [<InlineData("Foo/Bar.xml")>]
     let ``Read text file when file does not exists with failure value`` (path) =
         let actual = IO.readFile path
+        let ex = getFailure actual
 
-        test <@ true = isIOError actual @>
+        test <@ ex.IsSome @>
+        test <@ String.IsNullOrWhiteSpace ex.Value.Message = false @>
+        test <@ String.IsNullOrWhiteSpace ex.Value.Stack = false @>
 
     [<Theory>]
     [<InlineData("")>]
     [<InlineData("$ù!ù:@@")>]
-    let ```Read text file when using wrong parameters with exception value`` (path) =
+    let ```Read text file when using wrong parameters with failure value`` (path) =
         let actual = IO.readFile path
+        let ex = getFailure actual
 
-        test <@ true = isIOException actual @>
+        test <@ ex.IsSome @>
+        test <@ String.IsNullOrWhiteSpace ex.Value.Message = false @>
+        test <@ String.IsNullOrWhiteSpace ex.Value.Stack = false @>

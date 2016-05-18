@@ -1,22 +1,22 @@
 ﻿namespace Markify.Core.IO
 
-type IOException = {
+type IOFailure = {
     Message : string
     Stack : string
 }
 
-type IOFailure =
-    | Error of string
-    | Exception of IOException
-
-type IOAction<'a> =
+type IOResult<'a> =
     | Success of 'a
     | Failure of IOFailure
 
-type IOWorkflow() =
+type IOBuilder() =
     member this.Bind (x, f) =
         match x with
-        | Success a -> f a
+        | Success a -> 
+            try
+                f a
+            with
+            | ex -> Failure { Message = ex.Message; Stack = ex.StackTrace }
         | Failure f -> Failure f
 
     member this.Return x =

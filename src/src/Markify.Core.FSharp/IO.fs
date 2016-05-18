@@ -3,19 +3,18 @@
 module IO =
     open System.IO
 
-    let private ioWorkflow = new IOWorkflow()
+    let private ioBuilder = new IOBuilder()
 
     let fileExists path =
-          Success false
-//        ioWorkflow {
-//            let! exists = Success (File.Exists path)
-//            return exists
-//        } 
+        ioBuilder {
+            let! p = path |> Success
+            let! exists = p |> File.Exists |> Success
+            return exists
+        }
 
     let readFile path =
-          IOException false
-//        ioWorkflow{
-//            let! exists = fileExists path
-//            let! content = (fun c -> Success (File.ReadAllText c)) path
-//            return content
-//        }
+        ioBuilder{
+            let! p = path |> Success
+            let! content = p |> File.ReadAllText |> Success
+            return content
+        }
