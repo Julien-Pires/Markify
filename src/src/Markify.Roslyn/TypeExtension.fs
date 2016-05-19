@@ -25,8 +25,9 @@
         let rec loopParentNode (innerNode: SyntaxNode) acc =
             match innerNode with
             | TypeNode t ->
-                acc
-                |> sprintf "%s.%s" (name innerNode).Value
+                match acc with
+                | "" -> sprintf "%s" (name innerNode).Value
+                | _ -> sprintf "%s.%s" (name innerNode).Value acc
                 |> loopParentNode innerNode.Parent
             | NamespaceNode n -> sprintf "%s.%s" (name n).Value acc
             | null -> acc

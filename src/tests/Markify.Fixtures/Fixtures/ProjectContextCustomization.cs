@@ -1,9 +1,11 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
-
-using static Markify.Models.Context;
+using System.Reflection;
 
 using Ploeh.AutoFixture;
+
+using static Markify.Models.Context;
 
 namespace Markify.Fixtures
 {
@@ -26,9 +28,17 @@ namespace Markify.Fixtures
 
         #region Customize
 
+        public string CreateFullPath(string path)
+        {
+            var basePath = new UriBuilder(Assembly.GetExecutingAssembly().CodeBase);
+            var cleanPath = Uri.UnescapeDataString(basePath.Path);
+
+            return Path.Combine(Path.GetDirectoryName(cleanPath), path);
+        }
+
         public void Customize(IFixture fixture)
         {
-            var files = _sourceFiles.Select(c => new Uri(c));
+            var files = _sourceFiles.Select(c => new Uri(CreateFullPath(c)));
             fixture.Register(() => new ProjectContext(files));
         }
 

@@ -1,8 +1,8 @@
 ﻿module SourceProvider
-    open Markify.Roslyn.IO
+    open Markify.Core.IO
     open Microsoft.CodeAnalysis.CSharp
     
     let getSyntaxTree path =
-        match IOProvider.readFile path with
+        match IO.readFile path with
         | Success a -> Some (CSharpSyntaxTree.ParseText a)
         | Failure f -> None
