@@ -9,9 +9,9 @@
     open Markify.Fixtures
 
     [<Theory>]
-    [<ProjectContextInlineAutoData([|"Class/ClassSamples.cs"|], "SingleClass", 0)>]
-    [<ProjectContextInlineAutoData([|"Class/InheritedClass.cs"|], "InheritClass", 1)>]
-    [<ProjectContextInlineAutoData([|"Class/InheritedClass.cs"|], "ImplementGenInterfaceClass", 2)>]
+    [<ProjectContextInlineAutoData([|"Projects/Source/Class/ClassSamples.cs"|], "SingleClass", 0)>]
+    [<ProjectContextInlineAutoData([|"Projects/Source/Class/InheritedClass.cs"|], "InheritClass", 1)>]
+    [<ProjectContextInlineAutoData([|"Projects/Source/Class/InheritedClass.cs"|], "ImplementGenInterfaceClass", 2)>]
     let ``Process project with type with inheritance tree`` (name, count, sut: RoslynProcessor, project: ProjectContext) =
         let typeDef = 
             (sut :> IProjectProcessor)
@@ -22,8 +22,8 @@
         test <@ count = Seq.length typeDef.BaseTypes @>
 
     [<Theory>]
-    [<ProjectContextInlineAutoData([|"Class/InheritedClass.cs"|], "InheritClass", "Exception")>]
-    [<ProjectContextInlineAutoData([|"Class/InheritedClass.cs"|], "MixedInheritanceClass", "IDisposable Exception")>]
+    [<ProjectContextInlineAutoData([|"Projects/Source/Class/InheritedClass.cs"|], "InheritClass", "Exception")>]
+    [<ProjectContextInlineAutoData([|"Projects/Source/Class/InheritedClass.cs"|], "MixedInheritanceClass", "IDisposable Exception")>]
     let ``Process project with type with multiple inheritance`` (name, typeNames: string, sut: RoslynProcessor, project: ProjectContext) =
         let expectedBaseTypes = typeNames.Split [|' '|]
 

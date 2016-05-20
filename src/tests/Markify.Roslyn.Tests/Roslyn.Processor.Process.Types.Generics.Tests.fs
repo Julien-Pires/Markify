@@ -9,8 +9,8 @@
     open Markify.Fixtures
 
     [<Theory>]
-    [<ProjectContextInlineAutoData([|"Class/ClassSamples.cs"|], 0, "SingleClass")>]
-    [<ProjectContextInlineAutoData([|"Generics/GenericClass.cs"|], 2, "GenericClass`2")>]
+    [<ProjectContextInlineAutoData([|"Projects/Source/Class/ClassSamples.cs"|], 0, "SingleClass")>]
+    [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericClass.cs"|], 2, "GenericClass`2")>]
     let ``Process project with generic types`` (count, name, sut: RoslynProcessor, project: ProjectContext) =
         let typeDef =
             (sut :> IProjectProcessor)
@@ -21,7 +21,7 @@
         test <@ count = Seq.length typeDef.Parameters @>
 
     [<Theory>]
-    [<ProjectContextInlineAutoData([|"Generics/GenericClass.cs"|], "T", "GenericClass`2")>]
+    [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericClass.cs"|], "T", "GenericClass`2")>]
     let ``Process project with generic parameter with correct name`` (parameterName, name, sut: RoslynProcessor, project: ProjectContext) =
         let typeDef =
             (sut :> IProjectProcessor)
@@ -35,7 +35,7 @@
         test <@ parameter.IsSome @>
     
     [<Theory>]
-    [<ProjectContextInlineAutoData([|"Generics/GenericClass.cs"|], "", "T", "GenericClass")>]
+    [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericClass.cs"|], "", "T", "GenericClass")>]
     let ``Process project with generic parameters that have modifiers`` (modifier: string, parameterName, name, sut: RoslynProcessor, project: ProjectContext) = 
         let expectedModifier = 
             match modifier with
@@ -54,7 +54,7 @@
         test <@ expectedModifier = Some(parameter.Identity.Name) @>
 
     [<Theory>]
-    [<ProjectContextInlineAutoData([|"Generics/GenericClass.cs"|], 2, "T", "GenericClass")>]
+    [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericClass.cs"|], 2, "T", "GenericClass")>]
     let ``Process project with generic parameter with constraints`` (count, parameterName, name, sut: RoslynProcessor, project: ProjectContext) =
         let typeDef =
             (sut :> IProjectProcessor)
@@ -68,7 +68,7 @@
         test <@ count = Seq.length parameter.Constraints @>
 
     [<Theory>]
-    [<ProjectContextInlineAutoData([|"Generics/GenericClass.cs"|], "T", "class IList<string>", "GenericClass")>]
+    [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericClass.cs"|], "T", "class IList<string>", "GenericClass")>]
     let ``Process project with generic parameter with correct constraints names`` (parameterName, constraints: string, name, sut: RoslynProcessor, project: ProjectContext) =
         let expectedConstraints = constraints.Split [|' '|]
         

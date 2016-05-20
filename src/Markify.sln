@@ -21,7 +21,7 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Markify.Models", "src\Marki
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Markify.Core.FSharp", "src\Markify.Core.FSharp\Markify.Core.FSharp.fsproj", "{D9A8FB2A-FC1A-4A2B-A5A3-17D72B712A04}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Markify.Core.FSharp.Tests", "tests\Markify.Core.FSharp\Markify.Core.FSharp.Tests.fsproj", "{1362A48A-D27E-4C44-8B68-37DD0CE23D6C}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Markify.Core.FSharp.Tests", "tests\Markify.Core.FSharp.Tests\Markify.Core.FSharp.Tests.fsproj", "{1362A48A-D27E-4C44-8B68-37DD0CE23D6C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
