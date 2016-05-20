@@ -35,13 +35,8 @@
         test <@ parameter.IsSome @>
     
     [<Theory>]
-    [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericClass.cs"|], "", "T", "GenericClass")>]
-    let ``Process project with generic parameters that have modifiers`` (modifier: string, parameterName, name, sut: RoslynProcessor, project: ProjectContext) = 
-        let expectedModifier = 
-            match modifier with
-            | "" -> None
-            | _ -> Some(modifier)
-
+    [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericClass.cs"|], "", "T", "GenericClass`2")>]
+    let ``Process project with generic parameters with modifiers`` (modifier: string, parameterName, name, sut: RoslynProcessor, project: ProjectContext) = 
         let typeDef =
             (sut :> IProjectProcessor)
             |> (fun c -> c.Process(project))
@@ -51,10 +46,10 @@
             typeDef.Parameters
             |> Seq.find (fun c -> c.Identity.Name = parameterName)
 
-        test <@ expectedModifier = Some(parameter.Identity.Name) @>
+        test <@ modifier = parameter.Modifier @>
 
     [<Theory>]
-    [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericClass.cs"|], 2, "T", "GenericClass")>]
+    [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericClass.cs"|], 2, "T", "GenericClass`2")>]
     let ``Process project with generic parameter with constraints`` (count, parameterName, name, sut: RoslynProcessor, project: ProjectContext) =
         let typeDef =
             (sut :> IProjectProcessor)
@@ -68,7 +63,7 @@
         test <@ count = Seq.length parameter.Constraints @>
 
     [<Theory>]
-    [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericClass.cs"|], "T", "class IList<string>", "GenericClass")>]
+    [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericClass.cs"|], "T", "class IList<string>", "GenericClass`2")>]
     let ``Process project with generic parameter with correct constraints names`` (parameterName, constraints: string, name, sut: RoslynProcessor, project: ProjectContext) =
         let expectedConstraints = constraints.Split [|' '|]
         

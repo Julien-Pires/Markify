@@ -17,6 +17,6 @@
                 Kind = StructureKind.Class;
                 AccessModifiers = accessModifiers c;
                 Modifiers = additionalModifiers c;
-                Parameters = [];
+                Parameters = getGenericParameters c;
                 BaseTypes = baseTypes c;
             })

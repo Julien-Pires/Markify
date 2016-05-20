@@ -4,6 +4,7 @@
 
     open Microsoft.CodeAnalysis
     open Microsoft.CodeAnalysis.CSharp
+    open Microsoft.CodeAnalysis.CSharp.Syntax 
 
     let accessModifiersList = Set [ 
                                 SyntaxKind.PublicKeyword
@@ -34,6 +35,34 @@
             | _ -> loopParentNode innerNode.Parent acc
 
         loopParentNode node ""
+
+    let createGenericDefinition (parameter : TypeParameterSyntax) (typeConstraints : TypeParameterConstraintClauseSyntax seq) =
+        let name = parameter.Identifier.ToString()
+        let identity = { Fullname = name; Name = name }
+        let constraints =
+            typeConstraints
+            |> Seq.tryPick (fun c ->
+                match c.Name.ToString() with
+                | x when name = x -> Some c
+                | _ -> None
+            )
+        let parameter = {
+            Identity = identity;
+            Modifier = parameter.VarianceKeyword.Text;
+            Constraints = 
+                match constraints with
+                | Some x -> ([], x.Constraints) ||> Seq.fold (fun acc c -> c.ToString()::acc) |> List.toSeq
+                | _ -> Seq.empty
+        }
+
+        parameter
+
+    let getGenericParameters (node : SyntaxNode) =
+        match node with
+        | TypeInfo info ->
+            info.Parameters
+            |> Seq.map (fun c -> createGenericDefinition c info.Constraints)
+        | _ -> Seq.empty
 
     let accessModifiers (node : SyntaxNode) = 
         match node with
