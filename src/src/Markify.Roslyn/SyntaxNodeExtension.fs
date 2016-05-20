@@ -14,39 +14,39 @@
             {Name = name; Parameters = parameters; Constraints = constraints; Modifiers = modifiers}
 
     let inline getTypeInfo (x : ^T) =
-        let parametersList = (^T : (member TypeParameterList : TypeParameterListSyntax)(x))
         new TypeInfo(
             (^T : (member Identifier : SyntaxToken)(x)).Text,
             (
+                let parametersList = (^T : (member TypeParameterList : TypeParameterListSyntax)(x))
                 match parametersList with
-                | null -> Seq.empty<TypeParameterSyntax>
+                | null -> Seq.empty
                 | _ -> parametersList.Parameters :> TypeParameterSyntax seq
             ),
-            (^T : (member ConstraintClauses : SyntaxList<TypeParameterConstraintClauseSyntax>)(x)),
+            (^T : (member ConstraintClauses : TypeParameterConstraintClauseSyntax SyntaxList)(x)),
             (^T : (member Modifiers : SyntaxTokenList)(x))
         )
 
     let (|NamespaceNode|_|) (node: SyntaxNode) =
         match node with
-        | :? NamespaceDeclarationSyntax as c -> Some(c)
+        | :? NamespaceDeclarationSyntax as c -> Some c
         | _ -> None
 
     let (|ClassNode|_|) (node: SyntaxNode) = 
         match node with
-        | :? ClassDeclarationSyntax as c -> Some(c)
+        | :? ClassDeclarationSyntax as c -> Some c
         | _ -> None
     
     let (|InheritableType|_|) (node: SyntaxNode) =
         match node with
-        | :? BaseTypeDeclarationSyntax as c -> Some(c)
+        | :? BaseTypeDeclarationSyntax as c -> Some c
         | _ -> None
 
     let (|TypeNode|_|) (node: SyntaxNode) =
         match node with
-        | ClassNode i -> Some(true)
+        | ClassNode i -> Some true
         | _ -> None
 
     let (|TypeInfo|_|) (node: SyntaxNode) =
         match node with
-        | ClassNode n -> Some(getTypeInfo n)
+        | ClassNode n -> Some (getTypeInfo n)
         | _ -> None

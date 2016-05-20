@@ -12,7 +12,7 @@
                                 SyntaxKind.PrivateKeyword
                                 SyntaxKind.ProtectedKeyword ]
 
-    let name (node : SyntaxNode) =
+    let getName (node : SyntaxNode) =
         match node with
         | TypeInfo info ->
             let parametersLength = Seq.length info.Parameters
@@ -22,15 +22,16 @@
         | NamespaceNode n -> Some(n.Name.ToString())
         | _ -> None
 
-    let fullname (node : SyntaxNode) : DefinitionFullname =
+    let getFullname (node : SyntaxNode) : DefinitionFullname =
         let rec loopParentNode (innerNode: SyntaxNode) acc =
             match innerNode with
             | TypeNode t ->
+                let name = getName innerNode
                 match acc with
-                | "" -> sprintf "%s" (name innerNode).Value
-                | _ -> sprintf "%s.%s" (name innerNode).Value acc
+                | "" -> sprintf "%s" name.Value
+                | _ -> sprintf "%s.%s" name.Value acc
                 |> loopParentNode innerNode.Parent
-            | NamespaceNode n -> sprintf "%s.%s" (name n).Value acc
+            | NamespaceNode n -> sprintf "%s.%s" (getName n).Value acc
             | null -> acc
             | _ -> loopParentNode innerNode.Parent acc
 
@@ -64,26 +65,26 @@
             |> Seq.map (fun c -> createGenericDefinition c info.Constraints)
         | _ -> Seq.empty
 
-    let accessModifiers (node : SyntaxNode) = 
+    let getAccessModifiers (node : SyntaxNode) = 
         match node with
         | TypeInfo info ->
             info.Modifiers
-            |> Seq.filter (fun c -> Set.contains (c.Kind()) accessModifiersList)
+            |> Seq.filter (fun c -> accessModifiersList |> Set.contains (c.Kind()))
             |> Seq.map (fun c -> c.ToString())
-        | _ -> Seq.empty<string>
+        | _ -> Seq.empty
 
-    let additionalModifiers (node : SyntaxNode) = 
+    let getAdditionalModifiers (node : SyntaxNode) = 
         match node with
         | TypeInfo info ->
             info.Modifiers
-            |> Seq.filter (fun c -> not (Set.contains (c.Kind()) accessModifiersList))
+            |> Seq.filter (fun c -> accessModifiersList |> Set.contains (c.Kind()) |> not)
             |> Seq.map (fun c -> c.ToString())
-        | _ -> Seq.empty<string>
+        | _ -> Seq.empty
 
-    let baseTypes (node : SyntaxNode) =
+    let getBaseTypes (node : SyntaxNode) =
         match node with
         | InheritableType it ->
             match it.BaseList with
-            | null -> Seq.empty<string>
+            | null -> Seq.empty
             | x -> x.Types |> Seq.map (fun c -> c.Type.ToString())
-        | _ -> Seq.empty<string>
+        | _ -> Seq.empty

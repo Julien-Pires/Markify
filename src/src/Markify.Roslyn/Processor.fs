@@ -18,7 +18,7 @@
             | None -> None
 
         let inspectProject (files : FilesList) =
-           (Seq.empty<TypeDefinition>, files)
+           (Seq.empty, files)
            ||> Seq.fold (fun acc c ->
                 let types = inspectFile c.AbsolutePath
                 match types with

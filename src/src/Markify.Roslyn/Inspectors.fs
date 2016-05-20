@@ -13,10 +13,10 @@
             | _ -> false)
         |> Seq.map(fun c ->
             {
-                Identity = { Fullname = fullname c; Name = (name c).Value };
+                Identity = { Fullname = getFullname c; Name = (getName c).Value };
                 Kind = StructureKind.Class;
-                AccessModifiers = accessModifiers c;
-                Modifiers = additionalModifiers c;
+                AccessModifiers = getAccessModifiers c;
+                Modifiers = getAdditionalModifiers c;
                 Parameters = getGenericParameters c;
-                BaseTypes = baseTypes c;
+                BaseTypes = getBaseTypes c;
             })
