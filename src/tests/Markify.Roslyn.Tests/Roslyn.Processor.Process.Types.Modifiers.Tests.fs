@@ -14,6 +14,9 @@
     [<ProjectContextInlineAutoData([|"Projects/Source/Class/AccessModifier.cs"|], "protected", "ProtectedClass")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Class/AccessModifier.cs"|], "protected internal", "ProtectedInternalClass")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Class/AccessModifier.cs"|], "private", "PrivateClass")>]
+    [<ProjectContextInlineAutoData([|"Projects/Source/Interface/AccessModifier.cs"|], "public", "IPublicInterface")>]
+    [<ProjectContextInlineAutoData([|"Projects/Source/Interface/AccessModifier.cs"|], "internal", "IInternalInterface")>]
+    [<ProjectContextInlineAutoData([|"Projects/Source/Interface/AccessModifier.cs"|], "protected internal", "IProtectedInternalInterface")>]
     let ``Process project with types that have access modifiers`` (modifier: string, name, sut: RoslynProcessor, project: ProjectContext) =
         let expectedModifiers = modifier.Split [|' '|]
 
@@ -31,6 +34,7 @@
     [<ProjectContextInlineAutoData([|"Projects/Source/Class/AdditionnalModifier.cs"|], "sealed", "SealedClass")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Class/AdditionnalModifier.cs"|], "partial", "PartialClass")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Class/AdditionnalModifier.cs"|], "static", "StaticClass")>]
+    [<ProjectContextInlineAutoData([|"Projects/Source/Interface/AdditionnalModifier.cs"|], "partial", "IPartialInterface")>]
     let ``Process project with types that have a single modifier`` (modifier, name, sut: RoslynProcessor, project: ProjectContext) =
         let typeDef = 
             (sut :> IProjectProcessor)

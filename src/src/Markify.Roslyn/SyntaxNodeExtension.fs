@@ -36,6 +36,11 @@
         | :? ClassDeclarationSyntax as c -> Some c
         | _ -> None
     
+    let (|InterfaceNode|_|) (node : SyntaxNode) =
+        match node with
+        | :? InterfaceDeclarationSyntax as c -> Some c
+        | _ -> None
+
     let (|InheritableType|_|) (node: SyntaxNode) =
         match node with
         | :? BaseTypeDeclarationSyntax as c -> Some c
@@ -43,10 +48,12 @@
 
     let (|TypeNode|_|) (node: SyntaxNode) =
         match node with
-        | ClassNode i -> Some true
+        | ClassNode c -> Some true
+        | InterfaceNode c -> Some true
         | _ -> None
 
     let (|TypeInfo|_|) (node: SyntaxNode) =
         match node with
-        | ClassNode n -> Some (getTypeInfo n)
+        | ClassNode c -> Some (getTypeInfo c)
+        | InterfaceNode c -> Some (getTypeInfo c)
         | _ -> None

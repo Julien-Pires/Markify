@@ -5,16 +5,22 @@
 
     open Microsoft.CodeAnalysis
 
-    let searchTypes (node: SyntaxNode) =
+    let getTypeKind (node : SyntaxNode) =
+        match node with
+        | ClassNode c -> StructureKind.Class
+        | InterfaceNode i -> StructureKind.Interface
+        | _ -> StructureKind.Unknown
+
+    let searchTypes (|NodePattern|_|) (node : SyntaxNode) =
         node.DescendantNodes()
         |> Seq.filter(fun c -> 
             match c with
-            | TypeNode t -> true
+            | NodePattern n -> true
             | _ -> false)
         |> Seq.map(fun c ->
             {
                 Identity = { Fullname = getFullname c; Name = (getName c).Value };
-                Kind = StructureKind.Class;
+                Kind = getTypeKind c;
                 AccessModifiers = getAccessModifiers c;
                 Modifiers = getAdditionalModifiers c;
                 Parameters = getGenericParameters c;

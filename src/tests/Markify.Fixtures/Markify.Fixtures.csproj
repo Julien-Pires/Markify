@@ -153,6 +153,18 @@
     <Content Include="Projects\Source\Class\ClassSamples.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Projects\Source\Interface\AccessModifier.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Projects\Source\Interface\AdditionnalModifier.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Projects\Source\Interface\InterfaceSamples.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Projects\Source\Interface\InheritedInterface.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Projects\WithoutNamespace_Project.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

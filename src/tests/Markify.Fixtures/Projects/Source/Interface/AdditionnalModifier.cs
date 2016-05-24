@@ -1,0 +1,1 @@
+﻿public partial interface IPartialInterface { }

@@ -1,6 +1,4 @@
 ﻿module Processor
-    open System
-
     open Markify.Models
     open Markify.Processors
     open Markify.Models.Context
@@ -8,13 +6,21 @@
 
     open Inspectors
     open SourceProvider
+    open SyntaxNodeExtension
 
     type RoslynProcessor() =
+        let structureSearches = [
+            searchTypes (|ClassNode|_|)
+            searchTypes (|InterfaceNode|_|)
+        ]
+
         let inspectFile path =
             let tree = getSyntaxTree path
             match tree with
             | Some s ->
-                s.GetRoot() |> searchTypes |> Some
+                structureSearches 
+                |> Seq.collect (fun c -> c (s.GetRoot()))
+                |> Some
             | None -> None
 
         let inspectProject (files : FilesList) =

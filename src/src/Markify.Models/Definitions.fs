@@ -2,7 +2,12 @@
 
 module Definitions =
 
-    type StructureKind =  Class = 0 | Struct = 1 | Interface = 2 | Delegate = 3 | Enum = 4
+    type StructureKind =  | Unknown = 0
+                          | Class = 1
+                          | Struct = 2 
+                          | Interface = 3 
+                          | Delegate = 4
+                          | Enum = 5
 
     type DefinitionName = string
     type DefinitionFullname = string

@@ -12,7 +12,7 @@ type IOResult<'a> =
 type IOBuilder() =
     member this.Bind (x, f) =
         match x with
-        | Success a -> 
+        | Success a ->
             try
                 f a
             with

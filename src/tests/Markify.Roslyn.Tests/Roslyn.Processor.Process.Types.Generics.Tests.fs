@@ -1,4 +1,6 @@
 ﻿module Roslyn_Processor_Process_Types_Generics_Tests
+    open System
+    
     open Processor
     open Markify.Models.Context
     open Markify.Models.Definitions
@@ -10,6 +12,7 @@
 
     [<Theory>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Class/ClassSamples.cs"|], 0, "SingleClass")>]
+    [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericInterface.cs"|], 2, "GenericInterface`2")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericClass.cs"|], 2, "GenericClass`2")>]
     let ``Process project with generic types`` (count, name, sut: RoslynProcessor, project: ProjectContext) =
         let typeDef =
@@ -22,6 +25,8 @@
 
     [<Theory>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericClass.cs"|], "T", "GenericClass`2")>]
+    [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericInterface.cs"|], "T", "GenericInterface`2")>]
+    [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericInterface.cs"|], "Y", "GenericInterface`2")>]
     let ``Process project with generic parameter with correct name`` (parameterName, name, sut: RoslynProcessor, project: ProjectContext) =
         let typeDef =
             (sut :> IProjectProcessor)
@@ -36,6 +41,8 @@
     
     [<Theory>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericClass.cs"|], "", "T", "GenericClass`2")>]
+    [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericInterface.cs"|], "in", "T", "GenericInterface`2")>]
+    [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericInterface.cs"|], "out", "Y", "GenericInterface`2")>]
     let ``Process project with generic parameters with modifiers`` (modifier: string, parameterName, name, sut: RoslynProcessor, project: ProjectContext) = 
         let typeDef =
             (sut :> IProjectProcessor)
@@ -50,6 +57,7 @@
 
     [<Theory>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericClass.cs"|], 2, "T", "GenericClass`2")>]
+    [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericInterface.cs"|], 0, "Y", "GenericInterface`2")>]
     let ``Process project with generic parameter with constraints`` (count, parameterName, name, sut: RoslynProcessor, project: ProjectContext) =
         let typeDef =
             (sut :> IProjectProcessor)
@@ -64,8 +72,9 @@
 
     [<Theory>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericClass.cs"|], "T", "class IList<string>", "GenericClass`2")>]
+    [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericInterface.cs"|], "Y", "", "GenericInterface`2")>]
     let ``Process project with generic parameter with correct constraints names`` (parameterName, constraints: string, name, sut: RoslynProcessor, project: ProjectContext) =
-        let expectedConstraints = constraints.Split [|' '|]
+        let expectedConstraints = constraints.Split ([|' '|], StringSplitOptions.RemoveEmptyEntries)
         
         let typeDef =
             (sut :> IProjectProcessor)
