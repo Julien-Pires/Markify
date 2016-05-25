@@ -6,11 +6,21 @@
     open Microsoft.CodeAnalysis.CSharp
     open Microsoft.CodeAnalysis.CSharp.Syntax 
 
-    let accessModifiersList = Set [ 
-                                SyntaxKind.PublicKeyword
-                                SyntaxKind.InternalKeyword 
-                                SyntaxKind.PrivateKeyword
-                                SyntaxKind.ProtectedKeyword ]
+    let accessModifiersList = 
+        Set [
+            SyntaxKind.PublicKeyword
+            SyntaxKind.InternalKeyword 
+            SyntaxKind.PrivateKeyword
+            SyntaxKind.ProtectedKeyword 
+        ]
+
+    let getTypeKind (node : SyntaxNode) =
+        match node with
+        | ClassNode _ -> StructureKind.Class
+        | InterfaceNode _ -> StructureKind.Interface
+        | StructNode _ -> StructureKind.Struct
+        | EnumNode _ -> StructureKind.Enum
+        | _ -> StructureKind.Unknown
 
     let getName (node : SyntaxNode) =
         match node with
@@ -28,7 +38,7 @@
     let getFullname (node : SyntaxNode) : DefinitionFullname =
         let rec loopParentNode (innerNode: SyntaxNode) acc =
             match innerNode with
-            | TypeNode t ->
+            | TypeNode _ ->
                 let name = getName innerNode
                 match acc with
                 | "" -> sprintf "%s" name.Value
@@ -66,9 +76,8 @@
     let getGenericParameters (node : SyntaxNode) =
         match node with
         | GenericNode info ->
-            let genericCreator = info.Constraints |> createGenericDefinition
             info.Parameters
-            |> Seq.map genericCreator
+            |> Seq.map (info.Constraints |> createGenericDefinition)
         | _ -> Seq.empty
 
     let getAccessModifiers (node : SyntaxNode) = 
@@ -76,7 +85,7 @@
         | TypeNode info ->
             info.Modifiers
             |> Seq.filter (fun c -> 
-                accessModifiersList 
+                accessModifiersList
                 |> Set.contains (c.Kind()))
             |> Seq.map (fun c -> c.ToString())
         | _ -> Seq.empty

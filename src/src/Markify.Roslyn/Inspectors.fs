@@ -5,18 +5,11 @@
 
     open Microsoft.CodeAnalysis
 
-    let getTypeKind (node : SyntaxNode) =
-        match node with
-        | ClassNode c -> StructureKind.Class
-        | InterfaceNode c -> StructureKind.Interface
-        | StructNode c -> StructureKind.Struct
-        | _ -> StructureKind.Unknown
-
-    let searchTypes (|NodePattern|_|) (node : SyntaxNode) =
+    let searchTypes (node : SyntaxNode) =
         node.DescendantNodes()
         |> Seq.filter(fun c -> 
             match c with
-            | NodePattern n -> true
+            | TypeNode _ -> true
             | _ -> false)
         |> Seq.map(fun c ->
             {

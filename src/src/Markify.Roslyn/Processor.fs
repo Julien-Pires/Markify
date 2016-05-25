@@ -6,22 +6,12 @@
 
     open Inspectors
     open SourceProvider
-    open SyntaxNodeExtension
 
     type RoslynProcessor() =
-        let structureSearches = [
-            searchTypes (|ClassNode|_|)
-            searchTypes (|InterfaceNode|_|)
-            searchTypes (|StructNode|_|)
-        ]
-
         let inspectFile path =
             let tree = getSyntaxTree path
             match tree with
-            | Some s ->
-                structureSearches 
-                |> Seq.collect (fun c -> c (s.GetRoot()))
-                |> Some
+            | Some s -> searchTypes (s.GetRoot()) |> Some
             | None -> None
 
         let inspectProject (files : FilesList) =

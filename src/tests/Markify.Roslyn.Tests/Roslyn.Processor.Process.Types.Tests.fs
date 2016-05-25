@@ -14,11 +14,14 @@
     [<ProjectContextInlineAutoData([|"Projects/Source/Interface/InterfaceSamples.cs"|], 4, StructureKind.Interface)>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Struct/StructSamples.cs"|], 4, StructureKind.Struct)>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Enum/EnumSamples.cs"|], 3, StructureKind.Enum)>]
-    let ``Process project with unique structure kind in source`` (count, kind, sut: RoslynProcessor, project: ProjectContext) = 
+    let ``Process project with single source`` (expected, kind, sut: RoslynProcessor, project: ProjectContext) = 
         let library = (sut :> IProjectProcessor).Process project
+        let typesCount =
+            library.Types
+            |> Seq.filter (fun c -> c.Kind = kind)
+            |> Seq.length
 
-        test <@ Seq.length library.Types = count @>
-        test <@ library.Types |> Seq.filter (fun c -> c.Kind = kind) |> Seq.length = count @>
+        test <@ typesCount = expected @>
 
     [<Theory>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Class/ClassSamples.cs"; "Projects/Source/Class/ClassSamples.cs"|], "ParentClass")>]
