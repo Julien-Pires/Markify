@@ -14,6 +14,7 @@
     [<ProjectContextInlineAutoData([|"Projects/Source/Class/ClassSamples.cs"|], 0, "SingleClass")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericInterface.cs"|], 2, "GenericInterface`2")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericClass.cs"|], 2, "GenericClass`2")>]
+    [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericStruct.cs"|], 1, "GenericStruct`1")>]
     let ``Process project with generic types`` (count, name, sut: RoslynProcessor, project: ProjectContext) =
         let typeDef =
             (sut :> IProjectProcessor)
@@ -21,12 +22,13 @@
             |> (fun c -> c.Types)
             |> Seq.find (fun c -> c.Identity.Name = name)
 
-        test <@ count = Seq.length typeDef.Parameters @>
+        test <@ Seq.length typeDef.Parameters = count @>
 
     [<Theory>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericClass.cs"|], "T", "GenericClass`2")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericInterface.cs"|], "T", "GenericInterface`2")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericInterface.cs"|], "Y", "GenericInterface`2")>]
+    [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericStruct.cs"|], "T", "GenericStruct`1")>]
     let ``Process project with generic parameter with correct name`` (parameterName, name, sut: RoslynProcessor, project: ProjectContext) =
         let typeDef =
             (sut :> IProjectProcessor)
@@ -43,6 +45,7 @@
     [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericClass.cs"|], "", "T", "GenericClass`2")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericInterface.cs"|], "in", "T", "GenericInterface`2")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericInterface.cs"|], "out", "Y", "GenericInterface`2")>]
+    [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericStruct.cs"|], "", "T", "GenericStruct`1")>]
     let ``Process project with generic parameters with modifiers`` (modifier: string, parameterName, name, sut: RoslynProcessor, project: ProjectContext) = 
         let typeDef =
             (sut :> IProjectProcessor)
@@ -58,6 +61,7 @@
     [<Theory>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericClass.cs"|], 2, "T", "GenericClass`2")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericInterface.cs"|], 0, "Y", "GenericInterface`2")>]
+    [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericStruct.cs"|], 1, "T", "GenericStruct`1")>]
     let ``Process project with generic parameter with constraints`` (count, parameterName, name, sut: RoslynProcessor, project: ProjectContext) =
         let typeDef =
             (sut :> IProjectProcessor)
@@ -73,6 +77,7 @@
     [<Theory>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericClass.cs"|], "T", "class IList<string>", "GenericClass`2")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericInterface.cs"|], "Y", "", "GenericInterface`2")>]
+    [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericStruct.cs"|], "T", "struct", "GenericStruct`1")>]
     let ``Process project with generic parameter with correct constraints names`` (parameterName, constraints: string, name, sut: RoslynProcessor, project: ProjectContext) =
         let expectedConstraints = constraints.Split ([|' '|], StringSplitOptions.RemoveEmptyEntries)
         

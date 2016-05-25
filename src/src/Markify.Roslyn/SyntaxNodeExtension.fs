@@ -41,6 +41,11 @@
         | :? InterfaceDeclarationSyntax as c -> Some c
         | _ -> None
 
+    let (|StructNode|_|) (node : SyntaxNode) =
+        match node with
+        | :? StructDeclarationSyntax as c -> Some c
+        | _ -> None
+
     let (|InheritableType|_|) (node: SyntaxNode) =
         match node with
         | :? BaseTypeDeclarationSyntax as c -> Some c
@@ -50,10 +55,12 @@
         match node with
         | ClassNode c -> Some true
         | InterfaceNode c -> Some true
+        | StructNode c -> Some true
         | _ -> None
 
     let (|TypeInfo|_|) (node: SyntaxNode) =
         match node with
         | ClassNode c -> Some (getTypeInfo c)
         | InterfaceNode c -> Some (getTypeInfo c)
+        | StructNode c -> Some (getTypeInfo c)
         | _ -> None

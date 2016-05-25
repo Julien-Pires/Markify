@@ -8,7 +8,8 @@
     let getTypeKind (node : SyntaxNode) =
         match node with
         | ClassNode c -> StructureKind.Class
-        | InterfaceNode i -> StructureKind.Interface
+        | InterfaceNode c -> StructureKind.Interface
+        | StructNode c -> StructureKind.Struct
         | _ -> StructureKind.Unknown
 
     let searchTypes (|NodePattern|_|) (node : SyntaxNode) =

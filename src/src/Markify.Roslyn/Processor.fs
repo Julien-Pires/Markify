@@ -12,6 +12,7 @@
         let structureSearches = [
             searchTypes (|ClassNode|_|)
             searchTypes (|InterfaceNode|_|)
+            searchTypes (|StructNode|_|)
         ]
 
         let inspectFile path =
