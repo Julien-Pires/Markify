@@ -4,27 +4,42 @@
 
     type TypeName = string
 
-    [<Struct>]
-    type TypeInfo =
-        val Name: TypeName
-        val Parameters: TypeParameterSyntax seq
-        val Constraints: TypeParameterConstraintClauseSyntax seq
-        val Modifiers: SyntaxToken seq
-        new (name, parameters, constraints, modifiers) = 
-            {Name = name; Parameters = parameters; Constraints = constraints; Modifiers = modifiers}
+    type TypeInfo = {
+        Name : TypeName
+        Modifiers : SyntaxToken seq
+    }
 
-    let inline getTypeInfo (x : ^T) =
-        new TypeInfo(
-            (^T : (member Identifier : SyntaxToken)(x)).Text,
-            (
-                let parametersList = (^T : (member TypeParameterList : TypeParameterListSyntax)(x))
-                match parametersList with
-                | null -> Seq.empty
-                | _ -> parametersList.Parameters :> TypeParameterSyntax seq
-            ),
-            (^T : (member ConstraintClauses : TypeParameterConstraintClauseSyntax SyntaxList)(x)),
-            (^T : (member Modifiers : SyntaxTokenList)(x))
-        )
+    type GenericInfo = {
+        Parameters : TypeParameterSyntax seq
+        Constraints : TypeParameterConstraintClauseSyntax SyntaxList
+    }
+
+    type InheritanceInfo = {
+        BaseTypes : BaseTypeSyntax seq
+    }
+
+    let inline getTypeInfo (x : ^T) = {
+        Name = (^T : (member Identifier : SyntaxToken)(x)).Text;
+        Modifiers = (^T : (member Modifiers : SyntaxTokenList)(x))
+    }
+
+    let inline getGenericInfo (x : ^T) =
+        let parameters =
+            match (^T : (member TypeParameterList : TypeParameterListSyntax)(x)) with
+            | null -> Seq.empty
+            | c -> c.Parameters :> TypeParameterSyntax seq
+        let info = {
+            Parameters = parameters;
+            Constraints = (^T : (member ConstraintClauses : TypeParameterConstraintClauseSyntax SyntaxList)(x))
+        }
+        info
+
+    let inline getInheritanceInfo (x : ^T) = {
+        BaseTypes =
+            match (^T : (member BaseList : BaseListSyntax)(x)) with
+            | null -> Seq.empty
+            | c -> c.Types :> BaseTypeSyntax seq
+    }
 
     let (|NamespaceNode|_|) (node: SyntaxNode) =
         match node with
@@ -46,21 +61,22 @@
         | :? StructDeclarationSyntax as c -> Some c
         | _ -> None
 
-    let (|InheritableType|_|) (node: SyntaxNode) =
+    let (|EnumNode|_|) (node : SyntaxNode) =
         match node with
-        | :? BaseTypeDeclarationSyntax as c -> Some c
+        | :? EnumDeclarationSyntax as c -> Some c
         | _ -> None
 
-    let (|TypeNode|_|) (node: SyntaxNode) =
+    let (|InheritableNode|_|) (node: SyntaxNode) =
         match node with
-        | ClassNode c -> Some true
-        | InterfaceNode c -> Some true
-        | StructNode c -> Some true
+        | :? BaseTypeDeclarationSyntax as c -> getInheritanceInfo c |> Some
         | _ -> None
 
-    let (|TypeInfo|_|) (node: SyntaxNode) =
+    let (|GenericNode|_|) (node : SyntaxNode) =
         match node with
-        | ClassNode c -> Some (getTypeInfo c)
-        | InterfaceNode c -> Some (getTypeInfo c)
-        | StructNode c -> Some (getTypeInfo c)
+        | :? TypeDeclarationSyntax as c -> getGenericInfo c |> Some
+        | _ -> None
+
+    let (|TypeNode|_|) (node : SyntaxNode) = 
+        match node with
+        | :? BaseTypeDeclarationSyntax as c -> getTypeInfo c |> Some
         | _ -> None

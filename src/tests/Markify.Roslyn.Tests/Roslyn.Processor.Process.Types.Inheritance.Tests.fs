@@ -16,6 +16,7 @@
     [<ProjectContextInlineAutoData([|"Projects/Source/Interface/InheritedInterface.cs"|], "IImplementGenericInterface", 2)>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Struct/StructSamples.cs"|], "SingleStruct", 0)>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Struct/InheritedStruct.cs"|], "ImplementIDisposable", 1)>]
+    [<ProjectContextInlineAutoData([|"Projects/Source/Enum/InheritedEnum.cs"|], "IntEnum", 1)>]
     let ``Process project with type with inheritance tree`` (name, count, sut: RoslynProcessor, project: ProjectContext) =
         let typeDef = 
             (sut :> IProjectProcessor)
@@ -32,6 +33,8 @@
     [<ProjectContextInlineAutoData([|"Projects/Source/Interface/InheritedInterface.cs"|], "IImplementGenericInterface", "IList<String> IReadOnlyCollection<String>")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Struct/InheritedStruct.cs"|], "ImplementIDisposable", "IDisposable")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Struct/InheritedStruct.cs"|], "ImplementGenericInterface", "IList<String> IReadOnlyCollection<String>")>]
+    [<ProjectContextInlineAutoData([|"Projects/Source/Enum/InheritedEnum.cs"|], "IntEnum", "int")>]
+    [<ProjectContextInlineAutoData([|"Projects/Source/Enum/InheritedEnum.cs"|], "ByteEnum", "byte")>]
     let ``Process project with type with multiple inheritance`` (name, typeNames: string, sut: RoslynProcessor, project: ProjectContext) =
         let expectedBaseTypes = typeNames.Split [|' '|]
 

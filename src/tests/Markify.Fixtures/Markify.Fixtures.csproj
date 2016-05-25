@@ -177,6 +177,15 @@
     <Content Include="Projects\Source\Struct\StructSamples.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Projects\Source\Enum\AccessModifier.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Projects\Source\Enum\InheritedEnum.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Projects\Source\Enum\EnumSamples.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Projects\WithoutNamespace_Project.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

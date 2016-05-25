@@ -20,6 +20,9 @@
     [<ProjectContextInlineAutoData([|"Projects/Source/Struct/AccessModifier.cs"|], "public", "PublicStruct")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Struct/AccessModifier.cs"|], "internal", "InternalStruct")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Struct/AccessModifier.cs"|], "protected internal", "ProtectedInternalStruct")>]
+    [<ProjectContextInlineAutoData([|"Projects/Source/Enum/AccessModifier.cs"|], "public", "PublicEnum")>]
+    [<ProjectContextInlineAutoData([|"Projects/Source/Enum/AccessModifier.cs"|], "internal", "InternalEnum")>]
+    [<ProjectContextInlineAutoData([|"Projects/Source/Enum/AccessModifier.cs"|], "protected internal", "ProtectedInternalEnum")>]
     let ``Process project with types that have access modifiers`` (modifier: string, name, sut: RoslynProcessor, project: ProjectContext) =
         let expectedModifiers = modifier.Split [|' '|]
 

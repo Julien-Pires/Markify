@@ -14,12 +14,15 @@
 
     let getName (node : SyntaxNode) =
         match node with
-        | TypeInfo info ->
-            let parametersLength = Seq.length info.Parameters
+        | TypeNode info ->
+            let parametersLength =
+                match node with
+                | GenericNode genInfo -> genInfo.Parameters |> Seq.length
+                | _ -> 0
             match parametersLength with
-            | 0 -> Some(info.Name)
-            | _ -> Some(sprintf "%s`%i" info.Name parametersLength)
-        | NamespaceNode n -> Some(n.Name.ToString())
+            | 0 -> Some info.Name
+            | _ -> Some (sprintf "%s`%i" info.Name parametersLength)
+        | NamespaceNode n -> Some (n.Name.ToString())
         | _ -> None
 
     let getFullname (node : SyntaxNode) : DefinitionFullname =
@@ -37,7 +40,7 @@
 
         loopParentNode node ""
 
-    let createGenericDefinition (parameter : TypeParameterSyntax) (typeConstraints : TypeParameterConstraintClauseSyntax seq) =
+    let createGenericDefinition (typeConstraints : TypeParameterConstraintClauseSyntax seq) (parameter : TypeParameterSyntax) =
         let name = parameter.Identifier.ToString()
         let identity = { Fullname = name; Name = name }
         let constraints =
@@ -52,39 +55,46 @@
             Modifier = parameter.VarianceKeyword.Text;
             Constraints = 
                 match constraints with
-                | Some x -> ([], x.Constraints) ||> Seq.fold (fun acc c -> c.ToString()::acc) |> List.toSeq
+                | Some x -> 
+                    ([], x.Constraints) 
+                    ||> Seq.fold (fun acc c -> c.ToString()::acc) 
+                    |> List.toSeq
                 | _ -> Seq.empty
         }
-
         parameter
 
     let getGenericParameters (node : SyntaxNode) =
         match node with
-        | TypeInfo info ->
+        | GenericNode info ->
+            let genericCreator = info.Constraints |> createGenericDefinition
             info.Parameters
-            |> Seq.map (fun c -> createGenericDefinition c info.Constraints)
+            |> Seq.map genericCreator
         | _ -> Seq.empty
 
     let getAccessModifiers (node : SyntaxNode) = 
         match node with
-        | TypeInfo info ->
+        | TypeNode info ->
             info.Modifiers
-            |> Seq.filter (fun c -> accessModifiersList |> Set.contains (c.Kind()))
+            |> Seq.filter (fun c -> 
+                accessModifiersList 
+                |> Set.contains (c.Kind()))
             |> Seq.map (fun c -> c.ToString())
         | _ -> Seq.empty
 
     let getAdditionalModifiers (node : SyntaxNode) = 
         match node with
-        | TypeInfo info ->
+        | TypeNode info ->
             info.Modifiers
-            |> Seq.filter (fun c -> accessModifiersList |> Set.contains (c.Kind()) |> not)
+            |> Seq.filter (fun c -> 
+                accessModifiersList 
+                |> Set.contains (c.Kind()) 
+                |> not)
             |> Seq.map (fun c -> c.ToString())
         | _ -> Seq.empty
 
     let getBaseTypes (node : SyntaxNode) =
         match node with
-        | InheritableType it ->
-            match it.BaseList with
-            | null -> Seq.empty
-            | x -> x.Types |> Seq.map (fun c -> c.Type.ToString())
+        | InheritableNode info -> 
+            info.BaseTypes 
+            |> Seq.map (fun c -> c.Type.ToString())
         | _ -> Seq.empty
