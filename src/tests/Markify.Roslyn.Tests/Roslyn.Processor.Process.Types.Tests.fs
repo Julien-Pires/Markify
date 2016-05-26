@@ -14,6 +14,7 @@
     [<ProjectContextInlineAutoData([|"Projects/Source/Interface/InterfaceSamples.cs"|], 4, StructureKind.Interface)>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Struct/StructSamples.cs"|], 4, StructureKind.Struct)>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Enum/EnumSamples.cs"|], 3, StructureKind.Enum)>]
+    [<ProjectContextInlineAutoData([|"Projects/Source/Delegate/DelegateSamples.cs"|], 3, StructureKind.Delegate)>]
     let ``Process project with single source`` (expected, kind, sut: RoslynProcessor, project: ProjectContext) = 
         let library = (sut :> IProjectProcessor).Process project
         let typesCount =
@@ -28,6 +29,7 @@
     [<ProjectContextInlineAutoData([|"Projects/Source/Interface/InterfaceSamples.cs"; "Projects/Source/Interface/InterfaceSamples.cs"|], "IParentInterface")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Struct/StructSamples.cs"; "Projects/Source/Struct/StructSamples.cs"|], "SingleStruct")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Enum/EnumSamples.cs"; "Projects/Source/Enum/EnumSamples.cs"|], "SingleEnum")>]
+    [<ProjectContextInlineAutoData([|"Projects/Source/Delegate/DelegateSamples.cs"; "Projects/Source/Delegate/DelegateSamples.cs"|], "SingleDelegate")>]
     let ``Process project without duplicate types`` (fullname, sut: RoslynProcessor, project: ProjectContext) =
         let typeDef = 
             (sut :> IProjectProcessor)
@@ -43,7 +45,9 @@
     [<ProjectContextInlineAutoData([|"Projects/Source/Interface/InterfaceSamples.cs"|], "IInNamespaceInterface")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Struct/StructSamples.cs"|], "NestedStruct")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Enum/EnumSamples.cs"|], "NestedEnum")>]
+    [<ProjectContextInlineAutoData([|"Projects/Source/Delegate/DelegateSamples.cs"|], "InNamespaceDelegate")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericClass.cs"|], "GenericClass`2")>]
+    [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericDelegate.cs"|], "Do`1")>]
     let ``Process project with types with correct name`` (name, sut: RoslynProcessor, project: ProjectContext) =
         let typeDef = 
             (sut :> IProjectProcessor)
@@ -60,7 +64,9 @@
     [<ProjectContextInlineAutoData([|"Projects/Source/Interface/InterfaceSamples.cs"|], "FooSpace.IInNamespaceInterface")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Struct/StructSamples.cs"|], "FooSpace.InNamespaceStruct")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Enum/EnumSamples.cs"|], "FooSpace.InNamespaceEnum")>]
+    [<ProjectContextInlineAutoData([|"Projects/Source/Delegate/DelegateSamples.cs"|], "FooSpace.InNamespaceDelegate")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericClass.cs"|], "GenericClass`2")>]
+    [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericDelegate.cs"|], "Do`1")>]
     let ``Process project with types with correct fullname`` (fullname, sut: RoslynProcessor, project: ProjectContext) =
         let typeDef = 
             (sut :> IProjectProcessor)

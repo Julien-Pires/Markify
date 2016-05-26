@@ -50,7 +50,7 @@
         match node with
         | :? ClassDeclarationSyntax as c -> Some c
         | _ -> None
-    
+        
     let (|InterfaceNode|_|) (node : SyntaxNode) =
         match node with
         | :? InterfaceDeclarationSyntax as c -> Some c
@@ -66,6 +66,11 @@
         | :? EnumDeclarationSyntax as c -> Some c
         | _ -> None
 
+    let (|DelegateNode|_|) (node : SyntaxNode) =
+        match node with
+        | :? DelegateDeclarationSyntax as c -> Some c
+        | _ -> None
+
     let (|InheritableNode|_|) (node: SyntaxNode) =
         match node with
         | :? BaseTypeDeclarationSyntax as c -> getInheritanceInfo c |> Some
@@ -74,9 +79,11 @@
     let (|GenericNode|_|) (node : SyntaxNode) =
         match node with
         | :? TypeDeclarationSyntax as c -> getGenericInfo c |> Some
+        | :? DelegateDeclarationSyntax as c -> getGenericInfo c |> Some
         | _ -> None
 
     let (|TypeNode|_|) (node : SyntaxNode) = 
         match node with
         | :? BaseTypeDeclarationSyntax as c -> getTypeInfo c |> Some
+        | :? DelegateDeclarationSyntax as c -> getTypeInfo c |> Some
         | _ -> None

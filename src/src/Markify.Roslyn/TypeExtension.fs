@@ -20,6 +20,7 @@
         | InterfaceNode _ -> StructureKind.Interface
         | StructNode _ -> StructureKind.Struct
         | EnumNode _ -> StructureKind.Enum
+        | DelegateNode _ -> StructureKind.Delegate
         | _ -> StructureKind.Unknown
 
     let getName (node : SyntaxNode) =

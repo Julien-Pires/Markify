@@ -186,6 +186,12 @@
     <Content Include="Projects\Source\Enum\EnumSamples.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Projects\Source\Delegate\AccessModifier.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Projects\Source\Delegate\DelegateSamples.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Projects\WithoutNamespace_Project.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

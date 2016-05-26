@@ -43,6 +43,8 @@
             |> (fun c -> c.Process(project))
             |> (fun c -> c.Types)
             |> Seq.find (fun c -> c.Identity.Name = name)
-        let baseTypes = typeDef.BaseTypes |> Seq.filter (fun c -> Seq.contains c expectedBaseTypes)
+        let baseTypes = 
+            typeDef.BaseTypes 
+            |> Seq.filter (fun c -> Seq.contains c expectedBaseTypes)
 
         test <@ Seq.length expectedBaseTypes = Seq.length baseTypes @>

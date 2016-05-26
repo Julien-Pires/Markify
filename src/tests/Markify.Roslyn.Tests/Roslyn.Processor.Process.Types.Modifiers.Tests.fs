@@ -23,6 +23,9 @@
     [<ProjectContextInlineAutoData([|"Projects/Source/Enum/AccessModifier.cs"|], "public", "PublicEnum")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Enum/AccessModifier.cs"|], "internal", "InternalEnum")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Enum/AccessModifier.cs"|], "protected internal", "ProtectedInternalEnum")>]
+    [<ProjectContextInlineAutoData([|"Projects/Source/Delegate/AccessModifier.cs"|], "public", "PublicDelegate")>]
+    [<ProjectContextInlineAutoData([|"Projects/Source/Delegate/AccessModifier.cs"|], "internal", "InternalDelegate")>]
+    [<ProjectContextInlineAutoData([|"Projects/Source/Delegate/AccessModifier.cs"|], "protected internal", "ProtectedInternalDelegate")>]
     let ``Process project with types that have access modifiers`` (modifier: string, name, sut: RoslynProcessor, project: ProjectContext) =
         let expectedModifiers = modifier.Split [|' '|]
 
@@ -31,7 +34,9 @@
             |> (fun c -> c.Process(project))
             |> (fun c -> c.Types)
             |> Seq.find (fun c -> c.Identity.Name = name)
-        let possessedModifiers = Seq.filter (fun c -> Seq.contains c expectedModifiers) typeDef.AccessModifiers
+        let possessedModifiers = 
+            typeDef.AccessModifiers 
+            |> Seq.filter (fun c -> Seq.contains c expectedModifiers) 
 
         test <@ Seq.length possessedModifiers = Seq.length expectedModifiers @>
 
