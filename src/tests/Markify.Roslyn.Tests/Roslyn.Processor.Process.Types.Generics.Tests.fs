@@ -4,7 +4,7 @@
     open Processor
     open Markify.Models.Context
     open Markify.Models.Definitions
-    open Markify.Processors
+    open Markify.Core.Processors
 
     open Xunit
     open Swensen.Unquote

@@ -1,7 +1,7 @@
 ﻿module Processor
     open Markify.Models
-    open Markify.Processors
     open Markify.Models.Context
+    open Markify.Core.Processors
     open Markify.Models.Definitions
 
     open Inspectors

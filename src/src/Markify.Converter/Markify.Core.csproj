@@ -7,8 +7,8 @@
     <ProjectGuid>{8833BF6E-806F-483D-BA70-FF92B09E625D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Markify.Processors</RootNamespace>
-    <AssemblyName>Markify.Processors</AssemblyName>
+    <RootNamespace>Markify.Core</RootNamespace>
+    <AssemblyName>Markify.Core</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -41,7 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IProjectProcessor.cs" />
+    <Compile Include="IDE\ISolutionExplorer.cs" />
+    <Compile Include="IDE\ISolutionProvider.cs" />
+    <Compile Include="Processors\IProjectProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,7 +1,7 @@
 ﻿using static Markify.Models.Context;
 using static Markify.Models.Definitions;
 
-namespace Markify.Processors
+namespace Markify.Core.Processors
 {
     public interface IProjectProcessor
     {
