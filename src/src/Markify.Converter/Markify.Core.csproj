@@ -42,7 +42,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IDE\ISolutionExplorer.cs" />
-    <Compile Include="IDE\ISolutionProvider.cs" />
     <Compile Include="Processors\IProjectProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

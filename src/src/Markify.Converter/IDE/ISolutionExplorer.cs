@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+
+using static Markify.Models.Context;
 
 namespace Markify.Core.IDE
 {
@@ -6,17 +9,17 @@ namespace Markify.Core.IDE
     {
         #region Properties
 
-        Uri Root { get; }
+        string Name { get; }
 
-        string CurrentProject { get; }
+        Uri Root { get; }
 
         #endregion
 
         #region Methods
 
-        void GetProjects(bool withSourceOnly = false);
+        IEnumerable<Project> GetProjects(bool withSourceOnly = false);
 
-        void GetProject(string name, bool withSourceOnly = false);
+        Project GetProject(string name, bool withSourceOnly = false);
 
         #endregion
     }

@@ -3,8 +3,11 @@
 open System
 
 module Context =
+    type ProjectName = string
 
     type FilesList = Uri seq
-    type ProjectContext = {
+
+    type Project = {
+        Name : ProjectName
         Files : FilesList
     }

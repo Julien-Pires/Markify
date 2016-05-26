@@ -7,7 +7,7 @@ namespace Markify.Core.Processors
     {
         #region Methods
 
-        LibraryDefinition Process(ProjectContext project);
+        LibraryDefinition Process(Project project);
 
         #endregion
     }
