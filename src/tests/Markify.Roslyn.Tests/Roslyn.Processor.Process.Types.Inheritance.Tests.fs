@@ -2,7 +2,7 @@
     open Processor
     open Markify.Models.Context
     open Markify.Models.Definitions
-    open Markify.Processors
+    open Markify.Core.Processors
 
     open Xunit
     open Swensen.Unquote
@@ -17,7 +17,7 @@
     [<ProjectContextInlineAutoData([|"Projects/Source/Struct/StructSamples.cs"|], "SingleStruct", 0)>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Struct/InheritedStruct.cs"|], "ImplementIDisposable", 1)>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Enum/InheritedEnum.cs"|], "IntEnum", 1)>]
-    let ``Process project with type with inheritance tree`` (name, count, sut: RoslynProcessor, project: ProjectContext) =
+    let ``Process project with type with inheritance tree`` (name, count, sut: RoslynProcessor, project: Project) =
         let typeDef = 
             (sut :> IProjectProcessor)
             |> (fun c -> c.Process(project))
@@ -35,7 +35,7 @@
     [<ProjectContextInlineAutoData([|"Projects/Source/Struct/InheritedStruct.cs"|], "ImplementGenericInterface", "IList<String> IReadOnlyCollection<String>")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Enum/InheritedEnum.cs"|], "IntEnum", "int")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Enum/InheritedEnum.cs"|], "ByteEnum", "byte")>]
-    let ``Process project with type with multiple inheritance`` (name, typeNames: string, sut: RoslynProcessor, project: ProjectContext) =
+    let ``Process project with type with multiple inheritance`` (name, typeNames: string, sut: RoslynProcessor, project: Project) =
         let expectedBaseTypes = typeNames.Split [|' '|]
 
         let typeDef = 

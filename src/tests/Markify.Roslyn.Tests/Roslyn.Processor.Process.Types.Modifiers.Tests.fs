@@ -2,7 +2,7 @@
     open Processor
     open Markify.Models.Context
     open Markify.Models.Definitions
-    open Markify.Processors
+    open Markify.Core.Processors
 
     open Xunit
     open Swensen.Unquote
@@ -26,7 +26,7 @@
     [<ProjectContextInlineAutoData([|"Projects/Source/Delegate/AccessModifier.cs"|], "public", "PublicDelegate")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Delegate/AccessModifier.cs"|], "internal", "InternalDelegate")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Delegate/AccessModifier.cs"|], "protected internal", "ProtectedInternalDelegate")>]
-    let ``Process project with types that have access modifiers`` (modifier: string, name, sut: RoslynProcessor, project: ProjectContext) =
+    let ``Process project with types that have access modifiers`` (modifier: string, name, sut: RoslynProcessor, project: Project) =
         let expectedModifiers = modifier.Split [|' '|]
 
         let typeDef = 
@@ -47,7 +47,7 @@
     [<ProjectContextInlineAutoData([|"Projects/Source/Class/AdditionnalModifier.cs"|], "static", "StaticClass")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Interface/AdditionnalModifier.cs"|], "partial", "IPartialInterface")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Struct/AdditionnalModifier.cs"|], "partial", "PartialStruct")>]
-    let ``Process project with types that have a single modifier`` (modifier, name, sut: RoslynProcessor, project: ProjectContext) =
+    let ``Process project with types that have a single modifier`` (modifier, name, sut: RoslynProcessor, project: Project) =
         let typeDef = 
             (sut :> IProjectProcessor)
             |> (fun c -> c.Process(project))
@@ -59,7 +59,7 @@
     [<Theory>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Class/AdditionnalModifier.cs"|], "abstract partial", "AbstractPartialClass")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Class/AdditionnalModifier.cs"|], "sealed partial", "SealedPartialClass")>]
-    let ``Process project with types that have multiple modifiers`` (modifier: string, name, sut: RoslynProcessor, project: ProjectContext) =
+    let ``Process project with types that have multiple modifiers`` (modifier: string, name, sut: RoslynProcessor, project: Project) =
         let expectedModifiers = modifier.Split [|' '|]
 
         let typeDef = 

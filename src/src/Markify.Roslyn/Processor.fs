@@ -25,7 +25,7 @@
             |> Seq.distinctBy (fun c -> c.Identity.Fullname)
 
         interface IProjectProcessor with
-            member this.Process (project : ProjectContext) : LibraryDefinition =
+            member this.Process (project : Project) : LibraryDefinition =
                 {
                     Types = inspectProject project.Files
                 }

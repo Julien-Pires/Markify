@@ -71,6 +71,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IDE\ISolutionExplorer.CurrentSolution.Tests.cs" />
     <Compile Include="IDE\ISolutionExplorer.GetProject.Tests.cs" />
     <Compile Include="IDE\ISolutionExplorer.Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -39,7 +39,7 @@ namespace Markify.Fixtures
         public void Customize(IFixture fixture)
         {
             var files = _sourceFiles.Select(c => new Uri(CreateFullPath(c)));
-            fixture.Register(() => new Project("Test", files));
+            fixture.Register(() => new Project("Test", new Uri("c:/Test/Test.csproj"), files));
         }
 
         #endregion
