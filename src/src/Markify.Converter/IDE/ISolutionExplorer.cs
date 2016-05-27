@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Optional;
 
 using static Markify.Models.Context;
 
@@ -9,17 +8,15 @@ namespace Markify.Core.IDE
     {
         #region Properties
 
-        string Name { get; }
+        Option<Solution> CurrentSolution { get; }
 
-        Uri Root { get; }
+        Option<string> CurrentProject { get; }
 
         #endregion
 
         #region Methods
 
-        IEnumerable<Project> GetProjects(bool withSourceOnly = false);
-
-        Project GetProject(string name, bool withSourceOnly = false);
+        Option<Project> GetProject(string name);
 
         #endregion
     }

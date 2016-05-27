@@ -33,6 +33,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Optional, Version=3.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Optional.3.1.0\lib\net461\Optional.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Ploeh.AutoFixture, Version=3.46.0.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
       <HintPath>..\..\packages\AutoFixture.3.46.0\lib\net40\Ploeh.AutoFixture.dll</HintPath>
       <Private>True</Private>
@@ -67,7 +71,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IDE\ISolutionExplorer.GetProjects.Tests.cs" />
+    <Compile Include="IDE\ISolutionExplorer.GetProject.Tests.cs" />
     <Compile Include="IDE\ISolutionExplorer.Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
