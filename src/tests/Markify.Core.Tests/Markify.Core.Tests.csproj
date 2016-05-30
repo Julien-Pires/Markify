@@ -71,6 +71,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IDE\ISolutionExplorer.CurrentProject.Tests.cs" />
     <Compile Include="IDE\ISolutionExplorer.CurrentSolution.Tests.cs" />
     <Compile Include="IDE\ISolutionExplorer.GetProject.Tests.cs" />
     <Compile Include="IDE\ISolutionExplorer.Tests.cs" />
@@ -80,7 +81,9 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Markify.Converter\Markify.Core.csproj">
       <Project>{8833BF6E-806F-483D-BA70-FF92B09E625D}</Project>
@@ -89,6 +92,10 @@
     <ProjectReference Include="..\..\src\Markify.Models\Markify.Models.fsproj">
       <Project>{2a8dfdc1-8752-4784-b962-6d0b9ad1541a}</Project>
       <Name>Markify.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Markify.Fixtures\Markify.Fixtures.csproj">
+      <Project>{1435B850-0FFC-4E4B-B74C-C72EB6723A61}</Project>
+      <Name>Markify.Fixtures</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
