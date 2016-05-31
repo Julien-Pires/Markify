@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 using Markify.Core.IDE;
 using Markify.Fixtures;
@@ -10,8 +11,8 @@ namespace Markify.Core.Tests.IDE
     public partial class ISolutionExplorer_Tests
     {
         [Theory]
-        [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", new string[0], "FooSolution")]
-        [SolutionExplorerInlineAutoData("FooBarSolution", null, null, "FooBarSolution")]
+        [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", 0, -1, 0, "FooSolution")]
+        [SolutionExplorerInlineAutoData("FooBarSolution", "c:/FooBarSolution", 0, -1, 0, "FooBarSolution")]
         public void CurrentSolution_WithCurrent_ShouldReturnSolution(string expected, ISolutionExplorer explorer)
         {
             var actual = explorer.CurrentSolution;
@@ -25,7 +26,7 @@ namespace Markify.Core.Tests.IDE
         }
 
         [Theory]
-        [SolutionExplorerInlineAutoData(null, null, null)]
+        [SolutionExplorerInlineAutoData(null, null)]
         public void CurrentSolution_WithNoCurrent_ShouldReturnNone(ISolutionExplorer explorer)
         {
             var actual = explorer.CurrentSolution;
@@ -34,8 +35,8 @@ namespace Markify.Core.Tests.IDE
         }
 
         [Theory]
-        [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", new string[0], "FooSolution")]
-        [SolutionExplorerInlineAutoData("FooBarSolution", "c:/Projects/FooBarSolution", null, "c:/Projects/FooBarSolution")]
+        [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", 0, -1, 0, "c:/FooSolution")]
+        [SolutionExplorerInlineAutoData("FooBarSolution", "c:/Projects/FooBarSolution", 0, -1, 0, "c:/Projects/FooBarSolution")]
         public void CurrentSolution_ShouldReturnCorrectPath(string expected, ISolutionExplorer explorer)
         {
             var solution = explorer.CurrentSolution;
@@ -48,8 +49,8 @@ namespace Markify.Core.Tests.IDE
         }
 
         [Theory]
-        [SolutionExplorerInlineAutoData("FooSolution", null, new string[0], 0)]
-        [SolutionExplorerInlineAutoData("FooSolution", null, new []{"Foo", "Bar"}, 2)]
+        [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", 0, -1, 0, 0)]
+        [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", 4, -1, 0, 4)]
         public void CurrentSolution_WithProjects_ShouldReturnCorrectCount(int expected, ISolutionExplorer explorer)
         {
             var solution = explorer.CurrentSolution;
@@ -62,19 +63,22 @@ namespace Markify.Core.Tests.IDE
         }
 
         [Theory]
-        [SolutionExplorerInlineAutoData("FooSolution", null, new string[0], new object[] { new string[0] })]
-        [SolutionExplorerInlineAutoData("FooSolution", null, new[] { "Foo", "Bar" }, new object[] { new [] { "Foo", "Bar" } })]
-        [SolutionExplorerInlineAutoData("FooSolution", null, new[] { "Foo", "Bar", "FooBar" }, new object[] { new[] { "Foo" } })]
-        public void CurrentSolution_WithProjects_ShouldReturnCorrectName(string[] expected, ISolutionExplorer explorer)
+        [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", 0, -1, 0, "")]
+        [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", 1, -1, 0, "Project1")]
+        [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", 2, -1, 0, "Project1 Project2")]
+        [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", 4, -1, 0, "Project1 Project2 Project3 Project4")]
+        public void CurrentSolution_WithProjects_ShouldReturnCorrectName(string expected, ISolutionExplorer explorer)
         {
+            var expectedProjects = expected.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
             var solution = explorer.CurrentSolution;
             var projects = solution.Match(
                 some: x => x.Projects,
                 none: () => null
             );
-            var actual = projects.Intersect(expected);
+            var actual = projects.Intersect(expectedProjects);
 
-            Assert.Equal(expected.Length, actual.Count());
+            Assert.Equal(expectedProjects.Length, actual.Count());
         }
     }
 }

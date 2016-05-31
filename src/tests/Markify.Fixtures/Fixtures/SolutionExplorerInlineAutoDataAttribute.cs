@@ -10,43 +10,12 @@ namespace Markify.Fixtures
     {
         #region Constructors
 
-        public SolutionExplorerInlineAutoDataAttribute(
-            string currentSolution, 
-            string solutionPath,
-            string[] projects,
-            params object[] values) :
-            this(currentSolution, solutionPath, null, projects, null, values)
-        {
-        }
-
-        public SolutionExplorerInlineAutoDataAttribute(
-            string currentProject, 
-            params object[] values)
-            : this(null, null, currentProject, null, null, values)
-        {
-        }
-
-        public SolutionExplorerInlineAutoDataAttribute(
-            string currentSolution,
-            string project, 
-            string path,
-            string[] files,
-            params object[] values) :
-            this(currentSolution, null, null, new[] { project }, new [] { path }, files, values)
-        {
-        }
-
-        private SolutionExplorerInlineAutoDataAttribute(
-            string currentSolution,
-            string solutionPath,
-            string currentProject,
-            string[] projects,
-            string[] projectsPath,
-            string[] files,
-            params object[] values)
+        public SolutionExplorerInlineAutoDataAttribute(string solution, string root, int projectsCount = 0,
+            int currentProject = -1, int filesPerProject = 0, params object[] values)
             : base(new AutoDataAttribute(
-                    new Fixture().Customize(new SolutionExplorerCustomization())),
-                values)
+                    new Fixture().Customize(new SolutionExplorerCustomization(solution, root, projectsCount, 
+                        currentProject, filesPerProject))
+                ), values)
         {
         }
 

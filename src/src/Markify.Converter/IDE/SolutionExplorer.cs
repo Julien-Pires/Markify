@@ -1,4 +1,7 @@
-﻿using Optional;
+﻿using System;
+using System.Linq;
+
+using Optional;
 
 using static Markify.Models.Context;
 
@@ -18,18 +21,16 @@ namespace Markify.Core.IDE
         {
             get
             {
-                if (_ideEnv.CurrentSolution == null)
+                var name = _ideEnv.CurrentSolution;
+                if (name == null)
                     return Option.None<Solution>();
 
-                var name = _ideEnv.CurrentSolution;
-                var solution = new Solution
+                return new Solution
                 (
                     _ideEnv.CurrentSolution,
                     _ideEnv.GetSolutionPath(name),
                     _ideEnv.GetProjects(name)
-                );
-
-                return Option.Some(solution);
+                ).Some();
             }
         }
 
@@ -38,7 +39,7 @@ namespace Markify.Core.IDE
             get
             {
                 return _ideEnv.CurrentProject != null ? 
-                    Option.Some(_ideEnv.CurrentProject) :
+                    _ideEnv.CurrentProject.Some() :
                     Option.None<string>();
             }
         }
@@ -58,7 +59,23 @@ namespace Markify.Core.IDE
 
         public Option<Project> GetProject(string name)
         {
-            return default(Option<Project>);
+            if (string.IsNullOrWhiteSpace(name))
+                return default(Option<Project>);
+
+            if (!_ideEnv.GetProjects(_ideEnv.CurrentSolution).Contains(name))
+                return default(Option<Project>);
+
+            var projectPath = _ideEnv.GetProjectPath(name);
+            var solutionPath = _ideEnv.GetSolutionPath(_ideEnv.CurrentSolution);
+            if (projectPath == null || solutionPath == null)
+                return default(Option<Project>);
+
+            return new Project
+            ( 
+                name,
+                projectPath ?? new Uri(solutionPath, name),
+                _ideEnv.GetProjectFiles(name) ?? new Uri[0]
+            ).Some();
         }
 
         #endregion

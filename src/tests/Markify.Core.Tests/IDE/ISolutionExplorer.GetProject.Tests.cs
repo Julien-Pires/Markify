@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 using Markify.Core.IDE;
 using Markify.Fixtures;
+
 using Xunit;
 
 namespace Markify.Core.Tests.IDE
@@ -9,8 +11,8 @@ namespace Markify.Core.Tests.IDE
     public partial class ISolutionExplorer_Tests
     {
         [Theory]
-        [SolutionExplorerInlineAutoData("FooSolution", "Foo", null, null, "Foo")]
-        [SolutionExplorerInlineAutoData("FooSolution", "Bar", null, null, "Bar")]
+        [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", 1, -1, 0, "Project1")]
+        [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", 6, -1, 0, "Project4")]
         public void GetProject_WithExistingProject_ShouldReturnProject(string name, ISolutionExplorer solution)
         {
             var actual = solution.GetProject(name);
@@ -19,8 +21,8 @@ namespace Markify.Core.Tests.IDE
         }
 
         [Theory]
-        [SolutionExplorerInlineAutoData("FooSolution", "Bar", null, null, "Foo")]
-        [SolutionExplorerInlineAutoData("FooSolution", null, null, null, "Foo")]
+        [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", 0, -1, 0, "Fooject")]
+        [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", 4, -1, 0, "Fooject")]
         public void GetProject_WithNotExistingProject_ShouldReturnNone(string name, ISolutionExplorer solution)
         {
             var actual = solution.GetProject(name);
@@ -29,8 +31,8 @@ namespace Markify.Core.Tests.IDE
         }
 
         [Theory]
-        [SolutionExplorerInlineAutoData("FooSolution", "Foo", null, null, "Foo")]
-        [SolutionExplorerInlineAutoData("FooSolution", "Bar", null, null, "Bar")]
+        [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", 1, -1, 0, "Project1")]
+        [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", 3, -1, 0, "Project2")]
         public void GetProject_ShouldReturnCorrectName(string name, ISolutionExplorer solution)
         {
             var project = solution.GetProject(name);
@@ -43,8 +45,9 @@ namespace Markify.Core.Tests.IDE
         }
 
         [Theory]
-        [SolutionExplorerInlineAutoData("FooSolution", "Foo", "c:/Foo", null, "Foo", "c:/Foo")]
-        [SolutionExplorerInlineAutoData("FooSolution", "Bar", "c:/Projects/Bar", null, "Bar", "c:/Projects/Bar")]
+        [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", 1, -1, 0, "Project1", "c:/FooSolution/Project1")]
+        [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", 4, -1, 0, "Project3", "c:/FooSolution/Project3")]
+        [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", 6, -1, 0, "Project2", "c:/FooSolution/Project2")]
         public void GetProject_ShouldReturnCorrectPath(string name, string expected, ISolutionExplorer solution)
         {
             var project = solution.GetProject(name);
@@ -57,8 +60,8 @@ namespace Markify.Core.Tests.IDE
         }
 
         [Theory]
-        [SolutionExplorerInlineAutoData("FooSolution", "Foo", null, new string[0], "Foo", 0)]
-        [SolutionExplorerInlineAutoData("FooSolution", "Bar", null, new [] { "Foo", "FooBar" }, "Bar", 2)]
+        [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", 1, -1, 0, "Project1", 0)]
+        [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", 1, -1, 10, "Project1", 10)]
         public void GetProject_WithFiles_ShouldReturnCorrectCount(string name, int expected, ISolutionExplorer solution)
         {
             var project = solution.GetProject(name);
@@ -71,19 +74,21 @@ namespace Markify.Core.Tests.IDE
         }
 
         [Theory]
-        [SolutionExplorerInlineAutoData("FooSolution", "Foo", null, new string[0], "Foo", new string[0])]
-        [SolutionExplorerInlineAutoData("FooSolution", "Bar", null, new[] { "Foo", "FooBar" }, "Bar", new[] { "Foo" })]
-        [SolutionExplorerInlineAutoData("FooSolution", "Bar", null, new[] { "Foo", "FooBar" }, "Bar", new[] { "Foo", "FooBar" })]
-        public void GetProject_WithFiles_ShouldReturnCorrectFilesPath(string name, string[] expected, ISolutionExplorer solution)
+        [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", 1, -1, 0, "Project1", "")]
+        [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", 1, -1, 10, "Project1", "")]
+        [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", 1, -1, 20, "Project1", "")]
+        public void GetProject_WithFiles_ShouldReturnCorrectFilesPath(string name, string expected, ISolutionExplorer solution)
         {
+            var expectedPaths = expected.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
             var project = solution.GetProject(name);
             var paths = project.Match(
                 some: x => x.Files.Select(c => c.OriginalString),
                 none: () => null
             );
-            var actual = paths.Intersect(expected);
+            var actual = paths.Intersect(expectedPaths);
 
-            Assert.Equal(expected.Length, actual.Count());
+            Assert.Equal(expectedPaths.Length, actual.Count());
         }
     }
 }

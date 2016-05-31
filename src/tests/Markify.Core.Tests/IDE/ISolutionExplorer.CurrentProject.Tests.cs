@@ -8,8 +8,8 @@ namespace Markify.Core.Tests.IDE
     public partial class ISolutionExplorer_Tests
     {
         [Theory]
-        [SolutionExplorerInlineAutoData("FooProject", "FooProject")]
-        [SolutionExplorerInlineAutoData("BarProject", "BarProject")]
+        [SolutionExplorerInlineAutoData("FooProject", "c:/FooProject", 1, 0, 0, "Project1")]
+        [SolutionExplorerInlineAutoData("BarProject", "c:/FooProject", 4, 2, 0, "Project3")]
         public void CurrentProject_WhenHasCurrent_ShouldReturnCorrectValue(string expected, ISolutionExplorer explorer)
         {
             var actual = explorer.CurrentProject.Match(
@@ -21,7 +21,8 @@ namespace Markify.Core.Tests.IDE
         }
 
         [Theory]
-        [SolutionExplorerInlineAutoData(null)]
+        [SolutionExplorerInlineAutoData("FooProject", "c:/FooProject")]
+        [SolutionExplorerInlineAutoData("FooProject", "c:/FooProject", 2)]
         public void CurrentProject_WhenHasNoCurrent_ShouldReturnNone(ISolutionExplorer explorer)
         {
             var actual = explorer.CurrentProject;
