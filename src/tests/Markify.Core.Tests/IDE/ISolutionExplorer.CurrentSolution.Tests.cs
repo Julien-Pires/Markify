@@ -35,17 +35,17 @@ namespace Markify.Core.Tests.IDE
         }
 
         [Theory]
-        [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", 0, -1, 0, "c:/FooSolution")]
-        [SolutionExplorerInlineAutoData("FooBarSolution", "c:/Projects/FooBarSolution", 0, -1, 0, "c:/Projects/FooBarSolution")]
+        [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", 0, -1, 0, "c:/FooSolution/")]
+        [SolutionExplorerInlineAutoData("FooBarSolution", "c:/Projects/FooBarSolution", 0, -1, 0, "c:/Projects/FooBarSolution/")]
         public void CurrentSolution_ShouldReturnCorrectPath(string expected, ISolutionExplorer explorer)
         {
             var solution = explorer.CurrentSolution;
             var actual = solution.Match(
-                some: x => x.Path.OriginalString,
-                none: () => string.Empty
+                some: x => x.Path,
+                none: () => null
             );
 
-            Assert.Equal(expected, actual);
+            Assert.Equal(new Uri(expected), actual);
         }
 
         [Theory]

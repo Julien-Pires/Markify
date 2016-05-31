@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 
 using Markify.Core.IDE;
@@ -24,13 +23,26 @@ namespace Markify.Fixtures
             _ide = new Mock<IIDEEnvironment>();
             _ide.SetupGet(c => c.CurrentSolution).Returns(solution);
 
-            var solutionPath = new Uri(Path.Combine(root, solution));
+            var solutionPath = (Uri)null;
+            if (root != null)
+            {
+                if(!root.EndsWith("/"))
+                    root += "/";
+
+                solutionPath = new Uri(root);
+            }
             _ide.Setup(c => c.GetSolutionPath(It.Is<string>(d => d == solution))).Returns(solutionPath);
 
-            var projects = Enumerable.Range(0, projectsCount).Select(c => $"Project{c + 1}");
+            var projects = Enumerable.Range(0, projectsCount).Select(c => $"Project{c + 1}").ToArray();
             _ide.Setup(c => c.GetProjects(It.Is<string>(d => d == solution))).Returns(projects);
-            _ide.Setup(c => c.GetProjectPath(It.IsIn(projects))).Returns<string>(c => new Uri(solutionPath, $"/{c}"));
-            _ide.SetupGet(c => c.CurrentProject).Returns(() => currentProject > -1 ? projects.ElementAt(currentProject) : null);
+            _ide.Setup(c => c.GetProjectPath(It.IsIn(projects)))
+                .Returns<string>(c => solutionPath != null ? new Uri(solutionPath, $"{c}/") : null);
+            _ide.SetupGet(c => c.CurrentProject)
+                .Returns(() => currentProject > -1 ? projects.ElementAt(currentProject) : null);
+
+            var files = Enumerable.Range(0, filesPerProject).Select(c => $"File{c + 1}.cs");
+            _ide.Setup(c => c.GetProjectFiles(It.IsIn(projects)))
+                .Returns<string>(c => files.Select(d => new Uri(_ide.Object.GetProjectPath(c), d)));
         }
 
         #endregion

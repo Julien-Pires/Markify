@@ -21,7 +21,7 @@ namespace Markify.Core.IDE
 
         Uri GetProjectPath(string project);
 
-        Uri[] GetProjectFiles(string project);
+        IEnumerable<Uri> GetProjectFiles(string project);
 
         #endregion
     }

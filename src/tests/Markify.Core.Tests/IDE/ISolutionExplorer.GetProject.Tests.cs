@@ -45,18 +45,18 @@ namespace Markify.Core.Tests.IDE
         }
 
         [Theory]
-        [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", 1, -1, 0, "Project1", "c:/FooSolution/Project1")]
-        [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", 4, -1, 0, "Project3", "c:/FooSolution/Project3")]
-        [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", 6, -1, 0, "Project2", "c:/FooSolution/Project2")]
+        [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", 1, -1, 0, "Project1", "c:/FooSolution/Project1/")]
+        [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", 4, -1, 0, "Project3", "c:/FooSolution/Project3/")]
+        [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", 6, -1, 0, "Project2", "c:/FooSolution/Project2/")]
         public void GetProject_ShouldReturnCorrectPath(string name, string expected, ISolutionExplorer solution)
         {
             var project = solution.GetProject(name);
             var actual = project.Match(
-                some: x => x.Path.OriginalString,
-                none: () => string.Empty
+                some: x => x.Path,
+                none: () => null
             );
 
-            Assert.Equal(expected, actual);
+            Assert.Equal(new Uri(expected), actual);
         }
 
         [Theory]
@@ -75,15 +75,17 @@ namespace Markify.Core.Tests.IDE
 
         [Theory]
         [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", 1, -1, 0, "Project1", "")]
-        [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", 1, -1, 10, "Project1", "")]
-        [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", 1, -1, 20, "Project1", "")]
+        [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", 1, -1, 10, "Project1", "c:/FooSolution/Project1/File6.cs")]
+        [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", 1, -1, 20, "Project1", "c:/FooSolution/Project1/File1.cs c:/FooSolution/Project1/File12.cs")]
         public void GetProject_WithFiles_ShouldReturnCorrectFilesPath(string name, string expected, ISolutionExplorer solution)
         {
-            var expectedPaths = expected.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var expectedPaths = expected.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
+                                        .Select(c => new Uri(c))
+                                        .ToArray();
 
             var project = solution.GetProject(name);
             var paths = project.Match(
-                some: x => x.Files.Select(c => c.OriginalString),
+                some: x => x.Files,
                 none: () => null
             );
             var actual = paths.Intersect(expectedPaths);
