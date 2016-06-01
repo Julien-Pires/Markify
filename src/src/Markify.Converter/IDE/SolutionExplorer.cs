@@ -30,7 +30,7 @@ namespace Markify.Core.IDE
                 (
                     _ideEnv.CurrentSolution,
                     _ideEnv.GetSolutionPath(name),
-                    ImmutableList.CreateRange(_ideEnv.GetProjects(name))
+                    ImmutableList.CreateRange(_ideEnv.GetProjects(name) ?? new string[0])
                 ).Some();
             }
         }
@@ -63,10 +63,7 @@ namespace Markify.Core.IDE
             if (string.IsNullOrWhiteSpace(name))
                 return default(Option<Project>);
 
-            if (!_ideEnv.GetProjects(_ideEnv.CurrentSolution).Contains(name))
-                return default(Option<Project>);
-
-            var projectPath = _ideEnv.GetProjectPath(name);
+            var projectPath = _ideEnv.GetProjectPath(_ideEnv.CurrentSolution, name);
             var solutionPath = _ideEnv.GetSolutionPath(_ideEnv.CurrentSolution);
             if (projectPath == null || solutionPath == null)
                 return default(Option<Project>);
@@ -75,7 +72,7 @@ namespace Markify.Core.IDE
             ( 
                 name,
                 projectPath ?? new Uri(solutionPath, name),
-                ImmutableList.CreateRange(_ideEnv.GetProjectFiles(name) ?? new Uri[0])
+                ImmutableList.CreateRange(_ideEnv.GetProjectFiles(_ideEnv.CurrentSolution, name) ?? new Uri[0])
             ).Some();
         }
 

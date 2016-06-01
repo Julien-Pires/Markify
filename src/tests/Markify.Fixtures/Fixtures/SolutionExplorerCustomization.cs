@@ -31,18 +31,21 @@ namespace Markify.Fixtures
 
                 solutionPath = new Uri(root);
             }
+
             _ide.Setup(c => c.GetSolutionPath(It.Is<string>(d => d == solution))).Returns(solutionPath);
 
             var projects = Enumerable.Range(0, projectsCount).Select(c => $"Project{c + 1}").ToArray();
             _ide.Setup(c => c.GetProjects(It.Is<string>(d => d == solution))).Returns(projects);
-            _ide.Setup(c => c.GetProjectPath(It.IsIn(projects)))
-                .Returns<string>(c => solutionPath != null ? new Uri(solutionPath, $"{c}/") : null);
+
+            _ide.Setup(c => c.GetProjectPath(It.IsAny<string>(), It.IsIn(projects)))
+                .Returns<string, string>((s, p) => solutionPath != null ? new Uri(solutionPath, $"{p}/") : null);
+
             _ide.SetupGet(c => c.CurrentProject)
                 .Returns(() => currentProject > -1 ? projects.ElementAt(currentProject) : null);
 
             var files = Enumerable.Range(0, filesPerProject).Select(c => $"File{c + 1}.cs");
-            _ide.Setup(c => c.GetProjectFiles(It.IsIn(projects)))
-                .Returns<string>(c => files.Select(d => new Uri(_ide.Object.GetProjectPath(c), d)));
+            _ide.Setup(c => c.GetProjectFiles(It.IsAny<string>(), It.IsIn(projects)))
+                .Returns<string, string>((s, p) => files.Select(f => new Uri(_ide.Object.GetProjectPath(It.IsAny<string>(), p), f)));
         }
 
         #endregion
