@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Collections.Immutable;
 
 using Optional;
 
@@ -29,7 +30,7 @@ namespace Markify.Core.IDE
                 (
                     _ideEnv.CurrentSolution,
                     _ideEnv.GetSolutionPath(name),
-                    _ideEnv.GetProjects(name)
+                    ImmutableList.CreateRange(_ideEnv.GetProjects(name))
                 ).Some();
             }
         }
@@ -74,7 +75,7 @@ namespace Markify.Core.IDE
             ( 
                 name,
                 projectPath ?? new Uri(solutionPath, name),
-                _ideEnv.GetProjectFiles(name) ?? new Uri[0]
+                ImmutableList.CreateRange(_ideEnv.GetProjectFiles(name) ?? new Uri[0])
             ).Some();
         }
 
