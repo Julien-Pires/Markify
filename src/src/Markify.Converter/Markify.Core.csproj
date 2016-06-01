@@ -59,6 +59,7 @@
     <Compile Include="IDE\ISolutionExplorer.cs" />
     <Compile Include="IDE\SolutionExplorer.cs" />
     <Compile Include="IDE\VisualStudio\VSEnvironment.cs" />
+    <Compile Include="Processors\IDocumentProcessor.cs" />
     <Compile Include="Processors\IProjectProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
