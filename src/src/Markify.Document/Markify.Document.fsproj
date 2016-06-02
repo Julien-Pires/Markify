@@ -44,6 +44,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
+    <Compile Include="Processor.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Markify.Converter\Markify.Core.csproj">
+      <Name>Markify.Core</Name>
+      <Project>{8833bf6e-806f-483d-ba70-ff92b09e625d}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Markify.Models\Markify.Models.fsproj">
+      <Name>Markify.Models</Name>
+      <Project>{2a8dfdc1-8752-4784-b962-6d0b9ad1541a}</Project>
+      <Private>True</Private>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
