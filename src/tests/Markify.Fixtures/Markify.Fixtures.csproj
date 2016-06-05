@@ -237,6 +237,10 @@
       <Project>{8833BF6E-806F-483D-BA70-FF92B09E625D}</Project>
       <Name>Markify.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\src\Markify.Document\Markify.Document.fsproj">
+      <Project>{ebc40e4e-db5b-4ec0-9186-860350d2a4cf}</Project>
+      <Name>Markify.Document</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\src\Markify.Models\Markify.Models.fsproj">
       <Project>{2a8dfdc1-8752-4784-b962-6d0b9ad1541a}</Project>
       <Name>Markify.Models</Name>

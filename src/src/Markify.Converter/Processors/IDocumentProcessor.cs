@@ -1,4 +1,6 @@
-﻿using static Markify.Models.Document;
+﻿using System.Collections.Generic;
+
+using static Markify.Models.Document;
 using static Markify.Models.Definitions;
 
 namespace Markify.Core.Processors
@@ -7,7 +9,7 @@ namespace Markify.Core.Processors
     {
         #region Methods
 
-        TableOfContent Process(LibraryDefinition library);
+        TableOfContent Process(IEnumerable<LibraryDefinition> library, DocumentSetting setting);
 
         #endregion
     }

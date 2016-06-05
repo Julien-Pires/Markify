@@ -4,6 +4,13 @@ open System
 
 module Document =
 
+    type DocumentFolder = Uri
+    type FileExtension = string
+    type DocumentSetting = {
+        Root : DocumentFolder
+        PageExtension : FileExtension
+    }
+
     type PageName = string
     type PageFolder = Uri
     type Page = {
@@ -11,10 +18,9 @@ module Document =
         Folder : PageFolder
         Content : obj
     }
-
-    type DocumentFolder = Uri
+    
     type PageList = Page seq
     type TableOfContent = {
-        Path : DocumentFolder
+        Root : DocumentFolder
         Pages : PageList
     }

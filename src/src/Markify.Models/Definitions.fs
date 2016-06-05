@@ -1,13 +1,15 @@
 ﻿namespace Markify.Models
 
 module Definitions =
+    open Context
 
-    type StructureKind =  | Unknown = 0
-                          | Class = 1
-                          | Struct = 2 
-                          | Interface = 3 
-                          | Delegate = 4
-                          | Enum = 5
+    type StructureKind =  
+        | Unknown = 0
+        | Class = 1
+        | Struct = 2 
+        | Interface = 3 
+        | Delegate = 4
+        | Enum = 5
 
     type DefinitionName = string
     type DefinitionFullname = string
@@ -38,5 +40,6 @@ module Definitions =
 
     type TypesList = TypeDefinition seq
     type LibraryDefinition = {
+        Project : ProjectName
         Types : TypesList
     }

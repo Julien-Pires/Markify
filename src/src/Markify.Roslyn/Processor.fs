@@ -11,7 +11,10 @@
         let inspectFile path =
             let tree = getSyntaxTree path
             match tree with
-            | Some s -> searchTypes (s.GetRoot()) |> Some
+            | Some s -> 
+                s.GetRoot()
+                |> searchTypes
+                |> Some
             | None -> None
 
         let inspectProject (files : FilesList) =
@@ -27,5 +30,6 @@
         interface IProjectProcessor with
             member this.Process (project : Project) : LibraryDefinition =
                 {
+                    Project = project.Name
                     Types = inspectProject project.Files
                 }

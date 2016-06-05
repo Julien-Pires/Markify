@@ -45,8 +45,8 @@
   <ItemGroup>
     <None Include="Script.fsx" />
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="Definitions.fs" />
     <Compile Include="Context.fs" />
+    <Compile Include="Definitions.fs" />
     <Compile Include="Document.fs" />
   </ItemGroup>
   <PropertyGroup>
