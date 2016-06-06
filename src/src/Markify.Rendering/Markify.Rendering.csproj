@@ -4,14 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8833BF6E-806F-483D-BA70-FF92B09E625D}</ProjectGuid>
+    <ProjectGuid>{6B9CE3E8-68DA-4EB9-8362-58A289B51E76}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Markify.Core</RootNamespace>
-    <AssemblyName>Markify.Core</AssemblyName>
+    <RootNamespace>Markify.Rendering</RootNamespace>
+    <AssemblyName>Markify.Rendering</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,21 +30,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </Reference>
-    <Reference Include="envdte80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </Reference>
-    <Reference Include="Optional, Version=3.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Optional.3.1.0\lib\net461\Optional.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Collections.Immutable, Version=1.1.37.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Collections.Immutable.1.1.37\lib\dotnet\System.Collections.Immutable.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -55,25 +40,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IDE\IIDEEnvironment.cs" />
-    <Compile Include="IDE\ISolutionExplorer.cs" />
-    <Compile Include="IDE\SolutionExplorer.cs" />
-    <Compile Include="IDE\VisualStudio\VSEnvironment.cs" />
-    <Compile Include="Processors\IDocumentProcessor.cs" />
-    <Compile Include="Rendering\IDocumentRenderer.cs" />
-    <Compile Include="Processors\IProjectProcessor.cs" />
+    <Compile Include="ITemplate.cs" />
+    <Compile Include="ITemplatesProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Markify.Converter\Markify.Core.csproj">
+      <Project>{8833bf6e-806f-483d-ba70-ff92b09e625d}</Project>
+      <Name>Markify.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Markify.Models\Markify.Models.fsproj">
       <Project>{2a8dfdc1-8752-4784-b962-6d0b9ad1541a}</Project>
       <Name>Markify.Models</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Templates\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
