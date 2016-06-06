@@ -1,10 +1,12 @@
-﻿namespace Markify.Rendering
+﻿using Optional;
+
+namespace Markify.Rendering
 {
     public interface ITemplatesProvider
     {
         #region Methods
 
-        ITemplate GetTemplate(object content);
+        Option<ITemplate> GetTemplate(object content);
 
         #endregion
     }
