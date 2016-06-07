@@ -1,6 +1,7 @@
-﻿using System;
+﻿using Optional;
 
 using Microsoft.VisualStudio.TextTemplating;
+
 
 namespace Markify.Rendering.T4
 {
@@ -17,15 +18,30 @@ namespace Markify.Rendering.T4
         public T4Template(TextTransformation template)
         {
             _template = template;
+            _template.Session = new TextTemplatingSession();
         }
 
         #endregion
 
         #region Methods
 
-        public string Apply(object content)
+        public Option<string> Apply(object content)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _template.Session["Content"] = content;
+                _template.Initialize();
+
+                return _template.TransformText().Some();
+            }
+            catch
+            {
+                return Option.None<string>();
+            }
+            finally
+            {
+                _template.Session.Clear();
+            }
         }
 
         #endregion
