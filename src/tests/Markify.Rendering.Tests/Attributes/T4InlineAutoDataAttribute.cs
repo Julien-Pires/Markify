@@ -11,7 +11,8 @@ namespace Markify.Rendering.Tests.Attributes
         #region Constructors
 
         public T4InlineAutoDataAttribute(Type[] templatesBinding, Type currentContent, params object[] values)
-            : base(new AutoDataAttribute(new Fixture().Customize(new T4Customization())), values)
+            : base(new AutoDataAttribute(new Fixture().Customize(new T4Customization(templatesBinding, currentContent))),
+                  values)
         {
         }
 

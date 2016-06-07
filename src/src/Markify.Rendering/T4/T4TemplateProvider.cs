@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 
 using Optional;
 
@@ -8,19 +9,20 @@ using TemplateTuple = System.Tuple<Microsoft.VisualStudio.TextTemplating.TextTra
 
 namespace Markify.Rendering.T4
 {
-    internal sealed class T4TemplateProvider : ITemplatesProvider
+    public sealed class T4TemplateProvider : ITemplatesProvider
     {
         #region Fields
 
-        private readonly Dictionary<Type, ITemplate> _templates = new Dictionary<Type, ITemplate>();
+        private readonly IImmutableDictionary<Type, ITemplate> _templates;
 
         #endregion
 
         #region Constructors
 
-        internal T4TemplateProvider(IEnumerable<TemplateTuple> templates)
+        public T4TemplateProvider(IEnumerable<TemplateTuple> templates)
         {
-            //_templates = templates.ToDictionary(c => c.Item2, c => (ITemplate)new T4Template(c.Item1));
+            _templates = templates.Where(c => c != null)
+                                  .ToImmutableDictionary(c => c.Item2, c => (ITemplate)new T4Template(c.Item1));
         }
 
         #endregion
@@ -29,7 +31,14 @@ namespace Markify.Rendering.T4
 
         public Option<ITemplate> GetTemplate(object content)
         {
-            throw new NotImplementedException();
+            if (content == null)
+                return Option.None<ITemplate>();
+
+            ITemplate result;
+            if (!_templates.TryGetValue(content.GetType(), out result))
+                return Option.None<ITemplate>();
+
+            return Option.Some(result);
         }
 
         #endregion
