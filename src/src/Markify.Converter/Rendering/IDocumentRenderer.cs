@@ -6,7 +6,7 @@ namespace Markify.Core.Rendering
     {
         #region Methods
 
-        void Render(TableOfContent toc);
+        void Render(TableOfContent toc, IPageWriter writer);
 
         #endregion
     }
