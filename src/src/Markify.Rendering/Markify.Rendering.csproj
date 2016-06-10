@@ -54,6 +54,7 @@
     <Compile Include="ITemplatesProvider.cs" />
     <Compile Include="PagesRenderer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="T4\T4Helper.cs" />
     <Compile Include="T4\T4Template.cs" />
     <Compile Include="T4\Templates\TypeTemplate.cs">
       <AutoGen>True</AutoGen>
