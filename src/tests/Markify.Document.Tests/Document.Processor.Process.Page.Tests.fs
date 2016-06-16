@@ -10,8 +10,8 @@
     [<Theory>]
     [<SimpleDocumentInlineAutoData("c:/FooSolution/", "FooProject", 1, 2, "md", 1, "Type1.md")>]
     [<SimpleDocumentInlineAutoData("c:/FooSolution/", "FooProject", 4, 2, "md", 4, "Type0.md")>]
-    let ``Process library should return page with correct name`` (expected, name, setting, library, sut : IDocumentProcessor) =
-        let toc = sut.Process (library, setting)
+    let ``Process library should return page with correct name`` (expected, name, setting, library, sut : IDocumentOrganizer) =
+        let toc = sut.Organize (library, setting)
         let actual =
             toc.Pages
             |> Seq.filter (fun c -> c.Name = name)
@@ -21,8 +21,8 @@
     [<Theory>]
     [<SimpleDocumentInlineAutoData("c:/FooSolution/", "FooProject", 1, 1, "md", "Foo.md")>]
     [<SimpleDocumentInlineAutoData("c:/FooSolution/", "FooProject", 4, 1, "md", "Bar.md")>]
-    let ``Process library should not return page with incorrect name`` (expected, setting, library, sut : IDocumentProcessor) =
-        let toc = sut.Process (library, setting)
+    let ``Process library should not return page with incorrect name`` (expected, setting, library, sut : IDocumentOrganizer) =
+        let toc = sut.Organize (library, setting)
         let actual =
             toc.Pages
             |> Seq.tryFind (fun c -> c.Name = expected)
@@ -32,8 +32,8 @@
     [<Theory>]
     [<SimpleDocumentInlineAutoData("c:/FooSolution/", "FooProject", 1, 2, "md", "FooProject0\Parent\Type1.md")>]
     [<SimpleDocumentInlineAutoData("c:/FooSolution/", "FooProject", 4, 4, "md", "FooProject2\Parent\Type2.md")>]
-    let ``Process library should return page with unique path`` (expected, setting, library, sut : IDocumentProcessor) =
-        let toc = sut.Process (library, setting)
+    let ``Process library should return page with unique path`` (expected, setting, library, sut : IDocumentOrganizer) =
+        let toc = sut.Organize (library, setting)
         let actual =
             toc.Pages
             |> Seq.filter (fun c -> c.Folder = new Uri(expected, UriKind.Relative))

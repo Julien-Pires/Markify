@@ -30,8 +30,8 @@
         let expectedModifiers = modifier.Split [|' '|]
 
         let typeDef = 
-            (sut :> IProjectProcessor)
-            |> (fun c -> c.Process(project))
+            (sut :> IProjectAnalyzer)
+            |> (fun c -> c.Analyze(project))
             |> (fun c -> c.Types)
             |> Seq.find (fun c -> c.Identity.Name = name)
         let possessedModifiers = 
@@ -49,8 +49,8 @@
     [<ProjectContextInlineAutoData([|"Projects/Source/Struct/AdditionnalModifier.cs"|], "partial", "PartialStruct")>]
     let ``Process project with types that have a single modifier`` (modifier, name, sut: RoslynProcessor, project: Project) =
         let typeDef = 
-            (sut :> IProjectProcessor)
-            |> (fun c -> c.Process(project))
+            (sut :> IProjectAnalyzer)
+            |> (fun c -> c.Analyze(project))
             |> (fun c -> c.Types)
             |> Seq.find (fun c -> c.Identity.Name = name)
 
@@ -63,8 +63,8 @@
         let expectedModifiers = modifier.Split [|' '|]
 
         let typeDef = 
-            (sut :> IProjectProcessor)
-            |> (fun c -> c.Process(project))
+            (sut :> IProjectAnalyzer)
+            |> (fun c -> c.Analyze(project))
             |> (fun c -> c.Types)
             |> Seq.find (fun c -> c.Identity.Name = name)
         let possessedModifiers = Seq.filter (fun c -> Seq.contains c expectedModifiers) typeDef.Modifiers

@@ -19,8 +19,8 @@
     [<ProjectContextInlineAutoData([|"Projects/Source/Enum/InheritedEnum.cs"|], "IntEnum", 1)>]
     let ``Process project with type with inheritance tree`` (name, count, sut: RoslynProcessor, project: Project) =
         let typeDef = 
-            (sut :> IProjectProcessor)
-            |> (fun c -> c.Process(project))
+            (sut :> IProjectAnalyzer)
+            |> (fun c -> c.Analyze(project))
             |> (fun c -> c.Types)
             |> Seq.find (fun c -> c.Identity.Name = name)
 
@@ -39,8 +39,8 @@
         let expectedBaseTypes = typeNames.Split [|' '|]
 
         let typeDef = 
-            (sut :> IProjectProcessor)
-            |> (fun c -> c.Process(project))
+            (sut :> IProjectAnalyzer)
+            |> (fun c -> c.Analyze(project))
             |> (fun c -> c.Types)
             |> Seq.find (fun c -> c.Identity.Name = name)
         let baseTypes = 

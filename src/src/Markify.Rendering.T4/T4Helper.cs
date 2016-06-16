@@ -14,6 +14,7 @@ namespace Markify.Rendering.T4
             switch(definition.Kind)
             {
                 case StructureKind.Class:
+                case StructureKind.Unknown:
                     result = "class";
                     break;
 
@@ -43,10 +44,7 @@ namespace Markify.Rendering.T4
 
         public static string GetAccessModifiers(TypeDefinition definition)
         {
-            if (definition.AccessModifiers.Count() == 0)
-                return "internal";
-
-            return string.Join(" & ", definition.AccessModifiers);
+            return !definition.AccessModifiers.Any() ? "internal" : string.Join(" & ", definition.AccessModifiers);
         }
 
         public static string GetModifiers(TypeDefinition definition)
@@ -61,7 +59,7 @@ namespace Markify.Rendering.T4
 
         public static string GetNameWithParameters(TypeDefinition definition)
         {
-            if (definition.Parameters.Count() == 0)
+            if (!definition.Parameters.Any())
                 return definition.Identity.Name;
 
             var parameters = string.Join(", ", definition.Parameters.Select(c => c.Identity.Name));

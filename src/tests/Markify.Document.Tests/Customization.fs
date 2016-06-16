@@ -18,7 +18,7 @@
 
         interface ICustomization with
             member  this.Customize (fixture : IFixture) = 
-                fixture.Inject<IDocumentProcessor> (new SimpleDocumentProcessor())
+                fixture.Inject<IDocumentOrganizer> (new SimpleDocumentProcessor())
 
                 fixture.Register<DocumentSetting> (fun c -> 
                     let setting  = {

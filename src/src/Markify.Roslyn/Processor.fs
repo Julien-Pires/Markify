@@ -11,7 +11,7 @@
         let inspectFile path =
             let tree = getSyntaxTree path
             match tree with
-            | Some s -> 
+            | Some s ->
                 s.GetRoot()
                 |> searchTypes
                 |> Some
@@ -27,8 +27,8 @@
             )
             |> Seq.distinctBy (fun c -> c.Identity.Fullname)
 
-        interface IProjectProcessor with
-            member this.Process (project : Project) : LibraryDefinition =
+        interface IProjectAnalyzer with
+            member this.Analyze (project : Project) : LibraryDefinition =
                 {
                     Project = project.Name
                     Types = inspectProject project.Files

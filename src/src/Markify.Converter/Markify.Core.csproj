@@ -30,12 +30,19 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="envdte80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Ninject, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Ninject.3.2.2.0\lib\net45-full\Ninject.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Optional, Version=3.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Optional.3.1.0\lib\net461\Optional.dll</HintPath>
@@ -55,13 +62,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IDE\IDEModule.cs" />
     <Compile Include="IDE\IIDEEnvironment.cs" />
     <Compile Include="IDE\ISolutionExplorer.cs" />
     <Compile Include="IDE\SolutionExplorer.cs" />
     <Compile Include="IDE\VisualStudio\VSEnvironment.cs" />
-    <Compile Include="Processors\IDocumentProcessor.cs" />
+    <Compile Include="IDE\VisualStudio\VSModule.cs" />
+    <Compile Include="Processors\IDocumentOrganizer.cs" />
     <Compile Include="Rendering\IDocumentRenderer.cs" />
-    <Compile Include="Processors\IProjectProcessor.cs" />
+    <Compile Include="Processors\IProjectAnalyzer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rendering\IPageWriter.cs" />
   </ItemGroup>

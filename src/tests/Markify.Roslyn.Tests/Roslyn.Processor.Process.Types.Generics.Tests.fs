@@ -18,8 +18,8 @@
     [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericDelegate.cs"|], 1, "Do`1")>]
     let ``Process project with generic types`` (count, name, sut: RoslynProcessor, project: Project) =
         let typeDef =
-            (sut :> IProjectProcessor)
-            |> (fun c -> c.Process(project))
+            (sut :> IProjectAnalyzer)
+            |> (fun c -> c.Analyze(project))
             |> (fun c -> c.Types)
             |> Seq.find (fun c -> c.Identity.Name = name)
 
@@ -33,8 +33,8 @@
     [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericDelegate.cs"|], "T", "Do`1")>]
     let ``Process project with generic parameter with correct parameter name`` (parameterName, name, sut: RoslynProcessor, project: Project) =
         let typeDef =
-            (sut :> IProjectProcessor)
-            |> (fun c -> c.Process(project))
+            (sut :> IProjectAnalyzer)
+            |> (fun c -> c.Analyze(project))
             |> (fun c -> c.Types)
             |> Seq.find (fun c -> c.Identity.Name = name)
         let parameter =
@@ -51,8 +51,8 @@
     [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericDelegate.cs"|], "in", "T", "Do`1")>]
     let ``Process project with generic parameters with modifiers`` (modifier: string, parameterName, name, sut: RoslynProcessor, project: Project) = 
         let typeDef =
-            (sut :> IProjectProcessor)
-            |> (fun c -> c.Process(project))
+            (sut :> IProjectAnalyzer)
+            |> (fun c -> c.Analyze(project))
             |> (fun c -> c.Types)
             |> Seq.find (fun c -> c.Identity.Name = name)
         let parameter =
@@ -68,8 +68,8 @@
     [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericDelegate.cs"|], 3, "T", "Do`1")>]
     let ``Process project with generic parameter with constraints`` (count, parameterName, name, sut: RoslynProcessor, project: Project) =
         let typeDef =
-            (sut :> IProjectProcessor)
-            |> (fun c -> c.Process(project))
+            (sut :> IProjectAnalyzer)
+            |> (fun c -> c.Analyze(project))
             |> (fun c -> c.Types)
             |> Seq.find (fun c -> c.Identity.Name = name)
         let parameter =
@@ -87,8 +87,8 @@
         let expectedConstraints = constraints.Split ([|' '|], StringSplitOptions.RemoveEmptyEntries)
         
         let typeDef =
-            (sut :> IProjectProcessor)
-            |> (fun c -> c.Process(project))
+            (sut :> IProjectAnalyzer)
+            |> (fun c -> c.Analyze(project))
             |> (fun c -> c.Types)
             |> Seq.find (fun c -> c.Identity.Name = name)
         let parameter =

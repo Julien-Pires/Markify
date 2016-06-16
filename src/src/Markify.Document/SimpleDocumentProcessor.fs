@@ -8,8 +8,8 @@ open Markify.Models.Document
 open Markify.Models.Definitions
 
 type SimpleDocumentProcessor() =
-    interface IDocumentProcessor with
-        member this.Process (libraries : LibraryDefinition seq, setting : DocumentSetting) : TableOfContent = 
+    interface IDocumentOrganizer with
+        member this.Organize (libraries : LibraryDefinition seq, setting : DocumentSetting) : TableOfContent = 
             let pages =
                 ([], libraries)
                 ||> Seq.fold (fun acc c ->

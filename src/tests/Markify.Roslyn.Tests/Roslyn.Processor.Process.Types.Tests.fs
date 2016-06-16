@@ -16,7 +16,7 @@
     [<ProjectContextInlineAutoData([|"Projects/Source/Enum/EnumSamples.cs"|], 3, StructureKind.Enum)>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Delegate/DelegateSamples.cs"|], 3, StructureKind.Delegate)>]
     let ``Process project with single source`` (expected, kind, sut: RoslynProcessor, project: Project) = 
-        let library = (sut :> IProjectProcessor).Process project
+        let library = (sut :> IProjectAnalyzer).Analyze project
         let typesCount =
             library.Types
             |> Seq.filter (fun c -> c.Kind = kind)
@@ -32,8 +32,8 @@
     [<ProjectContextInlineAutoData([|"Projects/Source/Delegate/DelegateSamples.cs"; "Projects/Source/Delegate/DelegateSamples.cs"|], "SingleDelegate")>]
     let ``Process project without duplicate types`` (fullname, sut: RoslynProcessor, project: Project) =
         let typeDef = 
-            (sut :> IProjectProcessor)
-            |> (fun c -> c.Process project)
+            (sut :> IProjectAnalyzer)
+            |> (fun c -> c.Analyze project)
             |> (fun c -> c.Types)
             |> Seq.filter (fun c -> c.Identity.Fullname = fullname)
 
@@ -50,8 +50,8 @@
     [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericDelegate.cs"|], "Do`1")>]
     let ``Process project with types with correct name`` (name, sut: RoslynProcessor, project: Project) =
         let typeDef = 
-            (sut :> IProjectProcessor)
-            |> (fun c -> c.Process project)
+            (sut :> IProjectAnalyzer)
+            |> (fun c -> c.Analyze project)
             |> (fun c -> c.Types)
             |> Seq.tryFind (fun c -> c.Identity.Name = name)
 
@@ -69,8 +69,8 @@
     [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericDelegate.cs"|], "Do`1")>]
     let ``Process project with types with correct fullname`` (fullname, sut: RoslynProcessor, project: Project) =
         let typeDef = 
-            (sut :> IProjectProcessor)
-            |> (fun c -> c.Process project)
+            (sut :> IProjectAnalyzer)
+            |> (fun c -> c.Analyze project)
             |> (fun c -> c.Types)
             |> Seq.tryFind (fun c -> c.Identity.Fullname = fullname)
 

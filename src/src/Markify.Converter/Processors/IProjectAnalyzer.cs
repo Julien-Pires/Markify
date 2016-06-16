@@ -3,11 +3,11 @@ using static Markify.Models.Definitions;
 
 namespace Markify.Core.Processors
 {
-    public interface IProjectProcessor
+    public interface IProjectAnalyzer
     {
         #region Methods
 
-        LibraryDefinition Process(Project project);
+        LibraryDefinition Analyze(Project project);
 
         #endregion
     }

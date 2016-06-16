@@ -5,11 +5,11 @@ using static Markify.Models.Definitions;
 
 namespace Markify.Core.Processors
 {
-    public interface IDocumentProcessor
+    public interface IDocumentOrganizer
     {
         #region Methods
 
-        TableOfContent Process(IEnumerable<LibraryDefinition> library, DocumentSetting setting);
+        TableOfContent Organize(IEnumerable<LibraryDefinition> library, DocumentSetting setting);
 
         #endregion
     }
