@@ -2,7 +2,7 @@
 
 using static Markify.Models.Document;
 
-namespace Markify.Services.Impl
+namespace Markify.Services.Processing
 {
     internal class RendererService : IRendererService
     {

@@ -34,18 +34,21 @@ namespace Markify.Controllers
 
         public bool GenerateForCurrentProject()
         {
-            return GenerateDocumentation(GetCurrentProject());
+            return GenerateDocumentation(GetCurrentProject(), _explorer.CurrentSolution);
         }
 
         public bool GenerateForCurrentSolution()
         {
-            return GenerateDocumentation(GetProjectsFromCurrentSolution());
+            return GenerateDocumentation(GetProjectsFromCurrentSolution(), _explorer.CurrentSolution);
         }
 
-        private bool GenerateDocumentation(Option<IEnumerable<Project>> projects)
+        private bool GenerateDocumentation(Option<IEnumerable<Project>> projects, Option<Solution> solution)
         {
             return projects.Match(
-                x => _generator.Generate(x),
+                p => solution.Match(
+                    s => _generator.Generate(p, s),
+                    () => false
+                ),
                 () => false
             );
         }

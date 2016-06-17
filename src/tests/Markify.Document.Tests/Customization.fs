@@ -4,6 +4,7 @@
     open System.Collections.Generic
 
     open Markify.Document
+    open Markify.Models.Context
     open Markify.Core.Processors
     open Markify.Models.Document
     open Markify.Models.Definitions
@@ -20,9 +21,14 @@
             member  this.Customize (fixture : IFixture) = 
                 fixture.Inject<IDocumentOrganizer> (new SimpleDocumentProcessor())
 
+                fixture.Register<Solution>(fun c ->
+                    let solution = {
+                        Name = "Solution"
+                        Path = Uri(root)
+                        Projects = [] }
+                    solution)
                 fixture.Register<DocumentSetting> (fun c -> 
-                    let setting  = {
-                        Root = new Uri(root)
+                    let setting = {
                         PageExtension = extension }
                     setting)
                 fixture.Register<IEnumerable<LibraryDefinition>> (fun c ->

@@ -9,7 +9,7 @@ open Markify.Models.Definitions
 
 type SimpleDocumentProcessor() =
     interface IDocumentOrganizer with
-        member this.Organize (libraries : LibraryDefinition seq, setting : DocumentSetting) : TableOfContent = 
+        member this.Organize (libraries : LibraryDefinition seq, solution, setting : DocumentSetting) : TableOfContent = 
             let pages =
                 ([], libraries)
                 ||> Seq.fold (fun acc c ->
@@ -17,7 +17,6 @@ type SimpleDocumentProcessor() =
                     (acc, c.Types)
                     ||> Seq.fold (fun acc2 d -> (pageCreator d)::acc2))
             let toc = {
-                Root = Uri(setting.Root, "docs/")
-                Pages = pages
-            }
+                Root = Uri(solution.Path, "docs/")
+                Pages = pages}
             toc

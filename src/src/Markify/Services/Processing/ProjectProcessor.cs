@@ -8,7 +8,7 @@ using static Markify.Models.Context;
 using static Markify.Models.Document;
 using static Markify.Models.Definitions;
 
-namespace Markify.Services.Impl
+namespace Markify.Services.Processing
 {
     internal sealed class ProjectProcessor : IProjectProcessor
     {
@@ -16,31 +16,31 @@ namespace Markify.Services.Impl
 
         private readonly IProjectAnalyzer _analyzer;
         private readonly IDocumentOrganizer _organizer;
-        private readonly DocumentSetting _settings;
+        private readonly ISettingsProvider _settingsProvider;
 
         #endregion
 
         #region Constructors
 
-        public ProjectProcessor(IProjectAnalyzer analyzer, IDocumentOrganizer organizer, DocumentSetting settings)
+        public ProjectProcessor(IProjectAnalyzer analyzer, IDocumentOrganizer organizer, ISettingsProvider settingsProvider)
         {
             _analyzer = analyzer;
             _organizer = organizer;
-            _settings = settings;
+            _settingsProvider = settingsProvider;
         }
 
         #endregion
 
         #region Processing
 
-        public TableOfContent Process(IEnumerable<Project> projects)
+        public TableOfContent Process(IEnumerable<Project> projects, Solution solution)
         {
             var libraries = projects.Aggregate(
                 ImmutableArray.Create<LibraryDefinition>(),
                 (acc, c) => acc.Add(_analyzer.Analyze(c))
             );
 
-            return _organizer.Organize(libraries, _settings);
+            return _organizer.Organize(libraries, solution, _settingsProvider.GetSettings());
         }
 
         #endregion

@@ -8,12 +8,16 @@ using Markify.Controllers;
 using Markify.Core.IDE;
 using Markify.Core.IDE.VisualStudio;
 using Markify.Rendering.T4;
-using Markify.Services.Impl;
+using Markify.Services;
+
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 
 using Ninject;
 using Ninject.Modules;
+
+using EnvDTE;
+using EnvDTE80;
 
 namespace Markify
 {
@@ -35,7 +39,7 @@ namespace Markify
             new RenderingModule(),
             new T4Module(),
             new IDEModule(),
-            new VSModule(),
+            new VSModule(GetVisualStudioEnvironment),
             new ServicesModule()
         };
 
@@ -56,6 +60,8 @@ namespace Markify
             IKernel kernel = new StandardKernel(_modules);
             Commands = kernel.Get<CommandsController>();
         }
+
+        private static DTE2 GetVisualStudioEnvironment() => GetGlobalService(typeof(DTE)) as DTE2;
 
         #endregion
     }

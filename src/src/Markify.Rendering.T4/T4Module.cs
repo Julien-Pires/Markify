@@ -8,7 +8,7 @@ namespace Markify.Rendering.T4
     {
         #region Fields
 
-        private readonly TemplateTuple[] _templates = {};
+        private static readonly TemplateTuple[] Templates = {};
 
         #endregion
 
@@ -16,8 +16,7 @@ namespace Markify.Rendering.T4
 
         public override void Load()
         {
-            Bind<ITemplatesProvider>().To<T4TemplateProvider>()
-                                      .WithConstructorArgument(_templates);
+            Bind<ITemplatesProvider>().ToMethod(c => new T4TemplateProvider(Templates));
         }
 
         #endregion

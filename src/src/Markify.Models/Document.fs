@@ -7,7 +7,6 @@ module Document =
     type DocumentFolder = Uri
     type FileExtension = string
     type DocumentSetting = {
-        Root : DocumentFolder
         PageExtension : FileExtension
     }
 

@@ -8,7 +8,7 @@ namespace Markify.Services
     {
         #region Methods
 
-        bool Generate(IEnumerable<Project> projects);
+        bool Generate(IEnumerable<Project> projects, Solution solution);
 
         #endregion
     }

@@ -1,6 +1,6 @@
 ﻿using static Markify.Models.Document;
 
-namespace Markify.Services
+namespace Markify.Services.Processing
 {
     internal interface IRendererService
     {

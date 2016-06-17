@@ -2,7 +2,7 @@
 
 using static Markify.Models.Context;
 
-namespace Markify.Services.Impl
+namespace Markify.Services.Processing
 {
     internal class DocumentationGenerator : IDocumentationGenerator
     {
@@ -25,12 +25,12 @@ namespace Markify.Services.Impl
 
         #region Generator Methods
 
-        public bool Generate(IEnumerable<Project> projects)
+        public bool Generate(IEnumerable<Project> projects, Solution solution)
         {
             if(projects == null)
                 return false;
 
-            var tableOfContent = _projectProcessor.Process(projects);
+            var tableOfContent = _projectProcessor.Process(projects, solution);
 
             return _rendererService.Render(tableOfContent);
         }
