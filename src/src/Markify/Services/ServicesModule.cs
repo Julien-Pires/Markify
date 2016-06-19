@@ -1,4 +1,7 @@
-﻿using Markify.Services.Settings;
+﻿using Markify.Core.Rendering;
+
+using Markify.Services.IO;
+using Markify.Services.Settings;
 using Markify.Services.Processing;
 
 using Ninject.Modules;
@@ -11,6 +14,7 @@ namespace Markify.Services
 
         public override void Load()
         {
+            Bind<IPageWriter>().To<FileWriter>();
             Bind<IProjectProcessor>().To<ProjectProcessor>();
             Bind<IRendererService>().To<RendererService>();
             Bind<IDocumentationGenerator>().To<DocumentationGenerator>();

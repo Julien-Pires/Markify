@@ -27,7 +27,7 @@ namespace Markify.Core.IDE.VisualStudio
         public override void Load()
         {
             Bind<DTE2>().ToMethod(c => _vsEnvironmentFactory());
-            Bind<IIDEEnvironment>().To<VSEnvironment>();
+            Bind<IIDEEnvironment>().To<VisualStudioEnvironment>();
         }
 
         #endregion

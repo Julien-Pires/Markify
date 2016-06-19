@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Runtime.InteropServices;
 
 using Markify.Roslyn;
@@ -59,6 +60,17 @@ namespace Markify
 
             IKernel kernel = new StandardKernel(_modules);
             Commands = kernel.Get<CommandsController>();
+
+            var s = kernel.Get<ISolutionExplorer>();
+            var g = s.CurrentProject;
+            var h = s.CurrentSolution;
+            h.Match(
+                c => {
+                         var jk = s.GetProject(c.Projects.ElementAt(0));
+                         jk = jk;
+                },
+                () => { }
+            );
         }
 
         private static DTE2 GetVisualStudioEnvironment() => GetGlobalService(typeof(DTE)) as DTE2;

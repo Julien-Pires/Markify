@@ -8,7 +8,7 @@ using EnvDTE80;
 
 namespace Markify.Core.IDE.VisualStudio
 {
-    public sealed class VSEnvironment : IIDEEnvironment
+    public sealed class VisualStudioEnvironment : IIDEEnvironment
     {
         #region Fields
 
@@ -22,9 +22,9 @@ namespace Markify.Core.IDE.VisualStudio
         {
             get
             {
-                var projects = _visualStudio.ActiveSolutionProjects as Project[];
+                var projects = (Array)_visualStudio.ActiveSolutionProjects;
 
-                return projects.Length > 0 ? projects[0].FullName : null;
+                return projects.Length > 0 ? ((Project)projects.GetValue(0)).FullName : null;
             }
         }
 
@@ -34,7 +34,7 @@ namespace Markify.Core.IDE.VisualStudio
 
         #region Constructors
 
-        public VSEnvironment(DTE2 visualStudio)
+        public VisualStudioEnvironment(DTE2 visualStudio)
         {
             _visualStudio = visualStudio;
         }
@@ -45,17 +45,26 @@ namespace Markify.Core.IDE.VisualStudio
 
         private static IEnumerable<Project> GetProjects(Solution solution)
         {
-            return solution.Projects.OfType<Project>();
+            var projects = new Queue<Project>(solution.Projects.Cast<Project>());
+            while (projects.Count > 0)
+            {
+                var current = projects.Dequeue();
+                if (current.Kind == ProjectKinds.vsProjectKindSolutionFolder)
+                {
+                    var subProjects = current.ProjectItems.Cast<ProjectItem>()
+                                                          .Select(c => c.SubProject)
+                                                          .Where(c => c != null);
+                    foreach (var sub in subProjects)
+                        projects.Enqueue(sub);
+                }
+                else
+                    yield return current;
+            }
         }
 
         private static Project GetProject(string name, Solution solution)
         {
             return GetProjects(solution).FirstOrDefault(c => Path.GetFileNameWithoutExtension(name) == name);
-        }
-
-        private static IEnumerable<ProjectItem> GetProjectItems(Project project)
-        {
-            return project.ProjectItems.OfType<ProjectItem>();
         }
 
         #endregion
@@ -94,15 +103,29 @@ namespace Markify.Core.IDE.VisualStudio
         public IEnumerable<Uri> GetProjectFiles(string solution, string name)
         {
             if (CurrentSolution != solution)
-                return null;
+                yield break;
 
             var project = GetProject(name, _visualStudio.Solution);
             if (project == null)
-                return null;
+                yield break;
 
-            return GetProjectItems(project).SelectMany(
-                c => Enumerable.Range(0, c.FileCount).Select(d => new Uri(c.FileNames[(short)d]))
-            );
+            var files = new Queue<ProjectItem>(project.ProjectItems.Cast<ProjectItem>());
+            while (files.Count > 0)
+            {
+                var current = files.Dequeue();
+                switch (current.Kind)
+                {
+                    case Constants.vsProjectItemKindPhysicalFolder:
+                    case Constants.vsProjectItemKindVirtualFolder:
+                        foreach (var item in current.ProjectItems)
+                            files.Enqueue((ProjectItem)item);
+                        break;
+
+                    case Constants.vsProjectItemKindPhysicalFile:
+                        yield return new Uri(current.FileNames[0]);
+                        break;
+                }
+            }
         }
 
         #endregion

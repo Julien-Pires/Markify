@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Immutable;
 
 using Optional;
@@ -35,15 +34,7 @@ namespace Markify.Core.IDE
             }
         }
 
-        public Option<string> CurrentProject
-        {
-            get
-            {
-                return _ideEnv.CurrentProject != null ? 
-                    _ideEnv.CurrentProject.Some() :
-                    Option.None<string>();
-            }
-        }
+        public Option<string> CurrentProject => _ideEnv.CurrentProject?.Some() ?? Option.None<string>();
 
         #endregion
 
@@ -63,16 +54,17 @@ namespace Markify.Core.IDE
             if (string.IsNullOrWhiteSpace(name))
                 return default(Option<Project>);
 
-            var projectPath = _ideEnv.GetProjectPath(_ideEnv.CurrentSolution, name);
-            var solutionPath = _ideEnv.GetSolutionPath(_ideEnv.CurrentSolution);
+            var currentSolution = _ideEnv.CurrentSolution;
+            var projectPath = _ideEnv.GetProjectPath(currentSolution, name);
+            var solutionPath = _ideEnv.GetSolutionPath(currentSolution);
             if (projectPath == null || solutionPath == null)
                 return default(Option<Project>);
 
             return new Project
             ( 
                 name,
-                projectPath ?? new Uri(solutionPath, name),
-                ImmutableList.CreateRange(_ideEnv.GetProjectFiles(_ideEnv.CurrentSolution, name) ?? new Uri[0])
+                projectPath,
+                ImmutableList.CreateRange(_ideEnv.GetProjectFiles(currentSolution, name) ?? new Uri[0])
             ).Some();
         }
 
