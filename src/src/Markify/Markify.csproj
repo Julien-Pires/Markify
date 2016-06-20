@@ -84,9 +84,6 @@
     <Reference Include="envdte80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
-    <Reference Include="Markify.Document">
-      <HintPath>..\Markify.Document\bin\Debug\Markify.Document.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <HintPath>..\..\packages\Microsoft.VisualStudio.OLE.Interop.7.10.6070\lib\Microsoft.VisualStudio.OLE.Interop.dll</HintPath>
       <Private>True</Private>
@@ -126,8 +123,8 @@
       <HintPath>..\..\packages\Optional.3.1.0\lib\net461\Optional.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Ploeh.AutoFixture, Version=3.47.6.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\AutoFixture.3.47.6\lib\net40\Ploeh.AutoFixture.dll</HintPath>
+    <Reference Include="Ploeh.AutoFixture, Version=3.47.8.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\AutoFixture.3.47.8\lib\net40\Ploeh.AutoFixture.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -159,6 +156,10 @@
     <ProjectReference Include="..\Markify.Converter\Markify.Core.csproj">
       <Project>{8833BF6E-806F-483D-BA70-FF92B09E625D}</Project>
       <Name>Markify.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Markify.Document\Markify.Document.fsproj">
+      <Project>{ebc40e4e-db5b-4ec0-9186-860350d2a4cf}</Project>
+      <Name>Markify.Document</Name>
     </ProjectReference>
     <ProjectReference Include="..\Markify.Models\Markify.Models.fsproj">
       <Project>{2a8dfdc1-8752-4784-b962-6d0b9ad1541a}</Project>
