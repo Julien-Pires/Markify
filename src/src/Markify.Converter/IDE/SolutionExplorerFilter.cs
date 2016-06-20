@@ -11,13 +11,16 @@ namespace Markify.Core.IDE
 
         public IEnumerable<ProjectLanguage> SupportedLanguages { get; }
 
+        public IEnumerable<string> SupportedFiles { get; }
+
         #endregion
 
         #region Constructors
 
-        public SolutionExplorerFilter(IEnumerable<ProjectLanguage> languages)
+        public SolutionExplorerFilter(IEnumerable<ProjectLanguage> languages, IEnumerable<string> files)
         {
             SupportedLanguages = languages?.ToImmutableList() ?? ImmutableList.Create<ProjectLanguage>();
+            SupportedFiles = files?.ToImmutableList() ?? ImmutableList.Create<string>();
         }
 
         #endregion

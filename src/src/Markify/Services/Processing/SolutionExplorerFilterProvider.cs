@@ -21,7 +21,7 @@ namespace Markify.Services.Processing
                 if (_filters != null)
                     return _filters;
 
-                _filters = new SolutionExplorerFilter(new[] { ProjectLanguage.CSharp });
+                _filters = new SolutionExplorerFilter(new[] { ProjectLanguage.CSharp }, new []{ ".cs" });
 
                 return _filters;
             }

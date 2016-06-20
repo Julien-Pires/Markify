@@ -29,7 +29,8 @@ namespace Markify.Fixtures
             int currentProject, 
             int filesPerProject, 
             ProjectLanguage language,
-            IEnumerable<ProjectLanguage> filteredLanguages)
+            IEnumerable<ProjectLanguage> filteredLanguages,
+            IEnumerable<string> filteredFiles)
         {
             _ide = new Mock<IIDEEnvironment>();
             _ide.SetupGet(c => c.CurrentSolution).Returns(solution);
@@ -54,7 +55,8 @@ namespace Markify.Fixtures
             _ide.SetupGet(c => c.CurrentProject)
                 .Returns(() => currentProject > -1 ? projects.ElementAt(currentProject) : null);
 
-            var files = Enumerable.Range(0, filesPerProject).Select(c => $"File{c + 1}.cs");
+            var fileExt = language == ProjectLanguage.CSharp ? "cs" : "vb";
+            var files = Enumerable.Range(0, filesPerProject).Select(c => $"File{c + 1}.{fileExt}");
             _ide.Setup(c => c.GetProjectFiles(It.IsAny<string>(), It.IsIn(projects)))
                 .Returns<string, string>((s, p) => files.Select(f => new Uri(_ide.Object.GetProjectPath(It.IsAny<string>(), p), f)));
 
@@ -63,8 +65,7 @@ namespace Markify.Fixtures
 
             _filterProvider = new Mock<ISolutionExplorerFilterProvider>();
             _filterProvider.SetupGet(c => c.Filters)
-                           .Returns(() => new SolutionExplorerFilter(filteredLanguages));
-
+                           .Returns(() => new SolutionExplorerFilter(filteredLanguages, filteredFiles));
         }
 
         #endregion

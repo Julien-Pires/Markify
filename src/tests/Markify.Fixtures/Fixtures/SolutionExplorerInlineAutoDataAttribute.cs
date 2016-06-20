@@ -20,10 +20,11 @@ namespace Markify.Fixtures
             int filesPerProject = 0, 
             ProjectLanguage language = ProjectLanguage.Unsupported,
             ProjectLanguage[] filteredLanguages = null,
+            string[] filteredFiles = null,
             params object[] values)
             : base(new AutoDataAttribute(
                     new Fixture().Customize(new SolutionExplorerCustomization(solution, root, projectsCount, 
-                        currentProject, filesPerProject, language, filteredLanguages))
+                        currentProject, filesPerProject, language, filteredLanguages, filteredFiles))
                 ), values)
         {
         }

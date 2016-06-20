@@ -30,7 +30,11 @@ namespace Markify.Core.IDE
 
                 var supportedProjects = FilterSupportedProjects(_ideEnv.GetProjects(name) ?? new string[0]);
 
-                return new Solution(name, _ideEnv.GetSolutionPath(name), ImmutableList.CreateRange(supportedProjects)).Some();
+                return new Solution(
+                    name, 
+                    _ideEnv.GetSolutionPath(name), 
+                    ImmutableList.CreateRange(supportedProjects)
+                ).Some();
             }
         }
 
@@ -85,12 +89,14 @@ namespace Markify.Core.IDE
             if (!supportedProjects.Any())
                 return default(Option<Project>);
 
+            var supportedFiles = FilterSupportedFiles(_ideEnv.GetProjectFiles(solution, name) ?? new Uri[0]);
+
             return new Project
             ( 
                 name,
                 projectPath,
                 _ideEnv.GetProjectLanguage(solution, name),
-                ImmutableList.CreateRange(_ideEnv.GetProjectFiles(solution, name) ?? new Uri[0])
+                ImmutableList.CreateRange(supportedFiles)
             ).Some();
         }
 
@@ -101,13 +107,26 @@ namespace Markify.Core.IDE
             return !filters.SupportedLanguages.Any() || filters.SupportedLanguages.Any(c => c == language);
         }
 
+        private bool IsSupportedFile(string path)
+        {
+            var filters = _filterProvider.Filters;
+
+            return !filters.SupportedFiles.Any() || filters.SupportedFiles.Any(path.EndsWith);
+        }
+
         private IEnumerable<string> FilterSupportedProjects(IEnumerable<string> projects)
         {
-            return projects.Where(c => {
+            return projects.Where(c => 
+            {
                 var language = _ideEnv.GetProjectLanguage(_ideEnv.CurrentSolution, c);
 
                 return IsSupportedLanguage(language);
             });
+        }
+
+        private IEnumerable<Uri> FilterSupportedFiles(IEnumerable<Uri> files)
+        {
+            return files.Where(c => IsSupportedFile(c.AbsolutePath));
         }
 
         #endregion
