@@ -14,7 +14,7 @@ namespace Markify.Core.IDE
         #region Fields
 
         private readonly IIDEEnvironment _ideEnv;
-        private readonly SolutionExplorerFilter _filters;
+        private readonly ISolutionExplorerFilterProvider _filterProvider;
 
         #endregion
 
@@ -52,16 +52,16 @@ namespace Markify.Core.IDE
 
         #region Constructors
 
-        public SolutionExplorer(IIDEEnvironment ideEnv, SolutionExplorerFilter filters)
+        public SolutionExplorer(IIDEEnvironment ideEnv, ISolutionExplorerFilterProvider filterProvider)
         {
             if (ideEnv == null)
                 throw new ArgumentNullException(nameof(ideEnv));
 
-            if (filters == null)
-                throw new ArgumentNullException(nameof(filters));
+            if (filterProvider == null)
+                throw new ArgumentNullException(nameof(filterProvider));
 
             _ideEnv = ideEnv;
-            _filters = filters;
+            _filterProvider = filterProvider;
         }
 
         #endregion
@@ -96,10 +96,11 @@ namespace Markify.Core.IDE
 
         private bool IsSupportedLanguage(ProjectLanguage language)
         {
-            if (!_filters.SupportedLanguages.Any())
+            var filters = _filterProvider.GetFilterRules();
+            if (!filters.SupportedLanguages.Any())
                 return true;
 
-            return _filters.SupportedLanguages.Any(c => c == language);
+            return filters.SupportedLanguages.Any(c => c == language);
         }
 
         private IEnumerable<string> FilterSupportedProjects(IEnumerable<string> projects)

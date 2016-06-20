@@ -65,6 +65,7 @@
     <Compile Include="IDE\IDEModule.cs" />
     <Compile Include="IDE\IIDEEnvironment.cs" />
     <Compile Include="IDE\ISolutionExplorer.cs" />
+    <Compile Include="IDE\ISolutionExplorerFilterProvider.cs" />
     <Compile Include="IDE\SolutionExplorer.cs" />
     <Compile Include="IDE\SolutionExplorerFilter.cs" />
     <Compile Include="IDE\VisualStudio\VisualStudioEnvironment.cs" />

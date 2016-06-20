@@ -1,4 +1,5 @@
-﻿using Markify.Core.Rendering;
+﻿using Markify.Core.IDE;
+using Markify.Core.Rendering;
 
 using Markify.Services.IO;
 using Markify.Services.Settings;
@@ -19,6 +20,7 @@ namespace Markify.Services
             Bind<IRendererService>().To<RendererService>();
             Bind<IDocumentationGenerator>().To<DocumentationGenerator>();
             Bind<ISettingsProvider>().To<SettingsProvider>();
+            Bind<ISolutionExplorerFilterProvider>().To<SolutionExplorerFilterProvider>();
         }
 
         #endregion

@@ -69,7 +69,7 @@ namespace Markify.Core.IDE.VisualStudio
 
         private static VSProject GetProject(string name, VSSolution solution)
         {
-            return GetProjects(solution).FirstOrDefault(c => Path.GetFileNameWithoutExtension(name) == name);
+            return GetProjects(solution).FirstOrDefault(c => c.Name == name);
         }
 
         #endregion
@@ -92,7 +92,7 @@ namespace Markify.Core.IDE.VisualStudio
             if (CurrentSolution != solution)
                 return null;
 
-            return GetProjects(_visualStudio.Solution).Select(c => Path.GetFileNameWithoutExtension(c.FullName));
+            return GetProjects(_visualStudio.Solution).Select(c => c.Name);
         }
 
         public Uri GetProjectPath(string solution, string name)
@@ -139,7 +139,7 @@ namespace Markify.Core.IDE.VisualStudio
                 return ProjectLanguage.Unsupported;
 
             var project = GetProject(name, _visualStudio.Solution);
-            if (project == null)
+            if (project == null || project.CodeModel == null)
                 return ProjectLanguage.Unsupported;
 
             ProjectLanguage result;

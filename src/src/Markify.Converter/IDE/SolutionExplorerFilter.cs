@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 
 using static Markify.Models.Context;
 
@@ -16,7 +17,7 @@ namespace Markify.Core.IDE
 
         public SolutionExplorerFilter(IEnumerable<ProjectLanguage> languages)
         {
-            SupportedLanguages = languages;
+            SupportedLanguages = languages?.ToImmutableList() ?? ImmutableList.Create<ProjectLanguage>();
         }
 
         #endregion

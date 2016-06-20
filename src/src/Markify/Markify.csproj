@@ -61,6 +61,7 @@
     <Compile Include="Services\Processing\DocumentationGenerator.cs" />
     <Compile Include="Services\IDocumentationGenerator.cs" />
     <Compile Include="Services\Processing\ProjectProcessor.cs" />
+    <Compile Include="Services\Processing\SolutionExplorerFilterProvider.cs" />
     <Compile Include="Services\ServicesModule.cs" />
     <Compile Include="Services\Processing\IProjectProcessor.cs" />
     <Compile Include="Services\Processing\IRendererService.cs" />

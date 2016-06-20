@@ -16,7 +16,7 @@ namespace Markify.Fixtures
         #region Fields
 
         private readonly Mock<IIDEEnvironment> _ide;
-        private readonly SolutionExplorerFilter _filter;
+        private readonly Mock<ISolutionExplorerFilterProvider> _filterProvider;
 
         #endregion
 
@@ -61,7 +61,10 @@ namespace Markify.Fixtures
             _ide.Setup(c => c.GetProjectLanguage(It.IsAny<string>(), It.IsIn(projects)))
                 .Returns<string, string>((s, p) => language);
 
-            _filter = new SolutionExplorerFilter(filteredLanguages);
+            _filterProvider = new Mock<ISolutionExplorerFilterProvider>();
+            _filterProvider.Setup(c => c.GetFilterRules())
+                           .Returns(() => new SolutionExplorerFilter(filteredLanguages));
+
         }
 
         #endregion
@@ -70,7 +73,7 @@ namespace Markify.Fixtures
 
         public void Customize(IFixture fixture)
         {
-            fixture.Register<ISolutionExplorer>(() => new SolutionExplorer(_ide.Object, _filter));
+            fixture.Register<ISolutionExplorer>(() => new SolutionExplorer(_ide.Object, _filterProvider.Object));
         }
 
         #endregion
