@@ -6,11 +6,25 @@ namespace Markify.Services.Processing
 {
     internal sealed class SolutionExplorerFilterProvider : ISolutionExplorerFilterProvider
     {
-        #region Methods
+        #region Fields
 
-        public SolutionExplorerFilter GetFilterRules()
+        private SolutionExplorerFilter _filters;
+
+        #endregion
+
+        #region Properties
+
+        public SolutionExplorerFilter Filters
         {
-            return new SolutionExplorerFilter(new[] { ProjectLanguage.CSharp });
+            get
+            {
+                if (_filters != null)
+                    return _filters;
+
+                _filters = new SolutionExplorerFilter(new[] { ProjectLanguage.CSharp });
+
+                return _filters;
+            }
         }
 
         #endregion

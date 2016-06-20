@@ -81,18 +81,14 @@ namespace Markify.Core.IDE.VisualStudio
             if (CurrentSolution != solution)
                 return null;
 
-            if (_visualStudio.Solution == null)
-                return null;
+            var path = Path.GetDirectoryName(_visualStudio.Solution?.FullName);
 
-            return new Uri(Path.GetDirectoryName(_visualStudio.Solution.FullName));
+            return path == null ? null : new Uri(path);
         }
 
         public IEnumerable<string> GetProjects(string solution)
         {
-            if (CurrentSolution != solution)
-                return null;
-
-            return GetProjects(_visualStudio.Solution).Select(c => c.Name);
+            return CurrentSolution != solution ? null : GetProjects(_visualStudio.Solution).Select(c => c.Name);
         }
 
         public Uri GetProjectPath(string solution, string name)
@@ -101,8 +97,9 @@ namespace Markify.Core.IDE.VisualStudio
                 return null;
 
             var project = GetProject(name, _visualStudio.Solution);
+            var path = Path.GetDirectoryName(project.FullName);
 
-            return project == null ? null : new Uri(Path.GetDirectoryName(project.FullName));
+            return path == null ? null : new Uri(path);
         }
 
         public IEnumerable<Uri> GetProjectFiles(string solution, string name)
@@ -139,7 +136,7 @@ namespace Markify.Core.IDE.VisualStudio
                 return ProjectLanguage.Unsupported;
 
             var project = GetProject(name, _visualStudio.Solution);
-            if (project == null || project.CodeModel == null)
+            if (project?.CodeModel == null)
                 return ProjectLanguage.Unsupported;
 
             ProjectLanguage result;

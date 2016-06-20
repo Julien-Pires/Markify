@@ -69,7 +69,7 @@
     <Compile Include="IDE\SolutionExplorer.cs" />
     <Compile Include="IDE\SolutionExplorerFilter.cs" />
     <Compile Include="IDE\VisualStudio\VisualStudioEnvironment.cs" />
-    <Compile Include="IDE\VisualStudio\VSModule.cs" />
+    <Compile Include="IDE\VisualStudio\VisualStudioModule.cs" />
     <Compile Include="Processors\IDocumentOrganizer.cs" />
     <Compile Include="Rendering\IDocumentRenderer.cs" />
     <Compile Include="Processors\IProjectAnalyzer.cs" />

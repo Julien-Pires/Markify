@@ -42,7 +42,7 @@ namespace Markify.Core.IDE
                 if (project == null)
                     return default(Option<string>);
 
-                var supportedProjects = FilterSupportedProjects(new[] { project });
+                var supportedProjects = FilterSupportedProjects(new[] { project }).ToArray();
 
                 return supportedProjects.Any() ? supportedProjects.First().Some() : default(Option<string>);
             }
@@ -96,11 +96,9 @@ namespace Markify.Core.IDE
 
         private bool IsSupportedLanguage(ProjectLanguage language)
         {
-            var filters = _filterProvider.GetFilterRules();
-            if (!filters.SupportedLanguages.Any())
-                return true;
+            var filters = _filterProvider.Filters;
 
-            return filters.SupportedLanguages.Any(c => c == language);
+            return !filters.SupportedLanguages.Any() || filters.SupportedLanguages.Any(c => c == language);
         }
 
         private IEnumerable<string> FilterSupportedProjects(IEnumerable<string> projects)

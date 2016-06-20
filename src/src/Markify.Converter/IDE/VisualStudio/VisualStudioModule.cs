@@ -1,11 +1,12 @@
 ﻿using System;
+
 using EnvDTE80;
 
 using Ninject.Modules;
 
 namespace Markify.Core.IDE.VisualStudio
 {
-    public sealed class VSModule : NinjectModule
+    public sealed class VisualStudioModule : NinjectModule
     {
         #region Fields
 
@@ -15,7 +16,7 @@ namespace Markify.Core.IDE.VisualStudio
 
         #region Constructors
 
-        public VSModule(Func<DTE2> vsEnvironmentFactory)
+        public VisualStudioModule(Func<DTE2> vsEnvironmentFactory)
         {
             _vsEnvironmentFactory = vsEnvironmentFactory;
         }

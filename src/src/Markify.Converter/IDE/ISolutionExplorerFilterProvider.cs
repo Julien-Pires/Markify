@@ -2,9 +2,9 @@
 {
     public interface ISolutionExplorerFilterProvider
     {
-        #region Methods
-
-        SolutionExplorerFilter GetFilterRules();
+        #region Properties
+    
+        SolutionExplorerFilter Filters { get; }
 
         #endregion
     }

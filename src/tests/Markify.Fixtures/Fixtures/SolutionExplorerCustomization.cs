@@ -62,7 +62,7 @@ namespace Markify.Fixtures
                 .Returns<string, string>((s, p) => language);
 
             _filterProvider = new Mock<ISolutionExplorerFilterProvider>();
-            _filterProvider.Setup(c => c.GetFilterRules())
+            _filterProvider.SetupGet(c => c.Filters)
                            .Returns(() => new SolutionExplorerFilter(filteredLanguages));
 
         }

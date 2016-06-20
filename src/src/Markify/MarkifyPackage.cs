@@ -40,7 +40,7 @@ namespace Markify
             new RenderingModule(),
             new T4Module(),
             new IDEModule(),
-            new VSModule(GetVisualStudioEnvironment),
+            new VisualStudioModule(GetVisualStudioEnvironment),
             new ServicesModule()
         };
 
