@@ -61,8 +61,8 @@ namespace Markify
             IKernel kernel = new StandardKernel(_modules);
             Commands = kernel.Get<CommandsController>();
 
-            var s = kernel.Get<ISolutionExplorer>();
-            var g = s.CurrentProject;
+            var s = kernel.Get<ISolutionExplorer>() as SolutionExplorer;
+            //var g = s.CurrentProject;
             var h = s.CurrentSolution;
             h.Match(
                 c => {

@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Linq;
+using System.Collections.Generic;
 
 using Markify.Core.IDE;
 
 using Moq;
 using Ploeh.AutoFixture;
+
+using static Markify.Models.Context;
 
 namespace Markify.Fixtures
 {
@@ -13,12 +16,20 @@ namespace Markify.Fixtures
         #region Fields
 
         private readonly Mock<IIDEEnvironment> _ide;
+        private readonly SolutionExplorerFilter _filter;
 
         #endregion
 
         #region Constructors
 
-        public SolutionExplorerCustomization(string solution, string root, int projectsCount, int currentProject, int filesPerProject)
+        public SolutionExplorerCustomization(
+            string solution, 
+            string root, 
+            int projectsCount, 
+            int currentProject, 
+            int filesPerProject, 
+            ProjectLanguage language,
+            IEnumerable<ProjectLanguage> filteredLanguages)
         {
             _ide = new Mock<IIDEEnvironment>();
             _ide.SetupGet(c => c.CurrentSolution).Returns(solution);
@@ -46,6 +57,11 @@ namespace Markify.Fixtures
             var files = Enumerable.Range(0, filesPerProject).Select(c => $"File{c + 1}.cs");
             _ide.Setup(c => c.GetProjectFiles(It.IsAny<string>(), It.IsIn(projects)))
                 .Returns<string, string>((s, p) => files.Select(f => new Uri(_ide.Object.GetProjectPath(It.IsAny<string>(), p), f)));
+
+            _ide.Setup(c => c.GetProjectLanguage(It.IsAny<string>(), It.IsIn(projects)))
+                .Returns<string, string>((s, p) => language);
+
+            _filter = new SolutionExplorerFilter(filteredLanguages);
         }
 
         #endregion
@@ -54,7 +70,7 @@ namespace Markify.Fixtures
 
         public void Customize(IFixture fixture)
         {
-            fixture.Register<ISolutionExplorer>(() => new SolutionExplorer(_ide.Object));
+            fixture.Register<ISolutionExplorer>(() => new SolutionExplorer(_ide.Object, _filter));
         }
 
         #endregion

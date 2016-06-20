@@ -6,6 +6,11 @@ using System.Collections.Generic;
 using EnvDTE;
 using EnvDTE80;
 
+using static Markify.Models.Context;
+
+using VSProject = EnvDTE.Project;
+using VSSolution = EnvDTE.Solution;
+
 namespace Markify.Core.IDE.VisualStudio
 {
     public sealed class VisualStudioEnvironment : IIDEEnvironment
@@ -24,7 +29,7 @@ namespace Markify.Core.IDE.VisualStudio
             {
                 var projects = (Array)_visualStudio.ActiveSolutionProjects;
 
-                return projects.Length > 0 ? ((Project)projects.GetValue(0)).FullName : null;
+                return projects.Length > 0 ? ((VSProject)projects.GetValue(0)).FullName : null;
             }
         }
 
@@ -43,9 +48,9 @@ namespace Markify.Core.IDE.VisualStudio
 
         #region Helpers
 
-        private static IEnumerable<Project> GetProjects(Solution solution)
+        private static IEnumerable<VSProject> GetProjects(VSSolution solution)
         {
-            var projects = new Queue<Project>(solution.Projects.Cast<Project>());
+            var projects = new Queue<VSProject>(solution.Projects.Cast<VSProject>());
             while (projects.Count > 0)
             {
                 var current = projects.Dequeue();
@@ -62,7 +67,7 @@ namespace Markify.Core.IDE.VisualStudio
             }
         }
 
-        private static Project GetProject(string name, Solution solution)
+        private static VSProject GetProject(string name, VSSolution solution)
         {
             return GetProjects(solution).FirstOrDefault(c => Path.GetFileNameWithoutExtension(name) == name);
         }
@@ -126,6 +131,34 @@ namespace Markify.Core.IDE.VisualStudio
                         break;
                 }
             }
+        }
+
+        public ProjectLanguage GetProjectLanguage(string solution, string name)
+        {
+            if (CurrentSolution != solution)
+                return ProjectLanguage.Unsupported;
+
+            var project = GetProject(name, _visualStudio.Solution);
+            if (project == null)
+                return ProjectLanguage.Unsupported;
+
+            ProjectLanguage result;
+            switch(project.CodeModel.Language)
+            {
+                case CodeModelLanguageConstants.vsCMLanguageCSharp:
+                    result = ProjectLanguage.CSharp;
+                    break;
+
+                case CodeModelLanguageConstants.vsCMLanguageVB:
+                    result = ProjectLanguage.VisualBasic;
+                    break;
+
+                default:
+                    result = ProjectLanguage.Unsupported;
+                    break;
+            }
+
+            return result;
         }
 
         #endregion

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 
 using Optional;
@@ -12,6 +14,7 @@ namespace Markify.Core.IDE
         #region Fields
 
         private readonly IIDEEnvironment _ideEnv;
+        private readonly SolutionExplorerFilter _filters;
 
         #endregion
 
@@ -25,24 +28,40 @@ namespace Markify.Core.IDE
                 if (name == null)
                     return Option.None<Solution>();
 
-                return new Solution
-                (
-                    _ideEnv.CurrentSolution,
-                    _ideEnv.GetSolutionPath(name),
-                    ImmutableList.CreateRange(_ideEnv.GetProjects(name) ?? new string[0])
-                ).Some();
+                var supportedProjects = FilterSupportedProjects(_ideEnv.GetProjects(name) ?? new string[0]);
+
+                return new Solution(name, _ideEnv.GetSolutionPath(name), ImmutableList.CreateRange(supportedProjects)).Some();
             }
         }
 
-        public Option<string> CurrentProject => _ideEnv.CurrentProject?.Some() ?? Option.None<string>();
+        public Option<string> CurrentProject
+        {
+            get
+            {
+                var project = _ideEnv.CurrentProject;
+                if (project == null)
+                    return default(Option<string>);
+
+                var supportedProjects = FilterSupportedProjects(new[] { project });
+
+                return supportedProjects.Any() ? supportedProjects.First().Some() : default(Option<string>);
+            }
+        }
 
         #endregion
 
         #region Constructors
 
-        public SolutionExplorer(IIDEEnvironment ideEnv)
+        public SolutionExplorer(IIDEEnvironment ideEnv, SolutionExplorerFilter filters)
         {
+            if (ideEnv == null)
+                throw new ArgumentNullException(nameof(ideEnv));
+
+            if (filters == null)
+                throw new ArgumentNullException(nameof(filters));
+
             _ideEnv = ideEnv;
+            _filters = filters;
         }
 
         #endregion
@@ -54,18 +73,42 @@ namespace Markify.Core.IDE
             if (string.IsNullOrWhiteSpace(name))
                 return default(Option<Project>);
 
-            var currentSolution = _ideEnv.CurrentSolution;
-            var projectPath = _ideEnv.GetProjectPath(currentSolution, name);
-            var solutionPath = _ideEnv.GetSolutionPath(currentSolution);
-            if (projectPath == null || solutionPath == null)
+            var solution = _ideEnv.CurrentSolution;
+            if (solution == null)
+                return default(Option<Project>);
+
+            var projectPath = _ideEnv.GetProjectPath(solution, name);
+            if (projectPath == null)
+                return default(Option<Project>);
+
+            var supportedProjects = FilterSupportedProjects(new[] { name });
+            if (!supportedProjects.Any())
                 return default(Option<Project>);
 
             return new Project
             ( 
                 name,
                 projectPath,
-                ImmutableList.CreateRange(_ideEnv.GetProjectFiles(currentSolution, name) ?? new Uri[0])
+                _ideEnv.GetProjectLanguage(solution, name),
+                ImmutableList.CreateRange(_ideEnv.GetProjectFiles(solution, name) ?? new Uri[0])
             ).Some();
+        }
+
+        private bool IsSupportedLanguage(ProjectLanguage language)
+        {
+            if (!_filters.SupportedLanguages.Any())
+                return true;
+
+            return _filters.SupportedLanguages.Any(c => c == language);
+        }
+
+        private IEnumerable<string> FilterSupportedProjects(IEnumerable<string> projects)
+        {
+            return projects.Where(c => {
+                var language = _ideEnv.GetProjectLanguage(_ideEnv.CurrentSolution, c);
+
+                return IsSupportedLanguage(language);
+            });
         }
 
         #endregion

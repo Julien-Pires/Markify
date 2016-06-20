@@ -3,12 +3,18 @@
 open System
 
 module Context =
+    type ProjectLanguage =
+        | Unsupported = 0
+        | CSharp = 1
+        | VisualBasic = 2
+
     type ProjectName = string
     type ProjectPath = Uri
     type FilesList = Uri seq
     type Project = {
         Name : ProjectName
         Path : ProjectPath
+        Language : ProjectLanguage
         Files : FilesList
     }
 

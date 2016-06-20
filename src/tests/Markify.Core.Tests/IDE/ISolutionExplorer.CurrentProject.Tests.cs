@@ -3,16 +3,19 @@ using Markify.Fixtures;
 
 using Xunit;
 
+using static Markify.Models.Context;
+using static Markify.Models.Context.ProjectLanguage;
+
 namespace Markify.Core.Tests.IDE
 {
     public partial class ISolutionExplorer_Tests
     {
         [Theory]
-        [SolutionExplorerInlineAutoData("FooProject", "c:/FooProject", 1, 0, 0, "Project1")]
-        [SolutionExplorerInlineAutoData("BarProject", "c:/FooProject", 4, 2, 0, "Project3")]
-        public void CurrentProject_WhenHasCurrent_ShouldReturnCorrectValue(string expected, ISolutionExplorer explorer)
+        [SolutionExplorerInlineAutoData("FooProject", "c:/FooProject", 1, 0, 0, CSharp, new ProjectLanguage[0], "Project1")]
+        [SolutionExplorerInlineAutoData("BarProject", "c:/FooProject", 4, 2, 0, CSharp, new ProjectLanguage[0], "Project3")]
+        public void CurrentProject_WhenHasCurrent_ShouldReturnCorrectValue(string expected, ISolutionExplorer sut)
         {
-            var actual = explorer.CurrentProject.Match(
+            var actual = sut.CurrentProject.Match(
                 some: x => x,
                 none: () => string.Empty
             );
@@ -21,11 +24,30 @@ namespace Markify.Core.Tests.IDE
         }
 
         [Theory]
-        [SolutionExplorerInlineAutoData("FooProject", "c:/FooProject")]
-        [SolutionExplorerInlineAutoData("FooProject", "c:/FooProject", 2)]
-        public void CurrentProject_WhenHasNoCurrent_ShouldReturnNone(ISolutionExplorer explorer)
+        [SolutionExplorerInlineAutoData("FooProject", "c:/FooProject", 0, -1, 0, CSharp, new ProjectLanguage[0])]
+        [SolutionExplorerInlineAutoData("FooProject", "c:/FooProject", 2, -1, 0, CSharp, new ProjectLanguage[0])]
+        public void CurrentProject_WhenHasNoCurrent_ShouldReturnNone(ISolutionExplorer sut)
         {
-            var actual = explorer.CurrentProject;
+            var actual = sut.CurrentProject;
+
+            Assert.False(actual.HasValue);
+        }
+
+        [Theory]
+        [SolutionExplorerInlineAutoData("BarProject", "c:/FooProject", 4, 2, 0, CSharp, new[] { CSharp })]
+        [SolutionExplorerInlineAutoData("BarProject", "c:/FooProject", 4, 2, 0, VisualBasic, new[] { CSharp, VisualBasic })]
+        public void CurrentProject_WithLanguageIdenticalAsLanguageFilter_ShoulReturnProject(ISolutionExplorer sut)
+        {
+            var project = sut.CurrentProject;
+
+            Assert.True(project.HasValue);
+        }
+
+        [Theory]
+        [SolutionExplorerInlineAutoData("BarProject", "c:/FooProject", 4, 2, 0, CSharp, new[] { VisualBasic })]
+        public void CurrentProject_WhenLanguageDifferentThanLanguageFilter_ShouldReturnNone(ISolutionExplorer sut)
+        {
+            var actual = sut.CurrentProject;
 
             Assert.False(actual.HasValue);
         }
