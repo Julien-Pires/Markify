@@ -6,7 +6,8 @@
 <#@ import namespace="Microsoft.VisualStudio.TextTemplating" #>
 <#@ import namespace="Markify.Models" #>
 <# var definition = (Definitions.TypeDefinition)Session["Content"]; #>
-## **<#= T4Helper.GetNameWithParameters(definition) #>** : <#= T4Helper.GetKind(definition) #>
+### **<#= T4Helper.GetNameWithParameters(definition) #>** : <#= T4Helper.GetKind(definition) #>
+***
 **Accessibility**: <#= T4Helper.GetAccessModifiers(definition) #>
 
 <#
@@ -14,7 +15,7 @@
 	if(!string.IsNullOrWhiteSpace(modifiers))
 	{
 #>
-**specificities**: <#= modifiers #>
+**Specificities**: <#= modifiers #>
 
 <#
 	}
