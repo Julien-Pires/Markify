@@ -1,16 +1,16 @@
 ﻿using System;
-using System.Globalization;
 using System.ComponentModel.Design;
 
 using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
+
+using Markify.Controllers;
 
 namespace Markify.Commands
 {
     /// <summary>
     /// Command handler
     /// </summary>
-    internal sealed class GenerateSolutionDocumentationCommand
+    internal class GenerateSolutionDocumentationCommand
     {
         #region Fields
 
@@ -27,7 +27,9 @@ namespace Markify.Commands
         /// <summary>
         /// VS Package that provides this command, not null.
         /// </summary>
-        private readonly Package package;
+        private readonly Package _package;
+
+        private readonly CommandsController _controller;
 
         #endregion
 
@@ -41,7 +43,7 @@ namespace Markify.Commands
         /// <summary>
         /// Gets the service provider from the owner package.
         /// </summary>
-        private IServiceProvider ServiceProvider => package;
+        private IServiceProvider ServiceProvider => _package;
 
         #endregion
 
@@ -52,14 +54,16 @@ namespace Markify.Commands
         /// Adds our command handlers for menu (commands must exist in the command table file)
         /// </summary>
         /// <param name="package">Owner package, not null.</param>
-        private GenerateSolutionDocumentationCommand(Package package)
+        public GenerateSolutionDocumentationCommand(Package package, CommandsController controller)
         {
             if (package == null)
-            {
-                throw new ArgumentNullException("package");
-            }
+                throw new ArgumentNullException(nameof(package));
 
-            this.package = package;
+            if (controller == null)
+                throw new ArgumentNullException(nameof(controller));
+
+            _package = package;
+            _controller = controller;
 
             OleMenuCommandService commandService = this.ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
             if (commandService != null)
@@ -78,9 +82,9 @@ namespace Markify.Commands
         /// Initializes the singleton instance of the command.
         /// </summary>
         /// <param name="package">Owner package, not null.</param>
-        public static void Initialize(Package package)
+        public static void Initialize(Func<Type, object> factory)
         {
-            Instance = new GenerateSolutionDocumentationCommand(package);
+            Instance = (GenerateSolutionDocumentationCommand)factory(typeof(GenerateSolutionDocumentationCommand));
         }
 
         /// <summary>
@@ -92,17 +96,7 @@ namespace Markify.Commands
         /// <param name="e">Event args.</param>
         private void MenuItemCallback(object sender, EventArgs e)
         {
-            string message = string.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", this.GetType().FullName);
-            string title = "GenerateSolutionDocumentation";
-
-            // Show a message box to prove we were here
-            VsShellUtilities.ShowMessageBox(
-                this.ServiceProvider,
-                message,
-                title,
-                OLEMSGICON.OLEMSGICON_INFO,
-                OLEMSGBUTTON.OLEMSGBUTTON_OK,
-                OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+            _controller.GenerateForCurrentSolution();
         }
 
         #endregion

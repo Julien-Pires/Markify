@@ -156,6 +156,10 @@
       <Project>{8833BF6E-806F-483D-BA70-FF92B09E625D}</Project>
       <Name>Markify.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Markify.Core.FSharp\Markify.Core.FSharp.fsproj">
+      <Project>{d9a8fb2a-fc1a-4a2b-a5a3-17d72b712a04}</Project>
+      <Name>Markify.Core.FSharp</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Markify.Document\Markify.Document.fsproj">
       <Project>{ebc40e4e-db5b-4ec0-9186-860350d2a4cf}</Project>
       <Name>Markify.Document</Name>

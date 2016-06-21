@@ -30,12 +30,12 @@
         test <@ actual.IsNone @>
 
     [<Theory>]
-    [<SimpleDocumentInlineAutoData("c:/FooSolution/", "FooProject", 1, 2, "md", "FooProject0\Parent\Type1.md")>]
-    [<SimpleDocumentInlineAutoData("c:/FooSolution/", "FooProject", 4, 4, "md", "FooProject2\Parent\Type2.md")>]
-    let ``Process library should return page with unique path`` (expected, setting, solution, library, sut : IDocumentOrganizer) =
+    [<SimpleDocumentInlineAutoData("c:/FooSolution/", "FooProject", 1, 2, "md", @"FooProject0\Parent\", 2)>]
+    [<SimpleDocumentInlineAutoData("c:/FooSolution/", "FooProject", 4, 4, "md", @"FooProject2\Parent\", 4)>]
+    let ``Process library should return page with correct path`` (path, expected, setting, solution, library, sut : IDocumentOrganizer) =
         let toc = sut.Organize (library, solution, setting)
         let actual =
             toc.Pages
-            |> Seq.filter (fun c -> c.Folder = new Uri(expected, UriKind.Relative))
+            |> Seq.filter (fun c -> c.Folder = new Uri(path, UriKind.Relative))
 
-        test <@ Seq.length actual = 1 @>
+        test <@ Seq.length actual = expected @>

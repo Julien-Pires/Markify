@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Markify", "src\Markify\Markify.csproj", "{B7973B9F-7AC3-4D73-B23A-94627E86B202}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D9A8FB2A-FC1A-4A2B-A5A3-17D72B712A04} = {D9A8FB2A-FC1A-4A2B-A5A3-17D72B712A04}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{41C416FB-0EFB-4217-BB20-63F50AF46B35}"
 EndProject

@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 using Markify.Roslyn;
@@ -16,6 +17,7 @@ using Microsoft.VisualStudio.Shell;
 
 using Ninject;
 using Ninject.Modules;
+using Ninject.Parameters;
 
 using EnvDTE;
 using EnvDTE80;
@@ -62,8 +64,10 @@ namespace Markify
             IKernel kernel = new StandardKernel(_modules);
             Commands = kernel.Get<CommandsController>();
 
-            GenerateSolutionDocumentationCommand.Initialize(this);
-            GenerateCurrentProjectCommand.Initialize(this);
+            var packageArg = new ConstructorArgument("package", this);
+            Func<Type, object> cmdFactory = c => kernel.Get(c, new[] { packageArg });
+            GenerateSolutionDocumentationCommand.Initialize(cmdFactory);
+            GenerateCurrentProjectCommand.Initialize(cmdFactory);
         }
 
         private static DTE2 GetVisualStudioEnvironment() => GetGlobalService(typeof(DTE)) as DTE2;

@@ -8,7 +8,9 @@ open Markify.Models.Definitions
 
 module DocumentHelper =
     let convertNameToPath (fullname : string) =
-        fullname.Replace ('.', '\\')
+        let parts = fullname.Split ('.')
+        let path = String.Join ("\\", parts, 0, parts.Length - 1)
+        sprintf @"%s\" path
 
     let cleanExtension (ext : string) = 
         match ext with
@@ -18,10 +20,9 @@ module DocumentHelper =
     let createPage project ext definition =
         let path = Path.Combine (project, convertNameToPath definition.Identity.Fullname)
         let cleanExt = cleanExtension ext
-        let fullPath = sprintf "%s.%s" path cleanExt
         let page = {
             Name = sprintf "%s.%s" definition.Identity.Name cleanExt
-            Folder = Uri (fullPath, UriKind.Relative)
+            Folder = Uri (path, UriKind.Relative)
             Content = definition
         }
         page

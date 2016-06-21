@@ -5,6 +5,8 @@ using System.ComponentModel.Design;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 
+using Markify.Controllers;
+
 namespace Markify.Commands
 {
     /// <summary>
@@ -27,7 +29,9 @@ namespace Markify.Commands
         /// <summary>
         /// VS Package that provides this command, not null.
         /// </summary>
-        private readonly Package package;
+        private readonly Package _package;
+
+        private readonly CommandsController _controller;
 
         #endregion
 
@@ -41,7 +45,7 @@ namespace Markify.Commands
         /// <summary>
         /// Gets the service provider from the owner package.
         /// </summary>
-        private IServiceProvider ServiceProvider => package;
+        private IServiceProvider ServiceProvider => _package;
 
         #endregion
 
@@ -52,20 +56,22 @@ namespace Markify.Commands
         /// Adds our command handlers for menu (commands must exist in the command table file)
         /// </summary>
         /// <param name="package">Owner package, not null.</param>
-        private GenerateCurrentProjectCommand(Package package)
+        public GenerateCurrentProjectCommand(Package package, CommandsController controller)
         {
             if (package == null)
-            {
-                throw new ArgumentNullException("package");
-            }
+                throw new ArgumentNullException(nameof(package));
 
-            this.package = package;
+            if (controller == null)
+                throw new ArgumentNullException(nameof(controller));
 
-            OleMenuCommandService commandService = this.ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
+            _package = package;
+            _controller = controller;
+
+            OleMenuCommandService commandService = ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
             if (commandService != null)
             {
                 var menuCommandID = new CommandID(CommandSet, CommandId);
-                var menuItem = new MenuCommand(this.MenuItemCallback, menuCommandID);
+                var menuItem = new MenuCommand(MenuItemCallback, menuCommandID);
                 commandService.AddCommand(menuItem);
             }
         }
@@ -78,9 +84,9 @@ namespace Markify.Commands
         /// Initializes the singleton instance of the command.
         /// </summary>
         /// <param name="package">Owner package, not null.</param>
-        public static void Initialize(Package package)
+        public static void Initialize(Func<Type, object> factory)
         {
-            Instance = new GenerateCurrentProjectCommand(package);
+            Instance = (GenerateCurrentProjectCommand)factory(typeof(GenerateCurrentProjectCommand));
         }
 
         /// <summary>
