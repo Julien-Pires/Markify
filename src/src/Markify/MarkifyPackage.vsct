@@ -2,11 +2,11 @@
 <CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <Extern href="stdidcmd.h" />
   <Extern href="vsshlids.h" />
-  <Commands package="guidGenerateSolutionDocumentationPackage">
+  <Commands package="guidMarkifyPackage">
 
     <Menus>
-      <Menu guid="guidGenerateSolutionDocumentationPackageCmdSet" id="MarkifyMenuGenerate" priority="0x0700" type="Menu">
-        <Parent guid="guidGenerateSolutionDocumentationPackageCmdSet" id="MarkifyMenuGroup" />
+      <Menu guid="guidMarkifyPackageCmdSet" id="MarkifyMenuGenerate" priority="0x0700" type="Menu">
+        <Parent guid="guidMarkifyPackageCmdSet" id="MarkifyMenuGroup" />
         <Strings>
           <ButtonText>Markify</ButtonText>
           <CommandName>Markify</CommandName>
@@ -15,23 +15,23 @@
     </Menus>
 
     <Groups>
-      <Group guid="guidGenerateSolutionDocumentationPackageCmdSet" id="MarkifyMenuGroup" priority="0x0600">
+      <Group guid="guidMarkifyPackageCmdSet" id="MarkifyMenuGroup" priority="0x0600">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS" />
       </Group>
-      <Group guid="guidGenerateSolutionDocumentationPackageCmdSet" id="MarkifyMenuGenerateGroup" priority="0x0600">
-        <Parent guid="guidGenerateSolutionDocumentationPackageCmdSet" id="MarkifyMenuGenerate" />
+      <Group guid="guidMarkifyPackageCmdSet" id="MarkifyMenuGenerateGroup" priority="0x0600">
+        <Parent guid="guidMarkifyPackageCmdSet" id="MarkifyMenuGenerate" />
       </Group>
     </Groups>
 
     <Buttons>
-      <Button guid="guidGenerateSolutionDocumentationPackageCmdSet" id="GenerateSolutionDocumentationId">
-        <Parent guid="guidGenerateSolutionDocumentationPackageCmdSet" id="MarkifyMenuGenerateGroup" />
+      <Button guid="guidMarkifyPackageCmdSet" id="GenerateSolutionDocumentationId">
+        <Parent guid="guidMarkifyPackageCmdSet" id="MarkifyMenuGenerateGroup" />
         <Strings>
           <ButtonText>Generate for solution</ButtonText>
         </Strings>
       </Button>
-      <Button guid="guidGenerateSolutionDocumentationPackageCmdSet" id="GenerateCurrentProjectId">
-        <Parent guid="guidGenerateSolutionDocumentationPackageCmdSet" id="MarkifyMenuGenerateGroup" />
+      <Button guid="guidMarkifyPackageCmdSet" id="GenerateCurrentProjectId">
+        <Parent guid="guidMarkifyPackageCmdSet" id="MarkifyMenuGenerateGroup" />
         <Strings>
           <ButtonText>Generate for current project</ButtonText>
         </Strings>
@@ -45,9 +45,9 @@
   </Commands>
 
   <Symbols>
-    <GuidSymbol name="guidGenerateSolutionDocumentationPackage" value="{36a9af79-64df-4785-9454-ef8fec52d34c}" />
+    <GuidSymbol name="guidMarkifyPackage" value="{b49bea0e-0ec6-4dd0-bd62-fa1d2932374e}" />
     
-    <GuidSymbol name="guidGenerateSolutionDocumentationPackageCmdSet" value="{c8854178-213c-4435-995d-5003ad4e545a}">
+    <GuidSymbol name="guidMarkifyPackageCmdSet" value="{c8854178-213c-4435-995d-5003ad4e545a}">
       <IDSymbol name="MarkifyMenuGroup" value="0x1020" />
 
       <IDSymbol name="MarkifyMenuGenerate" value="0x1030" />

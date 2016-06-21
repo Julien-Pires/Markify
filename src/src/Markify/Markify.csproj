@@ -56,7 +56,6 @@
     <Compile Include="Controllers\CommandsController.cs" />
     <Compile Include="Commands\GenerateCurrentProjectCommand.cs" />
     <Compile Include="Commands\GenerateSolutionDocumentation.cs" />
-    <Compile Include="Commands\GenerateSolutionDocumentationPackage.cs" />
     <Compile Include="Services\IO\FileWriter.cs" />
     <Compile Include="Services\Processing\DocumentationGenerator.cs" />
     <Compile Include="Services\IDocumentationGenerator.cs" />
@@ -135,7 +134,7 @@
     <Reference Include="System.Design" />
   </ItemGroup>
   <ItemGroup>
-    <VSCTCompile Include="Commands\GenerateSolutionDocumentationPackage.vsct">
+    <VSCTCompile Include="MarkifyPackage.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
     </VSCTCompile>
   </ItemGroup>
@@ -147,9 +146,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Commands\Resources\GenerateCurrentProjectCommand.png" />
-    <Content Include="Commands\Resources\GenerateSolutionDocumentation.png" />
-    <Content Include="Commands\Resources\GenerateSolutionDocumentationPackage.ico" />
+    <Content Include="Resources\GenerateCurrentProjectCommand.png" />
+    <Content Include="Resources\GenerateSolutionDocumentation.png" />
+    <Content Include="Resources\GenerateSolutionDocumentationPackage.ico" />
     <Content Include="Resources\MarkifyPackage.ico" />
   </ItemGroup>
   <ItemGroup>

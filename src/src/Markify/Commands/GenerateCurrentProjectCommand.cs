@@ -1,12 +1,7 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="GenerateCurrentProjectCommand.cs" company="Company">
-//     Copyright (c) Company.  All rights reserved.
-// </copyright>
-//------------------------------------------------------------------------------
-
-using System;
-using System.ComponentModel.Design;
+﻿using System;
 using System.Globalization;
+using System.ComponentModel.Design;
+
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 
@@ -17,6 +12,8 @@ namespace Markify.Commands
     /// </summary>
     internal sealed class GenerateCurrentProjectCommand
     {
+        #region Fields
+
         /// <summary>
         /// Command ID.
         /// </summary>
@@ -31,6 +28,24 @@ namespace Markify.Commands
         /// VS Package that provides this command, not null.
         /// </summary>
         private readonly Package package;
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets the instance of the command.
+        /// </summary>
+        public static GenerateCurrentProjectCommand Instance { get; private set; }
+
+        /// <summary>
+        /// Gets the service provider from the owner package.
+        /// </summary>
+        private IServiceProvider ServiceProvider => package;
+
+        #endregion
+
+        #region Constructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GenerateCurrentProjectCommand"/> class.
@@ -55,25 +70,9 @@ namespace Markify.Commands
             }
         }
 
-        /// <summary>
-        /// Gets the instance of the command.
-        /// </summary>
-        public static GenerateCurrentProjectCommand Instance
-        {
-            get;
-            private set;
-        }
+        #endregion
 
-        /// <summary>
-        /// Gets the service provider from the owner package.
-        /// </summary>
-        private IServiceProvider ServiceProvider
-        {
-            get
-            {
-                return this.package;
-            }
-        }
+        #region Methods
 
         /// <summary>
         /// Initializes the singleton instance of the command.
@@ -105,5 +104,7 @@ namespace Markify.Commands
                 OLEMSGBUTTON.OLEMSGBUTTON_OK,
                 OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
         }
+
+        #endregion
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Runtime.InteropServices;
 
 using Markify.Roslyn;
@@ -10,6 +9,7 @@ using Markify.Core.IDE;
 using Markify.Core.IDE.VisualStudio;
 using Markify.Rendering.T4;
 using Markify.Services;
+using Markify.Commands;
 
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
@@ -24,6 +24,7 @@ namespace Markify
 {
     [PackageRegistration(UseManagedResourcesOnly = true)]
     [InstalledProductRegistration("#2110", "#2112", "1.0", IconResourceID = 2400)]
+    [ProvideMenuResource("Menus.ctmenu", 1)]
     [Guid(PackageGuidString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
     [ProvideAutoLoad(VSConstants.UICONTEXT.SolutionExistsAndFullyLoaded_string)]
@@ -61,16 +62,8 @@ namespace Markify
             IKernel kernel = new StandardKernel(_modules);
             Commands = kernel.Get<CommandsController>();
 
-            var s = kernel.Get<ISolutionExplorer>() as SolutionExplorer;
-            //var g = s.CurrentProject;
-            var h = s.CurrentSolution;
-            h.Match(
-                c => {
-                         var jk = s.GetProject(c.Projects.ElementAt(0));
-                         jk = jk;
-                },
-                () => { }
-            );
+            GenerateSolutionDocumentationCommand.Initialize(this);
+            GenerateCurrentProjectCommand.Initialize(this);
         }
 
         private static DTE2 GetVisualStudioEnvironment() => GetGlobalService(typeof(DTE)) as DTE2;
