@@ -35,8 +35,8 @@ namespace Markify.Rendering.Tests.Attributes
         {
             fixture.Register<ITemplatesProvider>(() =>
             {
-                var transform = new Mock<TextTransformation>();
-                var templates = _templateBinding.Select(c => new Tuple<TextTransformation, Type>(transform.Object, c));
+                var transform = new Mock<T4TemplateBase>();
+                var templates = _templateBinding.Select(c => new Tuple<T4TemplateBase, Type>(transform.Object, c));
 
                 return new T4TemplateProvider(templates);
             });

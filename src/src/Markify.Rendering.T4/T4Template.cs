@@ -2,20 +2,19 @@
 
 using Microsoft.VisualStudio.TextTemplating;
 
-
 namespace Markify.Rendering.T4
 {
     internal sealed class T4Template : ITemplate
     {
         #region Fields
 
-        private readonly TextTransformation _template;
+        private readonly T4TemplateBase _template;
 
         #endregion
 
         #region Constructors
 
-        public T4Template(TextTransformation template)
+        public T4Template(T4TemplateBase template)
         {
             _template = template;
             _template.Session = new TextTemplatingSession();
@@ -40,7 +39,7 @@ namespace Markify.Rendering.T4
             }
             finally
             {
-                _template.Session.Clear();
+                _template.Reset();
             }
         }
 

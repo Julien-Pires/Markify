@@ -60,6 +60,7 @@
     <Compile Include="T4Module.cs" />
     <Compile Include="T4Template.cs" />
     <Compile Include="T4TemplateProvider.cs" />
+    <Compile Include="T4TemplateBase.cs" />
     <Compile Include="Templates\TypeTemplate.cs">
       <DependentUpon>TypeTemplate.tt</DependentUpon>
       <AutoGen>True</AutoGen>

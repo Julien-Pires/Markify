@@ -65,7 +65,7 @@ namespace Markify
             Commands = kernel.Get<CommandsController>();
 
             var packageArg = new ConstructorArgument("package", this);
-            Func<Type, object> cmdFactory = c => kernel.Get(c, new[] { packageArg });
+            Func<Type, object> cmdFactory = c => kernel.Get(c, packageArg);
             GenerateSolutionDocumentationCommand.Initialize(cmdFactory);
             GenerateCurrentProjectCommand.Initialize(cmdFactory);
         }

@@ -5,7 +5,7 @@ using System.Collections.Immutable;
 
 using Optional;
 
-using TemplateTuple = System.Tuple<Microsoft.VisualStudio.TextTemplating.TextTransformation, System.Type>;
+using TemplateTuple = System.Tuple<Markify.Rendering.T4.T4TemplateBase, System.Type>;
 
 namespace Markify.Rendering.T4
 {

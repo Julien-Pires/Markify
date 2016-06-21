@@ -1,6 +1,10 @@
-﻿using Ninject.Modules;
+﻿using Markify.Rendering.T4.Templates;
 
-using TemplateTuple = System.Tuple<Microsoft.VisualStudio.TextTemplating.TextTransformation, System.Type>;
+using Ninject.Modules;
+
+using static Markify.Models.Definitions;
+
+using TemplateTuple = System.Tuple<Markify.Rendering.T4.T4TemplateBase, System.Type>;
 
 namespace Markify.Rendering.T4
 {
@@ -8,7 +12,10 @@ namespace Markify.Rendering.T4
     {
         #region Fields
 
-        private static readonly TemplateTuple[] Templates = {};
+        private static readonly TemplateTuple[] Templates =
+        {
+            new TemplateTuple(new TypeTemplate(), typeof(TypeDefinition)), 
+        };
 
         #endregion
 
