@@ -1,0 +1,3 @@
+## **ITemplatesProvider** : interface
+**Accessibility**: public
+

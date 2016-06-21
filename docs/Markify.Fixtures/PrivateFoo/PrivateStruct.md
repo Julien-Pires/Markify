@@ -1,0 +1,3 @@
+## **PrivateStruct** : struct
+**Accessibility**: private
+

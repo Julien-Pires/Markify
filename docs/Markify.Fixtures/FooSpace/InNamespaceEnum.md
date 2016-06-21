@@ -1,0 +1,3 @@
+## **InNamespaceEnum** : enum
+**Accessibility**: public
+

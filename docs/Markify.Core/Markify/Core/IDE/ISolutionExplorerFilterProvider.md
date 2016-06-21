@@ -1,0 +1,3 @@
+## **ISolutionExplorerFilterProvider** : interface
+**Accessibility**: public
+

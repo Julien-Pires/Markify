@@ -1,0 +1,3 @@
+## **InNamespaceClass** : class
+**Accessibility**: public
+

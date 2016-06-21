@@ -1,0 +1,3 @@
+## **GenerateSolutionDocumentationCommand** : class
+**Accessibility**: internal
+

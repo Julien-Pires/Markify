@@ -1,0 +1,3 @@
+## **IDocumentationGenerator** : interface
+**Accessibility**: internal
+

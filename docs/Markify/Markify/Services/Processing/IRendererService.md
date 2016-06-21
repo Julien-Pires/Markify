@@ -1,0 +1,3 @@
+## **IRendererService** : interface
+**Accessibility**: internal
+

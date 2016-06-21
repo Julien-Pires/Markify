@@ -1,0 +1,3 @@
+## **IProjectProcessor** : interface
+**Accessibility**: internal
+

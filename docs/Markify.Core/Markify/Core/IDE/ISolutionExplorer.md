@@ -1,0 +1,3 @@
+## **ISolutionExplorer** : interface
+**Accessibility**: public
+

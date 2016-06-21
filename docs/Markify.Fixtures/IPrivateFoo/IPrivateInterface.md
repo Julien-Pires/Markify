@@ -1,0 +1,3 @@
+## **IPrivateInterface** : interface
+**Accessibility**: private
+

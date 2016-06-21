@@ -1,0 +1,3 @@
+## **IInNamespaceInterface** : interface
+**Accessibility**: public
+

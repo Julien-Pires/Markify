@@ -1,0 +1,3 @@
+## **IProtectedInterface** : interface
+**Accessibility**: protected
+

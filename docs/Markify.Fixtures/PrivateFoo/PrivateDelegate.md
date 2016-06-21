@@ -1,0 +1,3 @@
+## **PrivateDelegate** : delegate
+**Accessibility**: private
+

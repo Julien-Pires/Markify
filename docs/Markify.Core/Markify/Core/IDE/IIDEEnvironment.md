@@ -1,0 +1,3 @@
+## **IIDEEnvironment** : interface
+**Accessibility**: public
+

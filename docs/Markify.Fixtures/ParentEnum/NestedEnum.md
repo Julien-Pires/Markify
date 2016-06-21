@@ -1,0 +1,3 @@
+## **NestedEnum** : enum
+**Accessibility**: public
+

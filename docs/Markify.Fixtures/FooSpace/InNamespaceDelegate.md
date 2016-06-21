@@ -1,0 +1,3 @@
+## **InNamespaceDelegate** : delegate
+**Accessibility**: public
+
