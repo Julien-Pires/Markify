@@ -29,7 +29,7 @@ namespace Markify.Core.IDE.VisualStudio
             {
                 var projects = (Array)_visualStudio.ActiveSolutionProjects;
 
-                return projects.Length > 0 ? ((VSProject)projects.GetValue(0)).FullName : null;
+                return projects.Length > 0 ? ((VSProject)projects.GetValue(0)).Name : null;
             }
         }
 
