@@ -11,8 +11,7 @@
             SyntaxKind.PublicKeyword
             SyntaxKind.InternalKeyword 
             SyntaxKind.PrivateKeyword
-            SyntaxKind.ProtectedKeyword 
-        ]
+            SyntaxKind.ProtectedKeyword ]
 
     let getTypeKind (node : SyntaxNode) =
         match node with
@@ -59,8 +58,7 @@
             |> Seq.tryPick (fun c ->
                 match c.Name.ToString() with
                 | x when name = x -> Some c
-                | _ -> None
-            )
+                | _ -> None )
         let parameter = {
             Identity = identity;
             Modifier = parameter.VarianceKeyword.Text;
@@ -70,8 +68,7 @@
                     ([], x.Constraints) 
                     ||> Seq.fold (fun acc c -> c.ToString()::acc) 
                     |> List.toSeq
-                | _ -> Seq.empty
-        }
+                | _ -> Seq.empty }
         parameter
 
     let getGenericParameters (node : SyntaxNode) =

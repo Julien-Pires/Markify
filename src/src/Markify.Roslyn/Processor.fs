@@ -23,16 +23,14 @@
                 let types = inspectFile c.AbsolutePath
                 match types with
                 | Some s -> Seq.append acc s
-                | None -> acc)
+                | None -> acc )
             |> Seq.filter (fun c ->
                 match c.Identity.Name with
                 | "" -> false
-                | _ -> true)
+                | _ -> true )
             |> Seq.distinctBy (fun c -> c.Identity.Fullname)
 
         interface IProjectAnalyzer with
-            member this.Analyze (project : Project) : LibraryDefinition =
-                {
+            member this.Analyze (project : Project) : LibraryDefinition = {
                     Project = project.Name
-                    Types = inspectProject project.Files
-                }
+                    Types = inspectProject project.Files }

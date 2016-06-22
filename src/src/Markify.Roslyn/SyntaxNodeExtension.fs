@@ -20,8 +20,7 @@
 
     let inline getTypeInfo (x : ^T) = {
         Name = (^T : (member Identifier : SyntaxToken)(x)).Text;
-        Modifiers = (^T : (member Modifiers : SyntaxTokenList)(x))
-    }
+        Modifiers = (^T : (member Modifiers : SyntaxTokenList)(x)) }
 
     let inline getGenericInfo (x : ^T) =
         let parameters =
@@ -30,16 +29,14 @@
             | c -> c.Parameters :> TypeParameterSyntax seq
         let info = {
             Parameters = parameters;
-            Constraints = (^T : (member ConstraintClauses : TypeParameterConstraintClauseSyntax SyntaxList)(x))
-        }
+            Constraints = (^T : (member ConstraintClauses : TypeParameterConstraintClauseSyntax SyntaxList)(x)) }
         info
 
     let inline getInheritanceInfo (x : ^T) = {
         BaseTypes =
             match (^T : (member BaseList : BaseListSyntax)(x)) with
             | null -> Seq.empty
-            | c -> c.Types :> BaseTypeSyntax seq
-    }
+            | c -> c.Types :> BaseTypeSyntax seq }
 
     let (|NamespaceNode|_|) (node: SyntaxNode) =
         match node with

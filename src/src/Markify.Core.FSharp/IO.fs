@@ -9,12 +9,10 @@ module IO =
         ioBuilder {
             let! p = path |> Success
             let! exists = p |> File.Exists |> Success
-            return exists
-        }
+            return exists }
 
     let readFile path =
         ioBuilder{
             let! p = path |> Success
             let! content = p |> File.ReadAllText |> Success
-            return content
-        }
+            return content }

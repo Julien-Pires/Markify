@@ -23,6 +23,5 @@ module DocumentHelper =
         let page = {
             Name = sprintf "%s.%s" definition.Identity.Name cleanExt
             Folder = Uri (path, UriKind.Relative)
-            Content = definition
-        }
+            Content = definition }
         page

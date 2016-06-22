@@ -18,5 +18,5 @@ type SimpleDocumentProcessor() =
                     ||> Seq.fold (fun acc2 d -> (pageCreator d)::acc2))
             let toc = {
                 Root = Uri(solution.Path, "docs/")
-                Pages = pages}
+                Pages = pages }
             toc
