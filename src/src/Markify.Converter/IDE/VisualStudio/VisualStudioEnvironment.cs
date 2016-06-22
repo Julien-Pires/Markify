@@ -83,7 +83,7 @@ namespace Markify.Core.IDE.VisualStudio
 
             var path = Path.GetDirectoryName(_visualStudio.Solution?.FullName);
 
-            return path == null ? null : new Uri(path);
+            return path == null ? null : new Uri($"{path}/");
         }
 
         public IEnumerable<string> GetProjects(string solution)
