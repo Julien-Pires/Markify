@@ -1,3 +1,0 @@
-## **INestedInterface** : interface
-**Accessibility**: public
-

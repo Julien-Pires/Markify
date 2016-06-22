@@ -1,3 +1,0 @@
-## **ToStringInstanceHelper** : class
-**Accessibility**: public
-

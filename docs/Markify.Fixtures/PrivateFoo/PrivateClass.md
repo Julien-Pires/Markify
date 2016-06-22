@@ -1,3 +1,0 @@
-## **PrivateClass** : class
-**Accessibility**: private
-

@@ -1,3 +1,0 @@
-## **IDocumentOrganizer** : interface
-**Accessibility**: public
-

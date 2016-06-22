@@ -1,3 +1,0 @@
-## **NestedDelegate** : delegate
-**Accessibility**: public
-

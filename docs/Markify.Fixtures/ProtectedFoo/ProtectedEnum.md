@@ -1,3 +1,0 @@
-## **ProtectedEnum** : enum
-**Accessibility**: protected
-

@@ -1,3 +1,0 @@
-## **IDocumentRenderer** : interface
-**Accessibility**: public
-

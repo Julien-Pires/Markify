@@ -1,3 +1,0 @@
-## **IProjectAnalyzer** : interface
-**Accessibility**: public
-

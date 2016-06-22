@@ -1,3 +1,0 @@
-## **NestedStruct** : struct
-**Accessibility**: public
-

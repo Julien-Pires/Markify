@@ -1,3 +1,0 @@
-## **IPageWriter** : interface
-**Accessibility**: public
-

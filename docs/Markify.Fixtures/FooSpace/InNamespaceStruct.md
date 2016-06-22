@@ -1,3 +1,0 @@
-## **InNamespaceStruct** : struct
-**Accessibility**: public
-

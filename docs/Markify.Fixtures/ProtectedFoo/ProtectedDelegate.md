@@ -1,3 +1,0 @@
-## **ProtectedDelegate** : delegate
-**Accessibility**: protected
-

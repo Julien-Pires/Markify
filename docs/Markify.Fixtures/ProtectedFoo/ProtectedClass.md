@@ -1,3 +1,0 @@
-## **ProtectedClass** : class
-**Accessibility**: protected
-

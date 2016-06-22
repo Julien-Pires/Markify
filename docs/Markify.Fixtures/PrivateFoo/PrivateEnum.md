@@ -1,3 +1,0 @@
-## **PrivateEnum** : enum
-**Accessibility**: private
-

@@ -1,3 +1,0 @@
-## **ISettingsProvider** : interface
-**Accessibility**: internal
-

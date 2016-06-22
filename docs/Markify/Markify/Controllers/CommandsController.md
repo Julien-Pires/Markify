@@ -1,3 +1,0 @@
-## **CommandsController** : class
-**Accessibility**: internal
-
