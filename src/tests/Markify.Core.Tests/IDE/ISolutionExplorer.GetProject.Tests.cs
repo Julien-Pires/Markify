@@ -6,8 +6,9 @@ using Markify.Fixtures;
 
 using Xunit;
 
-using static Markify.Models.Context;
-using static Markify.Models.Context.ProjectLanguage;
+using Markify.Models.IDE;
+
+using static Markify.Models.IDE.ProjectLanguage;
 
 namespace Markify.Core.Tests.IDE
 {

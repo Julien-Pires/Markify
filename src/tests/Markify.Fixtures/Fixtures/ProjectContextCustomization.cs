@@ -5,7 +5,7 @@ using System.Reflection;
 
 using Ploeh.AutoFixture;
 
-using static Markify.Models.Context;
+using Markify.Models.IDE;
 
 namespace Markify.Fixtures
 {

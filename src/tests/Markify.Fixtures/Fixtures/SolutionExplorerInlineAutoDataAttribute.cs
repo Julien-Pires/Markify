@@ -3,7 +3,7 @@
 using Ploeh.AutoFixture;
 using Ploeh.AutoFixture.Xunit2;
 
-using static Markify.Models.Context;
+using Markify.Models.IDE;
 
 namespace Markify.Fixtures
 {

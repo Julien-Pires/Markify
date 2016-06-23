@@ -3,7 +3,7 @@
 open System
 open System.IO
 
-open Markify.Models.Document
+open Markify.Models.Documents
 open Markify.Models.Definitions
 
 module DocumentHelper =

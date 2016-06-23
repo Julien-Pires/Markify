@@ -4,9 +4,10 @@
     open System.Collections.Generic
 
     open Markify.Document
-    open Markify.Models.Context
     open Markify.Core.Processors
-    open Markify.Models.Document
+
+    open Markify.Models.IDE
+    open Markify.Models.Documents
     open Markify.Models.Definitions
 
     open Ploeh.AutoFixture

@@ -3,8 +3,11 @@
 open System
 
 open DocumentHelper
+
 open Markify.Core.Processors
-open Markify.Models.Document
+
+open Markify.Models.IDE
+open Markify.Models.Documents
 open Markify.Models.Definitions
 
 type SimpleDocumentProcessor() =

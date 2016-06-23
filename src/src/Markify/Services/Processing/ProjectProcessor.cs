@@ -4,9 +4,9 @@ using System.Collections.Immutable;
 
 using Markify.Core.Processors;
 
-using static Markify.Models.Context;
-using static Markify.Models.Document;
-using static Markify.Models.Definitions;
+using Markify.Models.IDE;
+using Markify.Models.Documents;
+using Markify.Models.Definitions;
 
 namespace Markify.Services.Processing
 {

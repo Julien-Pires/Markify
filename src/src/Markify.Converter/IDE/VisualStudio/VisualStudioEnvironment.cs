@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using EnvDTE;
 using EnvDTE80;
 
-using static Markify.Models.Context;
+using Markify.Models.IDE;
 
 using VSProject = EnvDTE.Project;
 using VSSolution = EnvDTE.Solution;

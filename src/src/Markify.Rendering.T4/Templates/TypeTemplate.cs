@@ -13,7 +13,7 @@ namespace Markify.Rendering.T4.Templates
     using System.Text;
     using System.Collections.Generic;
     using Microsoft.VisualStudio.TextTemplating;
-    using Markify.Models;
+    using Markify.Models.Definitions;
     using System;
     
     /// <summary>
@@ -32,7 +32,7 @@ namespace Markify.Rendering.T4.Templates
         {
             
             #line 8 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
- var definition = (Definitions.TypeDefinition)Session["Content"]; 
+ var definition = (TypeDefinition)Session["Content"]; 
             
             #line default
             #line hidden

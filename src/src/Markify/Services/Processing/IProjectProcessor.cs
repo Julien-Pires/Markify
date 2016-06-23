@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 
-using static Markify.Models.Document;
-using static Markify.Models.Context;
+using Markify.Models.IDE;
+using Markify.Models.Documents;
 
 namespace Markify.Services.Processing
 {

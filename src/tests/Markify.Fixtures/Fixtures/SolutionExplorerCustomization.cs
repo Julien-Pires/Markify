@@ -7,7 +7,7 @@ using Markify.Core.IDE;
 using Moq;
 using Ploeh.AutoFixture;
 
-using static Markify.Models.Context;
+using Markify.Models.IDE;
 
 namespace Markify.Fixtures
 {

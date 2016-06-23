@@ -1,8 +1,8 @@
 ﻿using Markify.Rendering.T4.Templates;
 
-using Ninject.Modules;
+using Markify.Models.Definitions;
 
-using static Markify.Models.Definitions;
+using Ninject.Modules;
 
 using TemplateTuple = System.Tuple<Markify.Rendering.T4.T4TemplateBase, System.Type>;
 

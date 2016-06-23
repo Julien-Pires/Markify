@@ -1,7 +1,9 @@
 ﻿module Roslyn_Processor_Process_Types_Inheritance_Tests
     open Processor
-    open Markify.Models.Context
+
+    open Markify.Models.IDE
     open Markify.Models.Definitions
+
     open Markify.Core.Processors
 
     open Xunit

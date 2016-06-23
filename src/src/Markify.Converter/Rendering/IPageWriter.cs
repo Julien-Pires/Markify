@@ -1,6 +1,6 @@
 ﻿using System;
 
-using static Markify.Models.Document;
+using Markify.Models.Documents;
 
 namespace Markify.Core.Rendering
 {

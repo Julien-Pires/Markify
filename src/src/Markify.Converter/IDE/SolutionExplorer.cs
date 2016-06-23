@@ -5,7 +5,7 @@ using System.Collections.Immutable;
 
 using Optional;
 
-using static Markify.Models.Context;
+using Markify.Models.IDE;
 
 namespace Markify.Core.IDE
 {

@@ -3,7 +3,7 @@ using System.IO;
 
 using Markify.Core.Rendering;
 
-using static Markify.Models.Document;
+using Markify.Models.Documents;
 
 namespace Markify.Services.IO
 {

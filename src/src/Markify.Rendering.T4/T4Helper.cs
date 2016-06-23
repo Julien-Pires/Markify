@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-using static Markify.Models.Definitions;
+using Markify.Models.Definitions;
 
 namespace Markify.Rendering.T4
 {

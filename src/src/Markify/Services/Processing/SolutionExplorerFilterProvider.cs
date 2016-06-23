@@ -1,6 +1,6 @@
 ﻿using Markify.Core.IDE;
 
-using static Markify.Models.Context;
+using Markify.Models.IDE;
 
 namespace Markify.Services.Processing
 {
