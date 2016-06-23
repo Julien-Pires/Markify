@@ -1,10 +1,13 @@
-﻿module Inspectors
-    open TypeExtension
-    open SyntaxNodeExtension
-    open Markify.Models.Definitions
+﻿namespace Markify.Roslyn
 
-    open Microsoft.CodeAnalysis
+open TypeExtension
+open SyntaxNodeExtension
 
+open Markify.Models.Definitions
+
+open Microsoft.CodeAnalysis
+
+module Inspectors =
     let searchTypes (node : SyntaxNode) =
         node.DescendantNodes()
         |> Seq.filter(fun c -> 
@@ -18,5 +21,4 @@
                 AccessModifiers = getAccessModifiers c;
                 Modifiers = getAdditionalModifiers c;
                 Parameters = getGenericParameters c;
-                BaseTypes = getBaseTypes c;
-            })
+                BaseTypes = getBaseTypes c; })

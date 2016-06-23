@@ -1,6 +1,5 @@
 ﻿namespace Markify.Roslyn
 
-open Processor
 open Markify.Core.Processors
 
 open Ninject.Modules

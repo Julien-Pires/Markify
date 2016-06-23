@@ -1,11 +1,13 @@
-﻿module TypeExtension
-    open SyntaxNodeExtension
-    open Markify.Models.Definitions
+﻿namespace Markify.Roslyn
 
-    open Microsoft.CodeAnalysis
-    open Microsoft.CodeAnalysis.CSharp
-    open Microsoft.CodeAnalysis.CSharp.Syntax 
+open SyntaxNodeExtension
+open Markify.Models.Definitions
 
+open Microsoft.CodeAnalysis
+open Microsoft.CodeAnalysis.CSharp
+open Microsoft.CodeAnalysis.CSharp.Syntax 
+
+module TypeExtension =
     let accessModifiersList = 
         Set [
             SyntaxKind.PublicKeyword

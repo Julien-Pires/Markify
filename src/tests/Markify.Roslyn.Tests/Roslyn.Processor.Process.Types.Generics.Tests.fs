@@ -1,7 +1,7 @@
 ﻿module Roslyn_Processor_Process_Types_Generics_Tests
     open System
     
-    open Processor
+    open Markify.Roslyn
 
     open Markify.Models.IDE
     open Markify.Models.Definitions

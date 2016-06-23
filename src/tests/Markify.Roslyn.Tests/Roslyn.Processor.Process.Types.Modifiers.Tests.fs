@@ -1,5 +1,5 @@
 ﻿module Roslyn_Processor_Process_Types_Modifiers_Tests
-    open Processor
+    open Markify.Roslyn
 
     open Markify.Models.IDE
     open Markify.Models.Definitions

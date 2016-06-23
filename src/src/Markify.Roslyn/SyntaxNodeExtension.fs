@@ -1,23 +1,24 @@
-﻿module SyntaxNodeExtension
-    open Microsoft.CodeAnalysis
-    open Microsoft.CodeAnalysis.CSharp.Syntax
+﻿namespace Markify.Roslyn
 
-    type TypeName = string
+open Microsoft.CodeAnalysis
+open Microsoft.CodeAnalysis.CSharp.Syntax
 
-    type TypeInfo = {
-        Name : TypeName
-        Modifiers : SyntaxToken seq
-    }
+type TypeName = string
+type TypeInfo = {
+    Name : TypeName
+    Modifiers : SyntaxToken seq
+}
 
-    type GenericInfo = {
-        Parameters : TypeParameterSyntax seq
-        Constraints : TypeParameterConstraintClauseSyntax SyntaxList
-    }
+type GenericInfo = {
+    Parameters : TypeParameterSyntax seq
+    Constraints : TypeParameterConstraintClauseSyntax SyntaxList
+}
 
-    type InheritanceInfo = {
-        BaseTypes : BaseTypeSyntax seq
-    }
+type InheritanceInfo = {
+    BaseTypes : BaseTypeSyntax seq
+}
 
+module SyntaxNodeExtension =
     let inline getTypeInfo (x : ^T) = {
         Name = (^T : (member Identifier : SyntaxToken)(x)).Text;
         Modifiers = (^T : (member Modifiers : SyntaxTokenList)(x)) }
