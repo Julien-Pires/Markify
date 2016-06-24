@@ -68,7 +68,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
-    <ProjectReference Include="..\Markify.Converter\Markify.Core.csproj">
+    <ProjectReference Include="..\Markify.Core\Markify.Core.csproj">
       <Name>Markify.Core</Name>
       <Project>{8833bf6e-806f-483d-ba70-ff92b09e625d}</Project>
       <Private>True</Private>

@@ -130,14 +130,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Markify.Converter\Markify.Core.csproj">
-      <Name>Markify.Core</Name>
-      <Project>{8833bf6e-806f-483d-ba70-ff92b09e625d}</Project>
-      <Private>True</Private>
-    </ProjectReference>
     <ProjectReference Include="..\Markify.Core.FSharp\Markify.Core.FSharp.fsproj">
       <Name>Markify.Core.FSharp</Name>
       <Project>{d9a8fb2a-fc1a-4a2b-a5a3-17d72b712a04}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Markify.Core\Markify.Core.csproj">
+      <Name>Markify.Core</Name>
+      <Project>{8833bf6e-806f-483d-ba70-ff92b09e625d}</Project>
       <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\Markify.Models\Markify.Models.fsproj">

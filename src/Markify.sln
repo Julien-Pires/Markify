@@ -10,7 +10,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Markify", "src\Markify\Mark
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{41C416FB-0EFB-4217-BB20-63F50AF46B35}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Markify.Core", "src\Markify.Converter\Markify.Core.csproj", "{8833BF6E-806F-483D-BA70-FF92B09E625D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Markify.Core", "src\Markify.Core\Markify.Core.csproj", "{8833BF6E-806F-483D-BA70-FF92B09E625D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{E13F561B-BF8E-4A67-AC18-EC85159ECFAA}"
 EndProject

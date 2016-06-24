@@ -95,7 +95,7 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Markify.Converter\Markify.Core.csproj">
+    <ProjectReference Include="..\..\src\Markify.Core\Markify.Core.csproj">
       <Project>{8833BF6E-806F-483D-BA70-FF92B09E625D}</Project>
       <Name>Markify.Core</Name>
     </ProjectReference>

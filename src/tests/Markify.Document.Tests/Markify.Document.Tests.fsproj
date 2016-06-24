@@ -103,7 +103,7 @@
       <HintPath>..\..\packages\xunit.extensibility.execution.2.1.0\lib\net45\xunit.execution.desktop.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <ProjectReference Include="..\..\src\Markify.Converter\Markify.Core.csproj">
+    <ProjectReference Include="..\..\src\Markify.Core\Markify.Core.csproj">
       <Name>Markify.Core</Name>
       <Project>{8833bf6e-806f-483d-ba70-ff92b09e625d}</Project>
       <Private>True</Private>
