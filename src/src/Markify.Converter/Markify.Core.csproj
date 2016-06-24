@@ -70,9 +70,9 @@
     <Compile Include="IDE\SolutionExplorerFilter.cs" />
     <Compile Include="IDE\VisualStudio\VisualStudioEnvironment.cs" />
     <Compile Include="IDE\VisualStudio\VisualStudioModule.cs" />
-    <Compile Include="Processors\IDocumentOrganizer.cs" />
+    <Compile Include="Analyzers\IDocumentOrganizer.cs" />
     <Compile Include="Rendering\IDocumentRenderer.cs" />
-    <Compile Include="Processors\IProjectAnalyzer.cs" />
+    <Compile Include="Analyzers\IProjectAnalyzer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rendering\IPageWriter.cs" />
   </ItemGroup>

@@ -7,7 +7,7 @@ open Markify.Models.Definitions
 
 open Microsoft.CodeAnalysis
 
-module Inspectors =
+module Inspector =
     let searchTypes (node : SyntaxNode) =
         node.DescendantNodes()
         |> Seq.filter(fun c -> 

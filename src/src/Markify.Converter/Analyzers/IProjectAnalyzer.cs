@@ -1,7 +1,7 @@
 ﻿using Markify.Models.IDE;
 using Markify.Models.Definitions;
 
-namespace Markify.Core.Processors
+namespace Markify.Core.Analyzers
 {
     public interface IProjectAnalyzer
     {

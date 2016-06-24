@@ -1,6 +1,7 @@
 ﻿namespace Markify.Roslyn
 
 open Markify.Core.IO
+
 open Microsoft.CodeAnalysis.CSharp
 
 module SourceProvider =

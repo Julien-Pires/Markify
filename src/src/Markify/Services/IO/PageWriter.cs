@@ -7,7 +7,7 @@ using Markify.Models.Documents;
 
 namespace Markify.Services.IO
 {
-    public sealed class FileWriter : IPageWriter
+    public sealed class PageWriter : IPageWriter
     {
         #region Write Methods
 

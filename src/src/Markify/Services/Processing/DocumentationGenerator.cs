@@ -9,13 +9,13 @@ namespace Markify.Services.Processing
         #region Fields
 
         private readonly IProjectProcessor _projectProcessor;
-        private readonly IRendererService _rendererService;
+        private readonly IRenderer _rendererService;
 
         #endregion
 
         #region Constructors
 
-        public DocumentationGenerator(IProjectProcessor processor, IRendererService renderer)
+        public DocumentationGenerator(IProjectProcessor processor, IRenderer renderer)
         {
             _projectProcessor = processor;
             _rendererService = renderer;

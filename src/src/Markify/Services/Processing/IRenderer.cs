@@ -2,7 +2,7 @@
 
 namespace Markify.Services.Processing
 {
-    internal interface IRendererService
+    internal interface IRenderer
     {
         #region Methods
 

@@ -52,8 +52,8 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="DocumentHelper.fs" />
-    <Compile Include="SimpleDocumentProcessor.fs" />
-    <Compile Include="DocumentOrganizerModule.fs" />
+    <Compile Include="SimpleDocumentationOrganizer.fs" />
+    <Compile Include="DocumentationOrganizerModule.fs" />
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

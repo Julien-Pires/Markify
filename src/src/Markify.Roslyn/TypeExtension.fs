@@ -1,6 +1,7 @@
 ﻿namespace Markify.Roslyn
 
 open SyntaxNodeExtension
+
 open Markify.Models.Definitions
 
 open Microsoft.CodeAnalysis

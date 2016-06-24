@@ -6,7 +6,7 @@
     open Markify.Models.IDE
     open Markify.Models.Definitions
 
-    open Markify.Core.Processors
+    open Markify.Core.Analyzers
 
     open Attributes
 
@@ -19,7 +19,7 @@
     [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericClass.cs"|], 2, "GenericClass`2")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericStruct.cs"|], 1, "GenericStruct`1")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericDelegate.cs"|], 1, "Do`1")>]
-    let ``Process project with generic types`` (count, name, sut: RoslynProcessor, project: Project) =
+    let ``Process project with generic types`` (count, name, sut: RoslynAnalyzer, project: Project) =
         let typeDef =
             (sut :> IProjectAnalyzer)
             |> (fun c -> c.Analyze(project))
@@ -34,7 +34,7 @@
     [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericInterface.cs"|], "Y", "GenericInterface`2")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericStruct.cs"|], "T", "GenericStruct`1")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericDelegate.cs"|], "T", "Do`1")>]
-    let ``Process project with generic parameter with correct parameter name`` (parameterName, name, sut: RoslynProcessor, project: Project) =
+    let ``Process project with generic parameter with correct parameter name`` (parameterName, name, sut: RoslynAnalyzer, project: Project) =
         let typeDef =
             (sut :> IProjectAnalyzer)
             |> (fun c -> c.Analyze(project))
@@ -52,7 +52,7 @@
     [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericInterface.cs"|], "out", "Y", "GenericInterface`2")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericStruct.cs"|], "", "T", "GenericStruct`1")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericDelegate.cs"|], "in", "T", "Do`1")>]
-    let ``Process project with generic parameters with modifiers`` (modifier: string, parameterName, name, sut: RoslynProcessor, project: Project) = 
+    let ``Process project with generic parameters with modifiers`` (modifier: string, parameterName, name, sut: RoslynAnalyzer, project: Project) = 
         let typeDef =
             (sut :> IProjectAnalyzer)
             |> (fun c -> c.Analyze(project))
@@ -69,7 +69,7 @@
     [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericInterface.cs"|], 0, "Y", "GenericInterface`2")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericStruct.cs"|], 1, "T", "GenericStruct`1")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericDelegate.cs"|], 3, "T", "Do`1")>]
-    let ``Process project with generic parameter with constraints`` (count, parameterName, name, sut: RoslynProcessor, project: Project) =
+    let ``Process project with generic parameter with constraints`` (count, parameterName, name, sut: RoslynAnalyzer, project: Project) =
         let typeDef =
             (sut :> IProjectAnalyzer)
             |> (fun c -> c.Analyze(project))
@@ -86,7 +86,7 @@
     [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericInterface.cs"|], "Y", "", "GenericInterface`2")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericStruct.cs"|], "T", "struct", "GenericStruct`1")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericDelegate.cs"|], "T", "class IDisposable new()", "Do`1")>]
-    let ``Process project with generic parameter with correct constraints names`` (parameterName, constraints: string, name, sut: RoslynProcessor, project: Project) =
+    let ``Process project with generic parameter with correct constraints names`` (parameterName, constraints: string, name, sut: RoslynAnalyzer, project: Project) =
         let expectedConstraints = constraints.Split ([|' '|], StringSplitOptions.RemoveEmptyEntries)
         
         let typeDef =

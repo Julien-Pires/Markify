@@ -4,14 +4,14 @@ open System
 
 open DocumentHelper
 
-open Markify.Core.Processors
+open Markify.Core.Analyzers
 
 open Markify.Models.IDE
 open Markify.Models.Documents
 open Markify.Models.Definitions
 
-type SimpleDocumentProcessor() =
-    interface IDocumentOrganizer with
+type SimpleDocumentationOrganizer() =
+    interface IDocumentationOrganizer with
         member this.Organize (libraries : LibraryDefinition seq, solution, setting : DocumentSetting) : TableOfContent = 
             let pages =
                 ([], libraries)

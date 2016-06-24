@@ -4,7 +4,7 @@
     open Markify.Models.IDE
     open Markify.Models.Definitions
 
-    open Markify.Core.Processors
+    open Markify.Core.Analyzers
 
     open Attributes
 
@@ -18,7 +18,7 @@
     [<ProjectContextInlineAutoData([|"Projects/Source/Struct/StructSamples.cs"|], 4, StructureKind.Struct)>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Enum/EnumSamples.cs"|], 3, StructureKind.Enum)>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Delegate/DelegateSamples.cs"|], 3, StructureKind.Delegate)>]
-    let ``Process project with single source`` (expected, kind, sut: RoslynProcessor, project: Project) = 
+    let ``Process project with single source`` (expected, kind, sut: RoslynAnalyzer, project: Project) = 
         let library = (sut :> IProjectAnalyzer).Analyze project
         let typesCount =
             library.Types
@@ -33,7 +33,7 @@
     [<ProjectContextInlineAutoData([|"Projects/Source/Struct/StructSamples.cs"; "Projects/Source/Struct/StructSamples.cs"|], "SingleStruct")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Enum/EnumSamples.cs"; "Projects/Source/Enum/EnumSamples.cs"|], "SingleEnum")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Delegate/DelegateSamples.cs"; "Projects/Source/Delegate/DelegateSamples.cs"|], "SingleDelegate")>]
-    let ``Process project without duplicate types`` (fullname, sut: RoslynProcessor, project: Project) =
+    let ``Process project without duplicate types`` (fullname, sut: RoslynAnalyzer, project: Project) =
         let typeDef = 
             (sut :> IProjectAnalyzer)
             |> (fun c -> c.Analyze project)
@@ -51,7 +51,7 @@
     [<ProjectContextInlineAutoData([|"Projects/Source/Delegate/DelegateSamples.cs"|], "InNamespaceDelegate")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericClass.cs"|], "GenericClass`2")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericDelegate.cs"|], "Do`1")>]
-    let ``Process project with types with correct name`` (name, sut: RoslynProcessor, project: Project) =
+    let ``Process project with types with correct name`` (name, sut: RoslynAnalyzer, project: Project) =
         let typeDef = 
             (sut :> IProjectAnalyzer)
             |> (fun c -> c.Analyze project)
@@ -70,7 +70,7 @@
     [<ProjectContextInlineAutoData([|"Projects/Source/Delegate/DelegateSamples.cs"|], "FooSpace.InNamespaceDelegate")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericClass.cs"|], "GenericClass`2")>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Generics/GenericDelegate.cs"|], "Do`1")>]
-    let ``Process project with types with correct fullname`` (fullname, sut: RoslynProcessor, project: Project) =
+    let ``Process project with types with correct fullname`` (fullname, sut: RoslynAnalyzer, project: Project) =
         let typeDef = 
             (sut :> IProjectAnalyzer)
             |> (fun c -> c.Analyze project)

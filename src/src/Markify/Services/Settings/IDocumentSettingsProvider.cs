@@ -1,8 +1,8 @@
 ﻿using Markify.Models.Documents;
 
-namespace Markify.Services
+namespace Markify.Services.Settings
 {
-    internal interface ISettingsProvider
+    internal interface IDocumentSettingsProvider
     {
         #region Methods
 

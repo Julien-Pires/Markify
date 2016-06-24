@@ -2,7 +2,7 @@
 
 namespace Markify.Services.Settings
 {
-    internal sealed class SettingsProvider : ISettingsProvider
+    internal sealed class DocumentSettingsProvider : IDocumentSettingsProvider
     {
         #region Methods
 

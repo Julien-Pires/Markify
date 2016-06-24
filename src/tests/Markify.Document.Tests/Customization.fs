@@ -4,7 +4,7 @@
     open System.Collections.Generic
 
     open Markify.Document
-    open Markify.Core.Processors
+    open Markify.Core.Analyzers
 
     open Markify.Models.IDE
     open Markify.Models.Documents
@@ -20,7 +20,7 @@
 
         interface ICustomization with
             member  this.Customize (fixture : IFixture) = 
-                fixture.Inject<IDocumentOrganizer> (new SimpleDocumentProcessor())
+                fixture.Inject<IDocumentationOrganizer> (new SimpleDocumentationOrganizer())
 
                 fixture.Register<Solution>(fun c ->
                     let solution = {

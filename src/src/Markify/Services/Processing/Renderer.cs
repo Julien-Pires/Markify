@@ -4,7 +4,7 @@ using Markify.Models.Documents;
 
 namespace Markify.Services.Processing
 {
-    internal class RendererService : IRendererService
+    internal class Renderer : IRenderer
     {
         #region Fields
 
@@ -15,7 +15,7 @@ namespace Markify.Services.Processing
 
         #region Constructors
 
-        public RendererService(IDocumentRenderer renderer, IPageWriter writer)
+        public Renderer(IDocumentRenderer renderer, IPageWriter writer)
         {
             _renderer = renderer;
             _writer = writer;

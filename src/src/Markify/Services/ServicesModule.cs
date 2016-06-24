@@ -15,11 +15,11 @@ namespace Markify.Services
 
         public override void Load()
         {
-            Bind<IPageWriter>().To<FileWriter>();
+            Bind<IPageWriter>().To<PageWriter>();
             Bind<IProjectProcessor>().To<ProjectProcessor>();
-            Bind<IRendererService>().To<RendererService>();
+            Bind<IRenderer>().To<Renderer>();
             Bind<IDocumentationGenerator>().To<DocumentationGenerator>();
-            Bind<ISettingsProvider>().To<SettingsProvider>();
+            Bind<IDocumentSettingsProvider>().To<DocumentSettingsProvider>();
             Bind<ISolutionExplorerFilterProvider>().To<SolutionExplorerFilterProvider>();
         }
 

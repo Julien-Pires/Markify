@@ -4,12 +4,12 @@ open Markify.Models
 open Markify.Models.IDE
 open Markify.Models.Definitions
 
-open Markify.Core.Processors
+open Markify.Core.Analyzers
 
-open Inspectors
+open Inspector
 open SourceProvider
 
-type RoslynProcessor() =
+type RoslynAnalyzer() =
     let inspectFile path =
         let tree = getSyntaxTree path
         match tree with

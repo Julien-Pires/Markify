@@ -2,7 +2,7 @@
 
 using Markify.Models.IDE;
 
-namespace Markify.Services.Processing
+namespace Markify.Services.Settings
 {
     internal sealed class SolutionExplorerFilterProvider : ISolutionExplorerFilterProvider
     {

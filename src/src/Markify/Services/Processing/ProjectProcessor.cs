@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 
-using Markify.Core.Processors;
+using Markify.Core.Analyzers;
+using Markify.Services.Settings;
 
 using Markify.Models.IDE;
 using Markify.Models.Documents;
@@ -15,14 +16,14 @@ namespace Markify.Services.Processing
         #region Fields
 
         private readonly IProjectAnalyzer _analyzer;
-        private readonly IDocumentOrganizer _organizer;
-        private readonly ISettingsProvider _settingsProvider;
+        private readonly IDocumentationOrganizer _organizer;
+        private readonly IDocumentSettingsProvider _settingsProvider;
 
         #endregion
 
         #region Constructors
 
-        public ProjectProcessor(IProjectAnalyzer analyzer, IDocumentOrganizer organizer, ISettingsProvider settingsProvider)
+        public ProjectProcessor(IProjectAnalyzer analyzer, IDocumentationOrganizer organizer, IDocumentSettingsProvider settingsProvider)
         {
             _analyzer = analyzer;
             _organizer = organizer;

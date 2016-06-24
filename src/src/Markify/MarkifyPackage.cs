@@ -39,7 +39,7 @@ namespace Markify
         private readonly INinjectModule[] _modules =
         {
             new RoslynModule(),
-            new DocumentOrganizerModule(),
+            new DocumentationOrganizerModule(),
             new RenderingModule(),
             new T4Module(),
             new IDEModule(),
