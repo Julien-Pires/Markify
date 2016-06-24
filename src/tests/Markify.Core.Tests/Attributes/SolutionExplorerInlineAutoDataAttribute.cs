@@ -5,7 +5,7 @@ using Ploeh.AutoFixture.Xunit2;
 
 using Markify.Models.IDE;
 
-namespace Markify.Fixtures
+namespace Markify.Core.Tests.Attributes
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
     public class SolutionExplorerInlineAutoDataAttribute : InlineAutoDataAttribute

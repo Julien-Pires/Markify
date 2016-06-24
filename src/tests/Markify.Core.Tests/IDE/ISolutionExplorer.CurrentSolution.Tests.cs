@@ -2,11 +2,11 @@
 using System.Linq;
 
 using Markify.Core.IDE;
-using Markify.Fixtures;
+using Markify.Models.IDE;
+
+using Markify.Core.Tests.Attributes;
 
 using Xunit;
-
-using Markify.Models.IDE;
 
 using static Markify.Models.IDE.ProjectLanguage;
 

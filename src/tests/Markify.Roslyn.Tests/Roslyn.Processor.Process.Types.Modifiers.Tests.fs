@@ -6,9 +6,10 @@
 
     open Markify.Core.Processors
 
+    open Attributes
+
     open Xunit
     open Swensen.Unquote
-    open Markify.Fixtures
 
     [<Theory>]
     [<ProjectContextInlineAutoData([|"Projects/Source/Class/AccessModifier.cs"|], "public", "PublicClass")>]

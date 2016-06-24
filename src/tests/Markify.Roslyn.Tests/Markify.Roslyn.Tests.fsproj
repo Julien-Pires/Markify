@@ -58,6 +58,8 @@
     <Content Include="packages.config" />
     <None Include="Script.fsx" />
     <Compile Include="AssemblyInfo.fs" />
+    <Compile Include="Customization.fs" />
+    <Compile Include="Attributes.fs" />
     <Compile Include="Roslyn.Processor.Process.Types.Tests.fs" />
     <Compile Include="Roslyn.Processor.Process.Types.Generics.Tests.fs" />
     <Compile Include="Roslyn.Processor.Process.Types.Modifiers.Tests.fs" />

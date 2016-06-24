@@ -6,9 +6,10 @@
 
     open Markify.Core.Processors
 
+    open Attributes
+
     open Xunit
     open Swensen.Unquote
-    open Markify.Fixtures
 
     [<Theory>]
     [<ProjectContextInlineAutoData([|"Projects/Source/EmptySource.cs"|], 0, StructureKind.Class)>]

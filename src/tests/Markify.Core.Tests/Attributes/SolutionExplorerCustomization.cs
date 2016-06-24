@@ -9,7 +9,7 @@ using Ploeh.AutoFixture;
 
 using Markify.Models.IDE;
 
-namespace Markify.Fixtures
+namespace Markify.Core.Tests.Attributes
 {
     public class SolutionExplorerCustomization : ICustomization
     {

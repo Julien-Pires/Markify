@@ -10,5 +10,4 @@
     type SimpleDocumentInlineAutoDataAttribute(root, projectName, projectCount, typeCount, extension, [<ParamArray>] values) =
         inherit InlineAutoDataAttribute(
             AutoDataAttribute(Fixture().Customize(SimpleDocumentCustomization(root, projectName, projectCount, typeCount, extension))),
-            values
-        )
+            values)
