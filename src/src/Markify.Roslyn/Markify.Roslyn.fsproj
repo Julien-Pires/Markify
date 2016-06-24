@@ -57,7 +57,7 @@
     <Compile Include="TypeExtension.fs" />
     <Compile Include="SourceProvider.fs" />
     <Compile Include="Inspectors.fs" />
-    <Compile Include="Analyzer.fs" />
+    <Compile Include="RoslynAnalyzer.fs" />
     <Compile Include="RoslynModule.fs" />
   </ItemGroup>
   <ItemGroup>
