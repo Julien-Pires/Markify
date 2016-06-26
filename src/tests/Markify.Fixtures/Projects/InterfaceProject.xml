@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project>
+  <Files>
+    <!-- Interface (Total : 15) -->
+    <Uri>Source/Interface/AccessModifier</Uri>
+    <Uri>Source/Interface/AdditionnalModifier</Uri>
+    <Uri>Source/Interface/InheritedInterface</Uri>
+    <Uri>Source/Interface/InterfaceSamples</Uri>
+
+    <!-- Duplicate Tests -->
+    <Uri>Source/Interface/InterfaceSamples</Uri>
+  </Files>
+</Project>

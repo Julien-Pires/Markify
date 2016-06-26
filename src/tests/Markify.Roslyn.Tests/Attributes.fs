@@ -1,13 +1,14 @@
 ﻿module Attributes
 
     open System
-    open Customization
+
+    open Markify.Roslyn.Tests
 
     open Ploeh.AutoFixture
     open Ploeh.AutoFixture.Xunit2
 
     [<AttributeUsage(AttributeTargets.Method, AllowMultiple = true)>]
-    type ProjectContextInlineAutoDataAttribute(sourceFiles : string[], [<ParamArray>] values) =
+    type ProjectContextInlineAutoDataAttribute(projectFile : string, language, [<ParamArray>] values) =
         inherit InlineAutoDataAttribute(
-            AutoDataAttribute(Fixture().Customize(ProjectContextCustomization(sourceFiles))),
+            AutoDataAttribute(Fixture().Customize(ProjectContextCustomization(projectFile, language))),
             values)

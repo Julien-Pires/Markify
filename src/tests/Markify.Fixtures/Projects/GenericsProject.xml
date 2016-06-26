@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project>
+  <Files>
+    <!-- Generics -->
+    <Uri>Source/Generics/GenericClass</Uri>
+    <Uri>Source/Generics/GenericDelegate</Uri>
+    <Uri>Source/Generics/GenericInterface</Uri>
+    <Uri>Source/Generics/GenericStruct</Uri>
+  </Files>
+</Project>

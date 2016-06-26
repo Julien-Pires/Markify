@@ -33,7 +33,7 @@
         test <@ Success exists = actual @>
 
     [<Theory>]
-    [<InlineData("Projects/Class_Project.xml")>]
+    [<InlineData("Projects/ClassProject.xml")>]
     [<InlineData("Projects/Source/EmptySource.cs")>]
     let ``Read text file when file exists with success`` (path) =
         let actual = IO.readFile path

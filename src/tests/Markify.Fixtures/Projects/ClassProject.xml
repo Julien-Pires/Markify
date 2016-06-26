@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project>
+  <Files>
+    <!-- Class (Total : 22) -->
+    <Uri>Source/Class/AccessModifier</Uri>
+    <Uri>Source/Class/AdditionnalModifier</Uri>
+    <Uri>Source/Class/ClassSamples</Uri>
+    <Uri>Source/Class/InheritedClass</Uri>
+
+    <!-- Duplicate Tests-->
+    <Uri>Source/Class/ClassSamples</Uri>
+  </Files>
+</Project>

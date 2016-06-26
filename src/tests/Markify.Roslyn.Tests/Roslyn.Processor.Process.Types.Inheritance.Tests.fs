@@ -12,14 +12,14 @@
     open Swensen.Unquote
 
     [<Theory>]
-    [<ProjectContextInlineAutoData([|"Projects/Source/Class/ClassSamples.cs"|], "SingleClass", 0)>]
-    [<ProjectContextInlineAutoData([|"Projects/Source/Class/InheritedClass.cs"|], "InheritClass", 1)>]
-    [<ProjectContextInlineAutoData([|"Projects/Source/Class/InheritedClass.cs"|], "ImplementGenInterfaceClass", 2)>]  
-    [<ProjectContextInlineAutoData([|"Projects/Source/Interface/InterfaceSamples.cs"|], "ISingleInterface", 0)>]
-    [<ProjectContextInlineAutoData([|"Projects/Source/Interface/InheritedInterface.cs"|], "IImplementGenericInterface", 2)>]
-    [<ProjectContextInlineAutoData([|"Projects/Source/Struct/StructSamples.cs"|], "SingleStruct", 0)>]
-    [<ProjectContextInlineAutoData([|"Projects/Source/Struct/InheritedStruct.cs"|], "ImplementIDisposable", 1)>]
-    [<ProjectContextInlineAutoData([|"Projects/Source/Enum/InheritedEnum.cs"|], "IntEnum", 1)>]
+    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.CSharp, "SingleClass", 0)>]
+    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.CSharp, "InheritClass", 1)>]
+    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.CSharp, "ImplementGenInterfaceClass", 2)>]  
+    [<ProjectContextInlineAutoData("InterfaceProject.xml", ProjectLanguage.CSharp, "ISingleInterface", 0)>]
+    [<ProjectContextInlineAutoData("InterfaceProject.xml", ProjectLanguage.CSharp, "IImplementGenericInterface", 2)>]
+    [<ProjectContextInlineAutoData("StructProject.xml", ProjectLanguage.CSharp, "SingleStruct", 0)>]
+    [<ProjectContextInlineAutoData("StructProject.xml", ProjectLanguage.CSharp, "ImplementIDisposable", 1)>]
+    [<ProjectContextInlineAutoData("EnumProject.xml", ProjectLanguage.CSharp, "IntEnum", 1)>]
     let ``Process project with type with inheritance tree`` (name, count, sut: RoslynAnalyzer, project: Project) =
         let typeDef = 
             (sut :> IProjectAnalyzer)
@@ -30,14 +30,14 @@
         test <@ count = Seq.length typeDef.BaseTypes @>
 
     [<Theory>]
-    [<ProjectContextInlineAutoData([|"Projects/Source/Class/InheritedClass.cs"|], "InheritClass", "Exception")>]
-    [<ProjectContextInlineAutoData([|"Projects/Source/Class/InheritedClass.cs"|], "MixedInheritanceClass", "IDisposable Exception")>]   
-    [<ProjectContextInlineAutoData([|"Projects/Source/Interface/InheritedInterface.cs"|], "IImplementIDisposable", "IDisposable")>]
-    [<ProjectContextInlineAutoData([|"Projects/Source/Interface/InheritedInterface.cs"|], "IImplementGenericInterface", "IList<String> IReadOnlyCollection<String>")>]
-    [<ProjectContextInlineAutoData([|"Projects/Source/Struct/InheritedStruct.cs"|], "ImplementIDisposable", "IDisposable")>]
-    [<ProjectContextInlineAutoData([|"Projects/Source/Struct/InheritedStruct.cs"|], "ImplementGenericInterface", "IList<String> IReadOnlyCollection<String>")>]
-    [<ProjectContextInlineAutoData([|"Projects/Source/Enum/InheritedEnum.cs"|], "IntEnum", "int")>]
-    [<ProjectContextInlineAutoData([|"Projects/Source/Enum/InheritedEnum.cs"|], "ByteEnum", "byte")>]
+    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.CSharp, "InheritClass", "Exception")>]
+    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.CSharp, "MixedInheritanceClass", "IDisposable Exception")>]   
+    [<ProjectContextInlineAutoData("InterfaceProject.xml", ProjectLanguage.CSharp, "IImplementIDisposable", "IDisposable")>]
+    [<ProjectContextInlineAutoData("InterfaceProject.xml", ProjectLanguage.CSharp, "IImplementGenericInterface", "IList<String> IReadOnlyCollection<String>")>]
+    [<ProjectContextInlineAutoData("StructProject.xml", ProjectLanguage.CSharp, "ImplementIDisposable", "IDisposable")>]
+    [<ProjectContextInlineAutoData("StructProject.xml", ProjectLanguage.CSharp, "ImplementGenericInterface", "IList<String> IReadOnlyCollection<String>")>]
+    [<ProjectContextInlineAutoData("EnumProject.xml", ProjectLanguage.CSharp, "IntEnum", "int")>]
+    [<ProjectContextInlineAutoData("EnumProject.xml", ProjectLanguage.CSharp, "ByteEnum", "byte")>]
     let ``Process project with type with multiple inheritance`` (name, typeNames: string, sut: RoslynAnalyzer, project: Project) =
         let expectedBaseTypes = typeNames.Split [|' '|]
 

@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project>
+  <Files>
+    <!-- Class (Total : 22) -->
+    <Uri>Source/Class/AccessModifier</Uri>
+    <Uri>Source/Class/AdditionnalModifier</Uri>
+    <Uri>Source/Class/ClassSamples</Uri>
+    <Uri>Source/Class/InheritedClass</Uri>
+
+    <!-- Interface (Total : 15) -->
+    <Uri>Source/Interface/AccessModifier</Uri>
+    <Uri>Source/Interface/AdditionnalModifier</Uri>
+    <Uri>Source/Interface/InheritedInterface</Uri>
+    <Uri>Source/Interface/InterfaceSamples</Uri>
+
+    <!-- Struct (Total :13) -->
+    <Uri>Source/Struct/AccessModifier</Uri>
+    <Uri>Source/Struct/AdditionnalModifier</Uri>
+    <Uri>Source/Struct/InheritedStruct</Uri>
+    <Uri>Source/Struct/StructSamples</Uri>
+
+    <!-- Delegate (Total : 8) -->
+    <Uri>Source/Delegate/AccessModifier</Uri>
+    <Uri>Source/Delegate/DelegateSamples</Uri>
+
+    <!-- Enum (Total : 10) -->
+    <Uri>Source/Enum/AccessModifier</Uri>
+    <Uri>Source/Enum/EnumSamples</Uri>
+    <Uri>Source/Enum/InheritedEnum</Uri>
+
+    <!-- Generics -->
+    <Uri>Source/Generics/GenericClass</Uri>
+    <Uri>Source/Generics/GenericDelegate</Uri>
+    <Uri>Source/Generics/GenericInterface</Uri>
+    <Uri>Source/Generics/GenericStruct</Uri>
+  </Files>
+</Project>

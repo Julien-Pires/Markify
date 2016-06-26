@@ -12,23 +12,23 @@
     open Swensen.Unquote
 
     [<Theory>]
-    [<ProjectContextInlineAutoData([|"Projects/Source/Class/AccessModifier.cs"|], "public", "PublicClass")>]
-    [<ProjectContextInlineAutoData([|"Projects/Source/Class/AccessModifier.cs"|], "internal", "InternalClass")>]
-    [<ProjectContextInlineAutoData([|"Projects/Source/Class/AccessModifier.cs"|], "protected", "ProtectedClass")>]
-    [<ProjectContextInlineAutoData([|"Projects/Source/Class/AccessModifier.cs"|], "protected internal", "ProtectedInternalClass")>]
-    [<ProjectContextInlineAutoData([|"Projects/Source/Class/AccessModifier.cs"|], "private", "PrivateClass")>]
-    [<ProjectContextInlineAutoData([|"Projects/Source/Interface/AccessModifier.cs"|], "public", "IPublicInterface")>]
-    [<ProjectContextInlineAutoData([|"Projects/Source/Interface/AccessModifier.cs"|], "internal", "IInternalInterface")>]
-    [<ProjectContextInlineAutoData([|"Projects/Source/Interface/AccessModifier.cs"|], "protected internal", "IProtectedInternalInterface")>]
-    [<ProjectContextInlineAutoData([|"Projects/Source/Struct/AccessModifier.cs"|], "public", "PublicStruct")>]
-    [<ProjectContextInlineAutoData([|"Projects/Source/Struct/AccessModifier.cs"|], "internal", "InternalStruct")>]
-    [<ProjectContextInlineAutoData([|"Projects/Source/Struct/AccessModifier.cs"|], "protected internal", "ProtectedInternalStruct")>]
-    [<ProjectContextInlineAutoData([|"Projects/Source/Enum/AccessModifier.cs"|], "public", "PublicEnum")>]
-    [<ProjectContextInlineAutoData([|"Projects/Source/Enum/AccessModifier.cs"|], "internal", "InternalEnum")>]
-    [<ProjectContextInlineAutoData([|"Projects/Source/Enum/AccessModifier.cs"|], "protected internal", "ProtectedInternalEnum")>]
-    [<ProjectContextInlineAutoData([|"Projects/Source/Delegate/AccessModifier.cs"|], "public", "PublicDelegate")>]
-    [<ProjectContextInlineAutoData([|"Projects/Source/Delegate/AccessModifier.cs"|], "internal", "InternalDelegate")>]
-    [<ProjectContextInlineAutoData([|"Projects/Source/Delegate/AccessModifier.cs"|], "protected internal", "ProtectedInternalDelegate")>]
+    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.CSharp, "public", "PublicClass")>]
+    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.CSharp, "internal", "InternalClass")>]
+    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.CSharp, "protected", "ProtectedClass")>]
+    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.CSharp, "protected internal", "ProtectedInternalClass")>]
+    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.CSharp, "private", "PrivateClass")>]
+    [<ProjectContextInlineAutoData("InterfaceProject.xml", ProjectLanguage.CSharp, "public", "IPublicInterface")>]
+    [<ProjectContextInlineAutoData("InterfaceProject.xml", ProjectLanguage.CSharp, "internal", "IInternalInterface")>]
+    [<ProjectContextInlineAutoData("InterfaceProject.xml", ProjectLanguage.CSharp, "protected internal", "IProtectedInternalInterface")>]
+    [<ProjectContextInlineAutoData("StructProject.xml", ProjectLanguage.CSharp, "public", "PublicStruct")>]
+    [<ProjectContextInlineAutoData("StructProject.xml", ProjectLanguage.CSharp, "internal", "InternalStruct")>]
+    [<ProjectContextInlineAutoData("StructProject.xml", ProjectLanguage.CSharp, "protected internal", "ProtectedInternalStruct")>]
+    [<ProjectContextInlineAutoData("EnumProject.xml", ProjectLanguage.CSharp, "public", "PublicEnum")>]
+    [<ProjectContextInlineAutoData("EnumProject.xml", ProjectLanguage.CSharp, "internal", "InternalEnum")>]
+    [<ProjectContextInlineAutoData("EnumProject.xml", ProjectLanguage.CSharp, "protected internal", "ProtectedInternalEnum")>]
+    [<ProjectContextInlineAutoData("DelegateProject.xml", ProjectLanguage.CSharp, "public", "PublicDelegate")>]
+    [<ProjectContextInlineAutoData("DelegateProject.xml", ProjectLanguage.CSharp, "internal", "InternalDelegate")>]
+    [<ProjectContextInlineAutoData("DelegateProject.xml", ProjectLanguage.CSharp, "protected internal", "ProtectedInternalDelegate")>]
     let ``Process project with types that have access modifiers`` (modifier: string, name, sut: RoslynAnalyzer, project: Project) =
         let expectedModifiers = modifier.Split [|' '|]
 
@@ -44,12 +44,12 @@
         test <@ Seq.length possessedModifiers = Seq.length expectedModifiers @>
 
     [<Theory>]
-    [<ProjectContextInlineAutoData([|"Projects/Source/Class/AdditionnalModifier.cs"|], "abstract", "AbstractClass")>]
-    [<ProjectContextInlineAutoData([|"Projects/Source/Class/AdditionnalModifier.cs"|], "sealed", "SealedClass")>]
-    [<ProjectContextInlineAutoData([|"Projects/Source/Class/AdditionnalModifier.cs"|], "partial", "PartialClass")>]
-    [<ProjectContextInlineAutoData([|"Projects/Source/Class/AdditionnalModifier.cs"|], "static", "StaticClass")>]
-    [<ProjectContextInlineAutoData([|"Projects/Source/Interface/AdditionnalModifier.cs"|], "partial", "IPartialInterface")>]
-    [<ProjectContextInlineAutoData([|"Projects/Source/Struct/AdditionnalModifier.cs"|], "partial", "PartialStruct")>]
+    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.CSharp, "abstract", "AbstractClass")>]
+    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.CSharp, "sealed", "SealedClass")>]
+    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.CSharp, "partial", "PartialClass")>]
+    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.CSharp, "static", "StaticClass")>]
+    [<ProjectContextInlineAutoData("InterfaceProject.xml", ProjectLanguage.CSharp, "partial", "IPartialInterface")>]
+    [<ProjectContextInlineAutoData("StructProject.xml", ProjectLanguage.CSharp, "partial", "PartialStruct")>]
     let ``Process project with types that have a single modifier`` (modifier, name, sut: RoslynAnalyzer, project: Project) =
         let typeDef = 
             (sut :> IProjectAnalyzer)
@@ -60,8 +60,8 @@
         test <@ Seq.contains modifier typeDef.Modifiers @>
 
     [<Theory>]
-    [<ProjectContextInlineAutoData([|"Projects/Source/Class/AdditionnalModifier.cs"|], "abstract partial", "AbstractPartialClass")>]
-    [<ProjectContextInlineAutoData([|"Projects/Source/Class/AdditionnalModifier.cs"|], "sealed partial", "SealedPartialClass")>]
+    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.CSharp, "abstract partial", "AbstractPartialClass")>]
+    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.CSharp, "sealed partial", "SealedPartialClass")>]
     let ``Process project with types that have multiple modifiers`` (modifier: string, name, sut: RoslynAnalyzer, project: Project) =
         let expectedModifiers = modifier.Split [|' '|]
 

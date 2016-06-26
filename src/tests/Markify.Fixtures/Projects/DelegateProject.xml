@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project>
+  <Files>
+    <!-- Delegate (Total : 8) -->
+    <Uri>Source/Delegate/AccessModifier</Uri>
+    <Uri>Source/Delegate/DelegateSamples</Uri>
+
+    <!-- Duplicate Tests -->
+    <Uri>Source/Delegate/DelegateSamples</Uri>
+  </Files>
+</Project>
