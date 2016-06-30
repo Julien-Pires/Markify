@@ -5,37 +5,30 @@ open SyntaxNodeExtension
 open Markify.Models.Definitions
 
 open Microsoft.CodeAnalysis
-open Microsoft.CodeAnalysis.CSharp
-open Microsoft.CodeAnalysis.CSharp.Syntax 
 
 module TypeExtension =
-    let accessModifiersList = 
-        Set [
-            SyntaxKind.PublicKeyword
-            SyntaxKind.InternalKeyword 
-            SyntaxKind.PrivateKeyword
-            SyntaxKind.ProtectedKeyword ]
+    let (|TypeNode|_|) (node : TypeNode) =
+        match node.Kind with
+        | Type _ -> Some node
+        | _ -> None
 
-    let getTypeKind (node : SyntaxNode) =
-        match node with
-        | ClassNode _ -> StructureKind.Class
-        | InterfaceNode _ -> StructureKind.Interface
-        | StructNode _ -> StructureKind.Struct
-        | EnumNode _ -> StructureKind.Enum
-        | DelegateNode _ -> StructureKind.Delegate
-        | _ -> StructureKind.Unknown
+    let (|NamespaceNode|_|) (node : TypeNode) =
+        match node.Kind with
+        | Namespace _ -> Some node
+        | _ -> None
 
-    let getName (node : SyntaxNode) =
+    let getName (node : TypeNode) =
         match node with
-        | TypeNode info ->
-            let parametersLength =
-                match node with
-                | GenericNode genInfo -> genInfo.Parameters |> Seq.length
-                | _ -> 0
-            match parametersLength with
-            | 0 -> Some info.Name
-            | _ -> Some (sprintf "%s`%i" info.Name parametersLength)
-        | NamespaceNode n -> Some (n.Name.ToString())
+        | TypeNode _ ->
+            Some node.Name
+//            let parametersLength =
+//                match node with
+//                | GenericNode genInfo -> genInfo.Parameters |> Seq.length
+//                | _ -> 0
+//            match parametersLength with
+//            | 0 -> Some info.Name
+//            | _ -> Some (sprintf "%s`%i" info.Name parametersLength)
+        | NamespaceNode _ -> Some node.Name
         | _ -> None
 
     let getFullname (node : SyntaxNode) : DefinitionFullname =
@@ -52,59 +45,3 @@ module TypeExtension =
             | _ -> loopParentNode innerNode.Parent acc
 
         loopParentNode node ""
-
-    let createGenericDefinition (typeConstraints : TypeParameterConstraintClauseSyntax seq) (parameter : TypeParameterSyntax) =
-        let name = parameter.Identifier.ToString()
-        let identity = { Fullname = name; Name = name }
-        let constraints =
-            typeConstraints
-            |> Seq.tryPick (fun c ->
-                match c.Name.ToString() with
-                | x when name = x -> Some c
-                | _ -> None )
-        let parameter = {
-            Identity = identity;
-            Modifier = parameter.VarianceKeyword.Text;
-            Constraints = 
-                match constraints with
-                | Some x -> 
-                    ([], x.Constraints) 
-                    ||> Seq.fold (fun acc c -> c.ToString()::acc) 
-                    |> List.toSeq
-                | _ -> Seq.empty }
-        parameter
-
-    let getGenericParameters (node : SyntaxNode) =
-        match node with
-        | GenericNode info ->
-            info.Parameters
-            |> Seq.map (info.Constraints |> createGenericDefinition)
-        | _ -> Seq.empty
-
-    let getAccessModifiers (node : SyntaxNode) = 
-        match node with
-        | TypeNode info ->
-            info.Modifiers
-            |> Seq.filter (fun c -> 
-                accessModifiersList
-                |> Set.contains (c.Kind()))
-            |> Seq.map (fun c -> c.ToString())
-        | _ -> Seq.empty
-
-    let getAdditionalModifiers (node : SyntaxNode) = 
-        match node with
-        | TypeNode info ->
-            info.Modifiers
-            |> Seq.filter (fun c -> 
-                accessModifiersList 
-                |> Set.contains (c.Kind()) 
-                |> not)
-            |> Seq.map (fun c -> c.ToString())
-        | _ -> Seq.empty
-
-    let getBaseTypes (node : SyntaxNode) =
-        match node with
-        | InheritableNode info -> 
-            info.BaseTypes 
-            |> Seq.map (fun c -> c.Type.ToString())
-        | _ -> Seq.empty
