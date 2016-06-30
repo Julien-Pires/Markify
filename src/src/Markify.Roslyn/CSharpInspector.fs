@@ -39,7 +39,7 @@ module CSharpHelper =
         | :? DelegateDeclarationSyntax as c -> Some c
         | _ -> None
 
-    let (|StructureType|_|) (node : SyntaxNode) = 
+    let (|StructureNode|_|) (node : SyntaxNode) =
         match node with
         | :? BaseTypeDeclarationSyntax as c -> Some c
         | _ -> None
@@ -53,19 +53,20 @@ module CSharpHelper =
         | DelegateNode _ -> StructureKind.Delegate
         | _ -> StructureKind.Unknown
 
+    let rec getNode node =
+        match node with
+        | StructureNode c ->
+            let kind =  getTypeKind node
+            getTypeNode c kind getNode
+        | DelegateNode c ->
+            let kind =  getTypeKind node
+            getTypeNode c kind getNode
+        | NamespaceNode c -> getNamespaceNode c
+        | null -> NoNode
+        | _ -> getOtherNode node getNode
+
 type CSharpInspector() =
     inherit LanguageInspector()
 
-    let getName node : SyntaxNode -> TypeName =
-        match node with
-        | CSharpHelper.StructureType c -> (fun c -> (c :?> BaseTypeDeclarationSyntax).Identifier.Text)
-        | _ -> (fun c -> "Unknow")
-
     override this.getNode node =
-        match node with
-        | CSharpHelper.StructureType c ->
-            let kind = Type (CSharpHelper.getTypeKind node)
-            let name = getName node
-            (kind, this.getNode, name)
-            |||> getTypeNode node
-        | _ -> None
+        CSharpHelper.getNode node

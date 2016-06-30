@@ -7,20 +7,10 @@ open Markify.Models.Definitions
 open Microsoft.CodeAnalysis
 
 module TypeExtension =
-    let (|TypeNode|_|) (node : TypeNode) =
-        match node.Kind with
-        | Type _ -> Some node
-        | _ -> None
-
-    let (|NamespaceNode|_|) (node : TypeNode) =
-        match node.Kind with
-        | Namespace _ -> Some node
-        | _ -> None
-
-    let getName (node : TypeNode) =
+    let getName node =
         match node with
-        | TypeNode _ ->
-            Some node.Name
+        | Type c ->
+            Some c.Name
 //            let parametersLength =
 //                match node with
 //                | GenericNode genInfo -> genInfo.Parameters |> Seq.length
@@ -28,20 +18,20 @@ module TypeExtension =
 //            match parametersLength with
 //            | 0 -> Some info.Name
 //            | _ -> Some (sprintf "%s`%i" info.Name parametersLength)
-        | NamespaceNode _ -> Some node.Name
+        | Namespace c -> Some c.Name
         | _ -> None
 
-    let getFullname (node : SyntaxNode) : DefinitionFullname =
-        let rec loopParentNode (innerNode: SyntaxNode) acc =
+    let getFullname node : DefinitionFullname =
+        let rec loopParentNode innerNode acc =
             match innerNode with
-            | TypeNode _ ->
-                let name = getName innerNode
+            | Type c ->
+                let name = (getName innerNode).Value
                 match acc with
-                | "" -> sprintf "%s" name.Value
-                | _ -> sprintf "%s.%s" name.Value acc
-                |> loopParentNode innerNode.Parent
-            | NamespaceNode n -> sprintf "%s.%s" (getName n).Value acc
-            | null -> acc
-            | _ -> loopParentNode innerNode.Parent acc
+                | "" -> sprintf "%s" name
+                | _ -> sprintf "%s.%s" name acc
+                |> loopParentNode c.Parent.Value
+            | Namespace c -> sprintf "%s.%s" (getName innerNode).Value acc
+            | Other c -> loopParentNode c.Parent.Value acc
+            | NoNode _ -> acc
 
         loopParentNode node ""

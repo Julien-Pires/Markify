@@ -6,6 +6,6 @@ open Microsoft.CodeAnalysis
 
 [<AbstractClass>]
 type LanguageInspector() =
-    abstract member getNode : SyntaxNode -> TypeNode option
+    abstract member getNode : SyntaxNode -> Node
 
     member this.Inspect = ignore
