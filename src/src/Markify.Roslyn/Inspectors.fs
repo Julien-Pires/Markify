@@ -9,16 +9,17 @@ open Microsoft.CodeAnalysis
 
 module Inspector =
     let searchTypes (node : SyntaxNode) =
-        node.DescendantNodes()
-        |> Seq.filter(fun c -> 
-            match c with
-            | TypeNode _ -> true
-            | _ -> false)
-        |> Seq.map(fun c ->
-            {
-                Identity = { Fullname = getFullname c; Name = (getName c).Value };
-                Kind = getTypeKind c;
-                AccessModifiers = getAccessModifiers c;
-                Modifiers = getAdditionalModifiers c;
-                Parameters = getGenericParameters c;
-                BaseTypes = getBaseTypes c; })
+            Seq.empty
+//        node.DescendantNodes()
+//        |> Seq.filter(fun c -> 
+//            match c with
+//            | TypeNode _ -> true
+//            | _ -> false)
+//        |> Seq.map(fun c ->
+//            {
+//                Identity = { Fullname = getFullname c; Name = (getName c).Value };
+//                Kind = getTypeKind c;
+//                AccessModifiers = getAccessModifiers c;
+//                Modifiers = getAdditionalModifiers c;
+//                Parameters = getGenericParameters c;
+//                BaseTypes = getBaseTypes c; })

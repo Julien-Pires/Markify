@@ -10,14 +10,9 @@ module TypeExtension =
     let getName node =
         match node with
         | Type c ->
-            Some c.Name
-//            let parametersLength =
-//                match node with
-//                | GenericNode genInfo -> genInfo.Parameters |> Seq.length
-//                | _ -> 0
-//            match parametersLength with
-//            | 0 -> Some info.Name
-//            | _ -> Some (sprintf "%s`%i" info.Name parametersLength)
+            match c.Parameters |> Seq.length with
+            | 0 -> Some c.Name
+            | x -> Some (sprintf "%s`%i" c.Name x)
         | Namespace c -> Some c.Name
         | _ -> None
 

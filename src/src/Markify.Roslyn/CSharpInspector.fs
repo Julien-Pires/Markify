@@ -39,6 +39,11 @@ module CSharpHelper =
         | :? DelegateDeclarationSyntax as c -> Some c
         | _ -> None
 
+    let (|GenericTypeNode|_|) (node : SyntaxNode) =
+        match node with
+        | :? TypeDeclarationSyntax as c -> Some c
+        | _ -> None
+
     let (|StructureNode|_|) (node : SyntaxNode) =
         match node with
         | :? BaseTypeDeclarationSyntax as c -> Some c
@@ -55,10 +60,13 @@ module CSharpHelper =
 
     let rec getNode node =
         match node with
-        | StructureNode c ->
+        | GenericTypeNode c ->
             let kind =  getTypeKind node
-            getTypeNode c kind getNode
+            getGenericTypeNode c kind getNode
         | DelegateNode c ->
+            let kind =  getTypeKind node
+            getGenericTypeNode c kind getNode
+        | EnumNode c ->
             let kind =  getTypeKind node
             getTypeNode c kind getNode
         | NamespaceNode c -> getNamespaceNode c
