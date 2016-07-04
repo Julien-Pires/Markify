@@ -56,7 +56,8 @@
     <Compile Include="SyntaxNodeExtension.fs" />
     <Compile Include="TypeExtension.fs" />
     <Compile Include="LanguageInspector.fs" />
-    <Compile Include="CSharpInspector.fs" />
+    <Compile Include="CSharpHelper.fs" />
+    <Compile Include="VisualBasicHelper.fs" />
     <Compile Include="SourceProvider.fs" />
     <Compile Include="Inspectors.fs" />
     <Compile Include="RoslynAnalyzer.fs" />

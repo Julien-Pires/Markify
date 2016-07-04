@@ -25,6 +25,7 @@ type TypeNode = {
     Parent : Node Lazy
     Constraints : TypeConstraints seq
     Parameters : GenericParameters seq
+    Bases : NodeName seq
 }
 and NamespaceNode = {
     Node : SyntaxNode
@@ -47,17 +48,6 @@ module SyntaxNodeExtension =
     let inline getNamespaceName (x : ^T) =
         (^T : (member Name : ^a)(x)).ToString()
 
-    let inline getTypeConstraint (x : ^T) =
-        (^T : (member ConstraintClauses : ^a SyntaxList)(x))
-        |> Seq.map (fun c ->
-            let typesConstraints = 
-                (^a : (member Constraints : ^b SeparatedSyntaxList)(c)) 
-                |> Seq.map (fun c -> c.ToString())
-            let constraints = {
-                TypeConstraints.Name = (^a : (member Name : ^c)(c)).ToString()
-                Constraints = typesConstraints}
-            constraints)
-
     let inline getGenericParameters (x : ^T) =
         let parametersList = (^T : (member TypeParameterList : ^a)(x))
         match parametersList with
@@ -72,24 +62,17 @@ module SyntaxNodeExtension =
                     Modifier = modifier}
                 param)
 
+    let inline getBaseTypes (x : ^T) =
+        match (^T : (member BaseList : ^a)(x)) with
+        | null -> Seq.empty
+        | x ->
+            (^a : (member Types : ^b)(x))
+            |> Seq.map (fun c -> (^b : (member Type : ^c)(c)).ToString())
 
     let getParentNode (node : SyntaxNode) getParent =
         match node.Parent with
         | null -> lazy NoNode
         | c -> lazy (getParent c)
-
-    let getOtherNode node getParent =
-        let parent = getParentNode node getParent
-        let otherNode = {
-            Node = node
-            Parent = parent}
-        Other otherNode
-
-    let inline getNamespaceNode (node : ^T) =
-        let namespaceNode = {
-            NamespaceNode.Node = node
-            Name = getNamespaceName node}
-        Namespace namespaceNode
 
     let inline constructTypeNode(node : ^T) kind getParent =
         let name = getTypeName node
@@ -100,18 +83,25 @@ module SyntaxNodeExtension =
             Kind = kind
             Parent = parent
             Constraints = Seq.empty
-            Parameters = Seq.empty}
+            Parameters = Seq.empty
+            Bases = Seq.empty}
         typeNode
 
-    let inline getTypeNode(node : ^T) kind getParent =
+    let inline buildTypeNode f (node : ^T) kind getParent =
         (node, kind, getParent)
         |||> constructTypeNode
+        |> f
         |> Type
 
-    let inline getGenericTypeNode(node : ^T) kind getParent =
-        (node, kind, getParent)
-        |||> constructTypeNode
-        |> fun c -> { c with
-                        Constraints = getTypeConstraint node 
-                        Parameters = getGenericParameters node}
-        |> Type
+    let inline buildNamespaceNode (node : ^T) =
+        let namespaceNode = {
+            NamespaceNode.Node = node
+            Name = getNamespaceName node}
+        Namespace namespaceNode
+
+    let buildOtherNode node getParent =
+        let parent = getParentNode node getParent
+        let otherNode = {
+            Node = node
+            Parent = parent}
+        Other otherNode
