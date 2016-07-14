@@ -1,6 +1,6 @@
 ﻿namespace Markify.Roslyn
 
-open SyntaxNodeExtension
+open LanguageHelper
 
 open Markify.Models.Definitions
 
@@ -64,19 +64,6 @@ module VisualBasicHelper =
         | _ -> StructureKind.Unknown
 
     let rec getNode node =
-        let a = fun c -> c
-        match node with
-        | TypeNode _ ->
-            let a = fun c -> c
-            match node with
-            | ContainerTypeNode x -> 
-                let kind = getTypeKind node
-                buildTypeNode a x kind getNode
-            | EnumNode x -> buildTypeNode a x.EnumStatement StructureKind.Enum getNode
-            | DelegateNode x -> buildTypeNode a x StructureKind.Delegate getNode
-            | _ -> null
-        | NamespaceNode x -> buildNamespaceNode x.NamespaceStatement
-        | null -> NoNode
-        | _ -> buildOtherNode node getNode
+        NoNode
 
         
