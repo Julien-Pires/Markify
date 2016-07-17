@@ -13,7 +13,7 @@ module LanguageHelper =
                 let name = (^b : (member Identifier : SyntaxToken)(c)).Text
                 let modifier = 
                     match (^b : (member VarianceKeyword : SyntaxToken)(c)).Value with
-                    | null -> "None"
+                    | null -> ""
                     | x -> x.ToString()
                 let param = {
                     Name = name

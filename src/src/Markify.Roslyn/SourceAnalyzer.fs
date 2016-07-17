@@ -4,7 +4,6 @@ open System
 open System.IO
 open Markify.Core.IO
 open Markify.Models.Definitions
-open Markify.Roslyn.TypeExtension
 open Markify.Roslyn.LanguageHelper
 open Microsoft.CodeAnalysis
 
@@ -34,14 +33,14 @@ module SourceAnalyzer =
             match c with
             | Type x ->
                 let identity = {
-                    Fullname = getFullname c
-                    Name = getName c }
+                    Fullname = TypeExtension.getFullname c
+                    Name = TypeExtension.getName c }
                 let typeObj = {
                     Identity = identity
                     Kind = x.Kind
                     AccessModifiers = x.AccessModifiers
                     Modifiers = x.Modifiers
-                    Parameters = Seq.empty
+                    Parameters = TypeExtension.getGenericParameters x
                     BaseTypes = x.Bases }
                 Some typeObj
             | _ -> None)
@@ -62,7 +61,8 @@ module SourceAnalyzer =
             project.Files
             |> Seq.fold (fun acc c ->
                 getDefinitions c.AbsolutePath
-                |> Seq.append acc) Seq.empty
+                |> Seq.append acc
+                |> Seq.distinctBy (fun d -> d.Identity.Fullname)) Seq.empty
         let lib = {
             Project = project.Name
             Types = types }
