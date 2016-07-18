@@ -20,6 +20,7 @@ module SourceAnalyzer =
         let ext = Path.GetExtension file
         match ext with
         | HasExtension ".cs" x -> Some CSharpModule.inspect
+        | HasExtension ".vb" x -> Some VisualBasicModule.inspect
         | _ -> None
 
     let readFile file =

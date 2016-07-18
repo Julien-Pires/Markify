@@ -50,7 +50,7 @@ type ProjectContextCustomization (projectFile, language) =
                 let project = {
                     Name = "Test"
                     Path = Uri(sprintf "c:/Test/Test.%s" (getProjectExt language))
-                    Language = ProjectLanguage.CSharp
+                    Language = language
                     Files = 
                         testProject.Files
                         |> Seq.map (fun c -> sprintf "Projects/%s" c)

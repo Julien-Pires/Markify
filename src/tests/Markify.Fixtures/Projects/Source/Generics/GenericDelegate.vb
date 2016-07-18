@@ -1,3 +1,3 @@
 ﻿Imports System
 
-Delegate Sub Foo(Of In T As {Class, IDisposable, New})()
+Delegate Sub Do(Of In T As {Class, IDisposable, New})()

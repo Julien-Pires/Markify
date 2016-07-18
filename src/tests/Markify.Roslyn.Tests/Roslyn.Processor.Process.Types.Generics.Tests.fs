@@ -19,6 +19,11 @@
     [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.CSharp, 2, "GenericClass`2")>]
     [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.CSharp, 1, "GenericStruct`1")>]
     [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.CSharp, 1, "Do`1")>]
+    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.VisualBasic, 0, "SingleClass")>]
+    [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.VisualBasic, 2, "GenericInterface`2")>]
+    [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.VisualBasic, 2, "GenericClass`2")>]
+    [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.VisualBasic, 1, "GenericStruct`1")>]
+    [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.VisualBasic, 1, "Do`1")>]
     let ``Process project with generic types`` (count, name, sut: RoslynAnalyzer, project: Project) =
         let typeDef =
             (sut :> IProjectAnalyzer)
@@ -34,6 +39,11 @@
     [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.CSharp, "Y", "GenericInterface`2")>]
     [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.CSharp, "T", "GenericStruct`1")>]
     [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.CSharp, "T", "Do`1")>]
+    [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.VisualBasic, "T", "GenericClass`2")>]
+    [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.VisualBasic, "T", "GenericInterface`2")>]
+    [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.VisualBasic, "Y", "GenericInterface`2")>]
+    [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.VisualBasic, "T", "GenericStruct`1")>]
+    [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.VisualBasic, "T", "Do`1")>]
     let ``Process project with generic parameter with correct parameter name`` (parameterName, name, sut: RoslynAnalyzer, project: Project) =
         let typeDef =
             (sut :> IProjectAnalyzer)
@@ -52,6 +62,11 @@
     [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.CSharp, "out", "Y", "GenericInterface`2")>]
     [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.CSharp, "", "T", "GenericStruct`1")>]
     [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.CSharp, "in", "T", "Do`1")>]
+    [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.VisualBasic, "", "T", "GenericClass`2")>]
+    [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.VisualBasic, "In", "T", "GenericInterface`2")>]
+    [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.VisualBasic, "Out", "Y", "GenericInterface`2")>]
+    [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.VisualBasic, "", "T", "GenericStruct`1")>]
+    [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.VisualBasic, "In", "T", "Do`1")>]
     let ``Process project with generic parameters with modifiers`` (modifier: string, parameterName, name, sut: RoslynAnalyzer, project: Project) = 
         let typeDef =
             (sut :> IProjectAnalyzer)
@@ -69,6 +84,10 @@
     [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.CSharp, 0, "Y", "GenericInterface`2")>]
     [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.CSharp, 1, "T", "GenericStruct`1")>]
     [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.CSharp, 3, "T", "Do`1")>]
+    [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.VisualBasic, 2, "T", "GenericClass`2")>]
+    [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.VisualBasic, 0, "Y", "GenericInterface`2")>]
+    [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.VisualBasic, 1, "T", "GenericStruct`1")>]
+    [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.VisualBasic, 3, "T", "Do`1")>]
     let ``Process project with generic parameter with constraints`` (count, parameterName, name, sut: RoslynAnalyzer, project: Project) =
         let typeDef =
             (sut :> IProjectAnalyzer)
@@ -82,12 +101,16 @@
         test <@ Seq.length parameter.Constraints = count @>
 
     [<Theory>]
-    [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.CSharp, "T", "class IList<string>", "GenericClass`2")>]
+    [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.CSharp, "T", "class;IList<string>", "GenericClass`2")>]
     [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.CSharp, "Y", "", "GenericInterface`2")>]
     [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.CSharp, "T", "struct", "GenericStruct`1")>]
-    [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.CSharp, "T", "class IDisposable new()", "Do`1")>]
+    [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.CSharp, "T", "class;IDisposable;new()", "Do`1")>]
+    [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.VisualBasic, "T", "Class;IList(Of String)", "GenericClass`2")>]
+    [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.VisualBasic, "Y", "", "GenericInterface`2")>]
+    [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.VisualBasic, "T", "Structure", "GenericStruct`1")>]
+    [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.VisualBasic, "T", "Class;IDisposable;New", "Do`1")>]
     let ``Process project with generic parameter with correct constraints names`` (parameterName, constraints: string, name, sut: RoslynAnalyzer, project: Project) =
-        let expectedConstraints = constraints.Split ([|' '|], StringSplitOptions.RemoveEmptyEntries)
+        let expectedConstraints = constraints.Split ([|';'|], StringSplitOptions.RemoveEmptyEntries)
         
         let typeDef =
             (sut :> IProjectAnalyzer)
