@@ -1,7 +1,6 @@
 ﻿namespace Markify.Roslyn
 
 open Markify.Core.Analyzers
-
 open Ninject.Modules
 
 type RoslynModule() =

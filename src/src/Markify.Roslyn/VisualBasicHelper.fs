@@ -9,32 +9,32 @@ open Microsoft.CodeAnalysis.VisualBasic.Syntax
 module VisualBasicSyntaxHelper =
     let (|NamespaceNode|_|) (node: SyntaxNode) =
         match node with
-        | :? NamespaceBlockSyntax as c -> Some c
+        | :? NamespaceBlockSyntax as x -> Some x
         | _ -> None
 
     let (|ClassNode|_|) (node: SyntaxNode) = 
         match node with
-        | :? ClassBlockSyntax as c -> Some c
+        | :? ClassBlockSyntax as x -> Some x
         | _ -> None
 
     let (|InterfaceNode|_|) (node : SyntaxNode) =
         match node with
-        | :? InterfaceBlockSyntax as c -> Some c
+        | :? InterfaceBlockSyntax as x -> Some x
         | _ -> None
 
     let (|StructNode|_|) (node : SyntaxNode) =
         match node with
-        | :? StructureBlockSyntax as c -> Some c
+        | :? StructureBlockSyntax as x -> Some x
         | _ -> None
 
     let (|EnumNode|_|) (node : SyntaxNode) =
         match node with
-        | :? EnumBlockSyntax as c -> Some c
+        | :? EnumBlockSyntax as x -> Some x
         | _ -> None
 
     let (|DelegateNode|_|) (node : SyntaxNode) =
         match node with
-        | :? DelegateStatementSyntax as c -> Some c
+        | :? DelegateStatementSyntax as x -> Some x
         | _ -> None
 
     let (|ObjectNode|_|) (node : SyntaxNode) =
@@ -148,17 +148,17 @@ type VisualBasicNodeHelper() =
         let constraints = 
             getGenericParameters node
             |> Seq.map (fun c -> 
-            let paramConstraint =
-                match c.TypeParameterConstraintClause with
-                | :? TypeParameterSingleConstraintClauseSyntax as x -> SeparatedSyntaxList().Add x.Constraint
-                | :? TypeParameterMultipleConstraintClauseSyntax as x -> x.Constraints
-                | null | _ -> SeparatedSyntaxList()
-            let p = {
-                TypeConstraints.Name = c.Identifier.Text
-                Constraints =
-                    paramConstraint
-                    |> Seq.map (fun c -> c.ToString())}
-            p)
+                let paramConstraint =
+                    match c.TypeParameterConstraintClause with
+                    | :? TypeParameterSingleConstraintClauseSyntax as x -> SeparatedSyntaxList().Add x.Constraint
+                    | :? TypeParameterMultipleConstraintClauseSyntax as x -> x.Constraints
+                    | null | _ -> SeparatedSyntaxList()
+                let typeConstraint = {
+                    TypeConstraint.Name = c.Identifier.Text
+                    Constraints =
+                        paramConstraint
+                        |> Seq.map (fun c -> c.ToString())}
+                typeConstraint)
         constraints
 
     override this.GetGenericParameters node =
@@ -169,10 +169,10 @@ type VisualBasicNodeHelper() =
                     match c.VarianceKeyword.Value with
                     | null -> ""
                     | x -> x.ToString() 
-                let p = {
+                let parameter = {
                     Name = c.Identifier.Text
                     Modifier = modifier}
-                p)
+                parameter)
         parameters
 
 module VisualBasicModule = 

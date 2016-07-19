@@ -5,31 +5,31 @@ open Markify.Models.Definitions
 
 type ConstraintName = string
 type ConstraintTypeName = string
-type TypeConstraints = {
+type TypeConstraint = {
     Name : ConstraintName
     Constraints : ConstraintTypeName seq
 }
 
 type ParameterName = string
 type GenericVariance = string
-type GenericParameters = {
+type GenericParameter = {
     Name : ParameterName
     Modifier : GenericVariance
 }
 
 type NodeName = string
-type Modifiers = string seq
-type Parents = NodeName seq
+type Modifier = string
+type BaseType = NodeName
 type TypeNode = {
     Node : SyntaxNode
     Name : NodeName
     Kind : StructureKind
     Parent : Node Lazy
-    Modifiers : Modifiers
-    AccessModifiers : Modifiers
-    Constraints : TypeConstraints seq
-    Parameters : GenericParameters seq
-    Bases : Parents
+    Modifiers : Modifier seq
+    AccessModifiers : Modifier seq
+    Constraints : TypeConstraint seq
+    Parameters : GenericParameter seq
+    Bases : BaseType seq
 }
 and NamespaceNode = {
     Node : SyntaxNode

@@ -7,11 +7,11 @@ open Microsoft.CodeAnalysis
 type NodeHelper() =
     abstract member GetTypeName : SyntaxNode -> NodeName
     abstract member GetTypeKind : SyntaxNode -> StructureKind
-    abstract member GetModifiers : SyntaxNode -> Modifiers
-    abstract member GetAccessModifiers : SyntaxNode -> Modifiers
-    abstract member GetParents : SyntaxNode -> Parents
-    abstract member GetGenericConstraints : SyntaxNode -> TypeConstraints seq
-    abstract member GetGenericParameters : SyntaxNode -> GenericParameters seq
+    abstract member GetModifiers : SyntaxNode -> Modifier seq
+    abstract member GetAccessModifiers : SyntaxNode -> Modifier seq
+    abstract member GetParents : SyntaxNode -> BaseType seq
+    abstract member GetGenericConstraints : SyntaxNode -> TypeConstraint seq
+    abstract member GetGenericParameters : SyntaxNode -> GenericParameter seq
     abstract member GetNamespaceName : SyntaxNode -> NodeName
 
 type NodeFactory(nodeHelper : NodeHelper) =
@@ -20,7 +20,7 @@ type NodeFactory(nodeHelper : NodeHelper) =
     let getParentNode (node : SyntaxNode) getParent =
         match node.Parent with
         | null -> lazy NoNode
-        | c -> lazy (getParent c)
+        | x -> lazy (getParent x)
 
     member this.buildTypeNode node getParent =
         let parent = getParentNode node getParent

@@ -6,42 +6,42 @@ open Microsoft.CodeAnalysis.CSharp.Syntax
 module CSharpSyntaxHelper =
     let (|NamespaceNode|_|) (node: SyntaxNode) =
         match node with
-        | :? NamespaceDeclarationSyntax as c -> Some c
+        | :? NamespaceDeclarationSyntax as x -> Some x
         | _ -> None
 
     let (|ClassNode|_|) (node: SyntaxNode) = 
         match node with
-        | :? ClassDeclarationSyntax as c -> Some c
+        | :? ClassDeclarationSyntax as x -> Some x
         | _ -> None
         
     let (|InterfaceNode|_|) (node : SyntaxNode) =
         match node with
-        | :? InterfaceDeclarationSyntax as c -> Some c
+        | :? InterfaceDeclarationSyntax as x -> Some x
         | _ -> None
 
     let (|StructNode|_|) (node : SyntaxNode) =
         match node with
-        | :? StructDeclarationSyntax as c -> Some c
+        | :? StructDeclarationSyntax as x -> Some x
         | _ -> None
 
     let (|EnumNode|_|) (node : SyntaxNode) =
         match node with
-        | :? EnumDeclarationSyntax as c -> Some c
+        | :? EnumDeclarationSyntax as x -> Some x
         | _ -> None
 
     let (|DelegateNode|_|) (node : SyntaxNode) =
         match node with
-        | :? DelegateDeclarationSyntax as c -> Some c
+        | :? DelegateDeclarationSyntax as x -> Some x
         | _ -> None
 
     let (|ObjectNode|_|) (node : SyntaxNode) =
         match node with
-        | :? BaseTypeDeclarationSyntax as c -> Some c
+        | :? BaseTypeDeclarationSyntax as x -> Some x
         | _ -> None
 
     let (|ContainerTypeNode|_|) (node : SyntaxNode) = 
         match node with
-        | :? TypeDeclarationSyntax as c -> Some c
+        | :? TypeDeclarationSyntax as x -> Some x
         | _ -> None
 
     let (|TypeNode|_|) (node : SyntaxNode) = 
@@ -123,11 +123,11 @@ type CSharpNodeHelper() =
             | _ -> Seq.empty
         constraintsList
         |> Seq.map (fun c ->
-            let typesConstraints = 
+            let typesConstraints =
                 c.Constraints
-                |> Seq.map (fun c -> c.ToString())
+                |> Seq.map (fun d -> d.ToString())
             let constraints = {
-                TypeConstraints.Name = c.Name.ToString()
+                TypeConstraint.Name = c.Name.ToString()
                 Constraints = typesConstraints}
             constraints)
 

@@ -6,24 +6,24 @@ open Microsoft.CodeAnalysis
 module TypeExtension =
     let getName node =
         match node with
-        | Type c ->
-            match c.Parameters |> Seq.length with
-            | 0 -> c.Name
-            | x -> sprintf "%s`%i" c.Name x
-        | Namespace c -> c.Name
+        | Type x ->
+            match x.Parameters |> Seq.length with
+            | 0 -> x.Name
+            | w -> sprintf "%s`%i" x.Name w
+        | Namespace x -> x.Name
         | _ -> ""
 
     let getFullname node : DefinitionFullname =
         let rec loopParentNode innerNode acc =
             match innerNode with
-            | Type c ->
+            | Type x ->
                 let name = getName innerNode
                 match acc with
                 | "" -> sprintf "%s" name
                 | _ -> sprintf "%s.%s" name acc
-                |> loopParentNode c.Parent.Value
-            | Namespace c -> sprintf "%s.%s" (getName innerNode) acc
-            | Other c -> loopParentNode c.Parent.Value acc
+                |> loopParentNode x.Parent.Value
+            | Namespace _ -> sprintf "%s.%s" (getName innerNode) acc
+            | Other x -> loopParentNode x.Parent.Value acc
             | NoNode _ -> acc
 
         loopParentNode node ""

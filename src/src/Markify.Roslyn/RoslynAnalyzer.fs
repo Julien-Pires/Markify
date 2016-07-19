@@ -1,9 +1,7 @@
 ﻿namespace Markify.Roslyn
 
-open Markify.Models.IDE
-open Markify.Models.Definitions
-
 open Markify.Core.Analyzers
+open Markify.Models.Definitions
 
 type RoslynAnalyzer() =
     interface IProjectAnalyzer with
