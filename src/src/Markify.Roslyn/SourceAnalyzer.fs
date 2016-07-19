@@ -4,7 +4,6 @@ open System
 open System.IO
 open Markify.Core.IO
 open Markify.Models.Definitions
-open Markify.Roslyn.LanguageHelper
 open Microsoft.CodeAnalysis
 
 type Project = Markify.Models.IDE.Project

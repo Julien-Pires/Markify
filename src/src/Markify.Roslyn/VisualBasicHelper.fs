@@ -175,8 +175,7 @@ type VisualBasicNodeHelper() =
                 parameter)
         parameters
 
-module VisualBasicModule = 
-    open Markify.Roslyn.LanguageHelper
+module VisualBasicModule =
     open Microsoft.CodeAnalysis.CSharp
 
     let nodeHelper = VisualBasicNodeHelper()

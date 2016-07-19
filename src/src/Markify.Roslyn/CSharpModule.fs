@@ -77,6 +77,21 @@ type CSharpNodeHelper() =
         |> Seq.filter filter
         |> Seq.map (fun c -> c.Text)
 
+    let getGenericParameters node =
+        let parametersList =
+            match node with
+            | ContainerTypeNode x -> Some x.TypeParameterList
+            | DelegateNode x -> Some x.TypeParameterList
+            | _ -> None
+        let parameters =
+            match parametersList with
+            | None -> SeparatedSyntaxList()
+            | Some x ->
+                match x with
+                | null -> SeparatedSyntaxList()
+                | w -> w.Parameters
+        parameters
+
     override this.GetTypeName node =
         match node with
         | ObjectNode x -> x.Identifier.Text
@@ -112,7 +127,12 @@ type CSharpNodeHelper() =
 
     override this.GetParents node =
         match node with
-        | ObjectNode x -> LanguageHelper.getBaseTypes x
+        | ObjectNode x ->
+            match x.BaseList with
+            | null -> Seq.empty
+            | w ->
+                w.Types
+                |> Seq.map (fun c -> c.Type.ToString())
         | _ -> Seq.empty
 
     override this.GetGenericConstraints node =
@@ -132,15 +152,20 @@ type CSharpNodeHelper() =
             constraints)
 
     override this.GetGenericParameters node =
-        let parameters =
-            match node with
-            | ContainerTypeNode x -> LanguageHelper.getGenericParameters x
-            | DelegateNode x -> LanguageHelper.getGenericParameters x
-            | _ -> Seq.empty
+        let parameters = getGenericParameters node
         parameters
+        |> Seq.map (fun c -> 
+            let name = c.Identifier.Text
+            let modifier = 
+                match c.VarianceKeyword.Value with
+                | null -> ""
+                | x -> x.ToString()
+            let parameter = {
+                Name = name
+                Modifier = modifier}
+            parameter)
 
-module CSharpModule = 
-    open Markify.Roslyn.LanguageHelper
+module CSharpModule =
     open Microsoft.CodeAnalysis.CSharp
 
     let nodeHelper = CSharpNodeHelper()

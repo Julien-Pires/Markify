@@ -54,7 +54,6 @@
     <Content Include="packages.config" />
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="CommonSyntax.fs" />
-    <Compile Include="LanguageHelper.fs" />
     <Compile Include="NodeFactory.fs" />
     <Compile Include="CSharpModule.fs" />
     <Compile Include="VisualBasicHelper.fs" />
