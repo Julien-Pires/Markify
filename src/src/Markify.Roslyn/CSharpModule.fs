@@ -57,7 +57,7 @@ open CSharpSyntaxHelper
 open Markify.Models.Definitions
 open Microsoft.CodeAnalysis.CSharp
 
-type CSharpNodeHelper() =
+type CSharpHelper() =
     inherit NodeHelper()
 
     let accessModifiersList = 
@@ -91,6 +91,9 @@ type CSharpNodeHelper() =
                 | null -> SeparatedSyntaxList()
                 | w -> w.Parameters
         parameters
+
+    override this.ReadSource source =
+        CSharpSyntaxTree.ParseText source
 
     override this.GetTypeName node =
         match node with
@@ -165,28 +168,10 @@ type CSharpNodeHelper() =
                 Modifier = modifier}
             parameter)
 
-module CSharpModule =
-    open Microsoft.CodeAnalysis.CSharp
+    override this.IsTypeNode node =
+        (|TypeNode|_|) node
 
-    let nodeHelper = CSharpNodeHelper()
-    let nodeFactory = NodeFactory(nodeHelper)
-    
-    let rec getNode node =
+    override this.IsNamespaceNode node =
         match node with
-        | TypeNode _ -> nodeFactory.buildTypeNode node getNode
-        | NamespaceNode x -> nodeFactory.buildNamespaceNode x
-        | null -> NoNode
-        | _ -> nodeFactory.buildOtherNode node getNode
-
-    let readSource (source : string) =
-        CSharpSyntaxTree.ParseText source
-
-    let inspect source =
-        let tree = readSource source
-        let root = tree.GetRoot()
-        root.DescendantNodes()
-        |> Seq.filter (fun c -> 
-            match c with
-            | TypeNode _ -> true
-            | _ -> false)
-        |> Seq.map getNode
+        | NamespaceNode _ -> Some true
+        | _ -> None

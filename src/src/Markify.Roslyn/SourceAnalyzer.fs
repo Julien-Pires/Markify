@@ -15,12 +15,18 @@ module SourceAnalyzer =
         | true -> Some true
         | _ -> None
 
-    let getLanguageAnalyzer file =
+    let getNodeFactory file =
         let ext = Path.GetExtension file
-        match ext with
-        | HasExtension ".cs" x -> Some CSharpModule.inspect
-        | HasExtension ".vb" x -> Some VisualBasicModule.inspect
-        | _ -> None
+        let languageHelper =
+            match ext with
+            | HasExtension ".cs" _ -> Some (CSharpHelper() :> NodeHelper)
+            | HasExtension ".vb" _ -> Some (VisuaBasicHelper() :> NodeHelper)
+            | _ -> None
+        let factory =
+            match languageHelper with
+            | Some x -> Some (NodeFactory(x))
+            | _ -> None
+        factory
 
     let readFile file =
         match IO.readFile file with
@@ -50,8 +56,8 @@ module SourceAnalyzer =
         let nodes =
             readFile file
             >>= (fun c ->
-            getLanguageAnalyzer file 
-            >>= (fun d -> Some (d c)))
+            getNodeFactory file 
+            >>= (fun d -> Some (d.GetNodes c)))
         match nodes with
         | Some x -> searchTypes x
         | None -> Seq.empty

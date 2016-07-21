@@ -56,7 +56,7 @@
     <Compile Include="CommonSyntax.fs" />
     <Compile Include="NodeFactory.fs" />
     <Compile Include="CSharpModule.fs" />
-    <Compile Include="VisualBasicHelper.fs" />
+    <Compile Include="VisualBasicModule.fs" />
     <Compile Include="TypeExtension.fs" />
     <Compile Include="SourceAnalyzer.fs" />
     <Compile Include="RoslynAnalyzer.fs" />

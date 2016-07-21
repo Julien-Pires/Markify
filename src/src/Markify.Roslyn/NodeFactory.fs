@@ -5,6 +5,7 @@ open Microsoft.CodeAnalysis
 
 [<AbstractClass>]
 type NodeHelper() =
+    abstract member ReadSource : string -> SyntaxTree
     abstract member GetTypeName : SyntaxNode -> NodeName
     abstract member GetTypeKind : SyntaxNode -> StructureKind
     abstract member GetModifiers : SyntaxNode -> Modifier seq
@@ -13,22 +14,29 @@ type NodeHelper() =
     abstract member GetGenericConstraints : SyntaxNode -> TypeConstraint seq
     abstract member GetGenericParameters : SyntaxNode -> GenericParameter seq
     abstract member GetNamespaceName : SyntaxNode -> NodeName
+    abstract member IsTypeNode : SyntaxNode -> bool option
+    abstract member IsNamespaceNode : SyntaxNode -> bool option
 
 type NodeFactory(nodeHelper : NodeHelper) =
     let nodeHelper = nodeHelper
 
-    let getParentNode (node : SyntaxNode) getParent =
+    let (|TypeNode|_|) node =
+        nodeHelper.IsTypeNode node
+
+    let (|NamespaceNode|_|) node =
+        nodeHelper.IsNamespaceNode node
+
+    let buildParent nodeBuilder (node : SyntaxNode) =
         match node.Parent with
         | null -> lazy NoNode
-        | x -> lazy (getParent x)
+        | x -> lazy (nodeBuilder x)
 
-    member this.buildTypeNode node getParent =
-        let parent = getParentNode node getParent
+    let buildTypeNode parentBuilder node =
         let typeNode = {
             Node = node
             Name = nodeHelper.GetTypeName node
             Kind = nodeHelper.GetTypeKind node
-            Parent = parent
+            Parent = parentBuilder node
             Modifiers = nodeHelper.GetModifiers node
             AccessModifiers = nodeHelper.GetAccessModifiers node
             Constraints = nodeHelper.GetGenericConstraints node
@@ -36,15 +44,38 @@ type NodeFactory(nodeHelper : NodeHelper) =
             Bases = nodeHelper.GetParents node}
         Type typeNode
 
-    member this.buildNamespaceNode node =
+    let buildNamespaceNode node =
         let namespaceNode = {
             NamespaceNode.Node = node
             Name = nodeHelper.GetNamespaceName node}
         Namespace namespaceNode
 
-    member this.buildOtherNode node getParent =
-        let parent = getParentNode node getParent
+    let buildOtherNode parentBuilder node =
         let otherNode = {
             Node = node
-            Parent = parent}
+            Parent = parentBuilder node}
         Other otherNode
+
+    let rec buildNode node =
+        let parentBuilder = buildParent buildNode
+        let nodeBuilder =
+            match node with
+            | TypeNode _ -> Some (buildTypeNode parentBuilder)
+            | NamespaceNode _ -> Some (buildNamespaceNode)
+            | null -> None
+            | _ -> Some (buildOtherNode parentBuilder)
+        let newNode =
+            match nodeBuilder with
+            | Some x -> x node
+            | None -> NoNode
+        newNode
+
+    member this.GetNodes source =
+        let tree = nodeHelper.ReadSource source
+        let root = tree.GetRoot()
+        root.DescendantNodes()
+        |> Seq.filter (fun c -> 
+            match c with
+            | TypeNode _ -> true
+            | _ -> false)
+        |> Seq.map buildNode

@@ -56,7 +56,7 @@ module VisualBasicSyntaxHelper =
         
 open VisualBasicSyntaxHelper
 
-type VisualBasicNodeHelper() =
+type VisuaBasicHelper() =
     inherit NodeHelper()
 
     let accessModifiersList = 
@@ -91,6 +91,9 @@ type VisualBasicNodeHelper() =
                 | null -> SeparatedSyntaxList()
                 | x -> x.Parameters
         parameters
+
+    override this.ReadSource source =
+        VisualBasicSyntaxTree.ParseText source
 
     override this.GetTypeName node =
         match node with
@@ -173,30 +176,14 @@ type VisualBasicNodeHelper() =
                     Name = c.Identifier.Text
                     Modifier = modifier}
                 parameter)
-        parameters
+        parameters 
 
-module VisualBasicModule =
-    open Microsoft.CodeAnalysis.CSharp
-
-    let nodeHelper = VisualBasicNodeHelper()
-    let nodeFactory = NodeFactory(nodeHelper)
-    
-    let rec getNode node =
+    override this.IsTypeNode node =
         match node with
-        | TypeNode _ -> nodeFactory.buildTypeNode node getNode
-        | NamespaceNode x -> nodeFactory.buildNamespaceNode x
-        | null -> NoNode
-        | _ -> nodeFactory.buildOtherNode node getNode
+        | TypeNode _ -> Some true
+        | _ -> None
 
-    let readSource (source : string) =
-        VisualBasicSyntaxTree.ParseText source
-
-    let inspect source =
-        let tree = readSource source
-        let root = tree.GetRoot()
-        root.DescendantNodes()
-        |> Seq.filter (fun c -> 
-            match c with
-            | TypeNode _ -> true
-            | _ -> false)
-        |> Seq.map getNode  
+    override this.IsNamespaceNode node =
+        match node with
+        | NamespaceNode _ -> Some true
+        | _ -> None
