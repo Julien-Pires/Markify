@@ -144,7 +144,10 @@ type VisuaBasicHelper() =
                 Seq.append interfaces types
                 |> Seq.map (fun c -> c.ToString())
             allTypes
-        | EnumNode x -> seq { yield x.EnumStatement.UnderlyingType.Type().ToString() }
+        | EnumNode x ->
+            match x.EnumStatement.UnderlyingType with
+            | null -> Seq.empty
+            | w -> seq { yield w.Type().ToString() }
         | _ -> Seq.empty
 
     override this.GetGenericConstraints node =

@@ -21,7 +21,10 @@ namespace Markify.Services.Settings
                 if (_filters != null)
                     return _filters;
 
-                _filters = new SolutionExplorerFilter(new[] { ProjectLanguage.CSharp }, new []{ ".cs" });
+                _filters = new SolutionExplorerFilter(
+                    new[] { ProjectLanguage.CSharp, ProjectLanguage.VisualBasic }, 
+                    new[] { ".cs", ".vb" }
+                );
 
                 return _filters;
             }
