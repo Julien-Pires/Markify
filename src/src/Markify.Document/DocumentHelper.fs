@@ -9,8 +9,9 @@ open Markify.Models.Definitions
 module DocumentHelper =
     let convertNameToPath (fullname : string) =
         let parts = fullname.Split ('.')
-        let path = String.Join ("\\", parts, 0, parts.Length - 1)
-        sprintf @"%s\" path
+        match parts.Length with
+        | 1 -> String.Empty
+        | _ -> sprintf @"%s\" <| String.Join (@"\", parts, 0, parts.Length - 1)
 
     let cleanExtension (ext : string) = 
         match ext with
