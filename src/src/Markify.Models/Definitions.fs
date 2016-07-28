@@ -11,10 +11,10 @@ type StructureKind =
     | Enum = 5
 
 type DefinitionName = string
-type DefinitionFullname = string
 type DefinitionIdentity = {
     Name : DefinitionName
-    Fullname : DefinitionFullname
+    Parent : DefinitionName
+    Namespace : DefinitionName
 }
 
 type Modifier = string
@@ -37,8 +37,12 @@ type TypeDefinition = {
     Parameters : GenericParametersList
 }
 
-type TypesList = TypeDefinition seq
+type NamespaceDefinition = {
+    Name : DefinitionName
+}
+
 type LibraryDefinition = {
     Project : ProjectName
-    Types : TypesList
+    Namespaces : NamespaceDefinition seq
+    Types : TypeDefinition seq
 }
