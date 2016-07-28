@@ -52,7 +52,7 @@
             |> Seq.find (fun c -> c.Identity.Name = name)
         let parameter =
             typeDef.Parameters
-            |> Seq.tryFind (fun c -> c.Identity.Name = parameterName)
+            |> Seq.tryFind (fun c -> c.Identity = parameterName)
 
         test <@ parameter.IsSome @>
     
@@ -75,7 +75,7 @@
             |> Seq.find (fun c -> c.Identity.Name = name)
         let parameter =
             typeDef.Parameters
-            |> Seq.find (fun c -> c.Identity.Name = parameterName)
+            |> Seq.find (fun c -> c.Identity = parameterName)
 
         test <@ modifier = parameter.Modifier @>
 
@@ -96,7 +96,7 @@
             |> Seq.find (fun c -> c.Identity.Name = name)
         let parameter =
             typeDef.Parameters
-            |> Seq.find (fun c -> c.Identity.Name = parameterName)
+            |> Seq.find (fun c -> c.Identity = parameterName)
 
         test <@ Seq.length parameter.Constraints = count @>
 
@@ -119,7 +119,7 @@
             |> Seq.find (fun c -> c.Identity.Name = name)
         let parameter =
             typeDef.Parameters
-            |> Seq.find (fun c -> c.Identity.Name = parameterName)
+            |> Seq.find (fun c -> c.Identity = parameterName)
         let parameterConstraints = 
             parameter.Constraints 
             |> Seq.filter (fun c -> Seq.contains c expectedConstraints)

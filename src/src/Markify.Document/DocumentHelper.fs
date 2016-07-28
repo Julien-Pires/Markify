@@ -19,7 +19,7 @@ module DocumentHelper =
         | _ -> ext
 
     let createPage project ext definition =
-        let path = Path.Combine (project, convertNameToPath definition.Identity.Fullname)
+        let path = Path.Combine (project, convertNameToPath definition.Identity.Name)
         let cleanExt = cleanExtension ext
         let page = {
             Name = sprintf "%s.%s" definition.Identity.Name cleanExt

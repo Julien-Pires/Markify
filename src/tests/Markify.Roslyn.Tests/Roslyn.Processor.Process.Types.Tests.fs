@@ -9,6 +9,15 @@
     open Xunit
     open Swensen.Unquote
 
+    let getTypeFullname name parents =
+        let parentsName =
+            parents
+            |> Seq.fold (fun acc c ->
+                match acc with
+                | "" -> c
+                | _ -> sprintf "%s.%s" acc c) ""
+        sprintf "%s.%s" name parentsName
+
     [<Theory>]
     [<ProjectContextInlineAutoData("EmptySourceProject.xml", ProjectLanguage.CSharp, 0, StructureKind.Class)>]
     [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.CSharp, 22, StructureKind.Class)>]
@@ -41,12 +50,15 @@
     [<ProjectContextInlineAutoData("StructProject.xml", ProjectLanguage.VisualBasic, "SingleStruct")>]
     [<ProjectContextInlineAutoData("EnumProject.xml", ProjectLanguage.VisualBasic, "SingleEnum")>]
     [<ProjectContextInlineAutoData("DelegateProject.xml", ProjectLanguage.VisualBasic, "SingleDelegate")>]
-    let ``Process project without duplicate types`` (fullname, sut: RoslynAnalyzer, project: Project) =
+    let ``Process project without duplicate types`` (name, sut: RoslynAnalyzer, project: Project) =
+        let fullname = getTypeFullname name Seq.empty
         let typeDef = 
             (sut :> IProjectAnalyzer)
             |> (fun c -> c.Analyze project)
             |> (fun c -> c.Types)
-            |> Seq.filter (fun c -> c.Identity.Fullname = fullname)
+            |> Seq.filter (fun c -> 
+                let typeFullname = getTypeFullname c.Identity.Name c.Identity.Parents
+                typeFullname = fullname)
 
         test <@ Seq.length typeDef = 1 @>
 
@@ -95,11 +107,14 @@
     [<ProjectContextInlineAutoData("DelegateProject.xml", ProjectLanguage.VisualBasic, "FooSpace.InNamespaceDelegate")>]
     [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.VisualBasic, "GenericClass`2")>]
     [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.VisualBasic, "Do`1")>]
-    let ``Process project with types with correct fullname`` (fullname, sut: RoslynAnalyzer, project: Project) =
+    let ``Process project with types with correct fullname`` (name, sut: RoslynAnalyzer, project: Project) =
+        let fullname = getTypeFullname name Seq.empty
         let typeDef = 
             (sut :> IProjectAnalyzer)
             |> (fun c -> c.Analyze project)
             |> (fun c -> c.Types)
-            |> Seq.tryFind (fun c -> c.Identity.Fullname = fullname)
+            |> Seq.tryFind (fun c ->
+                let typeFullname = getTypeFullname c.Identity.Name c.Identity.Parents
+                typeFullname = fullname)
 
         test <@ typeDef.IsSome @>

@@ -62,7 +62,7 @@ namespace Markify.Rendering.T4
             if (!definition.Parameters.Any())
                 return definition.Identity.Name;
 
-            var parameters = string.Join(", ", definition.Parameters.Select(c => c.Identity.Name));
+            var parameters = string.Join(", ", definition.Parameters.Select(c => c.Identity));
 
             return $"{definition.Identity.Name}<{parameters}>";
         }

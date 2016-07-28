@@ -13,14 +13,14 @@ type StructureKind =
 type DefinitionName = string
 type DefinitionIdentity = {
     Name : DefinitionName
-    Parent : DefinitionName
-    Namespace : DefinitionName
+    Parents : DefinitionName seq
+    Namespace : DefinitionName option
 }
 
 type Modifier = string
 type ConstraintsList = string seq
 type GenericParameterDefinition = {
-    Identity : DefinitionIdentity
+    Identity : DefinitionName
     Modifier : Modifier
     Constraints : ConstraintsList
 }

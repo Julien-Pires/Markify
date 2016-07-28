@@ -13,7 +13,7 @@ module TypeExtension =
         | Namespace x -> x.Name
         | _ -> ""
 
-    let getFullname node : DefinitionFullname =
+    let getFullname node =
         let rec loopParentNode innerNode acc =
             match innerNode with
             | Type x ->
@@ -41,11 +41,8 @@ module TypeExtension =
                 match paramConstraint with
                 | Some x -> x.Constraints
                 | None -> Seq.empty
-            let identity = { 
-                Fullname = c.Name
-                Name = c.Name }
             let generic = {
-                Identity = identity
+                Identity = c.Name
                 Modifier = c.Modifier
                 Constraints = constraints}
             generic)

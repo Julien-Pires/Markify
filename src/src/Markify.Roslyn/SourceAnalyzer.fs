@@ -39,8 +39,9 @@ module SourceAnalyzer =
             match c with
             | Type x ->
                 let identity = {
-                    Fullname = TypeExtension.getFullname c
-                    Name = TypeExtension.getName c }
+                    Name = TypeExtension.getName c 
+                    Parents = Seq.empty
+                    Namespace = None }
                 let typeObj = {
                     Identity = identity
                     Kind = x.Kind
@@ -68,8 +69,9 @@ module SourceAnalyzer =
             |> Seq.fold (fun acc c ->
                 getDefinitions c.AbsolutePath
                 |> Seq.append acc
-                |> Seq.distinctBy (fun d -> d.Identity.Fullname)) Seq.empty
+                |> Seq.distinctBy (fun d -> d.Identity.Name)) Seq.empty
         let lib = {
             Project = project.Name
+            Namespaces = Seq.empty
             Types = types }
         lib
