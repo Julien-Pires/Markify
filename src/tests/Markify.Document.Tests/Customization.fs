@@ -48,7 +48,7 @@
                     |> Seq.map (fun c ->
                         let identity = {
                             Name = sprintf "Type%i" c;
-                            Parents = seq { yield "Parent" }
+                            Parents = Some "Parent"
                             Namespace = None }
                         let typeDef = {
                             Identity = identity

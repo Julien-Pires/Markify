@@ -11,19 +11,28 @@ type StructureKind =
     | Enum = 5
 
 type DefinitionName = string
-type DefinitionIdentity = {
-    Name : DefinitionName
-    Parents : DefinitionName seq
-    Namespace : DefinitionName option
-}
+
+[<CustomEquality; NoComparison>]
+type DefinitionIdentity = 
+  { Name : DefinitionName
+    Parents : DefinitionName option
+    Namespace : DefinitionName option }
+
+    override x.Equals(y) =
+        match y with
+        | :? DefinitionIdentity as w ->
+            x.Name = w.Name && x.Parents = w.Parents && x.Namespace = w.Namespace
+        | _ -> false
+
+    override x.GetHashCode() =
+        (31 * x.Name.GetHashCode()) * (31 * x.Parents.GetHashCode()) * (31 * x.Namespace.GetHashCode())
 
 type Modifier = string
 type ConstraintsList = string seq
 type GenericParameterDefinition = {
     Identity : DefinitionName
     Modifier : Modifier
-    Constraints : ConstraintsList
-}
+    Constraints : ConstraintsList }
 
 type ModifiersList = Modifier seq
 type BaseTypesList = string seq
@@ -34,15 +43,12 @@ type TypeDefinition = {
     AccessModifiers : ModifiersList
     Modifiers : ModifiersList
     BaseTypes : BaseTypesList
-    Parameters : GenericParametersList
-}
+    Parameters : GenericParametersList }
 
 type NamespaceDefinition = {
-    Name : DefinitionName
-}
+    Name : DefinitionName }
 
 type LibraryDefinition = {
     Project : ProjectName
     Namespaces : NamespaceDefinition seq
-    Types : TypeDefinition seq
-}
+    Types : TypeDefinition seq }

@@ -40,7 +40,7 @@ module SourceAnalyzer =
             | Type x ->
                 let identity = {
                     Name = TypeExtension.getName c 
-                    Parents = Seq.empty
+                    Parents = None
                     Namespace = None }
                 let typeObj = {
                     Identity = identity
