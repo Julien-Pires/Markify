@@ -3,16 +3,16 @@
 module IO =
     open System.IO
 
-    let private ioBuilder = new IOBuilder()
+    let private tryBuilder = new TryBuilder()
 
     let fileExists path =
-        ioBuilder {
+        tryBuilder {
             let! p = path |> Success
             let! exists = p |> File.Exists |> Success
             return exists }
 
     let readFile path =
-        ioBuilder{
+        tryBuilder{
             let! p = path |> Success
             let! content = p |> File.ReadAllText |> Success
             return content }

@@ -1,15 +1,15 @@
 ﻿namespace Markify.Core.IO
 
-type IOFailure = {
+type TryFailure = {
     Message : string
     Stack : string
 }
 
-type IOResult<'a> =
+type TryResult<'a> =
     | Success of 'a
-    | Failure of IOFailure
+    | Failure of TryFailure
 
-type IOBuilder() =
+type TryBuilder() =
     member this.Bind (x, f) =
         match x with
         | Success a ->
