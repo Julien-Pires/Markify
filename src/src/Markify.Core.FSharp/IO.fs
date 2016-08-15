@@ -2,6 +2,7 @@
 
 module IO =
     open System.IO
+    open Markify.Core.Builders
 
     let private tryBuilder = new TryBuilder()
 

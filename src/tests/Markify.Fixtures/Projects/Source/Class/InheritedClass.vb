@@ -1,7 +1,7 @@
 ﻿Imports System
 Imports System.Collections.Generic
 
-Namespace FooSpace.InnnerSpace
+Namespace FooSpace.InnerSpace
     Public Class InheritClass
         Inherits Exception
     End Class

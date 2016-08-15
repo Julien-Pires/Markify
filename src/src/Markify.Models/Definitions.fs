@@ -1,5 +1,6 @@
 ﻿namespace Markify.Models.Definitions
 
+open Markify.Core.Builders
 open Markify.Models.IDE
 
 type StructureKind =  
@@ -18,14 +19,19 @@ type DefinitionIdentity =
     Parents : DefinitionName option
     Namespace : DefinitionName option }
 
-    override x.Equals(y) =
-        match y with
-        | :? DefinitionIdentity as w ->
-            x.Name = w.Name && x.Parents = w.Parents && x.Namespace = w.Namespace
+    override this.Equals(c) =
+        match c with
+        | :? DefinitionIdentity as x ->
+            this.Name = x.Name && this.Parents = x.Parents && this.Namespace = x.Namespace
         | _ -> false
 
-    override x.GetHashCode() =
-        (31 * x.Name.GetHashCode()) * (31 * x.Parents.GetHashCode()) * (31 * x.Namespace.GetHashCode())
+    override this.GetHashCode() =
+        let result = HashBuilder(31){
+            yield this.Name
+            yield! this.Parents
+            yield! this.Namespace
+        }
+        result.Hash
 
 type Modifier = string
 type ConstraintsList = string seq

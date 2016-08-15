@@ -16,17 +16,17 @@
 
     [<Theory>]
     [<ProjectContextInlineAutoData("EmptySourceProject.xml", ProjectLanguage.CSharp, 0, StructureKind.Class)>]
-    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.CSharp, 22, StructureKind.Class)>]
+    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.CSharp, 24, StructureKind.Class)>]
     [<ProjectContextInlineAutoData("InterfaceProject.xml", ProjectLanguage.CSharp, 15, StructureKind.Interface)>]
     [<ProjectContextInlineAutoData("StructProject.xml", ProjectLanguage.CSharp, 13, StructureKind.Struct)>]
     [<ProjectContextInlineAutoData("EnumProject.xml", ProjectLanguage.CSharp, 10, StructureKind.Enum)>]
     [<ProjectContextInlineAutoData("DelegateProject.xml", ProjectLanguage.CSharp, 8, StructureKind.Delegate)>]
-    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.VisualBasic, 22, StructureKind.Class)>]
+    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.VisualBasic, 24, StructureKind.Class)>]
     [<ProjectContextInlineAutoData("InterfaceProject.xml", ProjectLanguage.VisualBasic, 15, StructureKind.Interface)>]
     [<ProjectContextInlineAutoData("StructProject.xml", ProjectLanguage.VisualBasic, 13, StructureKind.Struct)>]
     [<ProjectContextInlineAutoData("EnumProject.xml", ProjectLanguage.VisualBasic, 10, StructureKind.Enum)>]
     [<ProjectContextInlineAutoData("DelegateProject.xml", ProjectLanguage.VisualBasic, 8, StructureKind.Delegate)>]
-    let ``Process projects with types`` (expected, kind, sut: RoslynAnalyzer, project: Project) = 
+    let ``Process projects with types`` (expected, kind, sut : RoslynAnalyzer, project : Project) = 
         let library = (sut :> IProjectAnalyzer).Analyze project
         let typesCount =
             library.Types
@@ -90,6 +90,7 @@
     [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.CSharp, "SingleClass", "", "")>]
     [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.CSharp, "NestedClass", "ParentClass", "")>]
     [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.CSharp, "InNamespaceClass", "", "FooSpace")>]
+    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.CSharp, "ChildClass", "AnotherParentClass", "FooSpace.InnerSpace")>]
     [<ProjectContextInlineAutoData("InterfaceProject.xml", ProjectLanguage.CSharp, "IInNamespaceInterface", "", "FooSpace")>]
     [<ProjectContextInlineAutoData("StructProject.xml", ProjectLanguage.CSharp, "InNamespaceStruct", "", "FooSpace")>]
     [<ProjectContextInlineAutoData("EnumProject.xml", ProjectLanguage.CSharp, "InNamespaceEnum", "", "FooSpace")>]
@@ -99,6 +100,7 @@
     [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.VisualBasic, "SingleClass", "", "")>]
     [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.VisualBasic, "NestedClass", "ParentClass", "")>]
     [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.VisualBasic, "InNamespaceClass", "", "FooSpace")>]
+    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.VisualBasic, "ChildClass", "AnotherParentClass", "FooSpace.InnerSpace")>]
     [<ProjectContextInlineAutoData("InterfaceProject.xml", ProjectLanguage.VisualBasic, "IInNamespaceInterface", "", "FooSpace")>]
     [<ProjectContextInlineAutoData("StructProject.xml", ProjectLanguage.VisualBasic, "InNamespaceStruct", "", "FooSpace")>]
     [<ProjectContextInlineAutoData("EnumProject.xml", ProjectLanguage.VisualBasic, "InNamespaceEnum", "", "FooSpace")>]

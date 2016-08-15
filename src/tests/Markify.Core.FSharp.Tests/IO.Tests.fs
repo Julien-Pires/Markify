@@ -3,6 +3,7 @@
     open System.IO
     open System.Reflection
     open Markify.Core.IO
+    open Markify.Core.Builders
 
     open Xunit
     open Swensen.Unquote

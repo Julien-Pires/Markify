@@ -1,6 +1,5 @@
 ﻿module Hash_Tests
-    open Markify.Core.IO
-
+    open Markify.Core.Builders
     open Xunit
     open Swensen.Unquote
 

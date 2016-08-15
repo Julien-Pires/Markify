@@ -3,6 +3,8 @@
 open System
 open System.IO
 open Markify.Core.IO
+open Markify.Core.Builders
+open Markify.Core.FSharp.Operators
 open Markify.Models.Definitions
 open Microsoft.CodeAnalysis
 
@@ -33,45 +35,55 @@ module SourceAnalyzer =
         | Success x -> Some x
         | _ -> None
 
-    let searchTypes nodes =
+    let searchDefinitions nodes =
         nodes
-        |> Seq.choose (fun c ->
+        |> Seq.fold (fun acc c ->
+            let namespaces, types = acc
             match c with
             | Type x ->
                 let identity = {
                     Name = TypeExtension.getName c 
-                    Parents = None
-                    Namespace = None }
-                let typeObj = {
+                    Parents = TypeExtension.getParentName x
+                    Namespace = TypeExtension.getNamespaceName c }
+                let typeDef = {
                     Identity = identity
                     Kind = x.Kind
                     AccessModifiers = x.AccessModifiers
                     Modifiers = x.Modifiers
                     Parameters = TypeExtension.getGenericParameters x
                     BaseTypes = x.Bases }
-                Some typeObj
-            | _ -> None)
+                (namespaces, seq { yield! types; yield typeDef })
+            | Namespace x ->
+                let namespaceDef = {
+                    Name = x.Name}
+                (seq { yield! namespaces; yield namespaceDef}, types)
+            | _ -> acc) (Seq.empty, Seq.empty)
 
-    let (>>=) m f = Option.bind f m
-    let getDefinitions file =
+    let analyzeSourceFile file =
         let nodes =
             readFile file
             >>= (fun c ->
             getNodeFactory file 
             >>= (fun d -> Some (d.GetNodes c)))
         match nodes with
-        | Some x -> searchTypes x
-        | None -> Seq.empty
+        | Some x -> searchDefinitions x
+        | None -> (Seq.empty, Seq.empty)
 
     let inspect (project : Project) =
-        let types = 
+        let namespaces, types = 
             project.Files
             |> Seq.fold (fun acc c ->
-                getDefinitions c.AbsolutePath
-                |> Seq.append acc
-                |> Seq.distinctBy (fun d -> d.Identity.Name)) Seq.empty
-        let lib = {
+                let v, w = acc
+                let n, t = analyzeSourceFile c.AbsolutePath
+                (seq { yield! v; yield! n }, seq { yield! w; yield! t })) (Seq.empty, Seq.empty)
+        let library = {
             Project = project.Name
-            Namespaces = Seq.empty
-            Types = types }
-        lib
+            Namespaces =
+                namespaces
+                |> Seq.distinctBy (fun c -> c.Name)
+                |> Seq.toList
+            Types = 
+                types
+                |> Seq.distinctBy (fun c -> c.Identity)
+                |> Seq.toList }
+        library

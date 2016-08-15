@@ -1,4 +1,4 @@
-﻿namespace Markify.Core.IO
+﻿namespace Markify.Core.Builders
 
 type TryFailure = {
     Message : string

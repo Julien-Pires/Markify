@@ -50,25 +50,15 @@ type NodeFactory(nodeHelper : NodeHelper) =
             Name = nodeHelper.GetNamespaceName node}
         Namespace namespaceNode
 
-    let buildOtherNode parentBuilder node =
-        let otherNode = {
-            Node = node
-            Parent = parentBuilder node}
-        Other otherNode
-
     let rec buildNode node =
         let parentBuilder = buildParent buildNode
         let nodeBuilder =
             match node with
-            | TypeNode _ -> Some (buildTypeNode parentBuilder)
-            | NamespaceNode _ -> Some (buildNamespaceNode)
-            | null -> None
-            | _ -> Some (buildOtherNode parentBuilder)
-        let newNode =
-            match nodeBuilder with
-            | Some x -> x node
-            | None -> NoNode
-        newNode
+            | TypeNode _ -> buildTypeNode parentBuilder
+            | NamespaceNode _ -> buildNamespaceNode
+            | null -> fun c -> NoNode
+            | _ -> fun c -> buildNode c.Parent
+        nodeBuilder node
 
     member this.GetNodes source =
         let tree = nodeHelper.ReadSource source
@@ -76,6 +66,6 @@ type NodeFactory(nodeHelper : NodeHelper) =
         root.DescendantNodes()
         |> Seq.filter (fun c -> 
             match c with
-            | TypeNode _ -> true
+            | TypeNode _ | NamespaceNode _ -> true
             | _ -> false)
         |> Seq.map buildNode
