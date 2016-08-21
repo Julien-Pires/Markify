@@ -5,6 +5,7 @@ open System.IO
 open System.Reflection
 open System.Xml.Serialization
 
+open Markify.Roslyn
 open Markify.Models.IDE;
 
 open Ploeh.AutoFixture
@@ -44,7 +45,12 @@ type ProjectContextCustomization (projectFile, language) =
         | _ -> ""
 
     interface ICustomization with
-        member this.Customize (fixture : IFixture) = 
+        member this.Customize (fixture : IFixture) =
+            fixture.Register<SourceReader> (fun c ->
+                SourceReader(seq {
+                    yield LanguageReader(CSharpHelper(), ["cs"])
+                    yield LanguageReader(VisualBasicHelper(), ["vb"])
+                }))
             fixture.Register<Project> (fun c ->
                 let testProject = readXml projectFile
                 let project = {

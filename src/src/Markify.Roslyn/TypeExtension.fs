@@ -37,7 +37,6 @@ module TypeExtension =
             | Type x -> loopParentNode x.Parent.Value
             | Namespace x -> Some x.Name
             | _ -> None
-
         loopParentNode node
 
     let getGenericParameters (node : TypeNode) =

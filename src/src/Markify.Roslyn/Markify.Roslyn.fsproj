@@ -58,6 +58,7 @@
     <Compile Include="CSharpModule.fs" />
     <Compile Include="VisualBasicModule.fs" />
     <Compile Include="TypeExtension.fs" />
+    <Compile Include="Readers.fs" />
     <Compile Include="SourceAnalyzer.fs" />
     <Compile Include="RoslynAnalyzer.fs" />
     <Compile Include="RoslynModule.fs" />

@@ -56,7 +56,7 @@ module VisualBasicSyntaxHelper =
         
 open VisualBasicSyntaxHelper
 
-type VisuaBasicHelper() =
+type VisualBasicHelper() =
     inherit NodeHelper()
 
     let accessModifiersList = 
