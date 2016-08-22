@@ -34,8 +34,7 @@ module SourceAnalyzer =
     let searchDefinitions nodes =
         let content = {
             Namespaces = Seq.empty
-            Types = Seq.empty
-        }
+            Types = Seq.empty }
         nodes
         |> Seq.fold (fun (acc : SourceContent) c ->
             match c with
@@ -49,14 +48,14 @@ module SourceAnalyzer =
                     Namespaces = seq { yield! acc.Namespaces; yield namespaceDefinition } }
             | _ -> acc) content
 
-    let inspect (project : Project) sourceReader =
+    let inspect (project : Project) (sourceConverter : SourceConverter) =
         let library = {
             Project = project.Name
             Namespaces = Seq.empty
             Types = Seq.empty }
         project.Files
         |> Seq.map (fun c ->
-            let nodes = sourceReader c.AbsolutePath
+            let nodes = sourceConverter.Convert c.AbsolutePath
             searchDefinitions nodes )
         |> Seq.fold (fun (acc : LibraryDefinition) c ->
             { acc with

@@ -83,14 +83,17 @@ type VisualBasicHelper() =
             | ContainerTypeNode x -> Some x.BlockStatement.TypeParameterList
             | DelegateNode x -> Some x.TypeParameterList
             | _ -> None
-        let parameters =
-            match parametersList with
-            | None ->  SeparatedSyntaxList()
-            | Some x ->
-                match x with
-                | null -> SeparatedSyntaxList()
-                | x -> x.Parameters
-        parameters
+        match parametersList with
+        | None ->  SeparatedSyntaxList()
+        | Some x ->
+            match x with
+            | null -> SeparatedSyntaxList()
+            | x -> x.Parameters
+
+    let extractParents parents map =
+        parents
+        |> Seq.map map
+        |> Seq.concat
 
     override this.ReadSource source =
         VisualBasicSyntaxTree.ParseText source
@@ -132,18 +135,10 @@ type VisualBasicHelper() =
     override this.GetParents node =
         match node with
         | ContainerTypeNode x ->
-            let interfaces = 
-                x.Implements
-                |> Seq.map (fun c -> c.Types)
-                |> Seq.concat
-            let types =
-                x.Inherits
-                |> Seq.map (fun c -> c.Types)
-                |> Seq.concat
-            let allTypes = 
-                Seq.append interfaces types
-                |> Seq.map (fun c -> c.ToString())
-            allTypes
+            let interfaces = extractParents x.Implements (fun c -> c.Types)
+            let types = extractParents x.Inherits (fun c -> c.Types)
+            Seq.append interfaces types
+            |> Seq.map (fun c -> c.ToString())
         | EnumNode x ->
             match x.EnumStatement.UnderlyingType with
             | null -> Seq.empty
@@ -151,35 +146,31 @@ type VisualBasicHelper() =
         | _ -> Seq.empty
 
     override this.GetGenericConstraints node =
-        let constraints = 
-            getGenericParameters node
-            |> Seq.map (fun c -> 
-                let paramConstraint =
-                    match c.TypeParameterConstraintClause with
-                    | :? TypeParameterSingleConstraintClauseSyntax as x -> SeparatedSyntaxList().Add x.Constraint
-                    | :? TypeParameterMultipleConstraintClauseSyntax as x -> x.Constraints
-                    | null | _ -> SeparatedSyntaxList()
-                let typeConstraint = {
-                    TypeConstraint.Name = c.Identifier.Text
-                    Constraints =
-                        paramConstraint
-                        |> Seq.map (fun c -> c.ToString())}
-                typeConstraint)
-        constraints
+        getGenericParameters node
+        |> Seq.map (fun c -> 
+            let paramConstraint =
+                match c.TypeParameterConstraintClause with
+                | :? TypeParameterSingleConstraintClauseSyntax as x -> SeparatedSyntaxList().Add x.Constraint
+                | :? TypeParameterMultipleConstraintClauseSyntax as x -> x.Constraints
+                | null | _ -> SeparatedSyntaxList()
+            let typeConstraint = {
+                TypeConstraint.Name = c.Identifier.Text
+                Constraints =
+                    paramConstraint
+                    |> Seq.map (fun c -> c.ToString()) }
+            typeConstraint)
 
     override this.GetGenericParameters node =
-        let parameters = 
-            getGenericParameters node
-            |> Seq.map (fun c -> 
-                let modifier =
-                    match c.VarianceKeyword.Value with
-                    | null -> ""
-                    | x -> x.ToString() 
-                let parameter = {
-                    Name = c.Identifier.Text
-                    Modifier = modifier}
-                parameter)
-        parameters 
+        getGenericParameters node
+        |> Seq.map (fun c -> 
+            let modifier =
+                match c.VarianceKeyword.Value with
+                | null -> ""
+                | x -> x.ToString() 
+            let parameter = {
+                Name = c.Identifier.Text
+                Modifier = modifier}
+            parameter)
 
     override this.IsTypeNode node =
         match node with

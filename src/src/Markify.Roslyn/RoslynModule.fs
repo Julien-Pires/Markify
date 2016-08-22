@@ -7,6 +7,6 @@ type RoslynModule() =
     inherit NinjectModule()
 
     override this.Load () =
-        this.Bind<LanguageReader>().ToMethod(fun c -> LanguageReader(CSharpHelper(), ["cs"])) |> ignore
-        this.Bind<LanguageReader>().ToMethod(fun c -> LanguageReader(VisualBasicHelper(), ["vb"])) |> ignore
+        this.Bind<LanguageConverter>().ToMethod(fun c -> LanguageConverter(CSharpHelper(), ["cs"])) |> ignore
+        this.Bind<LanguageConverter>().ToMethod(fun c -> LanguageConverter(VisualBasicHelper(), ["vb"])) |> ignore
         this.Bind<IProjectAnalyzer>().To<RoslynAnalyzer>() |> ignore

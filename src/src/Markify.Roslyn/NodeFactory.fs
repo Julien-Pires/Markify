@@ -32,7 +32,7 @@ type NodeFactory(nodeHelper : NodeHelper) =
         | x -> lazy (nodeBuilder x)
 
     let buildTypeNode parentBuilder node =
-        let typeNode = {
+        Type {
             Node = node
             Name = nodeHelper.GetTypeName node
             Kind = nodeHelper.GetTypeKind node
@@ -41,14 +41,12 @@ type NodeFactory(nodeHelper : NodeHelper) =
             AccessModifiers = nodeHelper.GetAccessModifiers node
             Constraints = nodeHelper.GetGenericConstraints node
             Parameters = nodeHelper.GetGenericParameters node
-            Bases = nodeHelper.GetParents node}
-        Type typeNode
+            Bases = nodeHelper.GetParents node }
 
     let buildNamespaceNode node =
-        let namespaceNode = {
+        Namespace {
             NamespaceNode.Node = node
-            Name = nodeHelper.GetNamespaceName node}
-        Namespace namespaceNode
+            Name = nodeHelper.GetNamespaceName node }
 
     let rec buildNode node =
         let parentBuilder = buildParent buildNode
@@ -67,5 +65,5 @@ type NodeFactory(nodeHelper : NodeHelper) =
         |> Seq.filter (fun c -> 
             match c with
             | TypeNode _ | NamespaceNode _ -> true
-            | _ -> false)
+            | _ -> false )
         |> Seq.map buildNode

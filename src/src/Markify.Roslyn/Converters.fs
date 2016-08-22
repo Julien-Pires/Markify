@@ -5,23 +5,22 @@ open System.IO
 open Markify.Core.IO
 open Markify.Core.Builders
 
-type LanguageReader (nodeHelper : NodeHelper, extensions : string list) =
+type LanguageConverter (nodeHelper : NodeHelper, extensions : string list) =
     let nodeHelper = NodeFactory(nodeHelper)
 
     member this.Extensions with get() = extensions
 
-    member this.GetNodes(source) =
+    member this.Convert(source) =
         nodeHelper.GetNodes(source)
 
-type SourceReader (readers : LanguageReader seq) =
+type SourceConverter (readers : LanguageConverter seq) =
     let readers =
         readers
         |> Seq.fold (fun acc c ->
             let readerExtensions =
                 c.Extensions
                 |> List.map (fun d -> (d.ToLower(), c))
-            seq { yield! acc; yield! readerExtensions }
-            ) Seq.empty
+            seq { yield! acc; yield! readerExtensions }) Seq.empty
         |> Map.ofSeq
 
     let readFile file =
@@ -29,7 +28,7 @@ type SourceReader (readers : LanguageReader seq) =
         | Success x -> x
         | _ -> ""
 
-    member this.GetNodes file =
+    member this.Convert file =
         let ext = 
             match Path.GetExtension (file) with
             | x when x.StartsWith(".") -> x.Substring(1)
@@ -39,4 +38,4 @@ type SourceReader (readers : LanguageReader seq) =
         | None -> Seq.empty
         | Some x ->
             let fileContent = readFile file
-            x.GetNodes fileContent
+            x.Convert fileContent

@@ -46,10 +46,10 @@ type ProjectContextCustomization (projectFile, language) =
 
     interface ICustomization with
         member this.Customize (fixture : IFixture) =
-            fixture.Register<SourceReader> (fun c ->
-                SourceReader(seq {
-                    yield LanguageReader(CSharpHelper(), ["cs"])
-                    yield LanguageReader(VisualBasicHelper(), ["vb"])
+            fixture.Register<SourceConverter> (fun c ->
+                SourceConverter(seq {
+                    yield LanguageConverter(CSharpHelper(), ["cs"])
+                    yield LanguageConverter(VisualBasicHelper(), ["vb"])
                 }))
             fixture.Register<Project> (fun c ->
                 let testProject = readXml projectFile
