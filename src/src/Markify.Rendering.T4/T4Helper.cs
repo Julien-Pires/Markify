@@ -50,7 +50,7 @@ namespace Markify.Rendering.T4
         }
 
         public static string GetAccessModifiers(TypeDefinition definition) => 
-            !definition.AccessModifiers.Any() ? "internal" : string.Join(" & ", definition.AccessModifiers);
+            !definition.AccessModifiers.Any() ? "internal" : string.Join(" ", definition.AccessModifiers);
 
         public static string GetModifiers(TypeDefinition definition) => string.Join(", ", definition.Modifiers);
 
