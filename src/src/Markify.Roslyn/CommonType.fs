@@ -35,12 +35,7 @@ and NamespaceNode = {
     Node : SyntaxNode
     Name : NodeName
 }
-and OtherNode = {
-    Node : SyntaxNode
-    Parent : Node Lazy
-}
 and Node = 
     | Type of TypeNode
     | Namespace of NamespaceNode
-    | Other of OtherNode
     | NoNode
