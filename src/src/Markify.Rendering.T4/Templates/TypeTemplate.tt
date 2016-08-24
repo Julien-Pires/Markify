@@ -7,6 +7,7 @@
 <#@ import namespace="Markify.Models.Definitions" #>
 <# var definition = (TypeDefinition)Session["Content"]; #>
 ### **<#= T4Helper.GetNameWithParameters(definition) #>** : <#= T4Helper.GetKind(definition) #>
+<#= T4Helper.GetNamespace(definition) #>
 ***
 **Accessibility**: <#= T4Helper.GetAccessModifiers(definition) #>
 
