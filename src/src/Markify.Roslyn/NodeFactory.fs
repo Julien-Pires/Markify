@@ -32,7 +32,7 @@ type NodeFactory(nodeHelper : NodeHelper) =
         | x -> lazy (nodeBuilder x)
 
     let buildTypeNode parentBuilder node =
-        let typeNode = {
+        Type {
             Node = node
             Name = nodeHelper.GetTypeName node
             Kind = nodeHelper.GetTypeKind node
@@ -41,34 +41,22 @@ type NodeFactory(nodeHelper : NodeHelper) =
             AccessModifiers = nodeHelper.GetAccessModifiers node
             Constraints = nodeHelper.GetGenericConstraints node
             Parameters = nodeHelper.GetGenericParameters node
-            Bases = nodeHelper.GetParents node}
-        Type typeNode
+            Bases = nodeHelper.GetParents node }
 
     let buildNamespaceNode node =
-        let namespaceNode = {
+        Namespace {
             NamespaceNode.Node = node
-            Name = nodeHelper.GetNamespaceName node}
-        Namespace namespaceNode
-
-    let buildOtherNode parentBuilder node =
-        let otherNode = {
-            Node = node
-            Parent = parentBuilder node}
-        Other otherNode
+            Name = nodeHelper.GetNamespaceName node }
 
     let rec buildNode node =
         let parentBuilder = buildParent buildNode
         let nodeBuilder =
             match node with
-            | TypeNode _ -> Some (buildTypeNode parentBuilder)
-            | NamespaceNode _ -> Some (buildNamespaceNode)
-            | null -> None
-            | _ -> Some (buildOtherNode parentBuilder)
-        let newNode =
-            match nodeBuilder with
-            | Some x -> x node
-            | None -> NoNode
-        newNode
+            | TypeNode _ -> buildTypeNode parentBuilder
+            | NamespaceNode _ -> buildNamespaceNode
+            | null -> fun c -> NoNode
+            | _ -> fun c -> buildNode c.Parent
+        nodeBuilder node
 
     member this.GetNodes source =
         let tree = nodeHelper.ReadSource source
@@ -76,6 +64,6 @@ type NodeFactory(nodeHelper : NodeHelper) =
         root.DescendantNodes()
         |> Seq.filter (fun c -> 
             match c with
-            | TypeNode _ -> true
-            | _ -> false)
+            | TypeNode _ | NamespaceNode _ -> true
+            | _ -> false )
         |> Seq.map buildNode

@@ -6,16 +6,15 @@
 <#@ import namespace="Microsoft.VisualStudio.TextTemplating" #>
 <#@ import namespace="Markify.Models.Definitions" #>
 <# var definition = (TypeDefinition)Session["Content"]; #>
-### **<#= T4Helper.GetNameWithParameters(definition) #>** : <#= T4Helper.GetKind(definition) #>
+### **<#= T4Helper.GetNameWithParameters(definition) #>** : <#= T4Helper.GetAccessModifiers(definition) #> <#= T4Helper.GetKind(definition) #>
+<#= T4Helper.GetNamespace(definition) #>
 ***
-**Accessibility**: <#= T4Helper.GetAccessModifiers(definition) #>
-
 <#
 	var modifiers = T4Helper.GetModifiers(definition);
 	if(!string.IsNullOrWhiteSpace(modifiers))
 	{
 #>
-**Specificities**: <#= modifiers #>
+**Modifiers**: <#= modifiers #>
 
 <#
 	}

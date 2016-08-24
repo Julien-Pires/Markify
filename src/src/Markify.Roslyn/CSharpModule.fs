@@ -83,14 +83,12 @@ type CSharpHelper() =
             | ContainerTypeNode x -> Some x.TypeParameterList
             | DelegateNode x -> Some x.TypeParameterList
             | _ -> None
-        let parameters =
-            match parametersList with
-            | None -> SeparatedSyntaxList()
-            | Some x ->
-                match x with
-                | null -> SeparatedSyntaxList()
-                | w -> w.Parameters
-        parameters
+        match parametersList with
+        | None -> SeparatedSyntaxList()
+        | Some x ->
+            match x with
+            | null -> SeparatedSyntaxList()
+            | w -> w.Parameters
 
     override this.ReadSource source =
         CSharpSyntaxTree.ParseText source
@@ -155,8 +153,7 @@ type CSharpHelper() =
             constraints)
 
     override this.GetGenericParameters node =
-        let parameters = getGenericParameters node
-        parameters
+        getGenericParameters node
         |> Seq.map (fun c -> 
             let name = c.Identifier.Text
             let modifier = 

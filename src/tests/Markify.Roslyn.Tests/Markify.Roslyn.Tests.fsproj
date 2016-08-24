@@ -64,6 +64,7 @@
     <Compile Include="Roslyn.Processor.Process.Types.Generics.Tests.fs" />
     <Compile Include="Roslyn.Processor.Process.Types.Modifiers.Tests.fs" />
     <Compile Include="Roslyn.Processor.Process.Types.Inheritance.Tests.fs" />
+    <Compile Include="Roslyn.Processor.Process.Namespaces.Tests.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Core">

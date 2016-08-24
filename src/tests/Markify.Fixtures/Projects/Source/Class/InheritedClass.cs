@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
-public class InheritClass : Exception{}
+namespace FooSpace.InnerSpace
+{
+    public class InheritClass : Exception { }
+}
 
 public class ImplementInterfaceClass : IDisposable{}
 
