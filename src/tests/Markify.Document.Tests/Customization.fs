@@ -48,7 +48,8 @@
                     |> Seq.map (fun c ->
                         let identity = {
                             Name = sprintf "Type%i" c;
-                            Fullname = sprintf "Parent.Type%i" c }
+                            Parents = Some "Parent"
+                            Namespace = None }
                         let typeDef = {
                             Identity = identity
                             Kind = StructureKind.Class
@@ -57,5 +58,8 @@
                             BaseTypes = Seq.empty
                             Parameters = Seq.empty }
                         typeDef)
-
-            { Project = name; Types = types }
+            let lib = {
+                Project = name
+                Namespaces = Seq.empty
+                Types = types }
+            lib

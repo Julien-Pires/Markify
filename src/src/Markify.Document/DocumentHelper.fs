@@ -7,11 +7,16 @@ open Markify.Models.Documents
 open Markify.Models.Definitions
 
 module DocumentHelper =
-    let convertNameToPath (fullname : string) =
-        let parts = fullname.Split ('.')
-        match parts.Length with
-        | 1 -> String.Empty
-        | _ -> sprintf @"%s\" <| String.Join (@"\", parts, 0, parts.Length - 1)
+    let convertIdentityToPath identity =
+        let mergedName =
+            match (identity.Namespace, identity.Parents) with
+            | Some x, Some w -> sprintf "%s.%s" x w
+            | Some x, None -> x
+            | None, Some x -> x
+            | _ -> ""
+        match mergedName with
+        | "" -> ""
+        | _ -> sprintf @"%s\" <| mergedName.Replace ('.', '\\')
 
     let cleanExtension (ext : string) = 
         match ext with
@@ -19,10 +24,8 @@ module DocumentHelper =
         | _ -> ext
 
     let createPage project ext definition =
-        let path = Path.Combine (project, convertNameToPath definition.Identity.Fullname)
-        let cleanExt = cleanExtension ext
-        let page = {
-            Name = sprintf "%s.%s" definition.Identity.Name cleanExt
+        let path = Path.Combine (project, convertIdentityToPath definition.Identity)
+        let cleanedExt = cleanExtension ext
+        {   Name = sprintf "%s.%s" definition.Identity.Name cleanedExt
             Folder = Uri (path, UriKind.Relative)
             Content = definition }
-        page

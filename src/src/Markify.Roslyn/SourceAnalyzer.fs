@@ -3,73 +3,65 @@
 open System
 open System.IO
 open Markify.Core.IO
+open Markify.Core.Builders
+open Markify.Core.FSharp.Operators
 open Markify.Models.Definitions
 open Microsoft.CodeAnalysis
 
 type Project = Markify.Models.IDE.Project
 
+type SourceContent = {
+    Namespaces : NamespaceDefinition seq
+    Types : TypeDefinition seq
+}
+
 module SourceAnalyzer =
-    let (|HasExtension|_|) (uri : string) expected = 
-        let result = uri.EndsWith (expected, StringComparison.CurrentCultureIgnoreCase)
-        match result with
-        | true -> Some true
-        | _ -> None
+    let createNamespaceDefinition (node : NamespaceNode) =
+        { Name = node.Name }
 
-    let getNodeFactory file =
-        let ext = Path.GetExtension file
-        let languageHelper =
-            match ext with
-            | HasExtension ".cs" _ -> Some (CSharpHelper() :> NodeHelper)
-            | HasExtension ".vb" _ -> Some (VisuaBasicHelper() :> NodeHelper)
-            | _ -> None
-        let factory =
-            match languageHelper with
-            | Some x -> Some (NodeFactory(x))
-            | _ -> None
-        factory
+    let createTypeDefinition ((node : Node), ( typeNode : TypeNode)) = 
+        let identity = {
+            Name = TypeExtension.getName node
+            Parents = TypeExtension.getParentName typeNode
+            Namespace = TypeExtension.getNamespaceName node }
+        {   Identity = identity
+            Kind = typeNode.Kind
+            AccessModifiers = typeNode.AccessModifiers
+            Modifiers = typeNode.Modifiers
+            Parameters = TypeExtension.getGenericParameters typeNode
+            BaseTypes = typeNode.Bases }
 
-    let readFile file =
-        match IO.readFile file with
-        | Success x -> Some x
-        | _ -> None
-
-    let searchTypes nodes =
+    let searchDefinitions nodes =
+        let content = {
+            Namespaces = Seq.empty
+            Types = Seq.empty }
         nodes
-        |> Seq.choose (fun c ->
+        |> Seq.fold (fun (acc : SourceContent) c ->
             match c with
             | Type x ->
-                let identity = {
-                    Fullname = TypeExtension.getFullname c
-                    Name = TypeExtension.getName c }
-                let typeObj = {
-                    Identity = identity
-                    Kind = x.Kind
-                    AccessModifiers = x.AccessModifiers
-                    Modifiers = x.Modifiers
-                    Parameters = TypeExtension.getGenericParameters x
-                    BaseTypes = x.Bases }
-                Some typeObj
-            | _ -> None)
+                let typeDefinition = createTypeDefinition (c, x)
+                { acc with
+                    Types =  seq { yield! acc.Types; yield typeDefinition} }
+            | Namespace x ->
+                let namespaceDefinition = createNamespaceDefinition x
+                { acc with 
+                    Namespaces = seq { yield! acc.Namespaces; yield namespaceDefinition } }
+            | _ -> acc) content
 
-    let (>>=) m f = Option.bind f m
-    let getDefinitions file =
-        let nodes =
-            readFile file
-            >>= (fun c ->
-            getNodeFactory file 
-            >>= (fun d -> Some (d.GetNodes c)))
-        match nodes with
-        | Some x -> searchTypes x
-        | None -> Seq.empty
-
-    let inspect (project : Project) =
-        let types = 
-            project.Files
-            |> Seq.fold (fun acc c ->
-                getDefinitions c.AbsolutePath
-                |> Seq.append acc
-                |> Seq.distinctBy (fun d -> d.Identity.Fullname)) Seq.empty
-        let lib = {
+    let inspect (project : Project) (sourceConverter : SourceConverter) =
+        let library = {
             Project = project.Name
-            Types = types }
-        lib
+            Namespaces = Seq.empty
+            Types = Seq.empty }
+        project.Files
+        |> Seq.map (fun c ->
+            let nodes = sourceConverter.Convert c.AbsolutePath
+            searchDefinitions nodes )
+        |> Seq.fold (fun (acc : LibraryDefinition) c ->
+            { acc with
+                Namespaces = seq { yield! acc.Namespaces; yield! c.Namespaces}
+                Types = seq { yield! acc.Types; yield! c.Types} }) library
+        |> fun c -> 
+            { c with
+                Namespaces = c.Namespaces |> Seq.distinctBy (fun c -> c.Name) 
+                Types = c.Types |> Seq.distinctBy (fun c -> c.Identity) }

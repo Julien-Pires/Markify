@@ -1,9 +1,11 @@
 ﻿Imports System
 Imports System.Collections.Generic
 
-Public Class InheritClass
-    Inherits Exception
-End Class
+Namespace FooSpace.InnerSpace
+    Public Class InheritClass
+        Inherits Exception
+    End Class
+End Namespace
 
 Public Class ImplementInterfaceClass
     Inherits IDisposable
