@@ -35,7 +35,7 @@ type SourceConverter (readers : LanguageConverter seq) =
             | x -> x
         let reader = readers.TryFind <| ext.ToLower()
         match reader with
-        | None -> Seq.empty
+        | None -> []
         | Some x ->
             let fileContent = readFile file
             x.Convert fileContent

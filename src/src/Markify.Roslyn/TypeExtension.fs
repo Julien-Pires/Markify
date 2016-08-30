@@ -41,17 +41,17 @@ module TypeExtension =
 
     let getGenericParameters (node : TypeNode) =
         node.Parameters
-        |> Seq.map (fun c ->
+        |> List.map (fun c ->
             let paramConstraint =
                 node.Constraints
-                |> Seq.tryPick (fun d -> 
+                |> List.tryPick (fun d ->
                     match c.Name with
                     | x when d.Name = x -> Some d
                     | _ -> None)
             let constraints =
                 match paramConstraint with
                 | Some x -> x.Constraints
-                | None -> Seq.empty
+                | None -> []
             let generic = {
                 Identity = c.Name
                 Modifier = c.Modifier
