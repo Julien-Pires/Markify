@@ -1,8 +1,10 @@
 ﻿namespace Markify.Roslyn
 
+open System.Diagnostics.CodeAnalysis
 open Markify.Core.Analyzers
 open Ninject.Modules
 
+[<ExcludeFromCodeCoverage>]
 type RoslynModule() =
     inherit NinjectModule()
 

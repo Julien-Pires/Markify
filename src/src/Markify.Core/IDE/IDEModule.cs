@@ -1,7 +1,9 @@
-﻿using Ninject.Modules;
+﻿using System.Diagnostics.CodeAnalysis;
+using Ninject.Modules;
 
 namespace Markify.Core.IDE
 {
+    [ExcludeFromCodeCoverage]
     public sealed class IDEModule : NinjectModule
     {
         #region Module Loading
