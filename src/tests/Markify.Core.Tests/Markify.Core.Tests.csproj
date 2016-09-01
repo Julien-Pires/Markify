@@ -81,10 +81,10 @@
   <ItemGroup>
     <Compile Include="Attributes\SolutionExplorerCustomization.cs" />
     <Compile Include="Attributes\SolutionExplorerInlineAutoDataAttribute.cs" />
-    <Compile Include="IDE\ISolutionExplorer.CurrentProject.Tests.cs" />
-    <Compile Include="IDE\ISolutionExplorer.CurrentSolution.Tests.cs" />
-    <Compile Include="IDE\ISolutionExplorer.GetProject.Tests.cs" />
-    <Compile Include="IDE\ISolutionExplorer.Tests.cs" />
+    <Compile Include="IDE\SolutionExplorer.CurrentProject.Tests.cs" />
+    <Compile Include="IDE\SolutionExplorer.CurrentSolution.Tests.cs" />
+    <Compile Include="IDE\SolutionExplorer.GetProject.Tests.cs" />
+    <Compile Include="IDE\SolutionExplorer.Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

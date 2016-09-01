@@ -12,12 +12,12 @@ using static Markify.Models.IDE.ProjectLanguage;
 
 namespace Markify.Core.Tests.IDE
 {
-    public partial class ISolutionExplorer_Tests
+    public partial class SolutionExplorer_Tests
     {
         [Theory]
         [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", 0, -1, 0, CSharp, new ProjectLanguage[0], new string[0], "FooSolution")]
         [SolutionExplorerInlineAutoData("FooBarSolution", "c:/FooBarSolution", 0, -1, 0, CSharp, new ProjectLanguage[0], new string[0], "FooBarSolution")]
-        public void CurrentSolution_WithCurrent_ShouldReturnSolution(string expected, ISolutionExplorer sut)
+        public void CurrentSolution_WithCurrent_ShouldReturnSolution(string expected, SolutionExplorer sut)
         {
             var actual = sut.CurrentSolution;
             var name = actual.Match(
@@ -31,7 +31,7 @@ namespace Markify.Core.Tests.IDE
 
         [Theory]
         [SolutionExplorerInlineAutoData(null, null, 0, -1, 0, CSharp, new ProjectLanguage[0], new string[0])]
-        public void CurrentSolution_WithNoCurrent_ShouldReturnNone(ISolutionExplorer sut)
+        public void CurrentSolution_WithNoCurrent_ShouldReturnNone(SolutionExplorer sut)
         {
             var actual = sut.CurrentSolution;
 
@@ -41,7 +41,7 @@ namespace Markify.Core.Tests.IDE
         [Theory]
         [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", 0, -1, 0, CSharp, new ProjectLanguage[0], new string[0], "c:/FooSolution/")]
         [SolutionExplorerInlineAutoData("FooBarSolution", "c:/Projects/FooBarSolution", 0, -1, 0, CSharp, new ProjectLanguage[0], new string[0], "c:/Projects/FooBarSolution/")]
-        public void CurrentSolution_ShouldReturnCorrectPath(string expected, ISolutionExplorer sut)
+        public void CurrentSolution_ShouldReturnCorrectPath(string expected, SolutionExplorer sut)
         {
             var solution = sut.CurrentSolution;
             var actual = solution.Match(
@@ -55,7 +55,7 @@ namespace Markify.Core.Tests.IDE
         [Theory]
         [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", 0, -1, 0, CSharp, new ProjectLanguage[0], new string[0], 0)]
         [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", 4, -1, 0, CSharp, new ProjectLanguage[0], new string[0], 4)]
-        public void CurrentSolution_WithProjects_ShouldReturnCorrectCount(int expected, ISolutionExplorer sut)
+        public void CurrentSolution_WithProjects_ShouldReturnCorrectCount(int expected, SolutionExplorer sut)
         {
             var solution = sut.CurrentSolution;
             var actual = solution.Match(
@@ -70,7 +70,7 @@ namespace Markify.Core.Tests.IDE
         [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", 0, -1, 0, CSharp, new[] { CSharp }, new string[0], 0)]
         [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", 4, -1, 0, CSharp, new[] { CSharp }, new string[0], 4)]
         [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", 4, -1, 0, CSharp, new[] { VisualBasic }, new string[0], 0)]
-        public void CurrentSolution_WithLanguageFilter_ShouldReturnCorrectCount(int expected, ISolutionExplorer sut)
+        public void CurrentSolution_WithLanguageFilter_ShouldReturnCorrectCount(int expected, SolutionExplorer sut)
         {
             var solution = sut.CurrentSolution;
             var actual = solution.Match(
@@ -86,7 +86,7 @@ namespace Markify.Core.Tests.IDE
         [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", 1, -1, 0, CSharp, new ProjectLanguage[0], new string[0], "Project1")]
         [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", 2, -1, 0, CSharp, new ProjectLanguage[0], new string[0], "Project1 Project2")]
         [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", 4, -1, 0, CSharp, new ProjectLanguage[0], new string[0], "Project1 Project2 Project3 Project4")]
-        public void CurrentSolution_WithProjects_ShouldReturnCorrectName(string expected, ISolutionExplorer sut)
+        public void CurrentSolution_WithProjects_ShouldReturnCorrectName(string expected, SolutionExplorer sut)
         {
             var expectedProjects = expected.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 

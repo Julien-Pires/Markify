@@ -3,11 +3,10 @@ using System.Linq;
 using System.Collections.Generic;
 
 using Markify.Core.IDE;
+using Markify.Models.IDE;
 
 using Moq;
 using Ploeh.AutoFixture;
-
-using Markify.Models.IDE;
 
 namespace Markify.Core.Tests.Attributes
 {
@@ -74,7 +73,7 @@ namespace Markify.Core.Tests.Attributes
 
         public void Customize(IFixture fixture)
         {
-            fixture.Register<ISolutionExplorer>(() => new SolutionExplorer(_ide.Object, _filterProvider.Object));
+            fixture.Register(() => new SolutionExplorer(_ide.Object, _filterProvider.Object));
         }
 
         #endregion
