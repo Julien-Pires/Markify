@@ -2,9 +2,11 @@
 using System.Text;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Markify.Rendering.T4
 {
+    [ExcludeFromCodeCoverage]
     public abstract class T4TemplateBase
     {
         #region Fields
