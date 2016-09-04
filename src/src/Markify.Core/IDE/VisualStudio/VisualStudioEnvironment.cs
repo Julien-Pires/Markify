@@ -33,7 +33,7 @@ namespace Markify.Core.IDE.VisualStudio
             }
         }
 
-        public string CurrentSolution => Path.GetFileNameWithoutExtension(_visualStudio.Solution.FullName);
+        public string CurrentSolution => Path.GetFileNameWithoutExtension(_visualStudio.Solution?.FullName);
 
         #endregion
 
@@ -78,6 +78,9 @@ namespace Markify.Core.IDE.VisualStudio
 
         public Uri GetSolutionPath(string solution)
         {
+            if(solution == null)
+                throw new ArgumentNullException(nameof(solution));
+
             if (CurrentSolution != solution)
                 return null;
 
@@ -88,18 +91,26 @@ namespace Markify.Core.IDE.VisualStudio
 
         public IEnumerable<string> GetProjects(string solution)
         {
+            if(solution == null)
+                throw new ArgumentNullException(nameof(solution));
+
             return CurrentSolution != solution ? null : GetProjects(_visualStudio.Solution).Select(c => c.Name);
         }
 
         public Uri GetProjectPath(string solution, string name)
         {
+            if(solution == null)
+                throw new ArgumentNullException(nameof(solution));
+
+            if(name == null)
+                throw new ArgumentNullException(nameof(name));
+
             if (CurrentSolution != solution)
                 return null;
 
             var project = GetProject(name, _visualStudio.Solution);
-            var path = Path.GetDirectoryName(project.FullName);
 
-            return path == null ? null : new Uri(path);
+            return project != null ? new Uri(Path.GetDirectoryName(project.FullName)) : null;
         }
 
         public IEnumerable<Uri> GetProjectFiles(string solution, string name)
