@@ -10,7 +10,12 @@ namespace Markify.Core.Tests.Attributes
         #region Constructors
 
         public VisualStudioEnvironmentDataAttribute(string name, int projectCount, int solutionFolder, params object[] values)
-            : this(new VisualStudioEnvironmentCustomization(name, projectCount, solutionFolder), values)
+            : this(new VisualStudioEnvironmentCustomization(name, projectCount, solutionFolder, 0, 0), values)
+        {
+        }
+
+        public VisualStudioEnvironmentDataAttribute(string name, int projectCount, int solutionFolder, int files, int folders, params object[] values)
+            : this(new VisualStudioEnvironmentCustomization(name, projectCount, solutionFolder, files, folders), values)
         {
         }
 
