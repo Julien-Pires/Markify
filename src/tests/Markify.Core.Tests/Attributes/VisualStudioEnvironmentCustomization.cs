@@ -22,16 +22,16 @@ namespace Markify.Core.Tests.Attributes
 
         #region Constructors
 
-        public VisualStudioEnvironmentCustomization(string name, int projectCount, int solutionFolder, int files, int folders)
+        public VisualStudioEnvironmentCustomization(string name, int projectCount, int solutionFolder, int files, int folders, string language)
         {
-            _solution = CreateSolution(name, projectCount, solutionFolder, files, folders, Root);
+            _solution = CreateSolution(name, projectCount, solutionFolder, files, folders, language, Root);
         }
 
         #endregion
 
         #region Customization
 
-        private static Solution CreateSolution(string name, int projectCount, int solutionFolder, int files, int folders, string root)
+        private static Solution CreateSolution(string name, int projectCount, int solutionFolder, int files, int folders, string language, string root)
         {
             if (string.IsNullOrWhiteSpace(name))
                 return null;
@@ -42,22 +42,22 @@ namespace Markify.Core.Tests.Attributes
             var projects = new Mock<Projects>();
             solution.SetupGet(c => c.Projects).Returns(projects.Object);
 
-            var solutionContent = CreateSolutionContent(projectCount, solutionFolder, files, folders, root);
+            var solutionContent = CreateSolutionContent(projectCount, solutionFolder, files, folders, language, root);
             projects.As<IEnumerable>().Setup(c => c.GetEnumerator()).Returns(() => solutionContent.GetEnumerator());
 
             return solution.Object;
         }
 
-        private static List<Project> CreateSolutionContent(int projectCount, int solutionFolder, int files, int folders, string root)
+        private static List<Project> CreateSolutionContent(int projectCount, int solutionFolder, int files, int folders, string language, string root)
         {
-            Func<string, IEnumerable<Project>> projectBuilder = c => CreateProjects(projectCount, files, folders, c);
+            Func<string, IEnumerable<Project>> projectBuilder = c => CreateProjects(projectCount, files, folders, language, c);
             var topProjects = projectBuilder(root);
             var nestedProjects = CreateSolutionFolder(solutionFolder, projectBuilder, root);
 
             return topProjects.Concat(nestedProjects).ToList();
         }
 
-        private static IEnumerable<Project> CreateProjects(int count, int files, int folders, string root)
+        private static IEnumerable<Project> CreateProjects(int count, int files, int folders, string language, string root)
         {
             var projects = new List<Project>(count);
             for (var i = 0; i < count; i++)
@@ -68,6 +68,10 @@ namespace Markify.Core.Tests.Attributes
                 project.SetupGet(c => c.Name).Returns(projectName);
                 project.SetupGet(c => c.FullName).Returns(projectPath);
                 project.SetupGet(c => c.ProjectItems).Returns(CreateProjectContent(files, folders, projectPath));
+
+                var codeModel = new Mock<CodeModel>();
+                codeModel.SetupGet(c => c.Language).Returns(language);
+                project.SetupGet(c => c.CodeModel).Returns(codeModel.Object);
 
                 projects.Add(project.Object);
             }

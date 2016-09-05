@@ -152,6 +152,12 @@ namespace Markify.Core.IDE.VisualStudio
 
         public ProjectLanguage GetProjectLanguage(string solution, string name)
         {
+            if (solution == null)
+                throw new ArgumentNullException(nameof(solution));
+
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+
             if (CurrentSolution != solution)
                 return ProjectLanguage.Unsupported;
 
