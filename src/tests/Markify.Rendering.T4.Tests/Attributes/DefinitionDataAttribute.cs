@@ -6,7 +6,7 @@ using Ploeh.AutoFixture.Xunit2;
 namespace Markify.Rendering.T4.Tests.Attributes
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-    public class DefinitionDataAttribute : InlineAutoDataAttribute
+    internal class DefinitionDataAttribute : InlineAutoDataAttribute
     {
         #region Constructors
 
@@ -17,6 +17,11 @@ namespace Markify.Rendering.T4.Tests.Attributes
 
         public DefinitionDataAttribute(string name, string parent, string nspace, StructureKind kind, params object[] values)
             :this(new TypeDefinitionCustomization(name, parent, nspace, kind, null, null), values)
+        {
+        }
+
+        public DefinitionDataAttribute(string name, string[] modifiers, string[] accessModifiers, params object[] values)
+            : this(new TypeDefinitionCustomization(name, null, null, StructureKind.Class, modifiers, accessModifiers), values)
         {
         }
 

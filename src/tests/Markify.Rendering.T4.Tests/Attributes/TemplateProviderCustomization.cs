@@ -6,7 +6,7 @@ using Ploeh.AutoFixture.Kernel;
 
 namespace Markify.Rendering.T4.Tests.Attributes
 {
-    public sealed class TemplateProviderCustomization : ICustomization
+    internal sealed class TemplateProviderCustomization : ICustomization
     {
         #region Fields
 

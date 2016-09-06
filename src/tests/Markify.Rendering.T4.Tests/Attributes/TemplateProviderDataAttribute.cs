@@ -5,7 +5,7 @@ using Ploeh.AutoFixture.Xunit2;
 namespace Markify.Rendering.T4.Tests.Attributes
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-    public sealed class TemplateProviderDataAttribute : InlineAutoDataAttribute
+    internal sealed class TemplateProviderDataAttribute : InlineAutoDataAttribute
     {
         #region Constructors
 

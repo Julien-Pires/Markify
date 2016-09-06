@@ -39,6 +39,26 @@ namespace Markify.Rendering.T4.Tests
 
         #endregion
 
+        #region GetModifiers
+
+        [Theory]
+        [DefinitionData]
+        public void GetModifiers_ShouldThrow_WhenDefinitionIsNull()
+        {
+            Check.ThatCode(() => DefinitionFormatter.GetModifiers(null)).Throws<ArgumentNullException>();
+        }
+
+        [Theory]
+        [DefinitionData("Foo", new string[0], null, "")]
+        [DefinitionData("Foo", new [] { "sealed" }, null, "sealed")]
+        [DefinitionData("Foo", new[] { "sealed", "abstract" }, null, "sealed, abstract")]
+        public void GetModifiers_ShouldReturnCorrectValue(string expected, TypeDefinition definition)
+        {
+            Check.That(DefinitionFormatter.GetModifiers(definition)).IsEqualTo(expected);
+        }
+
+        #endregion
+
         #endregion
     }
 }

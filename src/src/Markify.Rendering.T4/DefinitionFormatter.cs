@@ -9,6 +9,7 @@ namespace Markify.Rendering.T4
     {
         #region Fields
 
+        private const string Delimiter = ", ";
         private const string Class = "class";
         private const string Struct = "struct";
         private const string Interface = "interface";
@@ -65,7 +66,13 @@ namespace Markify.Rendering.T4
         public static string GetAccessModifiers(TypeDefinition definition) => 
             !definition.AccessModifiers.Any() ? "internal" : string.Join(" ", definition.AccessModifiers);
 
-        public static string GetModifiers(TypeDefinition definition) => string.Join(", ", definition.Modifiers);
+        public static string GetModifiers(TypeDefinition definition)
+        {
+            if(definition == null)
+                throw new ArgumentNullException(nameof(definition));
+
+            return string.Join(Delimiter, definition.Modifiers);
+        }
 
         public static string GetParents(TypeDefinition definition) => string.Join(", ", definition.BaseTypes);
 
