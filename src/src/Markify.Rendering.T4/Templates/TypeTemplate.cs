@@ -40,28 +40,28 @@ namespace Markify.Rendering.T4.Templates
             this.Write("### **");
             
             #line 9 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(T4Helper.GetNameWithParameters(definition)));
+            this.Write(this.ToStringHelper.ToStringWithCulture(DefinitionFormatter.GetNameWithParameters(definition)));
             
             #line default
             #line hidden
             this.Write("** : ");
             
             #line 9 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(T4Helper.GetAccessModifiers(definition)));
+            this.Write(this.ToStringHelper.ToStringWithCulture(DefinitionFormatter.GetAccessModifiers(definition)));
             
             #line default
             #line hidden
             this.Write(" ");
             
             #line 9 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(T4Helper.GetKind(definition)));
+            this.Write(this.ToStringHelper.ToStringWithCulture(DefinitionFormatter.GetKind(definition)));
             
             #line default
             #line hidden
             this.Write("\r\n");
             
             #line 10 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(T4Helper.GetNamespace(definition)));
+            this.Write(this.ToStringHelper.ToStringWithCulture(DefinitionFormatter.GetNamespace(definition)));
             
             #line default
             #line hidden
@@ -69,7 +69,7 @@ namespace Markify.Rendering.T4.Templates
             
             #line 12 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
 
-	var modifiers = T4Helper.GetModifiers(definition);
+	var modifiers = DefinitionFormatter.GetModifiers(definition);
 	if(!string.IsNullOrWhiteSpace(modifiers))
 	{
 
@@ -95,7 +95,7 @@ namespace Markify.Rendering.T4.Templates
             
             #line 22 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
 
-	var parents = T4Helper.GetParents(definition);
+	var parents = DefinitionFormatter.GetParents(definition);
 	if(!string.IsNullOrWhiteSpace(parents))
 	{
 

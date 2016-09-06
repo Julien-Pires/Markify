@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Markify", "src\Markify\Markify.csproj", "{B7973B9F-7AC3-4D73-B23A-94627E86B202}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -34,7 +34,7 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Markify.Document.Tests", "t
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Markify.Rendering", "src\Markify.Rendering\Markify.Rendering.csproj", "{6B9CE3E8-68DA-4EB9-8362-58A289B51E76}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Markify.Rendering.Tests", "tests\Markify.Rendering.Tests\Markify.Rendering.Tests.csproj", "{9D9BFCFF-7408-4518-91C0-9BD523D33B92}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Markify.Rendering.T4.Tests", "tests\Markify.Rendering.T4.Tests\Markify.Rendering.T4.Tests.csproj", "{9D9BFCFF-7408-4518-91C0-9BD523D33B92}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Markify.Rendering.T4", "src\Markify.Rendering.T4\Markify.Rendering.T4.csproj", "{BAD50507-B3A7-4B18-A870-A7AF22D5EBD3}"
 EndProject

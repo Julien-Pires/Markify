@@ -1,10 +1,11 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Microsoft.FSharp.Core;
 using Markify.Models.Definitions;
 
 namespace Markify.Rendering.T4
 {
-    internal static class T4Helper
+    public static class DefinitionFormatter
     {
         #region Common Helper
 
@@ -17,11 +18,13 @@ namespace Markify.Rendering.T4
 
         public static string GetKind(TypeDefinition definition)
         {
+            if(definition == null)
+                throw new ArgumentNullException(nameof(definition));
+
             string result;
             switch(definition.Kind)
             {
                 case StructureKind.Class:
-                case StructureKind.Unknown:
                     result = "class";
                     break;
 

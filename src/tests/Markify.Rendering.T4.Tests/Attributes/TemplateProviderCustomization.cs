@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Linq;
-
-using Markify.Rendering.T4;
-using Microsoft.VisualStudio.TextTemplating;
-
 using Moq;
 using Ploeh.AutoFixture;
 using Ploeh.AutoFixture.Kernel;
 
-namespace Markify.Rendering.Tests.Attributes
+namespace Markify.Rendering.T4.Tests.Attributes
 {
-    public sealed class T4Customization : ICustomization
+    public sealed class TemplateProviderCustomization : ICustomization
     {
         #region Fields
 
@@ -21,7 +17,7 @@ namespace Markify.Rendering.Tests.Attributes
 
         #region Constructors
 
-        public T4Customization(Type[] templateBinding, Type currentContent)
+        public TemplateProviderCustomization(Type[] templateBinding, Type currentContent)
         {
             _templateBinding = templateBinding;
             _currentContent = currentContent;
@@ -33,7 +29,7 @@ namespace Markify.Rendering.Tests.Attributes
 
         public void Customize(IFixture fixture)
         {
-            fixture.Register<ITemplatesProvider>(() =>
+            fixture.Register(() =>
             {
                 var transform = new Mock<T4TemplateBase>();
                 var templates = _templateBinding.Select(c => new Tuple<T4TemplateBase, Type>(transform.Object, c));

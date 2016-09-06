@@ -8,8 +8,8 @@
     <ProjectGuid>{9D9BFCFF-7408-4518-91C0-9BD523D33B92}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Markify.Rendering.Tests</RootNamespace>
-    <AssemblyName>Markify.Rendering.Tests</AssemblyName>
+    <RootNamespace>Markify.Rendering.T4.Tests</RootNamespace>
+    <AssemblyName>Markify.Rendering.T4.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
@@ -37,24 +37,34 @@
       <HintPath>..\..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="FSharp.Core, Version=4.4.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.TextTemplating.14.0, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="Moq, Version=4.5.9.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Moq.4.5.9\lib\net45\Moq.dll</HintPath>
+    <Reference Include="Moq, Version=4.5.21.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Moq.4.5.21\lib\net45\Moq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NFluent, Version=1.3.1.0, Culture=neutral, PublicKeyToken=18828b37b84b1437, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NFluent.1.3.1.0\lib\net40\NFluent.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Optional, Version=3.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Optional.3.1.0\lib\net461\Optional.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Ploeh.AutoFixture, Version=3.47.8.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\AutoFixture.3.47.8\lib\net40\Ploeh.AutoFixture.dll</HintPath>
+    <Reference Include="Ploeh.AutoFixture, Version=3.50.2.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\AutoFixture.3.50.2\lib\net40\Ploeh.AutoFixture.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Ploeh.AutoFixture.Xunit2, Version=3.47.8.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\AutoFixture.Xunit2.3.47.8\lib\net45\Ploeh.AutoFixture.Xunit2.dll</HintPath>
+    <Reference Include="Ploeh.AutoFixture.Xunit2, Version=3.50.2.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\AutoFixture.Xunit2.3.50.2\lib\net45\Ploeh.AutoFixture.Xunit2.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Collections.Immutable, Version=1.2.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Collections.Immutable.1.2.0\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -80,16 +90,23 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attributes\T4Customization.cs" />
-    <Compile Include="Attributes\T4InlineAutoDataAttribute.cs" />
-    <Compile Include="ITemplatesProvider.Tests.cs" />
+    <Compile Include="Attributes\DefinitionDataAttribute.cs" />
+    <Compile Include="Attributes\TypeDefinitionCustomization.cs" />
+    <Compile Include="Attributes\TemplateProviderCustomization.cs" />
+    <Compile Include="Attributes\TemplateProviderDataAttribute.cs" />
+    <Compile Include="T4TemplateProvider.Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <Compile Include="DefinitionFormatter.Tests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Markify.Models\Markify.Models.fsproj">
+      <Project>{2a8dfdc1-8752-4784-b962-6d0b9ad1541a}</Project>
+      <Name>Markify.Models</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\src\Markify.Rendering.T4\Markify.Rendering.T4.csproj">
       <Project>{bad50507-b3a7-4b18-a870-a7af22d5ebd3}</Project>
       <Name>Markify.Rendering.T4</Name>
