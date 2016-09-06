@@ -7,6 +7,16 @@ namespace Markify.Rendering.T4
 {
     public static class DefinitionFormatter
     {
+        #region Fields
+
+        private const string Class = "class";
+        private const string Struct = "struct";
+        private const string Interface = "interface";
+        private const string Enum = "enum";
+        private const string Delegate = "delegate";
+
+        #endregion
+
         #region Common Helper
 
         public static T GetValueOrDefault<T>(FSharpOption<T> option, T def = default(T)) => 
@@ -25,23 +35,23 @@ namespace Markify.Rendering.T4
             switch(definition.Kind)
             {
                 case StructureKind.Class:
-                    result = "class";
+                    result = Class;
                     break;
 
                 case StructureKind.Struct:
-                    result = "struct";
+                    result = Struct;
                     break;
 
                 case StructureKind.Interface:
-                    result = "interface";
+                    result = Interface;
                     break;
 
                 case StructureKind.Enum:
-                    result = "enum";
+                    result = Enum;
                     break;
 
                 case StructureKind.Delegate:
-                    result = "delegate";
+                    result = Delegate;
                     break;
 
                 default:
