@@ -10,17 +10,22 @@ namespace Markify.Core.Tests.Attributes
         #region Constructors
 
         public VisualStudioEnvironmentDataAttribute(string name, int projectCount, int solutionFolder, params object[] values)
-            : this(new VisualStudioEnvironmentCustomization(name, projectCount, solutionFolder, 0, 0, string.Empty), values)
+            : this(new VisualStudioEnvironmentCustomization(name, projectCount, solutionFolder, 0, 0, false, string.Empty), values)
         {
         }
 
         public VisualStudioEnvironmentDataAttribute(string name, int projectCount, int solutionFolder, string language, params object[] values)
-            : this(new VisualStudioEnvironmentCustomization(name, projectCount, solutionFolder, 0, 0, language), values)
+            : this(new VisualStudioEnvironmentCustomization(name, projectCount, solutionFolder, 0, 0, false, language), values)
+        {
+        }
+
+        public VisualStudioEnvironmentDataAttribute(string name, int projectCount, int solutionFolder, bool hasCurrentProject, params object[] values)
+            : this(new VisualStudioEnvironmentCustomization(name, projectCount, solutionFolder, 0, 0, hasCurrentProject, string.Empty), values)
         {
         }
 
         public VisualStudioEnvironmentDataAttribute(string name, int projectCount, int solutionFolder, int files, int folders, params object[] values)
-            : this(new VisualStudioEnvironmentCustomization(name, projectCount, solutionFolder, files, folders, string.Empty), values)
+            : this(new VisualStudioEnvironmentCustomization(name, projectCount, solutionFolder, files, folders, false, string.Empty), values)
         {
         }
 

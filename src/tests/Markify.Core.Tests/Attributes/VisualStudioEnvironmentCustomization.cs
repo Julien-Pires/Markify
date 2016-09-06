@@ -16,22 +16,57 @@ namespace Markify.Core.Tests.Attributes
 
         private const string Root = "c:";
 
-        private readonly Solution _solution;
+        private readonly string _name;
+        private readonly int _projectCount;
+        private readonly int _solutionFolder;
+        private readonly int _files;
+        private readonly int _folders;
+        private readonly bool _hasCurrentProject;
+        private readonly string _language;
 
         #endregion
 
         #region Constructors
 
-        public VisualStudioEnvironmentCustomization(string name, int projectCount, int solutionFolder, int files, int folders, string language)
+        public VisualStudioEnvironmentCustomization(string name, int projectCount, int solutionFolder, int files, int folders, 
+            bool hasCurrentProject, string language)
         {
-            _solution = CreateSolution(name, projectCount, solutionFolder, files, folders, language, Root);
+            _name = name;
+            _projectCount = projectCount;
+            _solutionFolder = solutionFolder;
+            _files = files;
+            _folders = folders;
+            _hasCurrentProject = hasCurrentProject;
+            _language = language;
         }
 
         #endregion
 
         #region Customization
 
-        private static Solution CreateSolution(string name, int projectCount, int solutionFolder, int files, int folders, string language, string root)
+        private static DTE2 CreateVisualStudioInterface(string name, int projectCount, int solutionFolder, int files, int folders, 
+            string language, bool hasCurrentProject, string root)
+        {
+            var visualStudio = new Mock<DTE2>();
+            var solution = CreateSolution(name, projectCount, solutionFolder, files, folders, language, Root);
+            visualStudio.SetupGet(c => c.Solution).Returns(solution);
+
+            var projects = Array.Empty<Project>();
+            if (hasCurrentProject)
+            {
+                projects = solution.Projects.Cast<Project>()
+                                            .Where(c => c.Kind != ProjectKinds.vsProjectKindSolutionFolder)
+                                            .Take(1)
+                                            .ToArray();
+                
+            }
+            visualStudio.SetupGet(c => c.ActiveSolutionProjects).Returns(projects);
+
+            return visualStudio.Object;
+        }
+
+        private static Solution CreateSolution(string name, int projectCount, int solutionFolder, int files, int folders, 
+            string language, string root)
         {
             if (string.IsNullOrWhiteSpace(name))
                 return null;
@@ -155,10 +190,8 @@ namespace Markify.Core.Tests.Attributes
 
         public void Customize(IFixture fixture)
         {
-            var vsEnv = new Mock<DTE2>();
-            vsEnv.SetupGet(c => c.Solution).Returns(_solution);
-
-            fixture.Inject(new VisualStudioEnvironment(vsEnv.Object));
+            var visualStudio = CreateVisualStudioInterface(_name, _projectCount, _solutionFolder, _files, _folders, _language, _hasCurrentProject, Root);
+            fixture.Inject(new VisualStudioEnvironment(visualStudio));
         }
 
         #endregion

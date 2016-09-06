@@ -23,6 +23,46 @@ namespace Markify.Core.Tests.IDE
 
         #endregion
 
+        #region Properties
+
+        #region CurrentProject
+
+        [Theory]
+        [VisualStudioEnvironmentData("Foo", 2, 0, false)]
+        public void CurrentProject_ShouldReturnNull_WhenHasNoActiveProject(VisualStudioEnvironment sut)
+        {
+            Check.That(sut.CurrentProject).IsNull();
+        }
+
+        [Theory]
+        [VisualStudioEnvironmentData("Foo", 0, 0, true)]
+        public void CurrentProject_ShouldReturnNull_WhenSolutionHasNoProject(VisualStudioEnvironment sut)
+        {
+            Check.That(sut.CurrentProject).IsNull();
+        }
+
+        [Theory]
+        [VisualStudioEnvironmentData("Foo", 2, 0, true)]
+        public void CurrentProject_ShouldReturnProjectName_WhenHasActiveProject(VisualStudioEnvironment sut)
+        {
+            Check.That(sut.CurrentProject).IsNotNull();
+        }
+
+        [Theory]
+        [VisualStudioEnvironmentData("Foo", 2, 0, true, "Foo")]
+        public void CurrentProject_ShouldReturnProjectNameFromCurrentSolution_WhenHasActiveProject(string solution, VisualStudioEnvironment sut)
+        {
+            var projects = sut.GetProjects(solution);
+
+            Check.That(projects.Contains(sut.CurrentProject)).IsTrue();
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Public Methods
+
         #region GetSolutionPath
 
         [Theory]
@@ -249,6 +289,8 @@ namespace Markify.Core.Tests.IDE
 
             Check.That(sut.GetProjectLanguage(solution, project)).IsEqualTo(expected);
         }
+
+        #endregion
 
         #endregion
     }
