@@ -21,6 +21,7 @@ namespace Markify.Rendering.T4.Templates
     /// </summary>
     
     #line 1 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "14.0.0.0")]
     public partial class TypeTemplate : T4TemplateBase
     {
