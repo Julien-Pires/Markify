@@ -94,13 +94,18 @@
     <Compile Include="Attributes\TypeDefinitionCustomization.cs" />
     <Compile Include="Attributes\TemplateProviderCustomization.cs" />
     <Compile Include="Attributes\TemplateProviderDataAttribute.cs" />
+    <Compile Include="DefinitionFormatter\DefinitionFormatter.GetAccessModifiers.Tests.cs" />
+    <Compile Include="DefinitionFormatter\DefinitionFormatter.GetModifiers.Tests.cs" />
+    <Compile Include="DefinitionFormatter\DefinitionFormatter.GetNamespace.Tests.cs" />
+    <Compile Include="DefinitionFormatter\DefinitionFormatter.GetNameWithParameters.Tests.cs" />
+    <Compile Include="DefinitionFormatter\DefinitionFormatter.GetParents.Tests.cs" />
     <Compile Include="T4TemplateProvider.Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <Compile Include="DefinitionFormatter.Tests.cs" />
+    <Compile Include="DefinitionFormatter\DefinitionFormatter.GetKind.Tests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Markify.Models\Markify.Models.fsproj">

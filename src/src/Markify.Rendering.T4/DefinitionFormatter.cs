@@ -10,6 +10,8 @@ namespace Markify.Rendering.T4
         #region Fields
 
         private const string Delimiter = ", ";
+        private const string AccessModifierDelimiter = " ";
+        private const string DefaultAccessModifier = "internal";
         private const string Class = "class";
         private const string Struct = "struct";
         private const string Interface = "interface";
@@ -20,7 +22,7 @@ namespace Markify.Rendering.T4
 
         #region Common Helper
 
-        public static T GetValueOrDefault<T>(FSharpOption<T> option, T def = default(T)) => 
+        private static T GetValueOrDefault<T>(FSharpOption<T> option, T def = default(T)) => 
             FSharpOption<T>.get_IsSome(option) ? option.Value : def;
 
         #endregion
@@ -63,8 +65,13 @@ namespace Markify.Rendering.T4
             return result;
         }
 
-        public static string GetAccessModifiers(TypeDefinition definition) => 
-            !definition.AccessModifiers.Any() ? "internal" : string.Join(" ", definition.AccessModifiers);
+        public static string GetAccessModifiers(TypeDefinition definition)
+        {
+            if (definition == null)
+                throw new ArgumentNullException(nameof(definition));
+
+            return definition.AccessModifiers.Any() ? string.Join(AccessModifierDelimiter, definition.AccessModifiers) : DefaultAccessModifier;
+        }
 
         public static string GetModifiers(TypeDefinition definition)
         {
@@ -74,12 +81,27 @@ namespace Markify.Rendering.T4
             return string.Join(Delimiter, definition.Modifiers);
         }
 
-        public static string GetParents(TypeDefinition definition) => string.Join(", ", definition.BaseTypes);
+        public static string GetParents(TypeDefinition definition)
+        {
+            if (definition == null)
+                throw new ArgumentNullException(nameof(definition));
 
-        public static string GetNamespace(TypeDefinition definition) => GetValueOrDefault(definition.Identity.Namespace, string.Empty);
+            return string.Join(Delimiter, definition.BaseTypes);
+        }
+
+        public static string GetNamespace(TypeDefinition definition)
+        {
+            if (definition == null)
+                throw new ArgumentNullException(nameof(definition));
+
+            return GetValueOrDefault(definition.Identity.Namespace, string.Empty);
+        }
 
         public static string GetNameWithParameters(TypeDefinition definition)
         {
+            if (definition == null)
+                throw new ArgumentNullException(nameof(definition));
+
             if (!definition.Parameters.Any())
                 return definition.Identity.Name;
 

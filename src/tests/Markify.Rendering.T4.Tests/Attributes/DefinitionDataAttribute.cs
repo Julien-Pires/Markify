@@ -15,13 +15,14 @@ namespace Markify.Rendering.T4.Tests.Attributes
         {
         }
 
-        public DefinitionDataAttribute(string name, string parent, string nspace, StructureKind kind, params object[] values)
-            :this(new TypeDefinitionCustomization(name, parent, nspace, kind, null, null), values)
+        public DefinitionDataAttribute(string name, string parent, string nspace, StructureKind kind, string[] parameters, params object[] values)
+            :this(new TypeDefinitionCustomization(name, parent, nspace, kind, null, null, null, parameters), values)
         {
         }
 
-        public DefinitionDataAttribute(string name, string[] modifiers, string[] accessModifiers, params object[] values)
-            : this(new TypeDefinitionCustomization(name, null, null, StructureKind.Class, modifiers, accessModifiers), values)
+        public DefinitionDataAttribute(string name, string[] modifiers, string[] accessModifiers, string[] baseTypes, params object[] values)
+            : this(new TypeDefinitionCustomization(name, null, null, StructureKind.Class, modifiers, accessModifiers, 
+                baseTypes, null), values)
         {
         }
 
