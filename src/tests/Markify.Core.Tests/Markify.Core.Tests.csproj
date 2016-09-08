@@ -93,11 +93,17 @@
     <Compile Include="Attributes\SolutionExplorerInlineAutoDataAttribute.cs" />
     <Compile Include="Attributes\VisualStudioEnvironmentDataAttribute.cs" />
     <Compile Include="Attributes\VisualStudioEnvironmentCustomization.cs" />
-    <Compile Include="IDE\SolutionExplorer.CurrentProject.Tests.cs" />
-    <Compile Include="IDE\SolutionExplorer.CurrentSolution.Tests.cs" />
-    <Compile Include="IDE\SolutionExplorer.GetProject.Tests.cs" />
-    <Compile Include="IDE\SolutionExplorer.Tests.cs" />
-    <Compile Include="IDE\VisualStudioEnvironment.Tests.cs" />
+    <Compile Include="IDE\SolutionExplorer\SolutionExplorer.CurrentProject.Tests.cs" />
+    <Compile Include="IDE\SolutionExplorer\SolutionExplorer.CurrentSolution.Tests.cs" />
+    <Compile Include="IDE\SolutionExplorer\SolutionExplorer.GetProject.Tests.cs" />
+    <Compile Include="IDE\SolutionExplorer\SolutionExplorer.Tests.cs" />
+    <Compile Include="IDE\VisualStudioEnvironment\VisualStudioEnvironment.CurrentProject.Tests.cs" />
+    <Compile Include="IDE\VisualStudioEnvironment\VisualStudioEnvironment.GetProjectFiles.Tests.cs" />
+    <Compile Include="IDE\VisualStudioEnvironment\VisualStudioEnvironment.GetProjectLanguage.Tests.cs" />
+    <Compile Include="IDE\VisualStudioEnvironment\VisualStudioEnvironment.GetProjectPath.Tests.cs" />
+    <Compile Include="IDE\VisualStudioEnvironment\VisualStudioEnvironment.GetProjects.Tests.cs" />
+    <Compile Include="IDE\VisualStudioEnvironment\VisualStudioEnvironment.GetSolutionPath.Tests.cs" />
+    <Compile Include="IDE\VisualStudioEnvironment\VisualStudioEnvironment.Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
