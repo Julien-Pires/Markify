@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Linq;
-
 using Markify.Core.IDE;
 using Markify.Models.IDE;
-
 using Markify.Core.Tests.Attributes;
-
+using NFluent;
 using Xunit;
 
 using static Markify.Models.IDE.ProjectLanguage;
@@ -19,14 +17,14 @@ namespace Markify.Core.Tests.IDE
         [SolutionExplorerInlineAutoData("FooBarSolution", "c:/FooBarSolution", 0, -1, 0, CSharp, new ProjectLanguage[0], new string[0], "FooBarSolution")]
         public void CurrentSolution_WithCurrent_ShouldReturnSolution(string expected, SolutionExplorer sut)
         {
-            var actual = sut.CurrentSolution;
-            var name = actual.Match(
+            var solution = sut.CurrentSolution;
+            var actual = solution.Match(
                 x => x.Name,
                 () => string.Empty
             );
 
-            Assert.True(actual.HasValue);
-            Assert.Equal(expected, name);
+            Check.That(solution.HasValue).IsTrue();
+            Check.That(actual).IsEqualTo(expected);
         }
 
         [Theory]
@@ -35,7 +33,7 @@ namespace Markify.Core.Tests.IDE
         {
             var actual = sut.CurrentSolution;
 
-            Assert.False(actual.HasValue);
+            Check.That(actual.HasValue).IsFalse();
         }
 
         [Theory]
@@ -49,7 +47,7 @@ namespace Markify.Core.Tests.IDE
                 () => null
             );
 
-            Assert.Equal(new Uri(expected), actual);
+            Check.That(actual).IsEqualTo(new Uri(expected));
         }
 
         [Theory]
@@ -63,7 +61,7 @@ namespace Markify.Core.Tests.IDE
                 () => -1
             );
 
-            Assert.Equal(expected, actual);
+            Check.That(actual).IsEqualTo(expected);
         }
 
         [Theory]
@@ -78,7 +76,7 @@ namespace Markify.Core.Tests.IDE
                 () => -1
             );
 
-            Assert.Equal(expected, actual);
+            Check.That(actual).IsEqualTo(expected);
         }
 
         [Theory]
@@ -97,7 +95,7 @@ namespace Markify.Core.Tests.IDE
             );
             var actual = projects.Intersect(expectedProjects);
 
-            Assert.Equal(expectedProjects.Length, actual.Count());
+            Check.That(actual.Count()).IsEqualTo(expectedProjects.Length);
         }
     }
 }

@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Linq;
-
 using Markify.Core.IDE;
 using Markify.Models.IDE;
-
 using Markify.Core.Tests.Attributes;
-
+using NFluent;
 using Xunit;
 
 using static Markify.Models.IDE.ProjectLanguage;
@@ -21,7 +19,7 @@ namespace Markify.Core.Tests.IDE
         {
             var actual = sut.GetProject(name);
 
-            Assert.True(actual.HasValue);
+            Check.That(actual.HasValue).IsTrue();
         }
 
         [Theory]
@@ -31,7 +29,7 @@ namespace Markify.Core.Tests.IDE
         {
             var actual = sut.GetProject(name);
 
-            Assert.False(actual.HasValue);
+            Check.That(actual.HasValue).IsFalse();
         }
 
         [Theory]
@@ -46,8 +44,8 @@ namespace Markify.Core.Tests.IDE
                 () => Unsupported
             );
 
-            Assert.True(project.HasValue);
-            Assert.Equal(expected, actual);
+            Check.That(project.HasValue).IsTrue();
+            Check.That(actual).IsEqualTo(expected);
         }
 
         [Theory]
@@ -56,21 +54,21 @@ namespace Markify.Core.Tests.IDE
         {
             var actual = sut.GetProject(name);
 
-            Assert.False(actual.HasValue);
+            Check.That(actual.HasValue).IsFalse();
         }
 
         [Theory]
         [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", 1, -1, 0, CSharp, new ProjectLanguage[0], new string[0], "Project1")]
         [SolutionExplorerInlineAutoData("FooSolution", "c:/FooSolution", 3, -1, 0, CSharp, new ProjectLanguage[0], new string[0], "Project2")]
-        public void GetProject_ShouldReturnCorrectName(string name, SolutionExplorer sut)
+        public void GetProject_ShouldReturnCorrectName(string expected, SolutionExplorer sut)
         {
-            var project = sut.GetProject(name);
+            var project = sut.GetProject(expected);
             var actual = project.Match(
                 x => x.Name,
                 () => string.Empty
             );
 
-            Assert.Equal(name, actual);
+            Check.That(actual).IsEqualTo(expected);
         }
 
         [Theory]
@@ -85,7 +83,7 @@ namespace Markify.Core.Tests.IDE
                 () => null
             );
 
-            Assert.Equal(new Uri(expected), actual);
+            Check.That(actual).IsEqualTo(new Uri(expected));
         }
 
         [Theory]
@@ -102,7 +100,7 @@ namespace Markify.Core.Tests.IDE
                 () => -1
             );
 
-            Assert.Equal(expected, actual);
+            Check.That(actual).IsEqualTo(expected);
         }
 
         [Theory]
@@ -122,7 +120,7 @@ namespace Markify.Core.Tests.IDE
             );
             var actual = paths.Intersect(expectedPaths);
 
-            Assert.Equal(expectedPaths.Length, actual.Count());
+            Check.That(actual.Count()).IsEqualTo(expectedPaths.Length);
         }
     }
 }

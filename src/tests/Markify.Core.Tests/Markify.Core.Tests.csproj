@@ -96,7 +96,6 @@
     <Compile Include="IDE\SolutionExplorer\SolutionExplorer.CurrentProject.Tests.cs" />
     <Compile Include="IDE\SolutionExplorer\SolutionExplorer.CurrentSolution.Tests.cs" />
     <Compile Include="IDE\SolutionExplorer\SolutionExplorer.GetProject.Tests.cs" />
-    <Compile Include="IDE\SolutionExplorer\SolutionExplorer.Tests.cs" />
     <Compile Include="IDE\VisualStudioEnvironment\VisualStudioEnvironment.CurrentProject.Tests.cs" />
     <Compile Include="IDE\VisualStudioEnvironment\VisualStudioEnvironment.GetProjectFiles.Tests.cs" />
     <Compile Include="IDE\VisualStudioEnvironment\VisualStudioEnvironment.GetProjectLanguage.Tests.cs" />

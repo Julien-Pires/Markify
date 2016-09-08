@@ -1,8 +1,7 @@
 ﻿using Markify.Core.IDE;
 using Markify.Models.IDE;
-
 using Markify.Core.Tests.Attributes;
-
+using NFluent;
 using Xunit;
 
 using static Markify.Models.IDE.ProjectLanguage;
@@ -21,7 +20,7 @@ namespace Markify.Core.Tests.IDE
                 () => string.Empty
             );
 
-            Assert.Equal(expected, actual);
+            Check.That(actual).IsEqualTo(expected);
         }
 
         [Theory]
@@ -31,7 +30,7 @@ namespace Markify.Core.Tests.IDE
         {
             var actual = sut.CurrentProject;
 
-            Assert.False(actual.HasValue);
+            Check.That(actual.HasValue).IsFalse();
         }
 
         [Theory]
@@ -41,7 +40,7 @@ namespace Markify.Core.Tests.IDE
         {
             var project = sut.CurrentProject;
 
-            Assert.True(project.HasValue);
+            Check.That(project.HasValue).IsTrue();
         }
 
         [Theory]
@@ -50,7 +49,7 @@ namespace Markify.Core.Tests.IDE
         {
             var actual = sut.CurrentProject;
 
-            Assert.False(actual.HasValue);
+            Check.That(actual.HasValue).IsFalse();
         }
     }
 }
