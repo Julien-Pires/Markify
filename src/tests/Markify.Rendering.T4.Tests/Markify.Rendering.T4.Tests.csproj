@@ -90,7 +90,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attributes\DefinitionDataAttribute.cs" />
+    <Compile Include="Attributes\TemplateCustomization.cs" />
+    <Compile Include="Attributes\TemplateDataAttribute.cs" />
+    <Compile Include="Attributes\TypeDefinitionDataAttribute.cs" />
     <Compile Include="Attributes\TypeDefinitionCustomization.cs" />
     <Compile Include="Attributes\TemplateProviderCustomization.cs" />
     <Compile Include="Attributes\TemplateProviderDataAttribute.cs" />
@@ -99,13 +101,14 @@
     <Compile Include="DefinitionFormatter\DefinitionFormatter.GetNamespace.Tests.cs" />
     <Compile Include="DefinitionFormatter\DefinitionFormatter.GetNameWithParameters.Tests.cs" />
     <Compile Include="DefinitionFormatter\DefinitionFormatter.GetParents.Tests.cs" />
-    <Compile Include="T4TemplateProvider.Tests.cs" />
+    <Compile Include="T4TemplateProvider\T4TemplateProvider.GetTemplate.Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
     <Compile Include="DefinitionFormatter\DefinitionFormatter.GetKind.Tests.cs" />
+    <Compile Include="T4Template\T4Template.Apply.Tests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Markify.Models\Markify.Models.fsproj">

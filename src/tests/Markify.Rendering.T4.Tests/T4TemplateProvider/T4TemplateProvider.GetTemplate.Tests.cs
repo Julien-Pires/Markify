@@ -5,12 +5,8 @@ using Xunit;
 
 namespace Markify.Rendering.T4.Tests
 {
-    public class T4TemplateProvider_Tests
+    public sealed class T4TemplateProvider_Tests
     {
-        #region Public Methods
-
-        #region GetTemplate
-
         [Theory]
         [TemplateProviderData(new[] { typeof(string)}, typeof(string))]
         [TemplateProviderData(new[] { typeof(string), typeof(int), typeof(DateTime) }, typeof(DateTime))]
@@ -33,9 +29,5 @@ namespace Markify.Rendering.T4.Tests
         {
             Check.That(sut.GetTemplate(content).HasValue).IsFalse();
         }
-
-        #endregion
-
-        #endregion
     }
 }

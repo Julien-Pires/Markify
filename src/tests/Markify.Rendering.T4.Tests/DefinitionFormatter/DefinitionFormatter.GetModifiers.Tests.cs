@@ -15,9 +15,9 @@ namespace Markify.Rendering.T4.Tests
         }
 
         [Theory]
-        [DefinitionData("Foo", new string[0], null, null, "")]
-        [DefinitionData("Foo", new[] { "sealed" }, null, null, "sealed")]
-        [DefinitionData("Foo", new[] { "sealed", "abstract" }, null, null, "sealed, abstract")]
+        [TypeDefinitionData("Foo", new string[0], null, null, "")]
+        [TypeDefinitionData("Foo", new[] { "sealed" }, null, null, "sealed")]
+        [TypeDefinitionData("Foo", new[] { "sealed", "abstract" }, null, null, "sealed, abstract")]
         public void GetModifiers_ShouldReturnCorrectValue(string expected, TypeDefinition definition)
         {
             Check.That(DefinitionFormatter.GetModifiers(definition)).IsEqualTo(expected);

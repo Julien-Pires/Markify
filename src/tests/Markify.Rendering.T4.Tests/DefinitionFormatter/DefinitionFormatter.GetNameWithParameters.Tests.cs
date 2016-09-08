@@ -15,15 +15,15 @@ namespace Markify.Rendering.T4.Tests
         }
 
         [Theory]
-        [DefinitionData("Foo", null, null, StructureKind.Class, new string[] { }, "Foo")]
+        [TypeDefinitionData("Foo", null, null, StructureKind.Class, new string[] { }, "Foo")]
         public void GetNameWithParameters_ShouldReturnOnlyName_WhenHasNoParameters(string expected, TypeDefinition definition)
         {
             Check.That(DefinitionFormatter.GetNameWithParameters(definition)).IsEqualTo(expected);
         }
 
         [Theory]
-        [DefinitionData("Foo", null, null, StructureKind.Class, new string[] { "T" }, "Foo<T>")]
-        [DefinitionData("Foo", null, null, StructureKind.Class, new string[] { "T", "Y", "Z" }, "Foo<T, Y, Z>")]
+        [TypeDefinitionData("Foo", null, null, StructureKind.Class, new string[] { "T" }, "Foo<T>")]
+        [TypeDefinitionData("Foo", null, null, StructureKind.Class, new string[] { "T", "Y", "Z" }, "Foo<T, Y, Z>")]
         public void GetNameWithParameters_ShouldReturnNameWithParameters_WhenHasParamters(string expected, TypeDefinition definition)
         {
             Check.That(DefinitionFormatter.GetNameWithParameters(definition)).IsEqualTo(expected);

@@ -15,9 +15,9 @@ namespace Markify.Rendering.T4.Tests
         }
 
         [Theory]
-        [DefinitionData("Foo", null, null, new string[]{}, "")]
-        [DefinitionData("Foo", null, null, new string[] { "IDisposable" }, "IDisposable")]
-        [DefinitionData("Foo", null, null, new string[] { "IDisposable", "IEnumerable" }, "IDisposable, IEnumerable")]
+        [TypeDefinitionData("Foo", null, null, new string[]{}, "")]
+        [TypeDefinitionData("Foo", null, null, new string[] { "IDisposable" }, "IDisposable")]
+        [TypeDefinitionData("Foo", null, null, new string[] { "IDisposable", "IEnumerable" }, "IDisposable, IEnumerable")]
         public void GetParents_ShouldReturnCorrectValue(string expected, TypeDefinition definition)
         {
             Check.That(DefinitionFormatter.GetParents(definition)).IsEqualTo(expected);
