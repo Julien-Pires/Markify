@@ -28,11 +28,14 @@ namespace Markify.Rendering
             foreach(var page in toc.Pages)
             {
                 var template = _provider.GetTemplate(page.Content);
-                var text = template.Match(
-                    some: c => c.Apply(page.Content).ValueOr(string.Empty),
-                    none : () => string.Empty
+                template.Match(
+                    some : c => 
+                    {
+                        var text = c.Apply(page.Content).ValueOr(string.Empty);
+                        writer.Write(text, page, toc.Root);
+                    },
+                    none : () => { }
                 );
-                writer.Write(text, page, toc.Root);
             }
         }
 
