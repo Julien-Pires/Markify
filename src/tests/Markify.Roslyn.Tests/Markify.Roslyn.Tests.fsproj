@@ -56,7 +56,6 @@
   <ItemGroup>
     <Content Include="app.config" />
     <Content Include="packages.config" />
-    <None Include="Script.fsx" />
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Customization.fs" />
     <Compile Include="Attributes.fs" />

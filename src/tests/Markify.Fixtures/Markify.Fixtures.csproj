@@ -71,6 +71,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Projects\InvalidFileProject.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Projects\DelegateProject.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

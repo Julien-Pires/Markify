@@ -17,7 +17,7 @@ type TestProject() =
     member val Files : string[] = [||] with get, set
 
 type ProjectContextCustomization (projectFile, language) =
-    let projectFile = projectFile
+    let projectFile = sprintf "%s.xml" projectFile
     let language = language
 
     let getFullPath path =
@@ -49,8 +49,7 @@ type ProjectContextCustomization (projectFile, language) =
             fixture.Register<SourceConverter> (fun c ->
                 SourceConverter(seq {
                     yield LanguageConverter(CSharpHelper(), ["cs"])
-                    yield LanguageConverter(VisualBasicHelper(), ["vb"])
-                }))
+                    yield LanguageConverter(VisualBasicHelper(), ["vb"]) }))
             fixture.Register<Project> (fun c ->
                 let testProject = readXml projectFile
                 let project = {
