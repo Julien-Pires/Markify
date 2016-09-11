@@ -17,6 +17,7 @@ test:
   - src\tests\Markify.Document.Tests\bin\Debug\Markify.Document.Tests.dll
   - src\tests\Markify.Core.Tests\bin\Debug\Markify.Core.Tests.dll
   - src\tests\Markify.Rendering.Tests\bin\Debug\Markify.Rendering.Tests.dll
+  - src\tests\Markify.Rendering.T4.Tests\bin\Debug\Markify.Rendering.T4.Tests.dll
 after_test:
     - ps: >-
         $tests = (
@@ -24,7 +25,8 @@ after_test:
           "Markify.Core.FSharp.Tests",
           "Markify.Document.Tests",
           "Markify.Core.Tests",
-          "Markify.Rendering.Tests"
+          "Markify.Rendering.Tests",
+          "Markify.Rendering.T4.Tests"
         )
 
         $filter = "+[Markify*]* -[*.Tests]*"

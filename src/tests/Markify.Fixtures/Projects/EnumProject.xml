@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Project>
+  <Count>10</Count>
   <Files>
-    <!-- Enum (Total : 10) -->
     <Uri>Source/Enum/AccessModifier</Uri>
     <Uri>Source/Enum/EnumSamples</Uri>
     <Uri>Source/Enum/InheritedEnum</Uri>

@@ -33,7 +33,7 @@ namespace Markify.Core.IDE.VisualStudio
             }
         }
 
-        public string CurrentSolution => Path.GetFileNameWithoutExtension(_visualStudio.Solution.FullName);
+        public string CurrentSolution => Path.GetFileNameWithoutExtension(_visualStudio.Solution?.FullName);
 
         #endregion
 
@@ -78,6 +78,9 @@ namespace Markify.Core.IDE.VisualStudio
 
         public Uri GetSolutionPath(string solution)
         {
+            if(solution == null)
+                throw new ArgumentNullException(nameof(solution));
+
             if (CurrentSolution != solution)
                 return null;
 
@@ -88,50 +91,73 @@ namespace Markify.Core.IDE.VisualStudio
 
         public IEnumerable<string> GetProjects(string solution)
         {
+            if(solution == null)
+                throw new ArgumentNullException(nameof(solution));
+
             return CurrentSolution != solution ? null : GetProjects(_visualStudio.Solution).Select(c => c.Name);
         }
 
         public Uri GetProjectPath(string solution, string name)
         {
+            if(solution == null)
+                throw new ArgumentNullException(nameof(solution));
+
+            if(name == null)
+                throw new ArgumentNullException(nameof(name));
+
             if (CurrentSolution != solution)
                 return null;
 
             var project = GetProject(name, _visualStudio.Solution);
-            var path = Path.GetDirectoryName(project.FullName);
 
-            return path == null ? null : new Uri(path);
+            return project != null ? new Uri(Path.GetDirectoryName(project.FullName)) : null;
         }
 
         public IEnumerable<Uri> GetProjectFiles(string solution, string name)
         {
+            if (solution == null)
+                throw new ArgumentNullException(nameof(solution));
+
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+
+            var files = new List<Uri>();
             if (CurrentSolution != solution)
-                yield break;
+                return files;
 
             var project = GetProject(name, _visualStudio.Solution);
             if (project == null)
-                yield break;
+                return files;
 
-            var files = new Queue<ProjectItem>(project.ProjectItems.Cast<ProjectItem>());
-            while (files.Count > 0)
+            var pendingItems = new Queue<ProjectItem>(project.ProjectItems.Cast<ProjectItem>());
+            while (pendingItems.Count > 0)
             {
-                var current = files.Dequeue();
+                var current = pendingItems.Dequeue();
                 switch (current.Kind)
                 {
                     case Constants.vsProjectItemKindPhysicalFolder:
                     case Constants.vsProjectItemKindVirtualFolder:
                         foreach (var item in current.ProjectItems)
-                            files.Enqueue((ProjectItem)item);
+                            pendingItems.Enqueue((ProjectItem)item);
                         break;
 
                     case Constants.vsProjectItemKindPhysicalFile:
-                        yield return new Uri(current.FileNames[0]);
+                        files.Add(new Uri(current.FileNames[0]));
                         break;
                 }
             }
+
+            return files;
         }
 
         public ProjectLanguage GetProjectLanguage(string solution, string name)
         {
+            if (solution == null)
+                throw new ArgumentNullException(nameof(solution));
+
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+
             if (CurrentSolution != solution)
                 return ProjectLanguage.Unsupported;
 

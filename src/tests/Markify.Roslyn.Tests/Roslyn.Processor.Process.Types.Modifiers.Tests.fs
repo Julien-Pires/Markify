@@ -1,4 +1,6 @@
-﻿module Roslyn_Processor_Process_Types_Modifiers_Tests
+﻿namespace Markify.Roslyn.Tests
+
+module Roslyn_Processor_Process_Types_Modifiers_Tests =
     open Markify.Roslyn
 
     open Markify.Models.IDE
@@ -12,41 +14,41 @@
     open Swensen.Unquote
 
     [<Theory>]
-    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.CSharp, "public", "PublicClass")>]
-    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.CSharp, "internal", "InternalClass")>]
-    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.CSharp, "protected", "ProtectedClass")>]
-    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.CSharp, "protected internal", "ProtectedInternalClass")>]
-    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.CSharp, "private", "PrivateClass")>]
-    [<ProjectContextInlineAutoData("InterfaceProject.xml", ProjectLanguage.CSharp, "public", "IPublicInterface")>]
-    [<ProjectContextInlineAutoData("InterfaceProject.xml", ProjectLanguage.CSharp, "internal", "IInternalInterface")>]
-    [<ProjectContextInlineAutoData("InterfaceProject.xml", ProjectLanguage.CSharp, "protected internal", "IProtectedInternalInterface")>]
-    [<ProjectContextInlineAutoData("StructProject.xml", ProjectLanguage.CSharp, "public", "PublicStruct")>]
-    [<ProjectContextInlineAutoData("StructProject.xml", ProjectLanguage.CSharp, "internal", "InternalStruct")>]
-    [<ProjectContextInlineAutoData("StructProject.xml", ProjectLanguage.CSharp, "protected internal", "ProtectedInternalStruct")>]
-    [<ProjectContextInlineAutoData("EnumProject.xml", ProjectLanguage.CSharp, "public", "PublicEnum")>]
-    [<ProjectContextInlineAutoData("EnumProject.xml", ProjectLanguage.CSharp, "internal", "InternalEnum")>]
-    [<ProjectContextInlineAutoData("EnumProject.xml", ProjectLanguage.CSharp, "protected internal", "ProtectedInternalEnum")>]
-    [<ProjectContextInlineAutoData("DelegateProject.xml", ProjectLanguage.CSharp, "public", "PublicDelegate")>]
-    [<ProjectContextInlineAutoData("DelegateProject.xml", ProjectLanguage.CSharp, "internal", "InternalDelegate")>]
-    [<ProjectContextInlineAutoData("DelegateProject.xml", ProjectLanguage.CSharp, "protected internal", "ProtectedInternalDelegate")>]
-    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.VisualBasic, "Public", "PublicClass")>]
-    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.VisualBasic, "Friend", "InternalClass")>]
-    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.VisualBasic, "Protected", "ProtectedClass")>]
-    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.VisualBasic, "Protected Friend", "ProtectedInternalClass")>]
-    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.VisualBasic, "Private", "PrivateClass")>]
-    [<ProjectContextInlineAutoData("InterfaceProject.xml", ProjectLanguage.VisualBasic, "Public", "IPublicInterface")>]
-    [<ProjectContextInlineAutoData("InterfaceProject.xml", ProjectLanguage.VisualBasic, "Friend", "IInternalInterface")>]
-    [<ProjectContextInlineAutoData("InterfaceProject.xml", ProjectLanguage.VisualBasic, "Protected Friend", "IProtectedInternalInterface")>]
-    [<ProjectContextInlineAutoData("StructProject.xml", ProjectLanguage.VisualBasic, "Public", "PublicStruct")>]
-    [<ProjectContextInlineAutoData("StructProject.xml", ProjectLanguage.VisualBasic, "Friend", "InternalStruct")>]
-    [<ProjectContextInlineAutoData("StructProject.xml", ProjectLanguage.VisualBasic, "Protected Friend", "ProtectedInternalStruct")>]
-    [<ProjectContextInlineAutoData("EnumProject.xml", ProjectLanguage.VisualBasic, "Public", "PublicEnum")>]
-    [<ProjectContextInlineAutoData("EnumProject.xml", ProjectLanguage.VisualBasic, "Friend", "InternalEnum")>]
-    [<ProjectContextInlineAutoData("EnumProject.xml", ProjectLanguage.VisualBasic, "Protected Friend", "ProtectedInternalEnum")>]
-    [<ProjectContextInlineAutoData("DelegateProject.xml", ProjectLanguage.VisualBasic, "Public", "PublicDelegate")>]
-    [<ProjectContextInlineAutoData("DelegateProject.xml", ProjectLanguage.VisualBasic, "Friend", "InternalDelegate")>]
-    [<ProjectContextInlineAutoData("DelegateProject.xml", ProjectLanguage.VisualBasic, "Protected Friend", "ProtectedInternalDelegate")>]
-    let ``Process project with types that have access modifiers`` (modifier: string, name, sut: RoslynAnalyzer, project: Project) =
+    [<ProjectData("ClassProject", ProjectLanguage.CSharp, "public", "PublicClass")>]
+    [<ProjectData("ClassProject", ProjectLanguage.CSharp, "internal", "InternalClass")>]
+    [<ProjectData("ClassProject", ProjectLanguage.CSharp, "protected", "ProtectedClass")>]
+    [<ProjectData("ClassProject", ProjectLanguage.CSharp, "protected internal", "ProtectedInternalClass")>]
+    [<ProjectData("ClassProject", ProjectLanguage.CSharp, "private", "PrivateClass")>]
+    [<ProjectData("InterfaceProject", ProjectLanguage.CSharp, "public", "IPublicInterface")>]
+    [<ProjectData("InterfaceProject", ProjectLanguage.CSharp, "internal", "IInternalInterface")>]
+    [<ProjectData("InterfaceProject", ProjectLanguage.CSharp, "protected internal", "IProtectedInternalInterface")>]
+    [<ProjectData("StructProject", ProjectLanguage.CSharp, "public", "PublicStruct")>]
+    [<ProjectData("StructProject", ProjectLanguage.CSharp, "internal", "InternalStruct")>]
+    [<ProjectData("StructProject", ProjectLanguage.CSharp, "protected internal", "ProtectedInternalStruct")>]
+    [<ProjectData("EnumProject", ProjectLanguage.CSharp, "public", "PublicEnum")>]
+    [<ProjectData("EnumProject", ProjectLanguage.CSharp, "internal", "InternalEnum")>]
+    [<ProjectData("EnumProject", ProjectLanguage.CSharp, "protected internal", "ProtectedInternalEnum")>]
+    [<ProjectData("DelegateProject", ProjectLanguage.CSharp, "public", "PublicDelegate")>]
+    [<ProjectData("DelegateProject", ProjectLanguage.CSharp, "internal", "InternalDelegate")>]
+    [<ProjectData("DelegateProject", ProjectLanguage.CSharp, "protected internal", "ProtectedInternalDelegate")>]
+    [<ProjectData("ClassProject", ProjectLanguage.VisualBasic, "Public", "PublicClass")>]
+    [<ProjectData("ClassProject", ProjectLanguage.VisualBasic, "Friend", "InternalClass")>]
+    [<ProjectData("ClassProject", ProjectLanguage.VisualBasic, "Protected", "ProtectedClass")>]
+    [<ProjectData("ClassProject", ProjectLanguage.VisualBasic, "Protected Friend", "ProtectedInternalClass")>]
+    [<ProjectData("ClassProject", ProjectLanguage.VisualBasic, "Private", "PrivateClass")>]
+    [<ProjectData("InterfaceProject", ProjectLanguage.VisualBasic, "Public", "IPublicInterface")>]
+    [<ProjectData("InterfaceProject", ProjectLanguage.VisualBasic, "Friend", "IInternalInterface")>]
+    [<ProjectData("InterfaceProject", ProjectLanguage.VisualBasic, "Protected Friend", "IProtectedInternalInterface")>]
+    [<ProjectData("StructProject", ProjectLanguage.VisualBasic, "Public", "PublicStruct")>]
+    [<ProjectData("StructProject", ProjectLanguage.VisualBasic, "Friend", "InternalStruct")>]
+    [<ProjectData("StructProject", ProjectLanguage.VisualBasic, "Protected Friend", "ProtectedInternalStruct")>]
+    [<ProjectData("EnumProject", ProjectLanguage.VisualBasic, "Public", "PublicEnum")>]
+    [<ProjectData("EnumProject", ProjectLanguage.VisualBasic, "Friend", "InternalEnum")>]
+    [<ProjectData("EnumProject", ProjectLanguage.VisualBasic, "Protected Friend", "ProtectedInternalEnum")>]
+    [<ProjectData("DelegateProject", ProjectLanguage.VisualBasic, "Public", "PublicDelegate")>]
+    [<ProjectData("DelegateProject", ProjectLanguage.VisualBasic, "Friend", "InternalDelegate")>]
+    [<ProjectData("DelegateProject", ProjectLanguage.VisualBasic, "Protected Friend", "ProtectedInternalDelegate")>]
+    let ``Process project should return type access modifiers`` (modifier: string, name, sut: RoslynAnalyzer, project) =
         let expectedModifiers = modifier.Split [|' '|]
 
         let typeDef = 
@@ -61,19 +63,19 @@
         test <@ Seq.length possessedModifiers = Seq.length expectedModifiers @>
 
     [<Theory>]
-    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.CSharp, "abstract", "AbstractClass")>]
-    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.CSharp, "sealed", "SealedClass")>]
-    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.CSharp, "partial", "PartialClass")>]
-    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.CSharp, "static", "StaticClass")>]
-    [<ProjectContextInlineAutoData("InterfaceProject.xml", ProjectLanguage.CSharp, "partial", "IPartialInterface")>]
-    [<ProjectContextInlineAutoData("StructProject.xml", ProjectLanguage.CSharp, "partial", "PartialStruct")>]
-    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.VisualBasic, "MustInherit", "AbstractClass")>]
-    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.VisualBasic, "NotInheritable", "SealedClass")>]
-    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.VisualBasic, "Partial", "PartialClass")>]
-    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.VisualBasic, "Static", "StaticClass")>]
-    [<ProjectContextInlineAutoData("InterfaceProject.xml", ProjectLanguage.VisualBasic, "Partial", "IPartialInterface")>]
-    [<ProjectContextInlineAutoData("StructProject.xml", ProjectLanguage.VisualBasic, "Partial", "PartialStruct")>]
-    let ``Process project with types that have a single modifier`` (modifier, name, sut: RoslynAnalyzer, project: Project) =
+    [<ProjectData("ClassProject", ProjectLanguage.CSharp, "abstract", "AbstractClass")>]
+    [<ProjectData("ClassProject", ProjectLanguage.CSharp, "sealed", "SealedClass")>]
+    [<ProjectData("ClassProject", ProjectLanguage.CSharp, "partial", "PartialClass")>]
+    [<ProjectData("ClassProject", ProjectLanguage.CSharp, "static", "StaticClass")>]
+    [<ProjectData("InterfaceProject", ProjectLanguage.CSharp, "partial", "IPartialInterface")>]
+    [<ProjectData("StructProject", ProjectLanguage.CSharp, "partial", "PartialStruct")>]
+    [<ProjectData("ClassProject", ProjectLanguage.VisualBasic, "MustInherit", "AbstractClass")>]
+    [<ProjectData("ClassProject", ProjectLanguage.VisualBasic, "NotInheritable", "SealedClass")>]
+    [<ProjectData("ClassProject", ProjectLanguage.VisualBasic, "Partial", "PartialClass")>]
+    [<ProjectData("ClassProject", ProjectLanguage.VisualBasic, "Static", "StaticClass")>]
+    [<ProjectData("InterfaceProject", ProjectLanguage.VisualBasic, "Partial", "IPartialInterface")>]
+    [<ProjectData("StructProject", ProjectLanguage.VisualBasic, "Partial", "PartialStruct")>]
+    let ``Process project should return modifiers when type has one`` (modifier, name, sut: RoslynAnalyzer, project) =
         let typeDef = 
             (sut :> IProjectAnalyzer)
             |> (fun c -> c.Analyze(project))
@@ -83,11 +85,11 @@
         test <@ Seq.contains modifier typeDef.Modifiers @>
 
     [<Theory>]
-    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.CSharp, "abstract partial", "AbstractPartialClass")>]
-    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.CSharp, "sealed partial", "SealedPartialClass")>]
-    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.VisualBasic, "MustInherit Partial", "AbstractPartialClass")>]
-    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.VisualBasic, "NotInheritable Partial", "SealedPartialClass")>]
-    let ``Process project with types that have multiple modifiers`` (modifier: string, name, sut: RoslynAnalyzer, project: Project) =
+    [<ProjectData("ClassProject", ProjectLanguage.CSharp, "abstract partial", "AbstractPartialClass")>]
+    [<ProjectData("ClassProject", ProjectLanguage.CSharp, "sealed partial", "SealedPartialClass")>]
+    [<ProjectData("ClassProject", ProjectLanguage.VisualBasic, "MustInherit Partial", "AbstractPartialClass")>]
+    [<ProjectData("ClassProject", ProjectLanguage.VisualBasic, "NotInheritable Partial", "SealedPartialClass")>]
+    let ``Process project should return all modifiers when type has multiple`` (modifier: string, name, sut: RoslynAnalyzer, project) =
         let expectedModifiers = modifier.Split [|' '|]
 
         let typeDef = 

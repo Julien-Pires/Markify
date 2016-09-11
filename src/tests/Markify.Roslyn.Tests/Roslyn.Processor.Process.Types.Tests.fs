@@ -1,4 +1,6 @@
-﻿module Roslyn_Processor_Process_Types_Tests
+﻿namespace Markify.Roslyn.Tests
+
+module Roslyn_Processor_Process_Types_Tests =
     open Markify.Roslyn
     open Markify.Models.IDE
     open Markify.Models.Definitions
@@ -15,38 +17,38 @@
         | _ -> Some name
 
     [<Theory>]
-    [<ProjectContextInlineAutoData("EmptySourceProject.xml", ProjectLanguage.CSharp, 0, StructureKind.Class)>]
-    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.CSharp, 24, StructureKind.Class)>]
-    [<ProjectContextInlineAutoData("InterfaceProject.xml", ProjectLanguage.CSharp, 15, StructureKind.Interface)>]
-    [<ProjectContextInlineAutoData("StructProject.xml", ProjectLanguage.CSharp, 13, StructureKind.Struct)>]
-    [<ProjectContextInlineAutoData("EnumProject.xml", ProjectLanguage.CSharp, 10, StructureKind.Enum)>]
-    [<ProjectContextInlineAutoData("DelegateProject.xml", ProjectLanguage.CSharp, 8, StructureKind.Delegate)>]
-    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.VisualBasic, 24, StructureKind.Class)>]
-    [<ProjectContextInlineAutoData("InterfaceProject.xml", ProjectLanguage.VisualBasic, 15, StructureKind.Interface)>]
-    [<ProjectContextInlineAutoData("StructProject.xml", ProjectLanguage.VisualBasic, 13, StructureKind.Struct)>]
-    [<ProjectContextInlineAutoData("EnumProject.xml", ProjectLanguage.VisualBasic, 10, StructureKind.Enum)>]
-    [<ProjectContextInlineAutoData("DelegateProject.xml", ProjectLanguage.VisualBasic, 8, StructureKind.Delegate)>]
-    let ``Process projects with types`` (expected, kind, sut : RoslynAnalyzer, project : Project) = 
-        let library = (sut :> IProjectAnalyzer).Analyze project
+    [<ProjectData("EmptySourceProject", ProjectLanguage.CSharp, StructureKind.Class)>]
+    [<ProjectData("ClassProject", ProjectLanguage.CSharp, StructureKind.Class)>]
+    [<ProjectData("InterfaceProject", ProjectLanguage.CSharp, StructureKind.Interface)>]
+    [<ProjectData("StructProject", ProjectLanguage.CSharp, StructureKind.Struct)>]
+    [<ProjectData("EnumProject", ProjectLanguage.CSharp, StructureKind.Enum)>]
+    [<ProjectData("DelegateProject", ProjectLanguage.CSharp, StructureKind.Delegate)>]
+    [<ProjectData("ClassProject", ProjectLanguage.VisualBasic, StructureKind.Class)>]
+    [<ProjectData("InterfaceProject", ProjectLanguage.VisualBasic, StructureKind.Interface)>]
+    [<ProjectData("StructProject", ProjectLanguage.VisualBasic, StructureKind.Struct)>]
+    [<ProjectData("EnumProject", ProjectLanguage.VisualBasic, StructureKind.Enum)>]
+    [<ProjectData("DelegateProject", ProjectLanguage.VisualBasic, StructureKind.Delegate)>]
+    let ``Process projects should return expected types count`` (kind, sut : RoslynAnalyzer, info : ProjectInfo) = 
+        let library = (sut :> IProjectAnalyzer).Analyze info.Project
         let typesCount =
             library.Types
             |> Seq.filter (fun c -> c.Kind = kind)
             |> Seq.length
 
-        test <@ typesCount = expected @>
+        test <@ typesCount = info.Count @>
 
     [<Theory>]
-    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.CSharp, "ParentClass", "", "")>]
-    [<ProjectContextInlineAutoData("InterfaceProject.xml", ProjectLanguage.CSharp, "IParentInterface", "", "")>]
-    [<ProjectContextInlineAutoData("StructProject.xml", ProjectLanguage.CSharp, "NestedStruct", "ParentStruct", "")>]
-    [<ProjectContextInlineAutoData("EnumProject.xml", ProjectLanguage.CSharp, "InNamespaceEnum", "", "FooSpace")>]
-    [<ProjectContextInlineAutoData("DelegateProject.xml", ProjectLanguage.CSharp, "SingleDelegate", "", "")>]
-    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.VisualBasic, "InNamespaceClass", "", "FooSpace")>]
-    [<ProjectContextInlineAutoData("InterfaceProject.xml", ProjectLanguage.VisualBasic, "INestedInterface", "IParentInterface", "")>]
-    [<ProjectContextInlineAutoData("StructProject.xml", ProjectLanguage.VisualBasic, "SingleStruct", "", "")>]
-    [<ProjectContextInlineAutoData("EnumProject.xml", ProjectLanguage.VisualBasic, "SingleEnum", "", "")>]
-    [<ProjectContextInlineAutoData("DelegateProject.xml", ProjectLanguage.VisualBasic, "NestedDelegate", "ParentClass", "")>]
-    let ``Process project without duplicate types`` (name, parents, nspace, sut: RoslynAnalyzer, project: Project) =
+    [<ProjectData("ClassProject", ProjectLanguage.CSharp, "ParentClass", "", "")>]
+    [<ProjectData("InterfaceProject", ProjectLanguage.CSharp, "IParentInterface", "", "")>]
+    [<ProjectData("StructProject", ProjectLanguage.CSharp, "NestedStruct", "ParentStruct", "")>]
+    [<ProjectData("EnumProject", ProjectLanguage.CSharp, "InNamespaceEnum", "", "FooSpace")>]
+    [<ProjectData("DelegateProject", ProjectLanguage.CSharp, "SingleDelegate", "", "")>]
+    [<ProjectData("ClassProject", ProjectLanguage.VisualBasic, "InNamespaceClass", "", "FooSpace")>]
+    [<ProjectData("InterfaceProject", ProjectLanguage.VisualBasic, "INestedInterface", "IParentInterface", "")>]
+    [<ProjectData("StructProject", ProjectLanguage.VisualBasic, "SingleStruct", "", "")>]
+    [<ProjectData("EnumProject", ProjectLanguage.VisualBasic, "SingleEnum", "", "")>]
+    [<ProjectData("DelegateProject", ProjectLanguage.VisualBasic, "NestedDelegate", "ParentClass", "")>]
+    let ``Process project should return no duplicate types`` (name, parents, nspace, sut: RoslynAnalyzer, project) =
         let fullname = {
             Name = name
             Parents = getName parents
@@ -61,23 +63,23 @@
         test <@ Seq.length typeDef = 1 @>
 
     [<Theory>]
-    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.CSharp, "ParentClass")>]
-    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.CSharp, "InNamespaceClass")>]
-    [<ProjectContextInlineAutoData("InterfaceProject.xml", ProjectLanguage.CSharp, "IInNamespaceInterface")>]
-    [<ProjectContextInlineAutoData("StructProject.xml", ProjectLanguage.CSharp, "NestedStruct")>]
-    [<ProjectContextInlineAutoData("EnumProject.xml", ProjectLanguage.CSharp, "NestedEnum")>]
-    [<ProjectContextInlineAutoData("DelegateProject.xml", ProjectLanguage.CSharp, "InNamespaceDelegate")>]
-    [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.CSharp, "GenericClass`2")>]
-    [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.CSharp, "Do`1")>]
-    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.VisualBasic, "ParentClass")>]
-    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.VisualBasic, "InNamespaceClass")>]
-    [<ProjectContextInlineAutoData("InterfaceProject.xml", ProjectLanguage.VisualBasic, "IInNamespaceInterface")>]
-    [<ProjectContextInlineAutoData("StructProject.xml", ProjectLanguage.VisualBasic, "NestedStruct")>]
-    [<ProjectContextInlineAutoData("EnumProject.xml", ProjectLanguage.VisualBasic, "NestedEnum")>]
-    [<ProjectContextInlineAutoData("DelegateProject.xml", ProjectLanguage.VisualBasic, "InNamespaceDelegate")>]
-    [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.VisualBasic, "GenericClass`2")>]
-    [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.VisualBasic, "Do`1")>]
-    let ``Process project with types with correct name`` (name, sut: RoslynAnalyzer, project: Project) =
+    [<ProjectData("ClassProject", ProjectLanguage.CSharp, "ParentClass")>]
+    [<ProjectData("ClassProject", ProjectLanguage.CSharp, "InNamespaceClass")>]
+    [<ProjectData("InterfaceProject", ProjectLanguage.CSharp, "IInNamespaceInterface")>]
+    [<ProjectData("StructProject", ProjectLanguage.CSharp, "NestedStruct")>]
+    [<ProjectData("EnumProject", ProjectLanguage.CSharp, "NestedEnum")>]
+    [<ProjectData("DelegateProject", ProjectLanguage.CSharp, "InNamespaceDelegate")>]
+    [<ProjectData("GenericsProject", ProjectLanguage.CSharp, "GenericClass`2")>]
+    [<ProjectData("GenericsProject", ProjectLanguage.CSharp, "Do`1")>]
+    [<ProjectData("ClassProject", ProjectLanguage.VisualBasic, "ParentClass")>]
+    [<ProjectData("ClassProject", ProjectLanguage.VisualBasic, "InNamespaceClass")>]
+    [<ProjectData("InterfaceProject", ProjectLanguage.VisualBasic, "IInNamespaceInterface")>]
+    [<ProjectData("StructProject", ProjectLanguage.VisualBasic, "NestedStruct")>]
+    [<ProjectData("EnumProject", ProjectLanguage.VisualBasic, "NestedEnum")>]
+    [<ProjectData("DelegateProject", ProjectLanguage.VisualBasic, "InNamespaceDelegate")>]
+    [<ProjectData("GenericsProject", ProjectLanguage.VisualBasic, "GenericClass`2")>]
+    [<ProjectData("GenericsProject", ProjectLanguage.VisualBasic, "Do`1")>]
+    let ``Process project should return type with correct name`` (name, sut: RoslynAnalyzer, project) =
         let typeDef = 
             (sut :> IProjectAnalyzer)
             |> (fun c -> c.Analyze project)
@@ -87,27 +89,27 @@
         test <@ typeDef.IsSome @>
     
     [<Theory>]
-    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.CSharp, "SingleClass", "", "")>]
-    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.CSharp, "NestedClass", "ParentClass", "")>]
-    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.CSharp, "InNamespaceClass", "", "FooSpace")>]
-    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.CSharp, "ChildClass", "AnotherParentClass", "FooSpace.InnerSpace")>]
-    [<ProjectContextInlineAutoData("InterfaceProject.xml", ProjectLanguage.CSharp, "IInNamespaceInterface", "", "FooSpace")>]
-    [<ProjectContextInlineAutoData("StructProject.xml", ProjectLanguage.CSharp, "InNamespaceStruct", "", "FooSpace")>]
-    [<ProjectContextInlineAutoData("EnumProject.xml", ProjectLanguage.CSharp, "InNamespaceEnum", "", "FooSpace")>]
-    [<ProjectContextInlineAutoData("DelegateProject.xml", ProjectLanguage.CSharp, "InNamespaceDelegate", "", "FooSpace")>]
-    [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.CSharp, "GenericClass`2", "", "")>]
-    [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.CSharp, "Do`1", "", "")>]
-    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.VisualBasic, "SingleClass", "", "")>]
-    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.VisualBasic, "NestedClass", "ParentClass", "")>]
-    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.VisualBasic, "InNamespaceClass", "", "FooSpace")>]
-    [<ProjectContextInlineAutoData("ClassProject.xml", ProjectLanguage.VisualBasic, "ChildClass", "AnotherParentClass", "FooSpace.InnerSpace")>]
-    [<ProjectContextInlineAutoData("InterfaceProject.xml", ProjectLanguage.VisualBasic, "IInNamespaceInterface", "", "FooSpace")>]
-    [<ProjectContextInlineAutoData("StructProject.xml", ProjectLanguage.VisualBasic, "InNamespaceStruct", "", "FooSpace")>]
-    [<ProjectContextInlineAutoData("EnumProject.xml", ProjectLanguage.VisualBasic, "InNamespaceEnum", "", "FooSpace")>]
-    [<ProjectContextInlineAutoData("DelegateProject.xml", ProjectLanguage.VisualBasic, "InNamespaceDelegate", "", "FooSpace")>]
-    [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.VisualBasic, "GenericClass`2", "", "")>]
-    [<ProjectContextInlineAutoData("GenericsProject.xml", ProjectLanguage.VisualBasic, "Do`1", "", "")>]
-    let ``Process project with types with correct fullname`` (name, parents, nspace, sut: RoslynAnalyzer, project: Project) =
+    [<ProjectData("ClassProject", ProjectLanguage.CSharp, "SingleClass", "", "")>]
+    [<ProjectData("ClassProject", ProjectLanguage.CSharp, "NestedClass", "ParentClass", "")>]
+    [<ProjectData("ClassProject", ProjectLanguage.CSharp, "InNamespaceClass", "", "FooSpace")>]
+    [<ProjectData("ClassProject", ProjectLanguage.CSharp, "ChildClass", "AnotherParentClass", "FooSpace.InnerSpace")>]
+    [<ProjectData("InterfaceProject", ProjectLanguage.CSharp, "IInNamespaceInterface", "", "FooSpace")>]
+    [<ProjectData("StructProject", ProjectLanguage.CSharp, "InNamespaceStruct", "", "FooSpace")>]
+    [<ProjectData("EnumProject", ProjectLanguage.CSharp, "InNamespaceEnum", "", "FooSpace")>]
+    [<ProjectData("DelegateProject", ProjectLanguage.CSharp, "InNamespaceDelegate", "", "FooSpace")>]
+    [<ProjectData("GenericsProject", ProjectLanguage.CSharp, "GenericClass`2", "", "")>]
+    [<ProjectData("GenericsProject", ProjectLanguage.CSharp, "Do`1", "", "")>]
+    [<ProjectData("ClassProject", ProjectLanguage.VisualBasic, "SingleClass", "", "")>]
+    [<ProjectData("ClassProject", ProjectLanguage.VisualBasic, "NestedClass", "ParentClass", "")>]
+    [<ProjectData("ClassProject", ProjectLanguage.VisualBasic, "InNamespaceClass", "", "FooSpace")>]
+    [<ProjectData("ClassProject", ProjectLanguage.VisualBasic, "ChildClass", "AnotherParentClass", "FooSpace.InnerSpace")>]
+    [<ProjectData("InterfaceProject", ProjectLanguage.VisualBasic, "IInNamespaceInterface", "", "FooSpace")>]
+    [<ProjectData("StructProject", ProjectLanguage.VisualBasic, "InNamespaceStruct", "", "FooSpace")>]
+    [<ProjectData("EnumProject", ProjectLanguage.VisualBasic, "InNamespaceEnum", "", "FooSpace")>]
+    [<ProjectData("DelegateProject", ProjectLanguage.VisualBasic, "InNamespaceDelegate", "", "FooSpace")>]
+    [<ProjectData("GenericsProject", ProjectLanguage.VisualBasic, "GenericClass`2", "", "")>]
+    [<ProjectData("GenericsProject", ProjectLanguage.VisualBasic, "Do`1", "", "")>]
+    let ``Process project should return types with correct fullname`` (name, parents, nspace, sut: RoslynAnalyzer, project) =
         let fullname = {
             Name = name
             Parents = getName parents
@@ -120,3 +122,12 @@
             |> Seq.tryFind (fun c -> c.Identity = fullname)
 
         test <@ typeDef.IsSome @>
+
+    [<Theory>]
+    [<ProjectData("InvalidFileProject", ProjectLanguage.CSharp, 0)>]
+    [<ProjectData("InvalidFileProject", ProjectLanguage.VisualBasic, 0)>]
+    let ``Process project should return nothing when file does not exists`` (expected, sut : RoslynAnalyzer, project) =
+        let library = (sut :> IProjectAnalyzer).Analyze project
+        let actual = Seq.length library.Types
+
+        test <@ actual = expected @>

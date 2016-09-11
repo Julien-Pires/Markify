@@ -1,19 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props" Condition="Exists('..\..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{9D9BFCFF-7408-4518-91C0-9BD523D33B92}</ProjectGuid>
+    <ProjectGuid>{BE45AE0E-0D29-4782-B06D-C733EBBEF95E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Markify.Rendering.Tests</RootNamespace>
     <AssemblyName>Markify.Rendering.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -37,21 +35,24 @@
       <HintPath>..\..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.VisualStudio.TextTemplating.14.0, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="Moq, Version=4.5.9.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Moq.4.5.9\lib\net45\Moq.dll</HintPath>
+    <Reference Include="Moq, Version=4.5.21.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Moq.4.5.21\lib\net45\Moq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NFluent, Version=1.3.1.0, Culture=neutral, PublicKeyToken=18828b37b84b1437, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NFluent.1.3.1.0\lib\net40\NFluent.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Optional, Version=3.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Optional.3.1.0\lib\net461\Optional.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Ploeh.AutoFixture, Version=3.47.8.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\AutoFixture.3.47.8\lib\net40\Ploeh.AutoFixture.dll</HintPath>
+    <Reference Include="Ploeh.AutoFixture, Version=3.50.2.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\AutoFixture.3.50.2\lib\net40\Ploeh.AutoFixture.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Ploeh.AutoFixture.Xunit2, Version=3.47.8.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\AutoFixture.Xunit2.3.47.8\lib\net45\Ploeh.AutoFixture.Xunit2.dll</HintPath>
+    <Reference Include="Ploeh.AutoFixture.Xunit2, Version=3.50.2.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\AutoFixture.Xunit2.3.50.2\lib\net45\Ploeh.AutoFixture.Xunit2.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -80,9 +81,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attributes\T4Customization.cs" />
-    <Compile Include="Attributes\T4InlineAutoDataAttribute.cs" />
-    <Compile Include="ITemplatesProvider.Tests.cs" />
+    <Compile Include="Attributes\FakePageWriter.cs" />
+    <Compile Include="Attributes\PageRendererCustomization.cs" />
+    <Compile Include="Attributes\PageRendererDataAttribute.cs" />
+    <Compile Include="PageRenderer\PageRenderer.Render.Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -90,9 +92,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Markify.Rendering.T4\Markify.Rendering.T4.csproj">
-      <Project>{bad50507-b3a7-4b18-a870-a7af22d5ebd3}</Project>
-      <Name>Markify.Rendering.T4</Name>
+    <ProjectReference Include="..\..\src\Markify.Core\Markify.Core.csproj">
+      <Project>{8833BF6E-806F-483D-BA70-FF92B09E625D}</Project>
+      <Name>Markify.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\Markify.Models\Markify.Models.fsproj">
+      <Project>{2a8dfdc1-8752-4784-b962-6d0b9ad1541a}</Project>
+      <Name>Markify.Models</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\src\Markify.Rendering\Markify.Rendering.csproj">
       <Project>{6B9CE3E8-68DA-4EB9-8362-58A289B51E76}</Project>
@@ -103,12 +109,6 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props'))" />
-  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
