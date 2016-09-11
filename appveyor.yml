@@ -1,6 +1,5 @@
 version: 1.0.{build}
 configuration:
-- Debug
 - Release
 before_build:
 - cmd: nuget restore src\Markify.sln -verbosity detailed
