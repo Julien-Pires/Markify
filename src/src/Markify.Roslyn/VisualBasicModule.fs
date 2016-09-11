@@ -95,6 +95,7 @@ type VisualBasicHelper() =
         parents
         |> Seq.map map
         |> Seq.concat
+        |> Seq.toList
 
     override this.ReadSource source =
         VisualBasicSyntaxTree.ParseText source
@@ -138,9 +139,8 @@ type VisualBasicHelper() =
         | ContainerTypeNode x ->
             let interfaces = extractParents x.Implements (fun c -> c.Types)
             let types = extractParents x.Inherits (fun c -> c.Types)
-            Seq.append interfaces types
-            |> Seq.map (fun c -> c.ToString())
-            |> Seq.toList
+            List.append interfaces types
+            |> List.map (fun c -> c.ToString())
         | EnumNode x ->
             match x.EnumStatement.UnderlyingType with
             | null -> []
