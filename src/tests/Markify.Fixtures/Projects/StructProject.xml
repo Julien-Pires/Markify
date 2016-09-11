@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Project>
+  <Count>13</Count>
   <Files>
-    <!-- Struct (Total :13) -->
     <Uri>Source/Struct/AccessModifier</Uri>
     <Uri>Source/Struct/AdditionnalModifier</Uri>
     <Uri>Source/Struct/InheritedStruct</Uri>

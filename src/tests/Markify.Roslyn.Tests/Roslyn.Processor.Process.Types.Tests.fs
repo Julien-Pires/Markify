@@ -1,4 +1,6 @@
-﻿module Roslyn_Processor_Process_Types_Tests
+﻿namespace Markify.Roslyn.Tests
+
+module Roslyn_Processor_Process_Types_Tests =
     open Markify.Roslyn
     open Markify.Models.IDE
     open Markify.Models.Definitions
@@ -15,25 +17,25 @@
         | _ -> Some name
 
     [<Theory>]
-    [<ProjectData("EmptySourceProject", ProjectLanguage.CSharp, 0, StructureKind.Class)>]
-    [<ProjectData("ClassProject", ProjectLanguage.CSharp, 24, StructureKind.Class)>]
-    [<ProjectData("InterfaceProject", ProjectLanguage.CSharp, 15, StructureKind.Interface)>]
-    [<ProjectData("StructProject", ProjectLanguage.CSharp, 13, StructureKind.Struct)>]
-    [<ProjectData("EnumProject", ProjectLanguage.CSharp, 10, StructureKind.Enum)>]
-    [<ProjectData("DelegateProject", ProjectLanguage.CSharp, 8, StructureKind.Delegate)>]
-    [<ProjectData("ClassProject", ProjectLanguage.VisualBasic, 24, StructureKind.Class)>]
-    [<ProjectData("InterfaceProject", ProjectLanguage.VisualBasic, 15, StructureKind.Interface)>]
-    [<ProjectData("StructProject", ProjectLanguage.VisualBasic, 13, StructureKind.Struct)>]
-    [<ProjectData("EnumProject", ProjectLanguage.VisualBasic, 10, StructureKind.Enum)>]
-    [<ProjectData("DelegateProject", ProjectLanguage.VisualBasic, 8, StructureKind.Delegate)>]
-    let ``Process projects should return expected types count`` (expected, kind, sut : RoslynAnalyzer, project) = 
-        let library = (sut :> IProjectAnalyzer).Analyze project
+    [<ProjectData("EmptySourceProject", ProjectLanguage.CSharp, StructureKind.Class)>]
+    [<ProjectData("ClassProject", ProjectLanguage.CSharp, StructureKind.Class)>]
+    [<ProjectData("InterfaceProject", ProjectLanguage.CSharp, StructureKind.Interface)>]
+    [<ProjectData("StructProject", ProjectLanguage.CSharp, StructureKind.Struct)>]
+    [<ProjectData("EnumProject", ProjectLanguage.CSharp, StructureKind.Enum)>]
+    [<ProjectData("DelegateProject", ProjectLanguage.CSharp, StructureKind.Delegate)>]
+    [<ProjectData("ClassProject", ProjectLanguage.VisualBasic, StructureKind.Class)>]
+    [<ProjectData("InterfaceProject", ProjectLanguage.VisualBasic, StructureKind.Interface)>]
+    [<ProjectData("StructProject", ProjectLanguage.VisualBasic, StructureKind.Struct)>]
+    [<ProjectData("EnumProject", ProjectLanguage.VisualBasic, StructureKind.Enum)>]
+    [<ProjectData("DelegateProject", ProjectLanguage.VisualBasic, StructureKind.Delegate)>]
+    let ``Process projects should return expected types count`` (kind, sut : RoslynAnalyzer, info : ProjectInfo) = 
+        let library = (sut :> IProjectAnalyzer).Analyze info.Project
         let typesCount =
             library.Types
             |> Seq.filter (fun c -> c.Kind = kind)
             |> Seq.length
 
-        test <@ typesCount = expected @>
+        test <@ typesCount = info.Count @>
 
     [<Theory>]
     [<ProjectData("ClassProject", ProjectLanguage.CSharp, "ParentClass", "", "")>]

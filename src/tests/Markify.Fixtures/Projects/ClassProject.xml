@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Project>
+  <Count>24</Count>
   <Files>
-    <!-- Class (Total : 22) -->
     <Uri>Source/Class/AccessModifier</Uri>
     <Uri>Source/Class/AdditionnalModifier</Uri>
     <Uri>Source/Class/ClassSamples</Uri>
