@@ -76,6 +76,7 @@ type CSharpHelper() =
         modifiers
         |> Seq.filter filter
         |> Seq.map (fun c -> c.Text)
+        |> Seq.toList
 
     let getGenericParameters node =
         let parametersList =
@@ -130,11 +131,12 @@ type CSharpHelper() =
         match node with
         | ObjectNode x ->
             match x.BaseList with
-            | null -> Seq.empty
+            | null -> []
             | w ->
                 w.Types
                 |> Seq.map (fun c -> c.Type.ToString())
-        | _ -> Seq.empty
+                |> Seq.toList
+        | _ -> []
 
     override this.GetGenericConstraints node =
         let constraintsList =
@@ -147,10 +149,12 @@ type CSharpHelper() =
             let typesConstraints =
                 c.Constraints
                 |> Seq.map (fun d -> d.ToString())
+                |> Seq.toList
             let constraints = {
                 TypeConstraint.Name = c.Name.ToString()
                 Constraints = typesConstraints}
             constraints)
+        |> Seq.toList
 
     override this.GetGenericParameters node =
         getGenericParameters node
@@ -164,6 +168,7 @@ type CSharpHelper() =
                 Name = name
                 Modifier = modifier}
             parameter)
+        |> Seq.toList
 
     override this.IsTypeNode node =
         (|TypeNode|_|) node

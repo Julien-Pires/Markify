@@ -11,8 +11,8 @@ open Microsoft.CodeAnalysis
 type Project = Markify.Models.IDE.Project
 
 type SourceContent = {
-    Namespaces : NamespaceDefinition seq
-    Types : TypeDefinition seq
+    Namespaces : NamespaceDefinition list
+    Types : TypeDefinition list
 }
 
 module SourceAnalyzer =
@@ -32,36 +32,30 @@ module SourceAnalyzer =
             BaseTypes = typeNode.Bases }
 
     let searchDefinitions nodes =
-        let content = {
-            Namespaces = Seq.empty
-            Types = Seq.empty }
-        nodes
-        |> Seq.fold (fun (acc : SourceContent) c ->
+        ({ Namespaces = []; Types = [] }, nodes)
+        ||> List.fold (fun acc c ->
             match c with
             | Type x ->
                 let typeDefinition = createTypeDefinition (c, x)
-                { acc with
-                    Types =  seq { yield! acc.Types; yield typeDefinition} }
+                { acc with Types =  typeDefinition::acc.Types }
             | Namespace x ->
                 let namespaceDefinition = createNamespaceDefinition x
-                { acc with 
-                    Namespaces = seq { yield! acc.Namespaces; yield namespaceDefinition } }
-            | _ -> acc) content
+                { acc with Namespaces = namespaceDefinition::acc.Namespaces }
+            | _ -> acc)
 
     let inspect (project : Project) (sourceConverter : SourceConverter) =
-        let library = {
-            Project = project.Name
-            Namespaces = Seq.empty
-            Types = Seq.empty }
-        project.Files
-        |> Seq.map (fun c ->
-            let nodes = sourceConverter.Convert c.AbsolutePath
-            searchDefinitions nodes )
-        |> Seq.fold (fun (acc : LibraryDefinition) c ->
-            { acc with
-                Namespaces = seq { yield! acc.Namespaces; yield! c.Namespaces}
-                Types = seq { yield! acc.Types; yield! c.Types} }) library
-        |> fun c -> 
-            { c with
-                Namespaces = c.Namespaces |> Seq.distinctBy (fun c -> c.Name) 
-                Types = c.Types |> Seq.distinctBy (fun c -> c.Identity) }
+        let definitions =
+            ({ Namespaces = []; Types = [] }, project.Files)
+            ||> Seq.fold (fun acc c ->
+                let nodes = sourceConverter.Convert c.AbsolutePath
+                let content = searchDefinitions nodes
+                { acc with
+                    Namespaces = List.append acc.Namespaces content.Namespaces
+                    Types = List.append acc.Types content.Types })
+            |> fun c ->
+                { c with
+                    Namespaces = c.Namespaces |> List.distinctBy (fun c -> c.Name) 
+                    Types = c.Types |> List.distinctBy (fun c -> c.Identity) }
+        {   Project = project.Name
+            Namespaces = definitions.Namespaces
+            Types = definitions.Types }

@@ -76,6 +76,7 @@ type VisualBasicHelper() =
         modifiers
         |> Seq.filter filter
         |> Seq.map (fun c -> c.Text)
+        |> Seq.toList
 
     let getGenericParameters node =
         let parametersList =
@@ -94,6 +95,7 @@ type VisualBasicHelper() =
         parents
         |> Seq.map map
         |> Seq.concat
+        |> Seq.toList
 
     override this.ReadSource source =
         VisualBasicSyntaxTree.ParseText source
@@ -137,13 +139,13 @@ type VisualBasicHelper() =
         | ContainerTypeNode x ->
             let interfaces = extractParents x.Implements (fun c -> c.Types)
             let types = extractParents x.Inherits (fun c -> c.Types)
-            Seq.append interfaces types
-            |> Seq.map (fun c -> c.ToString())
+            List.append interfaces types
+            |> List.map (fun c -> c.ToString())
         | EnumNode x ->
             match x.EnumStatement.UnderlyingType with
-            | null -> Seq.empty
-            | w -> seq { yield w.Type().ToString() }
-        | _ -> Seq.empty
+            | null -> []
+            | w -> [w.Type().ToString()]
+        | _ -> []
 
     override this.GetGenericConstraints node =
         getGenericParameters node
@@ -157,12 +159,14 @@ type VisualBasicHelper() =
                 TypeConstraint.Name = c.Identifier.Text
                 Constraints =
                     paramConstraint
-                    |> Seq.map (fun c -> c.ToString()) }
+                    |> Seq.map (fun c -> c.ToString())
+                    |> Seq.toList }
             typeConstraint)
+        |> Seq.toList
 
     override this.GetGenericParameters node =
         getGenericParameters node
-        |> Seq.map (fun c -> 
+        |> Seq.map (fun c ->
             let modifier =
                 match c.VarianceKeyword.Value with
                 | null -> ""
@@ -171,6 +175,7 @@ type VisualBasicHelper() =
                 Name = c.Identifier.Text
                 Modifier = modifier}
             parameter)
+        |> Seq.toList
 
     override this.IsTypeNode node =
         match node with

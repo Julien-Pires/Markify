@@ -8,11 +8,11 @@ type NodeHelper() =
     abstract member ReadSource : string -> SyntaxTree
     abstract member GetTypeName : SyntaxNode -> NodeName
     abstract member GetTypeKind : SyntaxNode -> StructureKind
-    abstract member GetModifiers : SyntaxNode -> Modifier seq
-    abstract member GetAccessModifiers : SyntaxNode -> Modifier seq
-    abstract member GetParents : SyntaxNode -> BaseType seq
-    abstract member GetGenericConstraints : SyntaxNode -> TypeConstraint seq
-    abstract member GetGenericParameters : SyntaxNode -> GenericParameter seq
+    abstract member GetModifiers : SyntaxNode -> Modifier list
+    abstract member GetAccessModifiers : SyntaxNode -> Modifier list
+    abstract member GetParents : SyntaxNode -> BaseType list
+    abstract member GetGenericConstraints : SyntaxNode -> TypeConstraint list
+    abstract member GetGenericParameters : SyntaxNode -> GenericParameter list
     abstract member GetNamespaceName : SyntaxNode -> NodeName
     abstract member IsTypeNode : SyntaxNode -> bool option
     abstract member IsNamespaceNode : SyntaxNode -> bool option
@@ -67,3 +67,4 @@ type NodeFactory(nodeHelper : NodeHelper) =
             | TypeNode _ | NamespaceNode _ -> true
             | _ -> false )
         |> Seq.map buildNode
+        |> Seq.toList
