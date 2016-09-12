@@ -67,4 +67,6 @@ type ProjectContextCustomization (projectFile, language) =
             fixture.Inject(project)
             fixture.Inject(projectInfo)
             fixture.Inject(
-                SourceConverter([LanguageConverter(CSharpHelper(), ["cs"]); LanguageConverter(VisualBasicHelper(), ["vb"])]))
+                SourceConverter(
+                    [(CSharpHelper() :> NodeHelper, ["cs"]);
+                    (VisualBasicHelper() :> NodeHelper, ["vb"])]))
