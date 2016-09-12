@@ -131,3 +131,11 @@ module Roslyn_Processor_Process_Types_Tests =
         let actual = Seq.length library.Types
 
         test <@ actual = expected @>
+
+    [<Theory>]
+    [<ProjectData("ClassProject", ProjectLanguage.Unsupported, 0)>]
+    let ```Process project should return nothing when file has unknown extension`` (expected, sut : RoslynAnalyzer, project) =
+        let library = (sut :> IProjectAnalyzer).Analyze project
+        let actual = Seq.length library.Types
+
+        test <@ actual = expected @>
