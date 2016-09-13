@@ -89,20 +89,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attributes\SolutionExplorerCustomization.cs" />
-    <Compile Include="Attributes\SolutionExplorerInlineAutoDataAttribute.cs" />
+    <Compile Include="Attributes\ProjectFilterCustomization.cs" />
     <Compile Include="Attributes\VisualStudioEnvironmentDataAttribute.cs" />
     <Compile Include="Attributes\VisualStudioEnvironmentCustomization.cs" />
-    <Compile Include="IDE\SolutionExplorer\SolutionExplorer.CurrentProject.Tests.cs" />
-    <Compile Include="IDE\SolutionExplorer\SolutionExplorer.CurrentSolution.Tests.cs" />
-    <Compile Include="IDE\SolutionExplorer\SolutionExplorer.GetProject.Tests.cs" />
-    <Compile Include="IDE\VisualStudioEnvironment\VisualStudioEnvironment.CurrentProject.Tests.cs" />
-    <Compile Include="IDE\VisualStudioEnvironment\VisualStudioEnvironment.GetProjectFiles.Tests.cs" />
-    <Compile Include="IDE\VisualStudioEnvironment\VisualStudioEnvironment.GetProjectLanguage.Tests.cs" />
-    <Compile Include="IDE\VisualStudioEnvironment\VisualStudioEnvironment.GetProjectPath.Tests.cs" />
-    <Compile Include="IDE\VisualStudioEnvironment\VisualStudioEnvironment.GetProjects.Tests.cs" />
-    <Compile Include="IDE\VisualStudioEnvironment\VisualStudioEnvironment.GetSolutionPath.Tests.cs" />
-    <Compile Include="IDE\VisualStudioEnvironment\VisualStudioEnvironment.Tests.cs" />
+    <Compile Include="Attributes\VisualStudioMockHelper.cs" />
+    <Compile Include="IDE\VisualStudioEnvironment\VisualStudioEnvironment.CurrentProject.cs" />
+    <Compile Include="IDE\VisualStudioEnvironment\VisualStudioEnvironment.CurrentSolution.Tests.cs" />
+    <Compile Include="IDE\VisualStudioEnvironment\VisualStudioEnvironment.CurrentSolution.Projects.Files.Tests.cs" />
+    <Compile Include="IDE\VisualStudioEnvironment\VisualStudioEnvironment.CurrentSolution.Projects.Tests.cs" />
+    <Compile Include="IDE\VisualStudioEnvironment\VisualStudioEnvironment.CurrentSolution.Path.Tests.cs" />
+    <Compile Include="IDE\VisualStudioEnvironment\VisualStudioEnvironment.CurrentSolution.Name.Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-
+﻿using System;
+using System.Collections.Generic;
 using Markify.Models.IDE;
 
 namespace Markify.Services
@@ -8,7 +8,7 @@ namespace Markify.Services
     {
         #region Methods
 
-        bool Generate(IEnumerable<Project> projects, Solution solution);
+        bool Generate(IEnumerable<Project> projects, Uri root);
 
         #endregion
     }

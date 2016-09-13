@@ -1,34 +1,25 @@
-﻿using Markify.Core.IDE;
+﻿using System.Collections.Generic;
+using Markify.Core.IDE;
 
 using Markify.Models.IDE;
 
 namespace Markify.Services.Settings
 {
-    internal sealed class SolutionExplorerFilterProvider : ISolutionExplorerFilterProvider
+    internal sealed class SolutionExplorerFilterProvider : IProjectFilterProvider
     {
-        #region Fields
-
-        private SolutionExplorerFilter _filters;
-
-        #endregion
-
         #region Properties
 
-        public SolutionExplorerFilter Filters
+        public ISet<string> AllowedExtensions { get; } = new HashSet<string>(new[]
         {
-            get
-            {
-                if (_filters != null)
-                    return _filters;
+            "cs",
+            "vb"
+        });
 
-                _filters = new SolutionExplorerFilter(
-                    new[] { ProjectLanguage.CSharp, ProjectLanguage.VisualBasic }, 
-                    new[] { ".cs", ".vb" }
-                );
-
-                return _filters;
-            }
-        }
+        public ISet<ProjectLanguage> SupportedLanguages { get; } = new HashSet<ProjectLanguage>(new[]
+        {
+            ProjectLanguage.CSharp,
+            ProjectLanguage.VisualBasic
+        });
 
         #endregion
     }

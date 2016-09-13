@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Linq;
+using System.Collections.Generic;
+using Markify.Models.IDE;
 using Ploeh.AutoFixture;
 using Ploeh.AutoFixture.Xunit2;
 
@@ -9,28 +12,20 @@ namespace Markify.Core.Tests.Attributes
     {
         #region Constructors
 
-        public VisualStudioEnvironmentDataAttribute(string name, int projectCount, int solutionFolder, params object[] values)
-            : this(new VisualStudioEnvironmentCustomization(name, projectCount, solutionFolder, 0, 0, false, string.Empty), values)
+        public VisualStudioEnvironmentDataAttribute(string solution = "Foo", string folder = null, int project = 0,
+            int solutionFolder = 0, bool hasCurrentProject = false, int files = 0, int fileFolders = 0, string language = null, 
+            string[] extensions = null, string[] allowedExtensions = null, object[] supportedLanguages = null, 
+            object[] values = null)
+            : this(new ICustomization[] {
+                new VisualStudioEnvironmentCustomization(solution, folder, project, solutionFolder, files, fileFolders,
+                    hasCurrentProject, language, extensions),
+                new ProjectFilterCustomization(allowedExtensions, supportedLanguages?.Cast<ProjectLanguage>())
+            }, values ?? new object[0])
         {
         }
 
-        public VisualStudioEnvironmentDataAttribute(string name, int projectCount, int solutionFolder, string language, params object[] values)
-            : this(new VisualStudioEnvironmentCustomization(name, projectCount, solutionFolder, 0, 0, false, language), values)
-        {
-        }
-
-        public VisualStudioEnvironmentDataAttribute(string name, int projectCount, int solutionFolder, bool hasCurrentProject, params object[] values)
-            : this(new VisualStudioEnvironmentCustomization(name, projectCount, solutionFolder, 0, 0, hasCurrentProject, string.Empty), values)
-        {
-        }
-
-        public VisualStudioEnvironmentDataAttribute(string name, int projectCount, int solutionFolder, int files, int folders, params object[] values)
-            : this(new VisualStudioEnvironmentCustomization(name, projectCount, solutionFolder, files, folders, false, string.Empty), values)
-        {
-        }
-
-        private VisualStudioEnvironmentDataAttribute(ICustomization customization, params object[] values)
-            : base(new AutoDataAttribute(new Fixture().Customize(customization)), values)
+        private VisualStudioEnvironmentDataAttribute(IEnumerable<ICustomization> customizations, params object[] values)
+            : base(new AutoDataAttribute(new Fixture().Customize(new CompositeCustomization(customizations))), values)
         {
         }
 

@@ -52,7 +52,7 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="DocumentHelper.fs" />
-    <Compile Include="SimpleDocumentationOrganizer.fs" />
+    <Compile Include="BasicDocumentationOrganizer.fs" />
     <Compile Include="DocumentationOrganizerModule.fs" />
     <Content Include="packages.config" />
   </ItemGroup>

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
+﻿using Optional;
 using Markify.Models.IDE;
 
 namespace Markify.Core.IDE
@@ -9,23 +7,9 @@ namespace Markify.Core.IDE
     {
         #region Properties
 
-        string CurrentSolution { get; }
+        Option<Solution> CurrentSolution { get; }
 
-        string CurrentProject { get; }
-
-        #endregion
-
-        #region Methods
-
-        Uri GetSolutionPath(string solution);
-
-        IEnumerable<string> GetProjects(string solution);
-
-        Uri GetProjectPath(string solution, string project);
-
-        IEnumerable<Uri> GetProjectFiles(string solution, string project);
-
-        ProjectLanguage GetProjectLanguage(string solution, string project);
+        Option<Project> CurrentProject { get; }
 
         #endregion
     }

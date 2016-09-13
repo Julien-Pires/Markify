@@ -19,9 +19,8 @@ type Project = {
 
 type SolutionName = string
 type SolutionPath = Uri
-type ProjectList = ProjectName seq
 type Solution = {
     Name : SolutionName
     Path : SolutionPath
-    Projects : ProjectList
+    Projects : Project seq
 }
