@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-
+﻿using System;
+using System.Collections.Generic;
 using Markify.Models.IDE;
 using Markify.Models.Documents;
 
@@ -9,7 +9,7 @@ namespace Markify.Services.Processing
     {
         #region Methods
 
-        TableOfContent Process(IEnumerable<Project> projects, Solution solution);
+        TableOfContent Process(IEnumerable<Project> projects, Uri root);
 
         #endregion
     }

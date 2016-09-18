@@ -21,7 +21,7 @@ namespace Markify.Services
             Bind<IRenderer>().To<Renderer>();
             Bind<IDocumentationGenerator>().To<DocumentationGenerator>();
             Bind<IDocumentSettingsProvider>().To<DocumentSettingsProvider>();
-            Bind<ISolutionExplorerFilterProvider>().To<SolutionExplorerFilterProvider>();
+            Bind<IProjectFilterProvider>().To<SolutionExplorerFilterProvider>();
         }
 
         #endregion

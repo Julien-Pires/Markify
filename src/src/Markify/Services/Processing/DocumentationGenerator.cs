@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-
+﻿using System;
+using System.Collections.Generic;
 using Markify.Models.IDE;
 
 namespace Markify.Services.Processing
@@ -25,12 +25,12 @@ namespace Markify.Services.Processing
 
         #region Generator Methods
 
-        public bool Generate(IEnumerable<Project> projects, Solution solution)
+        public bool Generate(IEnumerable<Project> projects, Uri root)
         {
             if(projects == null)
                 return false;
 
-            var tableOfContent = _projectProcessor.Process(projects, solution);
+            var tableOfContent = _projectProcessor.Process(projects, root);
 
             return _rendererService.Render(tableOfContent);
         }

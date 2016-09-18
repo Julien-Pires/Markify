@@ -1,13 +1,5 @@
-﻿using System.Linq;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-
-using Markify.Core.IDE;
+﻿using Markify.Core.IDE;
 using Markify.Services;
-
-using Optional;
-
-using Markify.Models.IDE;
 
 namespace Markify.Controllers
 {
@@ -15,16 +7,16 @@ namespace Markify.Controllers
     {
         #region Fields
 
-        private readonly ISolutionExplorer _explorer;
+        private readonly IIDEEnvironment _ide;
         private readonly IDocumentationGenerator _generator;
 
         #endregion
 
         #region Constructors
 
-        public CommandsController(ISolutionExplorer explorer, IDocumentationGenerator generator)
+        public CommandsController(IIDEEnvironment ide, IDocumentationGenerator generator)
         {
-            _explorer = explorer;
+            _ide = ide;
             _generator = generator;
         }
 
@@ -34,50 +26,26 @@ namespace Markify.Controllers
 
         public bool GenerateForCurrentProject()
         {
-            return GenerateDocumentation(GetCurrentProject(), _explorer.CurrentSolution);
-        }
+            return _ide.CurrentProject.Match(
+                c =>
+                {
+                    var solution = _ide.CurrentSolution;
+                    var root = solution.Match(
+                        d => d.Path,
+                        () => c.Path
+                    );
 
-        public bool GenerateForCurrentSolution()
-        {
-            return GenerateDocumentation(GetProjectsFromCurrentSolution(), _explorer.CurrentSolution);
-        }
-
-        private bool GenerateDocumentation(Option<IEnumerable<Project>> projects, Option<Solution> solution)
-        {
-            return projects.Match(
-                p => solution.Match(
-                    s => _generator.Generate(p, s),
-                    () => false
-                ),
+                    return _generator.Generate(new[] {c}, root);
+                },
                 () => false
             );
         }
 
-        #endregion
-
-        #region Explorer helpers
-
-        private Option<IEnumerable<Project>> GetProjectsFromCurrentSolution()
+        public bool GenerateForCurrentSolution()
         {
-            return _explorer.CurrentSolution.Match(
-                x => GetProjects(x.Projects).Some(),
-                Option.None<IEnumerable<Project>>
-            );
-        }
-
-        private Option<IEnumerable<Project>> GetCurrentProject()
-        {
-            return _explorer.CurrentProject.Match(
-                x => GetProjects(new[] {x}).Some(),
-                Option.None<IEnumerable<Project>>
-            );
-        }
-
-        private IEnumerable<Project> GetProjects(IEnumerable<string> projectNames)
-        {
-            return projectNames.Aggregate(
-                ImmutableArray.Create<Project>(),
-                (acc, c) => _explorer.GetProject(c).Match(acc.Add, () => acc)
+            return _ide.CurrentSolution.Match(
+                c => _generator.Generate(c.Projects, c.Path),
+                () => false
             );
         }
 
