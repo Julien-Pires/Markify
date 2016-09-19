@@ -9,21 +9,16 @@
 // ------------------------------------------------------------------------------
 namespace Markify.Rendering.T4.Templates
 {
-    using System.Linq;
-    using System.Text;
-    using System.Collections.Generic;
-    using Microsoft.VisualStudio.TextTemplating;
-    using Markify.Models.Definitions;
-    using System;
-    
+    using Models.Definitions;
+
     /// <summary>
     /// Class to produce the template output
     /// </summary>
     
     #line 1 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "14.0.0.0")]
-    public partial class TypeTemplate : T4TemplateBase
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "14.0.0.0")]
+    public class TypeTemplate : T4TemplateBase
     {
 #line hidden
         /// <summary>
@@ -37,35 +32,35 @@ namespace Markify.Rendering.T4.Templates
             
             #line default
             #line hidden
-            this.Write("### **");
+            Write("### **");
             
             #line 9 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(DefinitionFormatter.GetNameWithParameters(definition)));
+            Write(ToStringHelper.ToStringWithCulture(DefinitionFormatter.GetNameWithParameters(definition)));
             
             #line default
             #line hidden
-            this.Write("** : ");
+            Write("** : ");
             
             #line 9 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(DefinitionFormatter.GetAccessModifiers(definition)));
+            Write(ToStringHelper.ToStringWithCulture(DefinitionFormatter.GetAccessModifiers(definition)));
             
             #line default
             #line hidden
-            this.Write(" ");
+            Write(" ");
             
             #line 9 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(DefinitionFormatter.GetKind(definition)));
+            Write(ToStringHelper.ToStringWithCulture(DefinitionFormatter.GetKind(definition)));
             
             #line default
             #line hidden
-            this.Write("\r\n");
+            Write("\r\n");
             
             #line 10 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(DefinitionFormatter.GetNamespace(definition)));
+            Write(ToStringHelper.ToStringWithCulture(DefinitionFormatter.GetNamespace(definition)));
             
             #line default
             #line hidden
-            this.Write("\r\n***\r\n");
+            Write("\r\n***\r\n");
             
             #line 12 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
 
@@ -76,14 +71,14 @@ namespace Markify.Rendering.T4.Templates
             
             #line default
             #line hidden
-            this.Write("**Modifiers**: ");
+            Write("**Modifiers**: ");
             
             #line 17 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(modifiers));
+            Write(ToStringHelper.ToStringWithCulture(modifiers));
             
             #line default
             #line hidden
-            this.Write("\r\n\r\n");
+            Write("\r\n\r\n");
             
             #line 19 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
 
@@ -102,14 +97,14 @@ namespace Markify.Rendering.T4.Templates
             
             #line default
             #line hidden
-            this.Write("**Implements**: ");
+            Write("**Implements**: ");
             
             #line 27 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(parents));
+            Write(ToStringHelper.ToStringWithCulture(parents));
             
             #line default
             #line hidden
-            this.Write("\r\n\r\n");
+            Write("\r\n\r\n");
             
             #line 29 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
 
@@ -118,7 +113,7 @@ namespace Markify.Rendering.T4.Templates
             
             #line default
             #line hidden
-            return this.GenerationEnvironment.ToString();
+            return GenerationEnvironment.ToString();
         }
     }
     

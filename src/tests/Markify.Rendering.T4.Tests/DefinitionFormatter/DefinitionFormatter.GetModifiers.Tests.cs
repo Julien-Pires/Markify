@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Markify.Rendering.T4.Tests
 {
-    public sealed partial class DefinitionFormatter_Tests
+    public sealed partial class DefinitionFormatterTests
     {
         [Fact]
         public void GetModifiers_ShouldThrow_WhenDefinitionIsNull()

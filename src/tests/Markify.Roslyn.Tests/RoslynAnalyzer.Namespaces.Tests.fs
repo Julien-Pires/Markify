@@ -1,6 +1,6 @@
 ﻿namespace Markify.Roslyn.Tests
 
-module Roslyn_Processor_Process_Namespaces_Tests =
+module RoslynAnalyzerNamespacesTests =
     open Attributes
     open Markify.Roslyn
     open Markify.Models.IDE

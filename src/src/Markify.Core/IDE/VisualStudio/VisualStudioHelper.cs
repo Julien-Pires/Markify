@@ -38,7 +38,12 @@ namespace Markify.Core.IDE.VisualStudio
 
         #region Project Extension
 
-        public static Uri GetPath(this VSProject project) => new Uri(Path.GetDirectoryName(project.FullName));
+        public static Uri GetPath(this VSProject project)
+        {
+            var path = Path.GetDirectoryName(project?.FullName);
+
+            return path == null ? null : new Uri(path);
+        }
 
         public static IEnumerable<Uri> GetFiles(this VSProject project)
         {

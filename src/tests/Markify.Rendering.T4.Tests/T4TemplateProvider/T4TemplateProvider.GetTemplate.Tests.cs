@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Markify.Rendering.T4.Tests
 {
-    public sealed class T4TemplateProvider_Tests
+    public sealed class T4TemplateProviderTests
     {
         [Theory]
         [TemplateProviderData(new[] { typeof(string)}, typeof(string))]

@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Markify.Rendering.T4.Tests
 {
-    public sealed class T4Template_Tests
+    public sealed class T4TemplateTests
     {
         [Theory]
         [TemplateData("Foo")]

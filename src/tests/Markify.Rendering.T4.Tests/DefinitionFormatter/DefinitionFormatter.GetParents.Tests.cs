@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Markify.Rendering.T4.Tests
 {
-    public sealed partial class DefinitionFormatter_Tests
+    public sealed partial class DefinitionFormatterTests
     {
         [Fact]
         public void GetParents_ShouldThrow_WhenDefinitionIsNull()
@@ -16,8 +16,8 @@ namespace Markify.Rendering.T4.Tests
 
         [Theory]
         [TypeDefinitionData("Foo", null, null, new string[]{}, "")]
-        [TypeDefinitionData("Foo", null, null, new string[] { "IDisposable" }, "IDisposable")]
-        [TypeDefinitionData("Foo", null, null, new string[] { "IDisposable", "IEnumerable" }, "IDisposable, IEnumerable")]
+        [TypeDefinitionData("Foo", null, null, new[] { "IDisposable" }, "IDisposable")]
+        [TypeDefinitionData("Foo", null, null, new[] { "IDisposable", "IEnumerable" }, "IDisposable, IEnumerable")]
         public void GetParents_ShouldReturnCorrectValue(string expected, TypeDefinition definition)
         {
             Check.That(DefinitionFormatter.GetParents(definition)).IsEqualTo(expected);

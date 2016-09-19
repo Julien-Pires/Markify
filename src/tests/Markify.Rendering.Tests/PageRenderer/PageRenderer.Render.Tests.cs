@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Markify.Rendering.Tests
 {
-    public sealed class PageRenderer_Tests
+    public sealed class PageRendererTests
     {
         [Theory]
         [PageRendererData(0, 0)]

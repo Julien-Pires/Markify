@@ -1,4 +1,4 @@
-﻿module BasicDocumentationOrganizer_Tests
+﻿module BasicDocumentationOrganizerTests
 
     open System
     open Attributes

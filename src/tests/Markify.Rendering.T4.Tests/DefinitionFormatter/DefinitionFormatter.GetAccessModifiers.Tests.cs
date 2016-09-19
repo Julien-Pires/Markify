@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Markify.Rendering.T4.Tests
 {
-    public sealed partial class DefinitionFormatter_Tests
+    public sealed partial class DefinitionFormatterTests
     {
         [Fact]
         public void GetAccessModifiers_ShouldThrow_WhenDefinitionIsNull()
@@ -22,8 +22,8 @@ namespace Markify.Rendering.T4.Tests
         }
 
         [Theory]
-        [TypeDefinitionData("Foo", null, new string[] { "public" }, null, "public")]
-        [TypeDefinitionData("Foo", null, new string[] { "protected", "internal" }, null, "protected internal")]
+        [TypeDefinitionData("Foo", null, new[] { "public" }, null, "public")]
+        [TypeDefinitionData("Foo", null, new[] { "protected", "internal" }, null, "protected internal")]
         public void GetAccessModifiers_ShouldReturnCorrectModifiers(string expected, TypeDefinition definition)
         {
             Check.That(DefinitionFormatter.GetAccessModifiers(definition)).IsEqualTo(expected);
