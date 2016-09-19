@@ -3,7 +3,7 @@ using System.Linq;
 using Microsoft.FSharp.Core;
 using Markify.Models.Definitions;
 
-namespace Markify.Rendering.T4
+namespace Markify.Rendering
 {
     public static class DefinitionFormatter
     {

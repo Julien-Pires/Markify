@@ -1,4 +1,4 @@
-﻿module IO_Tests
+﻿module IOTests
     open System
     open System.IO
     open System.Reflection

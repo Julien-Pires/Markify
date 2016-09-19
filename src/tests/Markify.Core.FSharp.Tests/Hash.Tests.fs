@@ -1,4 +1,4 @@
-﻿module Hash_Tests
+﻿module HashTests
     open Markify.Core.Builders
     open Xunit
     open Swensen.Unquote

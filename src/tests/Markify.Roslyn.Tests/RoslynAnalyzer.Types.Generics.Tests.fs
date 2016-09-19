@@ -1,6 +1,6 @@
 ﻿namespace Markify.Roslyn.Tests
 
-module Roslyn_Processor_Process_Types_Generics_Tests =
+module RoslynAnalyzerTypesGenericsTests =
     open System
     
     open Markify.Roslyn

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Markify.Models.Documents;
 using Markify.Models.Definitions;
 
-
 namespace Markify.Core.Analyzers
 {
     public interface IDocumentationOrganizer

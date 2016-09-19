@@ -10,7 +10,7 @@ namespace Markify.Rendering.T4.Tests.Attributes
         #region Constructors
 
         public TemplateProviderDataAttribute(Type[] templatesBinding, Type currentContent, params object[] values)
-            : this(new TemplateProviderCustomization(templatesBinding, currentContent))
+            : this(new TemplateProviderCustomization(templatesBinding, currentContent), values)
         {
         }
 

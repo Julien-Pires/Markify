@@ -11,7 +11,7 @@ using static Markify.Models.IDE.ProjectLanguage;
 
 namespace Markify.Core.Tests.IDE
 {
-    public sealed partial class VisualStudioEnvironment_Tests
+    public sealed partial class VisualStudioEnvironmentTests
     {
         [Theory]
         [VisualStudioEnvironmentData]

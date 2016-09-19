@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Markify.Rendering.T4.Tests
 {
-    public sealed partial class DefinitionFormatter_Tests
+    public sealed partial class DefinitionFormatterTests
     {
         [Fact]
         public void GetNameWithParameters_ShouldThrow_WhenDefinitionIsNull()
@@ -22,8 +22,8 @@ namespace Markify.Rendering.T4.Tests
         }
 
         [Theory]
-        [TypeDefinitionData("Foo", null, null, StructureKind.Class, new string[] { "T" }, "Foo<T>")]
-        [TypeDefinitionData("Foo", null, null, StructureKind.Class, new string[] { "T", "Y", "Z" }, "Foo<T, Y, Z>")]
+        [TypeDefinitionData("Foo", null, null, StructureKind.Class, new[] { "T" }, "Foo<T>")]
+        [TypeDefinitionData("Foo", null, null, StructureKind.Class, new[] { "T", "Y", "Z" }, "Foo<T, Y, Z>")]
         public void GetNameWithParameters_ShouldReturnNameWithParameters_WhenHasParamters(string expected, TypeDefinition definition)
         {
             Check.That(DefinitionFormatter.GetNameWithParameters(definition)).IsEqualTo(expected);

@@ -14,7 +14,7 @@ type StructureKind =
 type DefinitionName = string
 
 [<CustomEquality; NoComparison>]
-type DefinitionIdentity = 
+type DefinitionIdentity =
   { Name : DefinitionName
     Parents : DefinitionName option
     Namespace : DefinitionName option }

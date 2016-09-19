@@ -234,7 +234,7 @@ namespace Markify.Rendering.T4
                     throw new ArgumentNullException(nameof(objectToConvert));
 
                 Type t = objectToConvert.GetType();
-                System.Reflection.MethodInfo method = t.GetMethod("ToString", new Type[] {
+                System.Reflection.MethodInfo method = t.GetMethod("ToString", new[] {
                             typeof(IFormatProvider)});
                 if (method == null)
                     return objectToConvert.ToString();

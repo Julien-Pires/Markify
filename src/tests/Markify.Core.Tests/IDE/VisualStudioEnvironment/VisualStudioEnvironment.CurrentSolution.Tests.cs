@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Markify.Core.Tests.IDE
 {
-    public sealed partial class VisualStudioEnvironment_Tests
+    public sealed partial class VisualStudioEnvironmentTests
     {
         [Theory]
         [VisualStudioEnvironmentData(null)]
