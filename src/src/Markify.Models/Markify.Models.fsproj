@@ -41,7 +41,6 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Script.fsx" />
@@ -49,13 +48,6 @@
     <Compile Include="IDE.fs" />
     <Compile Include="Definitions.fs" />
     <Compile Include="Documents.fs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Markify.Core.FSharp\Markify.Core.FSharp.fsproj">
-      <Name>Markify.Core.FSharp</Name>
-      <Project>{d9a8fb2a-fc1a-4a2b-a5a3-17d72b712a04}</Project>
-      <Private>True</Private>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
