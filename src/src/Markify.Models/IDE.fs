@@ -9,12 +9,12 @@ type ProjectLanguage =
 
 type ProjectName = string
 type ProjectPath = Uri
-type FilesList = Uri seq
+type File = Uri
 type Project = {
     Name : ProjectName
     Path : ProjectPath
     Language : ProjectLanguage
-    Files : FilesList
+    Files : File seq
 }
 
 type SolutionName = string

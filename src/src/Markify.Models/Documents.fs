@@ -15,9 +15,8 @@ type Page = {
     Folder : PageFolder
     Content : obj
 }
-    
-type PageList = Page seq
+
 type TableOfContent = {
     Root : DocumentFolder
-    Pages : PageList
+    Pages : Page seq
 }
