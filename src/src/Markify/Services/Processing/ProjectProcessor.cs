@@ -1,10 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-
 using Markify.Core.Analyzers;
 using Markify.Services.Settings;
-
 using Markify.Models.IDE;
 using Markify.Models.Documents;
 using Markify.Models.Definitions;
@@ -34,14 +33,14 @@ namespace Markify.Services.Processing
 
         #region Processing
 
-        public TableOfContent Process(IEnumerable<Project> projects, Solution solution)
+        public TableOfContent Process(IEnumerable<Project> projects, Uri root)
         {
             var libraries = projects.Aggregate(
                 ImmutableArray.Create<LibraryDefinition>(),
                 (acc, c) => acc.Add(_analyzer.Analyze(c))
             );
 
-            return _organizer.Organize(libraries, solution, _settingsProvider.GetSettings());
+            return _organizer.Organize(libraries, root, _settingsProvider.GetSettings());
         }
 
         #endregion

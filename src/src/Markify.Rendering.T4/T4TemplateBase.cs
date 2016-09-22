@@ -2,9 +2,11 @@
 using System.Text;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Markify.Rendering.T4
 {
+    [ExcludeFromCodeCoverage]
     public abstract class T4TemplateBase
     {
         #region Fields
@@ -232,7 +234,7 @@ namespace Markify.Rendering.T4
                     throw new ArgumentNullException(nameof(objectToConvert));
 
                 Type t = objectToConvert.GetType();
-                System.Reflection.MethodInfo method = t.GetMethod("ToString", new Type[] {
+                System.Reflection.MethodInfo method = t.GetMethod("ToString", new[] {
                             typeof(IFormatProvider)});
                 if (method == null)
                     return objectToConvert.ToString();

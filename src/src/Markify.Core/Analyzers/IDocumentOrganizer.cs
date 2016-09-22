@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
-
-using Markify.Models.IDE;
+﻿using System;
+using System.Collections.Generic;
 using Markify.Models.Documents;
 using Markify.Models.Definitions;
 
@@ -10,7 +9,7 @@ namespace Markify.Core.Analyzers
     {
         #region Methods
 
-        TableOfContent Organize(IEnumerable<LibraryDefinition> library, Solution solution, DocumentSetting setting);
+        TableOfContent Organize(IEnumerable<LibraryDefinition> library, Uri root, DocumentSetting setting);
 
         #endregion
     }

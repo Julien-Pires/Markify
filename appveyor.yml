@@ -1,0 +1,41 @@
+version: 1.0.{build}
+configuration:
+- Release
+before_build:
+- cmd: nuget restore src\Markify.sln -verbosity detailed
+build:
+  project: src/Markify.sln
+  verbosity: minimal
+environment:
+    COVERALLS_REPO_TOKEN:  
+       secure: LzNrIl+p3PFuAPMSM+HwdnXT+edzlFsl/owok+qNPpOiVhkOIk1hQN9ZuPnzULzO
+test:
+  assemblies:
+  - src\tests\Markify.Roslyn.Tests\bin\Debug\Markify.Roslyn.Tests.dll
+  - src\tests\Markify.Core.FSharp.Tests\bin\Debug\Markify.Core.FSharp.Tests.dll
+  - src\tests\Markify.Document.Tests\bin\Debug\Markify.Document.Tests.dll
+  - src\tests\Markify.Core.Tests\bin\Debug\Markify.Core.Tests.dll
+  - src\tests\Markify.Rendering.Tests\bin\Debug\Markify.Rendering.Tests.dll
+  - src\tests\Markify.Rendering.T4.Tests\bin\Debug\Markify.Rendering.T4.Tests.dll
+after_test:
+    - ps: >-
+        $tests = (
+          "Markify.Roslyn.Tests",
+          "Markify.Core.FSharp.Tests",
+          "Markify.Document.Tests",
+          "Markify.Core.Tests",
+          "Markify.Rendering.Tests",
+          "Markify.Rendering.T4.Tests"
+        )
+
+        $filter = "+[Markify*]* -[*.Tests]*"
+
+        $xunitConsole = (Resolve-Path "src/packages/xunit.runner.console.2.*/tools/xunit.console.exe").ToString()
+
+        foreach($test in $tests) {
+          & .\src\packages\OpenCover.*\tools\OpenCover.Console.exe -register:user -target:"$xunitConsole" -targetargs:".\src\tests\$test\bin\$env:CONFIGURATION\$test.dll -noshadow" -skipautoprops -hideskipped:All -filter:"$filter" -excludebyattribute:*.ExcludeFromCodeCoverage* -output:coverage.xml -mergeoutput
+        }
+
+        $coveralls = (Resolve-Path "src/packages/coveralls.net.*/tools/csmacnz.coveralls.exe").ToString()
+
+        & $coveralls --opencover -i coverage.xml --repoToken $env:COVERALLS_REPO_TOKEN --commitId $env:APPVEYOR_REPO_COMMIT --commitBranch $env:APPVEYOR_REPO_BRANCH --commitAuthor $env:APPVEYOR_REPO_COMMIT_AUTHOR --commitEmail $env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL --commitMessage $env:APPVEYOR_REPO_COMMIT_MESSAGE --jobId $env:APPVEYOR_JOB_ID

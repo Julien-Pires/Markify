@@ -54,6 +54,7 @@ namespace Markify.Commands
         /// Adds our command handlers for menu (commands must exist in the command table file)
         /// </summary>
         /// <param name="package">Owner package, not null.</param>
+        /// <param name="controller">Controller that contains menu command</param>
         public GenerateCurrentProjectCommand(Package package, CommandsController controller)
         {
             if (package == null)
@@ -68,8 +69,8 @@ namespace Markify.Commands
             OleMenuCommandService commandService = ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
             if (commandService != null)
             {
-                var menuCommandID = new CommandID(CommandSet, CommandId);
-                var menuItem = new MenuCommand(MenuItemCallback, menuCommandID);
+                var menuCommandId = new CommandID(CommandSet, CommandId);
+                var menuItem = new MenuCommand(MenuItemCallback, menuCommandId);
                 commandService.AddCommand(menuItem);
             }
         }
@@ -81,7 +82,6 @@ namespace Markify.Commands
         /// <summary>
         /// Initializes the singleton instance of the command.
         /// </summary>
-        /// <param name="package">Owner package, not null.</param>
         public static void Initialize(Func<Type, object> factory)
         {
             Instance = (GenerateCurrentProjectCommand)factory(typeof(GenerateCurrentProjectCommand));

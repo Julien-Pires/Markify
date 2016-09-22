@@ -7,7 +7,7 @@ type ConstraintName = string
 type ConstraintTypeName = string
 type TypeConstraint = {
     Name : ConstraintName
-    Constraints : ConstraintTypeName seq
+    Constraints : ConstraintTypeName list
 }
 
 type ParameterName = string
@@ -25,11 +25,11 @@ type TypeNode = {
     Name : NodeName
     Kind : StructureKind
     Parent : Node Lazy
-    Modifiers : Modifier seq
-    AccessModifiers : Modifier seq
-    Constraints : TypeConstraint seq
-    Parameters : GenericParameter seq
-    Bases : BaseType seq
+    Modifiers : Modifier list
+    AccessModifiers : Modifier list
+    Constraints : TypeConstraint list
+    Parameters : GenericParameter list
+    Bases : BaseType list
 }
 and NamespaceNode = {
     Node : SyntaxNode

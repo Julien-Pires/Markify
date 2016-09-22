@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Project>
+  <Count>15</Count>
   <Files>
-    <!-- Interface (Total : 15) -->
     <Uri>Source/Interface/AccessModifier</Uri>
     <Uri>Source/Interface/AdditionnalModifier</Uri>
     <Uri>Source/Interface/InheritedInterface</Uri>

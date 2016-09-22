@@ -1,11 +1,11 @@
 ﻿using System;
-
+using System.Diagnostics.CodeAnalysis;
 using EnvDTE80;
-
 using Ninject.Modules;
 
 namespace Markify.Core.IDE.VisualStudio
 {
+    [ExcludeFromCodeCoverage]
     public sealed class VisualStudioModule : NinjectModule
     {
         #region Fields

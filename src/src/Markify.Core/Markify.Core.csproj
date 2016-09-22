@@ -53,22 +53,15 @@
       <HintPath>..\..\packages\System.Collections.Immutable.1.1.37\lib\dotnet\System.Collections.Immutable.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IDE\IDEModule.cs" />
     <Compile Include="IDE\IIDEEnvironment.cs" />
-    <Compile Include="IDE\ISolutionExplorer.cs" />
-    <Compile Include="IDE\ISolutionExplorerFilterProvider.cs" />
-    <Compile Include="IDE\SolutionExplorer.cs" />
-    <Compile Include="IDE\SolutionExplorerFilter.cs" />
+    <Compile Include="IDE\IProjectFilterProvider.cs" />
     <Compile Include="IDE\VisualStudio\VisualStudioEnvironment.cs" />
+    <Compile Include="IDE\VisualStudio\VisualStudioHelper.cs" />
     <Compile Include="IDE\VisualStudio\VisualStudioModule.cs" />
     <Compile Include="Analyzers\IDocumentOrganizer.cs" />
     <Compile Include="Rendering\IDocumentRenderer.cs" />

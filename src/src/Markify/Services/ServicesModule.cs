@@ -1,14 +1,15 @@
-﻿using Markify.Core.IDE;
+﻿using System.Diagnostics.CodeAnalysis;
+using Markify.Core.IDE;
 using Markify.Core.Rendering;
-
 using Markify.Services.IO;
 using Markify.Services.Settings;
 using Markify.Services.Processing;
-
 using Ninject.Modules;
+
 
 namespace Markify.Services
 {
+    [ExcludeFromCodeCoverage]
     internal sealed class ServicesModule : NinjectModule
     {
         #region Module Loading
@@ -20,7 +21,7 @@ namespace Markify.Services
             Bind<IRenderer>().To<Renderer>();
             Bind<IDocumentationGenerator>().To<DocumentationGenerator>();
             Bind<IDocumentSettingsProvider>().To<DocumentSettingsProvider>();
-            Bind<ISolutionExplorerFilterProvider>().To<SolutionExplorerFilterProvider>();
+            Bind<IProjectFilterProvider>().To<SolutionExplorerFilterProvider>();
         }
 
         #endregion

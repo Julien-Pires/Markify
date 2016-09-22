@@ -12,22 +12,14 @@
 
     open Ploeh.AutoFixture
 
-    type SimpleDocumentCustomization (root, projectName, projectCount, typeCount, extension) =
-        let root = root
+    type SimpleDocumentCustomization (projectName, projectCount, typeCount, extension) =
         let projectName = projectName;
         let projectCount = projectCount
         let typeCount = typeCount
 
         interface ICustomization with
             member  this.Customize (fixture : IFixture) = 
-                fixture.Inject<IDocumentationOrganizer> (new SimpleDocumentationOrganizer())
-
-                fixture.Register<Solution>(fun c ->
-                    let solution = {
-                        Name = "Solution"
-                        Path = Uri(root)
-                        Projects = [] }
-                    solution)
+                fixture.Inject<IDocumentationOrganizer> (new BasicDocumentationOrganizer())
                 fixture.Register<DocumentSetting> (fun c -> 
                     let setting = {
                         PageExtension = extension }

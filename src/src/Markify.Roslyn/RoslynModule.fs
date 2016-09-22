@@ -1,12 +1,18 @@
 ﻿namespace Markify.Roslyn
 
+open System.Diagnostics.CodeAnalysis
 open Markify.Core.Analyzers
 open Ninject.Modules
 
+[<ExcludeFromCodeCoverage>]
 type RoslynModule() =
     inherit NinjectModule()
 
     override this.Load () =
-        this.Bind<LanguageConverter>().ToMethod(fun c -> LanguageConverter(CSharpHelper(), ["cs"])) |> ignore
-        this.Bind<LanguageConverter>().ToMethod(fun c -> LanguageConverter(VisualBasicHelper(), ["vb"])) |> ignore
+        let languageHelpers = [
+            CSharpHelper() :> NodeHelper, ["cs"]
+            VisualBasicHelper() :> NodeHelper, ["vb"]
+        ]
+
+        this.Bind<SourceConverter>().ToSelf().WithConstructorArgument(languageHelpers) |> ignore
         this.Bind<IProjectAnalyzer>().To<RoslynAnalyzer>() |> ignore

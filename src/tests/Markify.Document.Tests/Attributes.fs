@@ -7,7 +7,7 @@
     open Ploeh.AutoFixture.Xunit2
 
     [<AttributeUsage(AttributeTargets.Method, AllowMultiple = true)>]
-    type SimpleDocumentInlineAutoDataAttribute(root, projectName, projectCount, typeCount, extension, [<ParamArray>] values) =
+    type DocumentDataAttribute(projectName, projectCount, typeCount, extension, [<ParamArray>] values) =
         inherit InlineAutoDataAttribute(
-            AutoDataAttribute(Fixture().Customize(SimpleDocumentCustomization(root, projectName, projectCount, typeCount, extension))),
+            AutoDataAttribute(Fixture().Customize(SimpleDocumentCustomization(projectName, projectCount, typeCount, extension))),
             values)

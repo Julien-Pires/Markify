@@ -1,13 +1,13 @@
-﻿using Markify.Rendering.T4.Templates;
-
+﻿using System.Diagnostics.CodeAnalysis;
+using Markify.Rendering.T4.Templates;
 using Markify.Models.Definitions;
-
 using Ninject.Modules;
 
 using TemplateTuple = System.Tuple<Markify.Rendering.T4.T4TemplateBase, System.Type>;
 
 namespace Markify.Rendering.T4
 {
+    [ExcludeFromCodeCoverage]
     public sealed class T4Module : NinjectModule
     {
         #region Fields

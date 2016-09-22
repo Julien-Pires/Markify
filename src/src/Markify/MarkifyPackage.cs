@@ -6,7 +6,6 @@ using Markify.Roslyn;
 using Markify.Document;
 using Markify.Rendering;
 using Markify.Controllers;
-using Markify.Core.IDE;
 using Markify.Core.IDE.VisualStudio;
 using Markify.Rendering.T4;
 using Markify.Services;
@@ -42,7 +41,6 @@ namespace Markify
             new DocumentationOrganizerModule(),
             new RenderingModule(),
             new T4Module(),
-            new IDEModule(),
             new VisualStudioModule(GetVisualStudioEnvironment),
             new ServicesModule()
         };
