@@ -53,7 +53,7 @@ module TypeExtension =
                 | Some x -> x.Constraints
                 | None -> []
             let generic = {
-                Identity = c.Name
+                Name = c.Name
                 Modifier = c.Modifier
                 Constraints = constraints}
             generic)

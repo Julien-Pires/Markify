@@ -11,26 +11,43 @@ type StructureKind =
     | Enum = 5
 
 type DefinitionName = string
-type DefinitionIdentity = {
-    Name : DefinitionName
-    Parents : DefinitionName option
-    Namespace : DefinitionName option }
-
 type Modifier = string
 type Constraint = string
 type GenericParameterDefinition = {
-    Identity : DefinitionName
+    Name : DefinitionName
     Modifier : Modifier
     Constraints : Constraint seq }
 
 type BaseType = string
-type TypeDefinition = {
-    Identity : DefinitionIdentity
-    Kind : StructureKind
+type TypeIdentity = {
+    Name : DefinitionName
+    Parents : DefinitionName option
+    Namespace : DefinitionName option
     AccessModifiers : Modifier seq
     Modifiers : Modifier seq
     BaseTypes : BaseType seq
     Parameters : GenericParameterDefinition seq }
+
+type ClassDefinition = {
+    Identity : TypeIdentity }
+type StructDefinition = ClassDefinition
+type InterfaceDefinition = ClassDefinition
+type EnumDefinition = ClassDefinition
+type DelegateDefinition = ClassDefinition
+
+type TypeDefinition =
+    | Class of ClassDefinition
+    | Struct of StructDefinition
+    | Interface of InterfaceDefinition
+    | Enum of EnumDefinition
+    | Delegate of DelegateDefinition
+    member this.Identity =
+        match this with
+        | Class x -> x.Identity
+        | Struct x -> x.Identity
+        | Interface x -> x.Identity
+        | Enum x -> x.Identity
+        | Delegate x -> x.Identity
 
 type NamespaceDefinition = {
     Name : DefinitionName }

@@ -6,11 +6,11 @@
 <#@ import namespace="Microsoft.VisualStudio.TextTemplating" #>
 <#@ import namespace="Markify.Models.Definitions" #>
 <# var definition = (TypeDefinition)Session["Content"]; #>
-### **<#= T4Helper.GetNameWithParameters(definition) #>** : <#= T4Helper.GetAccessModifiers(definition) #> <#= T4Helper.GetKind(definition) #>
-<#= T4Helper.GetNamespace(definition) #>
+### **<#= DefinitionFormatter.GetNameWithParameters(definition) #>** : <#= DefinitionFormatter.GetAccessModifiers(definition) #> <#= DefinitionFormatter.GetKind(definition) #>
+<#= DefinitionFormatter.GetNamespace(definition) #>
 ***
 <#
-	var modifiers = T4Helper.GetModifiers(definition);
+	var modifiers = DefinitionFormatter.GetModifiers(definition);
 	if(!string.IsNullOrWhiteSpace(modifiers))
 	{
 #>
@@ -20,7 +20,7 @@
 	}
 #>
 <#
-	var parents = T4Helper.GetParents(definition);
+	var parents = DefinitionFormatter.GetParents(definition);
 	if(!string.IsNullOrWhiteSpace(parents))
 	{
 #>

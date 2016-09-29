@@ -2,14 +2,10 @@
 
 module RoslynAnalyzerTypesModifiersTests =
     open Markify.Roslyn
-
     open Markify.Models.IDE
     open Markify.Models.Definitions
-
     open Markify.Core.Analyzers
-
     open Attributes
-
     open Xunit
     open Swensen.Unquote
 
@@ -53,11 +49,11 @@ module RoslynAnalyzerTypesModifiersTests =
 
         let typeDef = 
             (sut :> IProjectAnalyzer)
-            |> (fun c -> c.Analyze(project))
-            |> (fun c -> c.Types)
+            |> fun c -> c.Analyze project
+            |> fun c -> c.Types
             |> Seq.find (fun c -> c.Identity.Name = name)
         let possessedModifiers = 
-            typeDef.AccessModifiers 
+            typeDef.Identity.AccessModifiers 
             |> Seq.filter (fun c -> Seq.contains c expectedModifiers) 
 
         test <@ Seq.length possessedModifiers = Seq.length expectedModifiers @>
@@ -78,11 +74,11 @@ module RoslynAnalyzerTypesModifiersTests =
     let ``Process project should return modifiers when type has one`` (modifier, name, sut: RoslynAnalyzer, project) =
         let typeDef = 
             (sut :> IProjectAnalyzer)
-            |> (fun c -> c.Analyze(project))
-            |> (fun c -> c.Types)
+            |> fun c -> c.Analyze project
+            |> fun c -> c.Types
             |> Seq.find (fun c -> c.Identity.Name = name)
 
-        test <@ Seq.contains modifier typeDef.Modifiers @>
+        test <@ Seq.contains modifier typeDef.Identity.Modifiers @>
 
     [<Theory>]
     [<ProjectData("ClassProject", ProjectLanguage.CSharp, "abstract partial", "AbstractPartialClass")>]
@@ -94,9 +90,11 @@ module RoslynAnalyzerTypesModifiersTests =
 
         let typeDef = 
             (sut :> IProjectAnalyzer)
-            |> (fun c -> c.Analyze(project))
-            |> (fun c -> c.Types)
+            |> fun c -> c.Analyze project
+            |> fun c -> c.Types
             |> Seq.find (fun c -> c.Identity.Name = name)
-        let possessedModifiers = Seq.filter (fun c -> Seq.contains c expectedModifiers) typeDef.Modifiers
+        let possessedModifiers = 
+            typeDef.Identity.Modifiers
+            |> Seq.filter (fun c -> Seq.contains c expectedModifiers) 
 
         test <@ Seq.length possessedModifiers = Seq.length expectedModifiers @>

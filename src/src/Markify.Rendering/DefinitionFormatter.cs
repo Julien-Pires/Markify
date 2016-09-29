@@ -34,31 +34,27 @@ namespace Markify.Rendering
             if(definition == null)
                 throw new ArgumentNullException(nameof(definition));
 
-            string result;
-            switch(definition.Kind)
+            string result = string.Empty;
+            switch(definition.Tag)
             {
-                case StructureKind.Class:
+                case TypeDefinition.Tags.Class:
                     result = Class;
                     break;
 
-                case StructureKind.Struct:
+                case TypeDefinition.Tags.Struct:
                     result = Struct;
                     break;
 
-                case StructureKind.Interface:
+                case TypeDefinition.Tags.Interface:
                     result = Interface;
                     break;
 
-                case StructureKind.Enum:
+                case TypeDefinition.Tags.Enum:
                     result = Enum;
                     break;
 
-                case StructureKind.Delegate:
+                case TypeDefinition.Tags.Delegate:
                     result = Delegate;
-                    break;
-
-                default:
-                    result = string.Empty;
                     break;
             }
 
@@ -70,7 +66,7 @@ namespace Markify.Rendering
             if (definition == null)
                 throw new ArgumentNullException(nameof(definition));
 
-            return definition.AccessModifiers.Any() ? string.Join(AccessModifierDelimiter, definition.AccessModifiers) : DefaultAccessModifier;
+            return definition.Identity.AccessModifiers.Any() ? string.Join(AccessModifierDelimiter, definition.Identity.AccessModifiers) : DefaultAccessModifier;
         }
 
         public static string GetModifiers(TypeDefinition definition)
@@ -78,7 +74,7 @@ namespace Markify.Rendering
             if(definition == null)
                 throw new ArgumentNullException(nameof(definition));
 
-            return string.Join(Delimiter, definition.Modifiers);
+            return string.Join(Delimiter, definition.Identity.Modifiers);
         }
 
         public static string GetParents(TypeDefinition definition)
@@ -86,7 +82,7 @@ namespace Markify.Rendering
             if (definition == null)
                 throw new ArgumentNullException(nameof(definition));
 
-            return string.Join(Delimiter, definition.BaseTypes);
+            return string.Join(Delimiter, definition.Identity.BaseTypes);
         }
 
         public static string GetNamespace(TypeDefinition definition)
@@ -102,10 +98,10 @@ namespace Markify.Rendering
             if (definition == null)
                 throw new ArgumentNullException(nameof(definition));
 
-            if (!definition.Parameters.Any())
+            if (!definition.Identity.Parameters.Any())
                 return definition.Identity.Name;
 
-            var parameters = string.Join(", ", definition.Parameters.Select(c => c.Identity));
+            var parameters = string.Join(", ", definition.Identity.Parameters.Select(c => c.Name));
 
             return $"{definition.Identity.Name}<{parameters}>";
         }

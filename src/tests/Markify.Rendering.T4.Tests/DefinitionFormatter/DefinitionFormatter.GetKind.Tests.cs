@@ -20,16 +20,9 @@ namespace Markify.Rendering.T4.Tests
         [TypeDefinitionData("Foo", null, null, StructureKind.Struct, null, "struct")]
         [TypeDefinitionData("Foo", null, null, StructureKind.Delegate, null, "delegate")]
         [TypeDefinitionData("Foo", null, null, StructureKind.Enum, null, "enum")]
-        public void GetKind_ShouldReturnCorrectKeyword_WhenKindIsKnown(string expected, TypeDefinition definition)
+        public void GetKind_ShouldReturnCorrectKeyword(string expected, TypeDefinition definition)
         {
             Check.That(DefinitionFormatter.GetKind(definition)).IsEqualTo(expected);
-        }
-
-        [Theory]
-        [TypeDefinitionData("Foo", null, null, StructureKind.Unknown, null)]
-        public void GetKind_ShouldReturnEmpty_WhenKindIsUnknown(TypeDefinition definition)
-        {
-            Check.That(DefinitionFormatter.GetKind(definition)).IsEqualTo(string.Empty);
         }
     }
 }

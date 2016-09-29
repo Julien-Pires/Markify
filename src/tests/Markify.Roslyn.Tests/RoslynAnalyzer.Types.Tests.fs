@@ -5,9 +5,8 @@ module RoslynAnalyzerTypesTests =
     open Markify.Models.IDE
     open Markify.Models.Definitions
     open Markify.Core.Analyzers
-
     open Attributes
-
+    open DefinitionsHelper
     open Xunit
     open Swensen.Unquote
 
@@ -32,7 +31,7 @@ module RoslynAnalyzerTypesTests =
         let library = (sut :> IProjectAnalyzer).Analyze info.Project
         let typesCount =
             library.Types
-            |> Seq.filter (fun c -> c.Kind = kind)
+            |> Seq.choose (getFilterByKind kind)
             |> Seq.length
 
         test <@ typesCount = info.Count @>
@@ -49,16 +48,14 @@ module RoslynAnalyzerTypesTests =
     [<ProjectData("EnumProject", ProjectLanguage.VisualBasic, "SingleEnum", "", "")>]
     [<ProjectData("DelegateProject", ProjectLanguage.VisualBasic, "NestedDelegate", "ParentClass", "")>]
     let ``Process project should return no duplicate types`` (name, parents, nspace, sut: RoslynAnalyzer, project) =
-        let fullname = {
-            Name = name
-            Parents = getName parents
-            Namespace = getName nspace
-        }
         let typeDef =
             (sut :> IProjectAnalyzer)
-            |> (fun c -> c.Analyze project)
-            |> (fun c -> c.Types)
-            |> Seq.filter (fun c -> c.Identity = fullname)
+            |> fun c -> c.Analyze project
+            |> fun c -> c.Types
+            |> Seq.filter (fun c -> 
+                c.Identity.Name = name &&
+                c.Identity.Parents = getName parents &&
+                c.Identity.Namespace = getName nspace)
 
         test <@ Seq.length typeDef = 1 @>
 
@@ -80,10 +77,10 @@ module RoslynAnalyzerTypesTests =
     [<ProjectData("GenericsProject", ProjectLanguage.VisualBasic, "GenericClass`2")>]
     [<ProjectData("GenericsProject", ProjectLanguage.VisualBasic, "Do`1")>]
     let ``Process project should return type with correct name`` (name, sut: RoslynAnalyzer, project) =
-        let typeDef = 
+        let typeDef =
             (sut :> IProjectAnalyzer)
-            |> (fun c -> c.Analyze project)
-            |> (fun c -> c.Types)
+            |> fun c -> c.Analyze project
+            |> fun c -> c.Types
             |> Seq.tryFind (fun c -> c.Identity.Name = name)
 
         test <@ typeDef.IsSome @>
@@ -110,16 +107,14 @@ module RoslynAnalyzerTypesTests =
     [<ProjectData("GenericsProject", ProjectLanguage.VisualBasic, "GenericClass`2", "", "")>]
     [<ProjectData("GenericsProject", ProjectLanguage.VisualBasic, "Do`1", "", "")>]
     let ``Process project should return types with correct fullname`` (name, parents, nspace, sut: RoslynAnalyzer, project) =
-        let fullname = {
-            Name = name
-            Parents = getName parents
-            Namespace = getName nspace
-        }
         let typeDef = 
             (sut :> IProjectAnalyzer)
-            |> (fun c -> c.Analyze project)
-            |> (fun c -> c.Types)
-            |> Seq.tryFind (fun c -> c.Identity = fullname)
+            |> fun c -> c.Analyze project
+            |> fun c -> c.Types
+            |> Seq.tryFind (fun c ->
+                c.Identity.Name = name &&
+                c.Identity.Parents = getName parents &&
+                c.Identity.Namespace = getName nspace)
 
         test <@ typeDef.IsSome @>
 

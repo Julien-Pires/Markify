@@ -165,7 +165,7 @@ type CSharpHelper() =
                 | null -> ""
                 | x -> x.ToString()
             let parameter = {
-                Name = name
+                GenericParameter.Name = name
                 Modifier = modifier}
             parameter)
         |> Seq.toList

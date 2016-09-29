@@ -40,15 +40,48 @@ namespace Markify.Rendering.T4.Tests.Attributes
 
         #region Customization
 
+        private static TypeDefinition CreateDefinition(TypeIdentity identity, StructureKind kind)
+        {
+            TypeDefinition definition;
+            switch(kind)
+            {
+                case StructureKind.Class:
+                    definition = TypeDefinition.NewClass(new ClassDefinition(identity));
+                    break;
+
+                case StructureKind.Struct:
+                    definition = TypeDefinition.NewStruct(new ClassDefinition(identity));
+                    break;
+
+                case StructureKind.Interface:
+                    definition = TypeDefinition.NewInterface(new ClassDefinition(identity));
+                    break;
+
+                case StructureKind.Enum:
+                    definition = TypeDefinition.NewEnum(new ClassDefinition(identity));
+                    break;
+
+                case StructureKind.Delegate:
+                    definition = TypeDefinition.NewDelegate(new ClassDefinition(identity));
+                    break;
+
+                default:
+                    definition = null;
+                    break;
+            }
+
+            return definition;
+        }
+
         public void Customize(IFixture fixture)
         {
-            var identity = new DefinitionIdentity(_name,
-                _parent != null ? FSharpOption<string>.Some(_parent) : FSharpOption<string>.None,
-                _namespace != null ? FSharpOption<string>.Some(_namespace) : FSharpOption<string>.None
-            );
             var parameters = _parameters?.Select(c => new GenericParameterDefinition(c, null, null));
-            var definition = new TypeDefinition(identity, _kind, _accessModifiers, _modifiers, _baseTypes, parameters);
-            fixture.Inject(definition);
+            var identity = new TypeIdentity(_name,
+                _parent != null ? FSharpOption<string>.Some(_parent) : FSharpOption<string>.None,
+                _namespace != null ? FSharpOption<string>.Some(_namespace) : FSharpOption<string>.None,
+               _accessModifiers, _modifiers, _baseTypes, parameters
+            );
+            fixture.Inject(CreateDefinition(identity, _kind));
         }
 
         #endregion

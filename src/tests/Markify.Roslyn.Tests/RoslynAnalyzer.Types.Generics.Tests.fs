@@ -2,16 +2,11 @@
 
 module RoslynAnalyzerTypesGenericsTests =
     open System
-    
     open Markify.Roslyn
-
     open Markify.Models.IDE
     open Markify.Models.Definitions
-
     open Markify.Core.Analyzers
-
     open Attributes
-
     open Xunit
     open Swensen.Unquote
 
@@ -29,11 +24,11 @@ module RoslynAnalyzerTypesGenericsTests =
     let ``Process project should return type with correct generic parameters`` (count, name, sut: RoslynAnalyzer, project) =
         let typeDef =
             (sut :> IProjectAnalyzer)
-            |> (fun c -> c.Analyze(project))
-            |> (fun c -> c.Types)
+            |> fun c -> c.Analyze project
+            |> fun c -> c.Types
             |> Seq.find (fun c -> c.Identity.Name = name)
 
-        test <@ Seq.length typeDef.Parameters = count @>
+        test <@ Seq.length typeDef.Identity.Parameters = count @>
 
     [<Theory>]
     [<ProjectData("GenericsProject", ProjectLanguage.CSharp, "T", "GenericClass`2")>]
@@ -49,12 +44,12 @@ module RoslynAnalyzerTypesGenericsTests =
     let ``Process project should return correct parameter name when type is generic`` (parameterName, name, sut: RoslynAnalyzer, project) =
         let typeDef =
             (sut :> IProjectAnalyzer)
-            |> (fun c -> c.Analyze(project))
-            |> (fun c -> c.Types)
+            |> fun c -> c.Analyze project
+            |> fun c -> c.Types
             |> Seq.find (fun c -> c.Identity.Name = name)
         let parameter =
-            typeDef.Parameters
-            |> Seq.tryFind (fun c -> c.Identity = parameterName)
+            typeDef.Identity.Parameters
+            |> Seq.tryFind (fun c -> c.Name = parameterName)
 
         test <@ parameter.IsSome @>
     
@@ -72,12 +67,12 @@ module RoslynAnalyzerTypesGenericsTests =
     let ``Process project should return modifiers when type is generic`` (modifier: string, parameterName, name, sut: RoslynAnalyzer, project) =
         let typeDef =
             (sut :> IProjectAnalyzer)
-            |> (fun c -> c.Analyze(project))
-            |> (fun c -> c.Types)
+            |> fun c -> c.Analyze project
+            |> fun c -> c.Types
             |> Seq.find (fun c -> c.Identity.Name = name)
         let parameter =
-            typeDef.Parameters
-            |> Seq.find (fun c -> c.Identity = parameterName)
+            typeDef.Identity.Parameters
+            |> Seq.find (fun c -> c.Name = parameterName)
 
         test <@ modifier = parameter.Modifier @>
 
@@ -97,8 +92,8 @@ module RoslynAnalyzerTypesGenericsTests =
             |> (fun c -> c.Types)
             |> Seq.find (fun c -> c.Identity.Name = name)
         let parameter =
-            typeDef.Parameters
-            |> Seq.find (fun c -> c.Identity = parameterName)
+            typeDef.Identity.Parameters
+            |> Seq.find (fun c -> c.Name = parameterName)
 
         test <@ Seq.length parameter.Constraints = count @>
 
@@ -120,8 +115,8 @@ module RoslynAnalyzerTypesGenericsTests =
             |> (fun c -> c.Types)
             |> Seq.find (fun c -> c.Identity.Name = name)
         let parameter =
-            typeDef.Parameters
-            |> Seq.find (fun c -> c.Identity = parameterName)
+            typeDef.Identity.Parameters
+            |> Seq.find (fun c -> c.Name = parameterName)
         let parameterConstraints = 
             parameter.Constraints 
             |> Seq.filter (fun c -> Seq.contains c expectedConstraints)

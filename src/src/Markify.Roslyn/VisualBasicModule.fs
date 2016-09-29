@@ -172,7 +172,7 @@ type VisualBasicHelper() =
                 | null -> ""
                 | x -> x.ToString() 
             let parameter = {
-                Name = c.Identifier.Text
+                GenericParameter.Name = c.Identifier.Text
                 Modifier = modifier}
             parameter)
         |> Seq.toList

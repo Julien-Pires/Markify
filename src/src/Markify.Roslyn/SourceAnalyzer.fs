@@ -19,17 +19,22 @@ module SourceAnalyzer =
     let createNamespaceDefinition (node : NamespaceNode) =
         { Name = node.Name }
 
-    let createTypeDefinition ((node : Node), ( typeNode : TypeNode)) = 
+    let createTypeDefinition ((node : Node), (typeNode : TypeNode)) : TypeDefinition option = 
         let identity = {
             Name = TypeExtension.getName node
             Parents = TypeExtension.getParentName typeNode
-            Namespace = TypeExtension.getNamespaceName node }
-        {   Identity = identity
-            Kind = typeNode.Kind
+            Namespace = TypeExtension.getNamespaceName node
             AccessModifiers = typeNode.AccessModifiers
             Modifiers = typeNode.Modifiers
             Parameters = TypeExtension.getGenericParameters typeNode
             BaseTypes = typeNode.Bases }
+        match typeNode.Kind with
+        | StructureKind.Class -> Some <| Class { Identity = identity }
+        | StructureKind.Struct -> Some <| Struct { Identity = identity }
+        | StructureKind.Interface -> Some <| Interface { Identity = identity }
+        | StructureKind.Enum -> Some <| Enum { Identity = identity }
+        | StructureKind.Delegate -> Some <|  Delegate { Identity = identity }
+        | _ -> None
 
     let searchDefinitions nodes =
         ({ Namespaces = []; Types = [] }, nodes)
@@ -37,7 +42,9 @@ module SourceAnalyzer =
             match c with
             | Type x ->
                 let typeDefinition = createTypeDefinition (c, x)
-                { acc with Types =  typeDefinition::acc.Types }
+                match typeDefinition with
+                | Some w -> { acc with Types =  w::acc.Types }
+                | _ -> acc
             | Namespace x ->
                 let namespaceDefinition = createNamespaceDefinition x
                 { acc with Namespaces = namespaceDefinition::acc.Namespaces }

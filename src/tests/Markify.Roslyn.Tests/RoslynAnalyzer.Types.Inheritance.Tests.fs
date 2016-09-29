@@ -2,14 +2,10 @@
 
 module RoslynAnalyzerTypesInheritanceTests =
     open Markify.Roslyn
-
     open Markify.Models.IDE
     open Markify.Models.Definitions
-
     open Markify.Core.Analyzers
-
     open Attributes
-
     open Xunit
     open Swensen.Unquote
 
@@ -33,11 +29,11 @@ module RoslynAnalyzerTypesInheritanceTests =
     let ``Process project should return base types when type has one`` (name, count, sut: RoslynAnalyzer, project) =
         let typeDef = 
             (sut :> IProjectAnalyzer)
-            |> (fun c -> c.Analyze(project))
-            |> (fun c -> c.Types)
+            |> fun c -> c.Analyze project
+            |> fun c -> c.Types
             |> Seq.find (fun c -> c.Identity.Name = name)
 
-        test <@ count = Seq.length typeDef.BaseTypes @>
+        test <@ count = Seq.length typeDef.Identity.BaseTypes @>
 
     [<Theory>]
     [<ProjectData("ClassProject", ProjectLanguage.CSharp, "InheritClass", "Exception")>]
@@ -59,13 +55,13 @@ module RoslynAnalyzerTypesInheritanceTests =
     let ``Process project should return base types when type has multiple`` (name, typeNames: string, sut: RoslynAnalyzer, project) =
         let expectedBaseTypes = typeNames.Split [|';'|]
 
-        let typeDef = 
+        let typeDef =
             (sut :> IProjectAnalyzer)
-            |> (fun c -> c.Analyze(project))
-            |> (fun c -> c.Types)
+            |> fun c -> c.Analyze project
+            |> fun c -> c.Types
             |> Seq.find (fun c -> c.Identity.Name = name)
         let baseTypes = 
-            typeDef.BaseTypes 
+            typeDef.Identity.BaseTypes 
             |> Seq.filter (fun c -> Seq.contains c expectedBaseTypes)
 
         test <@ Seq.length expectedBaseTypes = Seq.length baseTypes @>
