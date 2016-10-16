@@ -1,8 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<Project>
-  <Files>
-    <Uri>Source/Class/Unknown</Uri>
-    <Uri>Source/Enum/Invalid</Uri>
-    <Uri>Source/Foo</Uri>
-  </Files>
-</Project>
+<Solution>
+  <Projects>
+    <Project>
+      <Count>0</Count>
+      <Files>
+        <Uri>Source/Class/Unknown</Uri>
+        <Uri>Source/Enum/Unknown.txt</Uri>
+        <Uri>Source/Interface/Unknown.png</Uri>
+      </Files>
+    </Project>
+  </Projects>
+</Solution>

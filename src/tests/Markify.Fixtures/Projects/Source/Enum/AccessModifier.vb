@@ -1,20 +1,19 @@
-﻿Public Enum PublicEnum
+﻿Public Enum PublicType
 End Enum
 
-Friend Enum InternalEnum
+Friend Enum InternalType
 End Enum
 
-Public Class PrivateFoo
-    Private Enum PrivateEnum
+Public Partial Class ParentType
+    Private Enum PrivateType
     End Enum
-End Class
 
-Public Class ProtectedFoo
-    Protected Enum ProtectedEnum
+    Protected Enum ProtectedType
     End Enum
-End Class
 
-Public Class ProtectedInternalFoo
-    Protected Friend Enum ProtectedInternalEnum
+    Protected Friend Enum ProtectedInternalType
+    End Enum
+
+    Friend Protected Enum InternalProtectedType
     End Enum
 End Class

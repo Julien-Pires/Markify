@@ -19,18 +19,26 @@ type ProjectContent() =
     [<XmlElement("Count")>]
     member val Count : int = 0 with get, set
 
+[<XmlRoot("Solution")>]
+type SolutionContent() =
+    [<XmlArray("Projects")>]
+    [<XmlArrayItem("Project")>]
+    member val Projects : ProjectContent[] = [||] with get, set
+
 type ProjectInfo = {
     Project : Project
     Count : int
 }
 
-type ProjectContextCustomization (projectFile, language) =
-    let projectFile = sprintf "%s.xml" projectFile
-    let extension = 
+type ProjectContextCustomization (file, language) =
+    let file = file
+
+    let extension =
         match language with
         | ProjectLanguage.CSharp -> "cs"
         | ProjectLanguage.VisualBasic -> "vb"
         | _ -> ""
+
     let projectExtension =
         match language with
         | ProjectLanguage.CSharp -> "csproj"
@@ -42,31 +50,35 @@ type ProjectContextCustomization (projectFile, language) =
         let cleanPath = Uri.UnescapeDataString (basePath.Path)
         Path.Combine (Path.GetDirectoryName (cleanPath), path)
 
-    let readXml path =
+    let createProject (content : ProjectContent) = 
+        let project = {   
+            Name = "Test"
+            Path = Uri(sprintf "c:/Test/Test.%s" projectExtension)
+            Language = language
+            Files =
+                content.Files
+                |> Seq.map (fun c -> 
+                    let fullpath = getFullPath <| sprintf "Projects/%s" c
+                    match language with                
+                    | ProjectLanguage.Unsupported -> fullpath
+                    | _ -> sprintf "%s.%s" fullpath extension)
+                |> Seq.map Uri }
+        {   Project = project
+            Count = content.Count }
+
+    member this.ReadXml<'T> path =
         let fullPath = getFullPath (sprintf "Projects/%s" path)
-        let serializer = XmlSerializer(typeof<ProjectContent>)
+        let serializer = XmlSerializer(typeof<'T>)
         use stream = new StreamReader(fullPath)
-        serializer.Deserialize stream :?> ProjectContent
+        serializer.Deserialize stream :?> 'T
+        
+    member this.GetProjects path =
+        (this.ReadXml<SolutionContent> (sprintf "%s.xml" path)).Projects
+
+    member this.BuildMultiProjects path =
+        this.GetProjects path
+        |> Array.map (createProject)
 
     interface ICustomization with
         member this.Customize (fixture : IFixture) =
-            let projectContent = readXml projectFile
-            let project = {
-                Name = "Test"
-                Path = Uri(sprintf "c:/Test/Test.%s" projectExtension)
-                Language = language
-                Files = 
-                    projectContent.Files
-                    |> Seq.map (fun c -> 
-                        let folder = sprintf "Projects/%s" c
-                        sprintf "%s.%s" (getFullPath folder) extension)
-                    |> Seq.map Uri}
-            let projectInfo = {
-                Project = project;
-                Count = projectContent.Count }
-            fixture.Inject(project)
-            fixture.Inject(projectInfo)
-            fixture.Inject(
-                SourceConverter(
-                    [(CSharpHelper() :> NodeHelper, ["cs"]);
-                    (VisualBasicHelper() :> NodeHelper, ["vb"])]))
+            fixture.Inject (this.BuildMultiProjects file)

@@ -1,19 +1,27 @@
-﻿public class SingleClass { }
+﻿public class FooType { }
 
-public class ParentClass
+public partial class ParentType
 {
-    public class NestedClass { }
+    public partial class NestedType { }
 }
 
-namespace FooSpace
+public partial class ParentType
 {
-    public class InNamespaceClass { }
-}
-
-namespace FooSpace.InnerSpace
-{
-    public class AnotherParentClass
+    public partial class AnotherNestedType
     {
-        public class ChildClass { }
+        public class DeeperNestedType { }
+    }
+}
+
+namespace FooNamespace
+{
+    public class InNamespaceType { }
+}
+
+namespace FooNamespace.BarNamespace
+{
+    public partial class ParentType
+    {
+        public class NestedType { }
     }
 }

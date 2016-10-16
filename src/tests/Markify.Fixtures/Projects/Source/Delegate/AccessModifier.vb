@@ -1,15 +1,13 @@
-﻿Public Delegate Sub PublicDelegate()
+﻿Public Delegate Sub PublicType()
 
-Friend Delegate Sub InternalDelegate()
+Friend Delegate Sub InternalType()
 
-Public Class PrivateFoo
-    Private Delegate Sub PrivateDelegate()
-End Class
+Public Partial Class ParentType
+    Private Delegate Sub PrivateType()
 
-Public Class ProtectedFoo
-    Protected Delegate Sub ProtectedDelegate()
-End Class
+    Protected Delegate Sub ProtectedType()
 
-Public Class ProtectedInternalFoo
-    Protected Friend Delegate Sub ProtectedInternalDelegate()
+    Protected Friend Delegate Sub ProtectedInternalType()
+
+    Friend Protected Delegate Sub InternalProtectedType()
 End Class

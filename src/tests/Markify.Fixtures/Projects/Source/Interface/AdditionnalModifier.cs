@@ -1,1 +1,1 @@
-﻿public partial interface IPartialInterface { }
+﻿public partial interface PartialType { }

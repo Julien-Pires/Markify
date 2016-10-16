@@ -58,6 +58,7 @@
     <Content Include="packages.config" />
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Customization.fs" />
+    <Compile Include="LanguageAnalyzerArgs.fs" />
     <Compile Include="Attributes.fs" />
     <Compile Include="DefinitionsHelper.fs" />
     <Compile Include="RoslynAnalyzer.Types.Tests.fs" />

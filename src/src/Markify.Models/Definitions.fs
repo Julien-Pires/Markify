@@ -15,7 +15,7 @@ type Modifier = string
 type Constraint = string
 type GenericParameterDefinition = {
     Name : DefinitionName
-    Modifier : Modifier
+    Modifier : Modifier option
     Constraints : Constraint seq }
 
 type BaseType = string

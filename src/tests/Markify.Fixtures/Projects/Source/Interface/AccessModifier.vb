@@ -1,20 +1,19 @@
-﻿Public Interface IPublicInterface
+﻿Public Interface PublicType
 End Interface
 
-Friend Interface IInternalInterface
+Friend Interface InternalType
 End Interface
 
-Public Interface IPrivateFoo
-    Private Interface IPrivateInterface
+Public Partial Interface ParentType
+    Private Interface PrivateType
     End Interface
-End Interface
 
-Public Interface IProtectedFoo
-    Protected Interface IProtectedInterface
+    Protected Interface ProtectedType
     End Interface
-End Interface
 
-Public Interface IProtectedInternalFoo
-    Protected Friend Interface IProtectedInternalInterface
+    Protected Friend Interface ProtectedInternalType
+    End Interface
+
+    Friend Protected Interface InternalProtectedType
     End Interface
 End Interface

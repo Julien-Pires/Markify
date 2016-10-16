@@ -1,100 +1,68 @@
 ﻿namespace Markify.Roslyn.Tests
 
 module RoslynAnalyzerTypesModifiersTests =
+    open System
     open Markify.Roslyn
     open Markify.Models.IDE
     open Markify.Models.Definitions
     open Markify.Core.Analyzers
     open Attributes
+    open DefinitionsHelper
     open Xunit
     open Swensen.Unquote
 
     [<Theory>]
-    [<ProjectData("ClassProject", ProjectLanguage.CSharp, "public", "PublicClass")>]
-    [<ProjectData("ClassProject", ProjectLanguage.CSharp, "internal", "InternalClass")>]
-    [<ProjectData("ClassProject", ProjectLanguage.CSharp, "protected", "ProtectedClass")>]
-    [<ProjectData("ClassProject", ProjectLanguage.CSharp, "protected internal", "ProtectedInternalClass")>]
-    [<ProjectData("ClassProject", ProjectLanguage.CSharp, "private", "PrivateClass")>]
-    [<ProjectData("InterfaceProject", ProjectLanguage.CSharp, "public", "IPublicInterface")>]
-    [<ProjectData("InterfaceProject", ProjectLanguage.CSharp, "internal", "IInternalInterface")>]
-    [<ProjectData("InterfaceProject", ProjectLanguage.CSharp, "protected internal", "IProtectedInternalInterface")>]
-    [<ProjectData("StructProject", ProjectLanguage.CSharp, "public", "PublicStruct")>]
-    [<ProjectData("StructProject", ProjectLanguage.CSharp, "internal", "InternalStruct")>]
-    [<ProjectData("StructProject", ProjectLanguage.CSharp, "protected internal", "ProtectedInternalStruct")>]
-    [<ProjectData("EnumProject", ProjectLanguage.CSharp, "public", "PublicEnum")>]
-    [<ProjectData("EnumProject", ProjectLanguage.CSharp, "internal", "InternalEnum")>]
-    [<ProjectData("EnumProject", ProjectLanguage.CSharp, "protected internal", "ProtectedInternalEnum")>]
-    [<ProjectData("DelegateProject", ProjectLanguage.CSharp, "public", "PublicDelegate")>]
-    [<ProjectData("DelegateProject", ProjectLanguage.CSharp, "internal", "InternalDelegate")>]
-    [<ProjectData("DelegateProject", ProjectLanguage.CSharp, "protected internal", "ProtectedInternalDelegate")>]
-    [<ProjectData("ClassProject", ProjectLanguage.VisualBasic, "Public", "PublicClass")>]
-    [<ProjectData("ClassProject", ProjectLanguage.VisualBasic, "Friend", "InternalClass")>]
-    [<ProjectData("ClassProject", ProjectLanguage.VisualBasic, "Protected", "ProtectedClass")>]
-    [<ProjectData("ClassProject", ProjectLanguage.VisualBasic, "Protected Friend", "ProtectedInternalClass")>]
-    [<ProjectData("ClassProject", ProjectLanguage.VisualBasic, "Private", "PrivateClass")>]
-    [<ProjectData("InterfaceProject", ProjectLanguage.VisualBasic, "Public", "IPublicInterface")>]
-    [<ProjectData("InterfaceProject", ProjectLanguage.VisualBasic, "Friend", "IInternalInterface")>]
-    [<ProjectData("InterfaceProject", ProjectLanguage.VisualBasic, "Protected Friend", "IProtectedInternalInterface")>]
-    [<ProjectData("StructProject", ProjectLanguage.VisualBasic, "Public", "PublicStruct")>]
-    [<ProjectData("StructProject", ProjectLanguage.VisualBasic, "Friend", "InternalStruct")>]
-    [<ProjectData("StructProject", ProjectLanguage.VisualBasic, "Protected Friend", "ProtectedInternalStruct")>]
-    [<ProjectData("EnumProject", ProjectLanguage.VisualBasic, "Public", "PublicEnum")>]
-    [<ProjectData("EnumProject", ProjectLanguage.VisualBasic, "Friend", "InternalEnum")>]
-    [<ProjectData("EnumProject", ProjectLanguage.VisualBasic, "Protected Friend", "ProtectedInternalEnum")>]
-    [<ProjectData("DelegateProject", ProjectLanguage.VisualBasic, "Public", "PublicDelegate")>]
-    [<ProjectData("DelegateProject", ProjectLanguage.VisualBasic, "Friend", "InternalDelegate")>]
-    [<ProjectData("DelegateProject", ProjectLanguage.VisualBasic, "Protected Friend", "ProtectedInternalDelegate")>]
-    let ``Process project should return type access modifiers`` (modifier: string, name, sut: RoslynAnalyzer, project) =
-        let expectedModifiers = modifier.Split [|' '|]
+    [<MultiProjectData("AllTypesModifiers", ProjectLanguage.CSharp, "PublicType", "public")>]
+    [<MultiProjectData("AllTypesModifiers", ProjectLanguage.CSharp, "InternalType", "internal")>]
+    [<MultiProjectData("AllTypesModifiers", ProjectLanguage.CSharp, "ParentType.ProtectedType", "protected")>]
+    [<MultiProjectData("AllTypesModifiers", ProjectLanguage.CSharp, "ParentType.PrivateType", "private")>]
+    [<MultiProjectData("AllTypesModifiers", ProjectLanguage.CSharp, "ParentType.ProtectedInternalType", "protected;internal")>]
+    [<MultiProjectData("AllTypesModifiers", ProjectLanguage.CSharp, "ParentType.InternalProtectedType", "protected;internal")>]
+    [<MultiProjectData("AllTypesModifiers", ProjectLanguage.VisualBasic, "PublicType", "Public")>]
+    [<MultiProjectData("AllTypesModifiers", ProjectLanguage.VisualBasic, "InternalType", "Friend")>]
+    [<MultiProjectData("AllTypesModifiers", ProjectLanguage.VisualBasic, "ParentType.ProtectedType", "Protected")>]
+    [<MultiProjectData("AllTypesModifiers", ProjectLanguage.VisualBasic, "ParentType.PrivateType", "Private")>]
+    [<MultiProjectData("AllTypesModifiers", ProjectLanguage.VisualBasic, "ParentType.ProtectedInternalType", "Protected;Friend")>]
+    [<MultiProjectData("AllTypesModifiers", ProjectLanguage.VisualBasic, "ParentType.InternalProtectedType", "Protected;Friend")>]
+    let ``Analyze should return all access modifiers when type has some`` (name, modifiers : string, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
+        let expected = Set <| modifiers.Split (';')
+        let actual =
+            projects
+            |> Seq.fold (fun acc c ->
+                let library = (sut :> IProjectAnalyzer).Analyze c.Project
+                let typeDefinition =
+                    library.Types
+                    |> Seq.find (fun d -> getFullname d.Identity = name)
+                typeDefinition::acc) []
+            |> List.map (fun c -> Set c.Identity.AccessModifiers)
 
-        let typeDef = 
-            (sut :> IProjectAnalyzer)
-            |> fun c -> c.Analyze project
-            |> fun c -> c.Types
-            |> Seq.find (fun c -> c.Identity.Name = name)
-        let possessedModifiers = 
-            typeDef.Identity.AccessModifiers 
-            |> Seq.filter (fun c -> Seq.contains c expectedModifiers) 
-
-        test <@ Seq.length possessedModifiers = Seq.length expectedModifiers @>
+        test <@ actual |> List.forall ((Set.isSubset)expected) @>
 
     [<Theory>]
-    [<ProjectData("ClassProject", ProjectLanguage.CSharp, "abstract", "AbstractClass")>]
-    [<ProjectData("ClassProject", ProjectLanguage.CSharp, "sealed", "SealedClass")>]
-    [<ProjectData("ClassProject", ProjectLanguage.CSharp, "partial", "PartialClass")>]
-    [<ProjectData("ClassProject", ProjectLanguage.CSharp, "static", "StaticClass")>]
-    [<ProjectData("InterfaceProject", ProjectLanguage.CSharp, "partial", "IPartialInterface")>]
-    [<ProjectData("StructProject", ProjectLanguage.CSharp, "partial", "PartialStruct")>]
-    [<ProjectData("ClassProject", ProjectLanguage.VisualBasic, "MustInherit", "AbstractClass")>]
-    [<ProjectData("ClassProject", ProjectLanguage.VisualBasic, "NotInheritable", "SealedClass")>]
-    [<ProjectData("ClassProject", ProjectLanguage.VisualBasic, "Partial", "PartialClass")>]
-    [<ProjectData("ClassProject", ProjectLanguage.VisualBasic, "Static", "StaticClass")>]
-    [<ProjectData("InterfaceProject", ProjectLanguage.VisualBasic, "Partial", "IPartialInterface")>]
-    [<ProjectData("StructProject", ProjectLanguage.VisualBasic, "Partial", "PartialStruct")>]
-    let ``Process project should return modifiers when type has one`` (modifier, name, sut: RoslynAnalyzer, project) =
-        let typeDef = 
-            (sut :> IProjectAnalyzer)
-            |> fun c -> c.Analyze project
-            |> fun c -> c.Types
-            |> Seq.find (fun c -> c.Identity.Name = name)
+    [<MultiProjectData("ContainerTypesModifiers", ProjectLanguage.CSharp, "PartialType", "partial")>]
+    [<MultiProjectData("ClassTypeModifiers", ProjectLanguage.CSharp, "SealedType", "sealed")>]
+    [<MultiProjectData("ClassTypeModifiers", ProjectLanguage.CSharp, "AbstractType", "abstract")>]
+    [<MultiProjectData("ClassTypeModifiers", ProjectLanguage.CSharp, "StaticType", "static")>]
+    [<MultiProjectData("ClassTypeModifiers", ProjectLanguage.CSharp, "AbstractPartialType", "abstract;partial")>]
+    [<MultiProjectData("ClassTypeModifiers", ProjectLanguage.CSharp, "SealedPartialType", "sealed;partial")>]
+    [<MultiProjectData("ContainerTypesModifiers", ProjectLanguage.VisualBasic, "PartialType", "Partial")>]
+    [<MultiProjectData("ClassTypeModifiers", ProjectLanguage.VisualBasic, "SealedType", "NotInheritable")>]
+    [<MultiProjectData("ClassTypeModifiers", ProjectLanguage.VisualBasic, "AbstractType", "MustInherit")>]
+    [<MultiProjectData("ClassTypeModifiers", ProjectLanguage.VisualBasic, "StaticType", "Static")>]
+    [<MultiProjectData("ClassTypeModifiers", ProjectLanguage.VisualBasic, "AbstractPartialType", "MustInherit;Partial")>]
+    [<MultiProjectData("ClassTypeModifiers", ProjectLanguage.VisualBasic, "SealedPartialType", "NotInheritable;Partial")>]
+    [<MultiProjectData("ClassTypeModifiers", ProjectLanguage.VisualBasic, "PartialAbstractType", "MustInherit;Partial")>]
+    [<MultiProjectData("ClassTypeModifiers", ProjectLanguage.VisualBasic, "PartialSealedType", "NotInheritable;Partial")>]
+    let ``Analyze should return all modifiers when type has some`` (name, modifiers : string, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
+        let expected = Set <| modifiers.Split (';')
+        let actual =
+            projects
+            |> Seq.fold (fun acc c ->
+                let library = (sut :> IProjectAnalyzer).Analyze c.Project
+                let typeDefinition =
+                    library.Types
+                    |> Seq.find (fun d -> getFullname d.Identity = name)
+                typeDefinition::acc) []
+            |> List.map (fun c -> Set c.Identity.Modifiers)
 
-        test <@ Seq.contains modifier typeDef.Identity.Modifiers @>
-
-    [<Theory>]
-    [<ProjectData("ClassProject", ProjectLanguage.CSharp, "abstract partial", "AbstractPartialClass")>]
-    [<ProjectData("ClassProject", ProjectLanguage.CSharp, "sealed partial", "SealedPartialClass")>]
-    [<ProjectData("ClassProject", ProjectLanguage.VisualBasic, "MustInherit Partial", "AbstractPartialClass")>]
-    [<ProjectData("ClassProject", ProjectLanguage.VisualBasic, "NotInheritable Partial", "SealedPartialClass")>]
-    let ``Process project should return all modifiers when type has multiple`` (modifier: string, name, sut: RoslynAnalyzer, project) =
-        let expectedModifiers = modifier.Split [|' '|]
-
-        let typeDef = 
-            (sut :> IProjectAnalyzer)
-            |> fun c -> c.Analyze project
-            |> fun c -> c.Types
-            |> Seq.find (fun c -> c.Identity.Name = name)
-        let possessedModifiers = 
-            typeDef.Identity.Modifiers
-            |> Seq.filter (fun c -> Seq.contains c expectedModifiers) 
-
-        test <@ Seq.length possessedModifiers = Seq.length expectedModifiers @>
+        test <@ actual |> List.forall ((Set.isSubset) expected) @>

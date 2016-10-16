@@ -1,20 +1,19 @@
-﻿Public Structure PublicStruct
+﻿Public Structure PublicType
 End Structure
 
-Friend Structure InternalStruct
+Friend Structure InternalType
 End Structure
 
-Public Structure PrivateFoo
-    Private Structure PrivateStruct
+Public Partial Structure ParentType
+    Private Structure PrivateType
+    End Structure
+
+    Protected Structure ProtectedType
+    End Structure
+
+    Protected Friend Structure ProtectedInternalType
+    End Structure
+
+    Friend Protected Structure InternalProtectedType
     End Structure
 End Structure
-
-Public Class ProtectedFoo
-    Protected Structure ProtectedStruct
-    End Structure
-End Class
-
-Public Class ProtectedInternalFoo
-    Protected Friend Structure ProtectedInternalStruct
-    End Structure
-End Class

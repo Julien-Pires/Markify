@@ -1,1 +1,1 @@
-﻿public partial struct PartialStruct { }
+﻿public partial struct PartialType { }

@@ -1,18 +1,14 @@
-﻿public delegate void PublicDelegate();
+﻿public delegate void PublicType();
 
-internal delegate void InternalDelegate();
+internal delegate void InternalType();
 
-public class PrivateFoo
+public partial class ParentType
 {
-    private delegate void PrivateDelegate();
-}
+    private delegate void PrivateType();
 
-public class ProtectedFoo
-{
-    protected delegate void ProtectedDelegate();
-}
+    protected delegate void ProtectedType();
 
-public class ProtectedInternalFoo
-{
-    protected internal delegate void ProtectedInternalDelegate();
+    protected internal delegate void ProtectedInternalType();
+
+    internal protected delegate void InternalProtectedType();
 }

@@ -1,12 +1,26 @@
-﻿Public Enum SingleEnum
+﻿Public Enum FooType
 End Enum
 
-Public Class ParentEnum
-    Public Enum NestedEnum
+Public Partial Class ParentType
+    Public Enum NestedType
     End Enum
 End Class
 
-Namespace FooSpace
-    Public Enum InNamespaceEnum
+Public Partial Class ParentType
+    Public Partial Class AnotherNestedType
+        Public Enum DeeperNestedType
+        End Enum
+    End Class
+End Class
+
+Namespace FooNamespace
+    Public Enum InNamespaceType
     End Enum
+End Namespace
+
+Namespace FooNamespace.BarNamespace
+    Public Partial Class ParentType
+        public Enum NestedType
+        End Enum
+    End Class
 End Namespace

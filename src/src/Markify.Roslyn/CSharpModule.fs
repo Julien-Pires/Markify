@@ -4,176 +4,185 @@ open Microsoft.CodeAnalysis
 open Microsoft.CodeAnalysis.CSharp.Syntax
 
 module CSharpSyntaxHelper =
-    let (|NamespaceNode|_|) (node: SyntaxNode) =
+    let (|IsNamespace|_|) (node: SyntaxNode) =
         match node with
         | :? NamespaceDeclarationSyntax as x -> Some x
         | _ -> None
 
-    let (|ClassNode|_|) (node: SyntaxNode) = 
+    let (|IsClass|_|) (node: SyntaxNode) = 
         match node with
         | :? ClassDeclarationSyntax as x -> Some x
         | _ -> None
         
-    let (|InterfaceNode|_|) (node : SyntaxNode) =
+    let (|IsInterface|_|) (node : SyntaxNode) =
         match node with
         | :? InterfaceDeclarationSyntax as x -> Some x
         | _ -> None
 
-    let (|StructNode|_|) (node : SyntaxNode) =
+    let (|IsStruct|_|) (node : SyntaxNode) =
         match node with
         | :? StructDeclarationSyntax as x -> Some x
         | _ -> None
 
-    let (|EnumNode|_|) (node : SyntaxNode) =
+    let (|IsEnum|_|) (node : SyntaxNode) =
         match node with
         | :? EnumDeclarationSyntax as x -> Some x
         | _ -> None
 
-    let (|DelegateNode|_|) (node : SyntaxNode) =
+    let (|IsDelegate|_|) (node : SyntaxNode) =
         match node with
         | :? DelegateDeclarationSyntax as x -> Some x
         | _ -> None
 
-    let (|ObjectNode|_|) (node : SyntaxNode) =
+    let (|IsStructureType|_|) (node : SyntaxNode) = 
         match node with
-        | :? BaseTypeDeclarationSyntax as x -> Some x
-        | _ -> None
-
-    let (|ContainerTypeNode|_|) (node : SyntaxNode) = 
-        match node with
-        | :? TypeDeclarationSyntax as x -> Some x
-        | _ -> None
-
-    let (|TypeNode|_|) (node : SyntaxNode) = 
-        match node with
-        | ClassNode x -> Some true
-        | InterfaceNode x -> Some true
-        | StructNode x -> Some true
-        | EnumNode x -> Some true
-        | DelegateNode x -> Some true
+        | IsClass x -> Some (x :> TypeDeclarationSyntax)
+        | IsStruct x -> Some (x :> TypeDeclarationSyntax)
+        | IsInterface x -> Some (x :> TypeDeclarationSyntax)
         | _ -> None
 
 open CSharpSyntaxHelper
 open Markify.Models.Definitions
 open Microsoft.CodeAnalysis.CSharp
 
-type CSharpHelper() =
-    inherit NodeHelper()
-
-    let accessModifiersList = 
+module CSharpHelper =
+    let accessModifiersList =
         Set [
             SyntaxKind.PublicKeyword
             SyntaxKind.InternalKeyword 
             SyntaxKind.PrivateKeyword
             SyntaxKind.ProtectedKeyword ]
 
-    let getModifiers filter (node : SyntaxNode) =
-        let modifiers =
-            match node with
-            | ObjectNode x -> x.Modifiers
-            | DelegateNode x -> x.Modifiers
-            | _ -> SyntaxTokenList()
+    let getStructureTypeIdentifier = function
+        | IsStructureType x -> Some x.Identifier
+        | _ -> None
+
+    let getNamespaceIdentifier = function
+        | IsNamespace x -> Some (x.Name :> SyntaxNode)
+        | _ -> None
+
+    let filterModifiers filter (modifiers : SyntaxTokenList) =
         modifiers
         |> Seq.filter filter
         |> Seq.map (fun c -> c.Text)
         |> Seq.toList
 
-    let getGenericParameters node =
-        let parametersList =
-            match node with
-            | ContainerTypeNode x -> Some x.TypeParameterList
-            | DelegateNode x -> Some x.TypeParameterList
-            | _ -> None
-        match parametersList with
-        | None -> SeparatedSyntaxList()
-        | Some x ->
-            match x with
-            | null -> SeparatedSyntaxList()
-            | w -> w.Parameters
+    let getAccessModifiers modifiers =
+        modifiers
+        |> filterModifiers (fun c ->
+            accessModifiersList
+            |> Set.contains (c.Kind()))
 
-    override this.ReadSource source =
-        CSharpSyntaxTree.ParseText source
-
-    override this.GetTypeName node =
-        match node with
-        | ObjectNode x -> x.Identifier.Text
-        | DelegateNode x -> x.Identifier.Text
-        | _ -> ""
-
-    override this.GetNamespaceName node =
-        match node with
-        | NamespaceNode x -> x.Name.ToString()
-        | _ -> ""
-
-    override this.GetTypeKind node =
-        match node with
-        | ClassNode _ -> StructureKind.Class
-        | InterfaceNode _ -> StructureKind.Interface
-        | StructNode _ -> StructureKind.Struct
-        | EnumNode _ -> StructureKind.Enum
-        | DelegateNode _ -> StructureKind.Delegate
-        | _ -> StructureKind.Unknown
-
-    override this.GetModifiers node =
-        node
-        |> getModifiers (fun c ->
+    let getAdditionalModifiers modifiers =
+        modifiers
+        |> filterModifiers (fun c ->
             accessModifiersList
             |> Set.contains (c.Kind())
             |> not)
 
-    override this.GetAccessModifiers node =
-        node
-        |> getModifiers (fun c ->
-            accessModifiersList
-            |> Set.contains (c.Kind()))
+    let getBaseTypes (node : BaseTypeDeclarationSyntax) =
+        match node.BaseList with
+        | null -> []
+        | x ->
+            x.Types
+            |> Seq.map (fun c -> c.Type.ToString())
+            |> Seq.toList
 
-    override this.GetParents node =
-        match node with
-        | ObjectNode x ->
-            match x.BaseList with
-            | null -> []
-            | w ->
-                w.Types
-                |> Seq.map (fun c -> c.Type.ToString())
-                |> Seq.toList
-        | _ -> []
+    let getGenericParameters = function
+        | null -> Seq.empty
+        | (w : TypeParameterListSyntax) -> w.Parameters :> TypeParameterSyntax seq
 
-    override this.GetGenericConstraints node =
-        let constraintsList =
-            match node with
-            | ContainerTypeNode x -> x.ConstraintClauses :> TypeParameterConstraintClauseSyntax seq
-            | DelegateNode x -> x.ConstraintClauses :> TypeParameterConstraintClauseSyntax seq
-            | _ -> Seq.empty
-        constraintsList
+    let getGenericParameterDefinitions (parameters : TypeParameterSyntax seq) (constraints : TypeParameterConstraintClauseSyntax seq) =
+        let constraintsMap =
+            constraints
+            |> Seq.map (fun c ->
+                let typesConstraints =
+                    c.Constraints
+                    |> Seq.map (fun d -> d.ToString())
+                    |> Seq.toList
+                (c.Name.ToString(), typesConstraints))
+            |> Map.ofSeq
+        parameters
         |> Seq.map (fun c ->
-            let typesConstraints =
-                c.Constraints
-                |> Seq.map (fun d -> d.ToString())
-                |> Seq.toList
-            let constraints = {
-                TypeConstraint.Name = c.Name.ToString()
-                Constraints = typesConstraints}
-            constraints)
-        |> Seq.toList
-
-    override this.GetGenericParameters node =
-        getGenericParameters node
-        |> Seq.map (fun c -> 
             let name = c.Identifier.Text
             let modifier = 
                 match c.VarianceKeyword.Value with
-                | null -> ""
-                | x -> x.ToString()
-            let parameter = {
-                GenericParameter.Name = name
-                Modifier = modifier}
-            parameter)
+                | null -> None
+                | x -> Some <| x.ToString()
+            let constraints =
+                constraintsMap
+                |> Map.tryFind(name)
+                |> function | Some x -> x | None -> []
+            {   Name = name
+                Modifier = modifier
+                Constraints = constraints })
         |> Seq.toList
 
-    override this.IsTypeNode node =
-        (|TypeNode|_|) node
+    let createTypeIdentity node =
+        {   Name = ""
+            Parents = SyntaxHelper.getParentName node getStructureTypeIdentifier 
+            Namespace = SyntaxHelper.getNamespaceName node getNamespaceIdentifier
+            AccessModifiers = []
+            Modifiers = [] 
+            BaseTypes = []
+            Parameters = [] }
 
-    override this.IsNamespaceNode node =
-        match node with
-        | NamespaceNode _ -> Some true
-        | _ -> None
+    let createStructureTypeDefinition (structureSyntax : TypeDeclarationSyntax) =
+        let parameters = getGenericParameters structureSyntax.TypeParameterList
+        let identity = {
+            (createTypeIdentity structureSyntax) with
+                Name = SyntaxHelper.getName structureSyntax.Identifier (parameters |> Seq.length)
+                AccessModifiers = getAccessModifiers structureSyntax.Modifiers 
+                Modifiers = getAdditionalModifiers structureSyntax.Modifiers 
+                BaseTypes = getBaseTypes structureSyntax 
+                Parameters = getGenericParameterDefinitions parameters structureSyntax.ConstraintClauses }
+        match structureSyntax with
+        | IsStruct _ -> Struct { Identity = identity }
+        | IsInterface _ -> Interface { Identity = identity }
+        | _ -> Class { Identity = identity }
+
+    let createEnumDefinition (enumSyntax : EnumDeclarationSyntax) =
+        let identity = {
+            (createTypeIdentity enumSyntax) with
+                Name = SyntaxHelper.getName enumSyntax.Identifier 0
+                AccessModifiers = getAccessModifiers enumSyntax.Modifiers 
+                Modifiers = getAdditionalModifiers enumSyntax.Modifiers 
+                BaseTypes = getBaseTypes enumSyntax }
+        Enum { Identity = identity }
+
+    let createDelegateDefinition (delegateSyntax : DelegateDeclarationSyntax) =
+        let parameters = getGenericParameters delegateSyntax.TypeParameterList
+        let identity = {
+            (createTypeIdentity delegateSyntax) with
+                Name = SyntaxHelper.getName delegateSyntax.Identifier (parameters |> Seq.length)
+                AccessModifiers = getAccessModifiers delegateSyntax.Modifiers 
+                Modifiers = getAdditionalModifiers delegateSyntax.Modifiers 
+                Parameters = getGenericParameterDefinitions parameters delegateSyntax.ConstraintClauses }
+        Delegate { Identity = identity }
+
+    let createNamespaceDefinition (namespaceSyntax : NamespaceDeclarationSyntax) =
+        { NamespaceDefinition.Name = namespaceSyntax.Name.ToString() }
+
+    let getDefinitions (root : SyntaxNode) =
+        root.DescendantNodes()
+        |> Seq.fold (fun (acc : SourceContent) c ->
+            match c with
+            | IsStructureType x ->
+                let structureDefinition = createStructureTypeDefinition x
+                { acc with Types = structureDefinition::acc.Types }
+            | IsEnum x ->
+                let enumDefinition = createEnumDefinition x
+                { acc with Types = enumDefinition::acc.Types }
+            | IsDelegate x ->
+                let delegateDefinition = createDelegateDefinition x
+                { acc with Types = delegateDefinition::acc.Types }
+            | IsNamespace x -> 
+                let namespaceDefinition = createNamespaceDefinition x
+                { acc with Namespaces = namespaceDefinition::acc.Namespaces }
+            | _ -> acc) { Types = []; Namespaces = [] }
+
+module CSharpAnalyzer =
+    let analyze (source : string) =
+        let tree = CSharpSyntaxTree.ParseText source
+        let root = tree.GetRoot()
+        CSharpHelper.getDefinitions root
