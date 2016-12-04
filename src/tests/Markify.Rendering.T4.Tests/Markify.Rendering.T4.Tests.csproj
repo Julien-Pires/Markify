@@ -90,22 +90,41 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\DelegateParametersBuilder.cs" />
+    <Compile Include="Attributes\EnumValuesBuilder.cs" />
+    <Compile Include="Attributes\MemberType.cs" />
     <Compile Include="Attributes\TemplateCustomization.cs" />
     <Compile Include="Attributes\TemplateDataAttribute.cs" />
+    <Compile Include="Attributes\TypeDefinitionBuilder.cs" />
     <Compile Include="Attributes\TypeDefinitionDataAttribute.cs" />
-    <Compile Include="Attributes\TypeDefinitionCustomization.cs" />
     <Compile Include="Attributes\TemplateProviderCustomization.cs" />
     <Compile Include="Attributes\TemplateProviderDataAttribute.cs" />
+    <Compile Include="Attributes\TypeMethodsBuilder.cs" />
+    <Compile Include="Attributes\TypeEventsBuilder.cs" />
+    <Compile Include="Attributes\TypeIdentityBuilder.cs" />
+    <Compile Include="Attributes\TypeFieldsBuilder.cs" />
+    <Compile Include="Attributes\TypePropertiesBuilder.cs" />
     <Compile Include="DefinitionFormatter\DefinitionFormatter.GetAccessModifiers.Tests.cs" />
+    <Compile Include="DefinitionFormatter\DefinitionFormatter.GetMethods.cs" />
+    <Compile Include="DefinitionFormatter\DefinitionFormatter.GetEvents.cs" />
     <Compile Include="DefinitionFormatter\DefinitionFormatter.GetModifiers.Tests.cs" />
     <Compile Include="DefinitionFormatter\DefinitionFormatter.GetNamespace.Tests.cs" />
     <Compile Include="DefinitionFormatter\DefinitionFormatter.GetNameWithParameters.Tests.cs" />
     <Compile Include="DefinitionFormatter\DefinitionFormatter.GetParents.Tests.cs" />
+    <Compile Include="DefinitionFormatter\DefinitionFormatter.GetFields.Tests.cs" />
+    <Compile Include="DefinitionFormatter\DefinitionFormatter.GetProperties.Tests.cs" />
+    <Compile Include="DefinitionFormatter\DefinitionFormatter.GetPropertyAccess.Tests.cs" />
+    <Compile Include="DefinitionFormatter\DefinitionFormatter.GetEnumValues.cs" />
+    <Compile Include="DefinitionFormatter\DefinitionFormatter.GetReturnType.Tests.cs" />
+    <Compile Include="DefinitionFormatter\DefinitionFormatter.Tests.cs" />
+    <Compile Include="MarkdownHelper\MarkdownHelperTests.cs" />
     <Compile Include="T4TemplateProvider\T4TemplateProvider.GetTemplate.Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <Compile Include="DefinitionFormatter\DefinitionFormatter.GetParameters.Tests.cs" />
+    <Compile Include="MarkdownHelper\MarkdownHelper.EscapeString.cs" />
     <None Include="packages.config" />
     <Compile Include="DefinitionFormatter\DefinitionFormatter.GetKind.Tests.cs" />
     <Compile Include="T4Template\T4Template.Apply.Tests.cs" />

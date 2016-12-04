@@ -15,15 +15,15 @@ namespace Markify.Rendering.T4.Tests
         }
 
         [Theory]
-        [TypeDefinitionData("Foo", null, new string[] { }, null, "internal")]
+        [ContainerDefinitionData("Foo", null, new string[] { }, null, "internal")]
         public void GetAccessModifiers_ShouldReturnDefaultModifier_WhenHasNoAccessModifiers(string expected, TypeDefinition definition)
         {
             Check.That(DefinitionFormatter.GetAccessModifiers(definition)).IsEqualTo(expected);
         }
 
         [Theory]
-        [TypeDefinitionData("Foo", null, new[] { "public" }, null, "public")]
-        [TypeDefinitionData("Foo", null, new[] { "protected", "internal" }, null, "protected internal")]
+        [ContainerDefinitionData("Foo", null, new[] { "public" }, null, "public")]
+        [ContainerDefinitionData("Foo", null, new[] { "protected", "internal" }, null, "protected internal")]
         public void GetAccessModifiers_ShouldReturnCorrectModifiers(string expected, TypeDefinition definition)
         {
             Check.That(DefinitionFormatter.GetAccessModifiers(definition)).IsEqualTo(expected);

@@ -51,6 +51,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MarkdownHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="T4Module.cs" />
     <Compile Include="T4Template.cs" />

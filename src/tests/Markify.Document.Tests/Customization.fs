@@ -46,7 +46,12 @@
                             Modifiers = Seq.empty
                             BaseTypes = Seq.empty
                             Parameters = Seq.empty }
-                        Class { Identity = identity })
+                        Class { 
+                            Identity = identity 
+                            Fields = []
+                            Properties = []
+                            Events = [] 
+                            Methods = [] })
             let lib = {
                 Project = name
                 Namespaces = Seq.empty

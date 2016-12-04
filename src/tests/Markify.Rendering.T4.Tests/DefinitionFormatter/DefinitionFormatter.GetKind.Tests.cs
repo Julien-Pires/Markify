@@ -15,11 +15,11 @@ namespace Markify.Rendering.T4.Tests
         }
 
         [Theory]
-        [TypeDefinitionData("Foo", null, null, StructureKind.Class, null, "class")]
-        [TypeDefinitionData("Foo", null, null, StructureKind.Interface, null, "interface")]
-        [TypeDefinitionData("Foo", null, null, StructureKind.Struct, null, "struct")]
-        [TypeDefinitionData("Foo", null, null, StructureKind.Delegate, null, "delegate")]
-        [TypeDefinitionData("Foo", null, null, StructureKind.Enum, null, "enum")]
+        [ContainerDefinitionData("Foo", null, null, StructureKind.Class, null, "class")]
+        [ContainerDefinitionData("Foo", null, null, StructureKind.Interface, null, "interface")]
+        [ContainerDefinitionData("Foo", null, null, StructureKind.Struct, null, "struct")]
+        [ContainerDefinitionData("Foo", null, null, StructureKind.Delegate, null, "delegate")]
+        [ContainerDefinitionData("Foo", null, null, StructureKind.Enum, null, "enum")]
         public void GetKind_ShouldReturnCorrectKeyword(string expected, TypeDefinition definition)
         {
             Check.That(DefinitionFormatter.GetKind(definition)).IsEqualTo(expected);

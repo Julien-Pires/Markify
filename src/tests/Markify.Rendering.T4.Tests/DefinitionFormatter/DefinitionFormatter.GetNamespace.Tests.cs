@@ -15,15 +15,15 @@ namespace Markify.Rendering.T4.Tests
         }
 
         [Theory]
-        [TypeDefinitionData("Foo", null, null, StructureKind.Class, null)]
+        [ContainerDefinitionData("Foo", null, null, StructureKind.Class, null)]
         public void GetNamespace_ShouldReturnEmpty_WhenHasNoNamespace(TypeDefinition definition)
         {
             Check.That(DefinitionFormatter.GetNamespace(definition)).IsEqualTo(string.Empty);
         }
 
         [Theory]
-        [TypeDefinitionData("Foo", null, "Foospace", StructureKind.Class, null, "Foospace")]
-        [TypeDefinitionData("Foo", null, "Foospace.Inner", StructureKind.Class, null, "Foospace.Inner")]
+        [ContainerDefinitionData("Foo", null, "Foospace", StructureKind.Class, null, "Foospace")]
+        [ContainerDefinitionData("Foo", null, "Foospace.Inner", StructureKind.Class, null, "Foospace.Inner")]
         public void GetNamespace_ShouldReturnCorrectValue_WhenHasNamespace(string expected, TypeDefinition definition)
         {
             Check.That(DefinitionFormatter.GetNamespace(definition)).IsEqualTo(expected);

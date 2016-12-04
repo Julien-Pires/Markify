@@ -12,6 +12,7 @@ namespace Markify.Rendering.T4.Templates
     using System.Linq;
     using System.Text;
     using System.Collections.Generic;
+    using static System.Globalization.CultureInfo;
     using Microsoft.VisualStudio.TextTemplating;
     using Markify.Models.Definitions;
     using System;
@@ -20,7 +21,7 @@ namespace Markify.Rendering.T4.Templates
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "C:\Users\jpires\Documents\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+    #line 1 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "14.0.0.0")]
     public partial class TypeTemplate : T4TemplateBase
     {
@@ -31,42 +32,42 @@ namespace Markify.Rendering.T4.Templates
         public override string TransformText()
         {
             
-            #line 8 "C:\Users\jpires\Documents\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+            #line 9 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
  var definition = (TypeDefinition)Session["Content"]; 
             
             #line default
             #line hidden
             this.Write("### **");
             
-            #line 9 "C:\Users\jpires\Documents\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(DefinitionFormatter.GetNameWithParameters(definition)));
+            #line 10 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(MarkdownHelper.EscapeString(DefinitionFormatter.GetNameWithParameters(definition.Identity))));
             
             #line default
             #line hidden
             this.Write("** : ");
             
-            #line 9 "C:\Users\jpires\Documents\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+            #line 10 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(DefinitionFormatter.GetAccessModifiers(definition)));
             
             #line default
             #line hidden
             this.Write(" ");
             
-            #line 9 "C:\Users\jpires\Documents\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+            #line 10 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(DefinitionFormatter.GetKind(definition)));
             
             #line default
             #line hidden
             this.Write("\r\n");
             
-            #line 10 "C:\Users\jpires\Documents\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+            #line 11 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(DefinitionFormatter.GetNamespace(definition)));
             
             #line default
             #line hidden
             this.Write("\r\n***\r\n");
             
-            #line 12 "C:\Users\jpires\Documents\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+            #line 13 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
 
 	var modifiers = DefinitionFormatter.GetModifiers(definition);
 	if(!string.IsNullOrWhiteSpace(modifiers))
@@ -77,22 +78,16 @@ namespace Markify.Rendering.T4.Templates
             #line hidden
             this.Write("**Modifiers**: ");
             
-            #line 17 "C:\Users\jpires\Documents\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+            #line 18 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(modifiers));
             
             #line default
             #line hidden
-            this.Write("\r\n\r\n");
+            this.Write("\r\n");
             
-            #line 19 "C:\Users\jpires\Documents\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+            #line 19 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
 
 	}
-
-            
-            #line default
-            #line hidden
-            
-            #line 22 "C:\Users\jpires\Documents\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
 
 	var parents = DefinitionFormatter.GetParents(definition);
 	if(!string.IsNullOrWhiteSpace(parents))
@@ -101,18 +96,360 @@ namespace Markify.Rendering.T4.Templates
             
             #line default
             #line hidden
-            this.Write("**Implements**: ");
+            this.Write("\r\n**Implements**: ");
             
-            #line 27 "C:\Users\jpires\Documents\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(parents));
+            #line 27 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(MarkdownHelper.EscapeString(parents)));
             
             #line default
             #line hidden
-            this.Write("\r\n\r\n");
+            this.Write("\r\n");
             
-            #line 29 "C:\Users\jpires\Documents\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+            #line 28 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
 
 	}
+
+	var returnType = DefinitionFormatter.GetReturnType(definition);
+	if(returnType.HasValue)
+	{
+
+            
+            #line default
+            #line hidden
+            this.Write("\r\n**Returns**: ");
+            
+            #line 36 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(MarkdownHelper.EscapeString(returnType.ValueOr(string.Empty))));
+            
+            #line default
+            #line hidden
+            this.Write("\r\n");
+            
+            #line 37 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+
+	}
+
+/****** Display type fields ******/
+var fields = DefinitionFormatter.GetFields(definition);
+if(fields.Any())
+{
+
+            
+            #line default
+            #line hidden
+            this.Write("\r\n## **Fields**\r\n");
+            
+            #line 47 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+	
+	foreach(var group in fields)
+	{
+
+            
+            #line default
+            #line hidden
+            this.Write("### **");
+            
+            #line 51 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(CurrentCulture.TextInfo.ToTitleCase(group.Key)));
+            
+            #line default
+            #line hidden
+            this.Write("**\r\n| Name  | Access |\r\n|---|---|\r\n");
+            
+            #line 54 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+		foreach(var field in group.OrderBy(c => c.Name))
+		{
+			var isReadOnly = field.Modifiers.Any(c => string.Equals(c, "readonly", StringComparison.CurrentCultureIgnoreCase) ||
+                string.Equals(c, "const", StringComparison.CurrentCultureIgnoreCase));
+
+            
+            #line default
+            #line hidden
+            
+            #line 59 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(field.Name));
+            
+            #line default
+            #line hidden
+            this.Write(" | ");
+            
+            #line 59 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(isReadOnly ? "Read-Only" : string.Empty));
+            
+            #line default
+            #line hidden
+            this.Write(" |\r\n");
+            
+            #line 60 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+
+		}
+	}
+}
+
+/****** Display type properties ******/
+var properties = DefinitionFormatter.GetProperties(definition);
+if(properties.Any())
+{
+
+            
+            #line default
+            #line hidden
+            this.Write("\r\n## **Properties**\r\n");
+            
+            #line 72 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+	
+	foreach(var group in properties)
+	{
+
+            
+            #line default
+            #line hidden
+            this.Write("### **");
+            
+            #line 76 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(CurrentCulture.TextInfo.ToTitleCase(group.Key)));
+            
+            #line default
+            #line hidden
+            this.Write("**\r\n| Name  | Access |\r\n|---|---|\r\n");
+            
+            #line 79 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+		foreach(var property in group.OrderBy(c => c.Name))
+		{
+
+            
+            #line default
+            #line hidden
+            
+            #line 82 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(property.Name));
+            
+            #line default
+            #line hidden
+            this.Write(" | ");
+            
+            #line 82 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(DefinitionFormatter.GetPropertyAccess(property)));
+            
+            #line default
+            #line hidden
+            this.Write(" |\r\n");
+            
+            #line 83 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+
+		}
+	}
+}
+
+/****** Display type events ******/
+var events = DefinitionFormatter.GetEvents(definition);
+if(events.Any())
+{
+
+            
+            #line default
+            #line hidden
+            this.Write("\r\n## **Events**\r\n");
+            
+            #line 95 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+	
+	foreach(var group in events)
+	{
+
+            
+            #line default
+            #line hidden
+            this.Write("### **");
+            
+            #line 99 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(CurrentCulture.TextInfo.ToTitleCase(group.Key)));
+            
+            #line default
+            #line hidden
+            this.Write("**\r\n| Name  | Type |\r\n|---|---|\r\n");
+            
+            #line 102 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+		foreach(var ev in group.OrderBy(c => c.Name))
+		{
+
+            
+            #line default
+            #line hidden
+            
+            #line 105 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(ev.Name));
+            
+            #line default
+            #line hidden
+            this.Write(" | ");
+            
+            #line 105 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(MarkdownHelper.EscapeString(ev.Type)));
+            
+            #line default
+            #line hidden
+            this.Write(" |\r\n");
+            
+            #line 106 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+
+		}
+	}
+}
+
+/****** Display type events ******/
+var methods = DefinitionFormatter.GetMethods(definition);
+if(methods.Any())
+{
+
+            
+            #line default
+            #line hidden
+            this.Write("\r\n## **Methods**\r\n");
+            
+            #line 118 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+	
+	foreach(var group in methods)
+	{
+
+            
+            #line default
+            #line hidden
+            this.Write("### **");
+            
+            #line 122 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(CurrentCulture.TextInfo.ToTitleCase(group.Key)));
+            
+            #line default
+            #line hidden
+            this.Write("**\r\n| Name  | Parameters | Return\r\n|---|---|---|\r\n");
+            
+            #line 125 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+		
+		var orderedMethods = group.OrderBy(c => c.Identity.Name).ThenBy(c => c.Parameters.Count());
+		foreach(var method in orderedMethods)
+		{
+			var methodParameters = String.Join(", ", method.Parameters.Select(c => c.Type));
+
+            
+            #line default
+            #line hidden
+            
+            #line 131 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(MarkdownHelper.EscapeString(DefinitionFormatter.GetNameWithParameters(method.Identity))));
+            
+            #line default
+            #line hidden
+            this.Write(" | (");
+            
+            #line 131 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(MarkdownHelper.EscapeString(methodParameters)));
+            
+            #line default
+            #line hidden
+            this.Write(") | ");
+            
+            #line 131 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(MarkdownHelper.EscapeString(method.ReturnType)));
+            
+            #line default
+            #line hidden
+            this.Write(" |\r\n");
+            
+            #line 132 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+
+		}
+	}
+}
+
+/****** Display type enum values ******/
+var values = DefinitionFormatter.GetEnumValues(definition);
+if(values.Any())
+{
+
+            
+            #line default
+            #line hidden
+            this.Write("\r\n## **Values**\r\n| Name  | Value |\r\n|---|---|\r\n");
+            
+            #line 146 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+
+	foreach(var enumValue in values)
+	{
+
+            
+            #line default
+            #line hidden
+            
+            #line 150 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(enumValue.Name));
+            
+            #line default
+            #line hidden
+            this.Write(" | ");
+            
+            #line 150 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(enumValue.Value.GetValueOrDefault(string.Empty)));
+            
+            #line default
+            #line hidden
+            this.Write(" |\r\n");
+            
+            #line 151 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+
+	}
+}
+
+/****** Display delegate parameters ******/
+var parameters = DefinitionFormatter.GetParameters(definition);
+if(parameters.Any())
+{
+
+            
+            #line default
+            #line hidden
+            this.Write("\r\n## **Parameters**\r\n| Name  | Type | Modifier | Default |\r\n|---|---|---|---|\r\n");
+            
+            #line 164 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+
+	foreach(var delegateParameters in parameters)
+	{
+
+            
+            #line default
+            #line hidden
+            
+            #line 168 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(delegateParameters.Name));
+            
+            #line default
+            #line hidden
+            this.Write(" | ");
+            
+            #line 168 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(MarkdownHelper.EscapeString(delegateParameters.Type)));
+            
+            #line default
+            #line hidden
+            this.Write(" | ");
+            
+            #line 168 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(delegateParameters.Modifier.GetValueOrDefault(string.Empty)));
+            
+            #line default
+            #line hidden
+            this.Write(" | ");
+            
+            #line 168 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(delegateParameters.DefaultValue.GetValueOrDefault(string.Empty)));
+            
+            #line default
+            #line hidden
+            this.Write(" |\r\n");
+            
+            #line 169 "D:\Users\Takumi\Documents\Projects\Markify\src\src\Markify.Rendering.T4\Templates\TypeTemplate.tt"
+
+	}
+}
 
             
             #line default

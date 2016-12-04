@@ -3,10 +3,11 @@
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="static System.Globalization.CultureInfo" #>
 <#@ import namespace="Microsoft.VisualStudio.TextTemplating" #>
 <#@ import namespace="Markify.Models.Definitions" #>
 <# var definition = (TypeDefinition)Session["Content"]; #>
-### **<#= DefinitionFormatter.GetNameWithParameters(definition) #>** : <#= DefinitionFormatter.GetAccessModifiers(definition) #> <#= DefinitionFormatter.GetKind(definition) #>
+### **<#= MarkdownHelper.EscapeString(DefinitionFormatter.GetNameWithParameters(definition.Identity)) #>** : <#= DefinitionFormatter.GetAccessModifiers(definition) #> <#= DefinitionFormatter.GetKind(definition) #>
 <#= DefinitionFormatter.GetNamespace(definition) #>
 ***
 <#
@@ -15,17 +16,157 @@
 	{
 #>
 **Modifiers**: <#= modifiers #>
-
 <#
 	}
-#>
-<#
+
 	var parents = DefinitionFormatter.GetParents(definition);
 	if(!string.IsNullOrWhiteSpace(parents))
 	{
 #>
-**Implements**: <#= parents #>
 
+**Implements**: <#= MarkdownHelper.EscapeString(parents) #>
 <#
 	}
+
+	var returnType = DefinitionFormatter.GetReturnType(definition);
+	if(returnType.HasValue)
+	{
+#>
+
+**Returns**: <#= MarkdownHelper.EscapeString(returnType.ValueOr(string.Empty)) #>
+<#
+	}
+
+/****** Display type fields ******/
+var fields = DefinitionFormatter.GetFields(definition);
+if(fields.Any())
+{
+#>
+
+## **Fields**
+<#	
+	foreach(var group in fields)
+	{
+#>
+### **<#= CurrentCulture.TextInfo.ToTitleCase(group.Key) #>**
+| Name  | Access |
+|---|---|
+<#		foreach(var field in group.OrderBy(c => c.Name))
+		{
+			var isReadOnly = field.Modifiers.Any(c => string.Equals(c, "readonly", StringComparison.CurrentCultureIgnoreCase) ||
+                string.Equals(c, "const", StringComparison.CurrentCultureIgnoreCase));
+#>
+<#= field.Name #> | <#= isReadOnly ? "Read-Only" : string.Empty #> |
+<#
+		}
+	}
+}
+
+/****** Display type properties ******/
+var properties = DefinitionFormatter.GetProperties(definition);
+if(properties.Any())
+{
+#>
+
+## **Properties**
+<#	
+	foreach(var group in properties)
+	{
+#>
+### **<#= CurrentCulture.TextInfo.ToTitleCase(group.Key) #>**
+| Name  | Access |
+|---|---|
+<#		foreach(var property in group.OrderBy(c => c.Name))
+		{
+#>
+<#= property.Name #> | <#= DefinitionFormatter.GetPropertyAccess(property) #> |
+<#
+		}
+	}
+}
+
+/****** Display type events ******/
+var events = DefinitionFormatter.GetEvents(definition);
+if(events.Any())
+{
+#>
+
+## **Events**
+<#	
+	foreach(var group in events)
+	{
+#>
+### **<#= CurrentCulture.TextInfo.ToTitleCase(group.Key) #>**
+| Name  | Type |
+|---|---|
+<#		foreach(var ev in group.OrderBy(c => c.Name))
+		{
+#>
+<#= ev.Name #> | <#= MarkdownHelper.EscapeString(ev.Type) #> |
+<#
+		}
+	}
+}
+
+/****** Display type events ******/
+var methods = DefinitionFormatter.GetMethods(definition);
+if(methods.Any())
+{
+#>
+
+## **Methods**
+<#	
+	foreach(var group in methods)
+	{
+#>
+### **<#= CurrentCulture.TextInfo.ToTitleCase(group.Key) #>**
+| Name  | Parameters | Return
+|---|---|---|
+<#		
+		var orderedMethods = group.OrderBy(c => c.Identity.Name).ThenBy(c => c.Parameters.Count());
+		foreach(var method in orderedMethods)
+		{
+			var methodParameters = String.Join(", ", method.Parameters.Select(c => c.Type));
+#>
+<#= MarkdownHelper.EscapeString(DefinitionFormatter.GetNameWithParameters(method.Identity)) #> | (<#= MarkdownHelper.EscapeString(methodParameters) #>) | <#= MarkdownHelper.EscapeString(method.ReturnType) #> |
+<#
+		}
+	}
+}
+
+/****** Display type enum values ******/
+var values = DefinitionFormatter.GetEnumValues(definition);
+if(values.Any())
+{
+#>
+
+## **Values**
+| Name  | Value |
+|---|---|
+<#
+	foreach(var enumValue in values)
+	{
+#>
+<#= enumValue.Name #> | <#= enumValue.Value.GetValueOrDefault(string.Empty) #> |
+<#
+	}
+}
+
+/****** Display delegate parameters ******/
+var parameters = DefinitionFormatter.GetParameters(definition);
+if(parameters.Any())
+{
+#>
+
+## **Parameters**
+| Name  | Type | Modifier | Default |
+|---|---|---|---|
+<#
+	foreach(var delegateParameters in parameters)
+	{
+#>
+<#= delegateParameters.Name #> | <#= MarkdownHelper.EscapeString(delegateParameters.Type) #> | <#= delegateParameters.Modifier.GetValueOrDefault(string.Empty) #> | <#= delegateParameters.DefaultValue.GetValueOrDefault(string.Empty) #> |
+<#
+	}
+}
 #>

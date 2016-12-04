@@ -28,12 +28,59 @@ type TypeIdentity = {
     BaseTypes : BaseType seq
     Parameters : GenericParameterDefinition seq }
 
+type TypeName = string
+type Value = string
+type AccessorDefinition = {
+    AccessModifiers : Modifier seq }
+type PropertyDefinition = {
+    Name : DefinitionName
+    Type : TypeName
+    AccessModifiers : Modifier seq
+    Modifiers : Modifier seq
+    DefaultValue : Value option
+    IsWrite : AccessorDefinition option
+    IsRead : AccessorDefinition option }
+
+type FieldDefinition = {
+    Name : DefinitionName
+    Type : TypeName
+    AccessModifiers : Modifier seq
+    Modifiers : Modifier seq
+    DefaultValue : Value option }
+
+type EnumValue = {
+    Name : DefinitionName
+    Value : Value option }
+
+type EventDefinition = {
+    Name : DefinitionName
+    Type : TypeName
+    AccessModifiers : Modifier seq
+    Modifiers : Modifier seq }
+
+type EnumDefinition = {
+    Identity : TypeIdentity
+    Values : EnumValue seq }
+
+type ParameterDefinition = {
+    Name : DefinitionName
+    Type : TypeName 
+    Modifier : Modifier option
+    DefaultValue : Value option }
+
+type DelegateDefinition = {
+    Identity : TypeIdentity 
+    Parameters : ParameterDefinition seq 
+    ReturnType : TypeName }
+
 type ClassDefinition = {
-    Identity : TypeIdentity }
+    Identity : TypeIdentity
+    Fields : FieldDefinition seq
+    Properties : PropertyDefinition seq
+    Events : EventDefinition seq 
+    Methods : DelegateDefinition seq }
 type StructDefinition = ClassDefinition
 type InterfaceDefinition = ClassDefinition
-type EnumDefinition = ClassDefinition
-type DelegateDefinition = ClassDefinition
 
 type TypeDefinition =
     | Class of ClassDefinition
