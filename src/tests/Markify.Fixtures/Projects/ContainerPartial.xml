@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Solution>
+  <Projects>
+    <Project>
+      <Files>
+        <Uri>Source/Class/ClassPartial</Uri>
+      </Files>
+    </Project>
+    <Project>
+      <Files>
+        <Uri>Source/Struct/StructPartial</Uri>
+      </Files>
+    </Project>
+  </Projects>
+</Solution>

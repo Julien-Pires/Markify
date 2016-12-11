@@ -76,6 +76,7 @@
     <Compile Include="RoslynAnalyzer.Types.Events.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Types.Methods.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Types.EnumValues.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Types.PartialMerging.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Delegate.ReturnType.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Namespaces.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Delegate.Parameters.Tests.fs" />

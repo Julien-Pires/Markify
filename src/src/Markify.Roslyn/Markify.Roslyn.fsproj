@@ -54,9 +54,11 @@
     <Content Include="packages.config" />
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Common.fs" />
+    <Compile Include="DefinitionHelper.fs" />
     <Compile Include="SyntaxHelper.fs" />
     <Compile Include="CSharpModule.fs" />
     <Compile Include="VisualBasicModule.fs" />
+    <Compile Include="PartialMerger.fs" />
     <Compile Include="RoslynAnalyzer.fs" />
     <Compile Include="RoslynModule.fs" />
   </ItemGroup>
