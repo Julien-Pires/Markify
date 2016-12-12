@@ -17,9 +17,9 @@ namespace Markify.Rendering.T4.Tests
 
         [Theory]
         [ContainerDefinitionData(new string[0], 0, values: new object[] { 0 })]
-        [ContainerDefinitionData(new string[] { "public" }, 1, values: new object[] { 1 })]
-        [ContainerDefinitionData(new string[] { "public", "private" }, 1, values: new object[] { 2 })]
-        [ContainerDefinitionData(new string[] { "public", "private", "protected internal" }, 1, values: new object[] { 3 })]
+        [ContainerDefinitionData(new[] { "public" }, 1, values: new object[] { 1 })]
+        [ContainerDefinitionData(new[] { "public", "private" }, 1, values: new object[] { 2 })]
+        [ContainerDefinitionData(new[] { "public", "private", "protected internal" }, 1, values: new object[] { 3 })]
         public void GetEvents_ShouldReturnEventsByVisiblity_WhenDefinitionHasSome(int expected, TypeDefinition definition)
         {
             Check.That(DefinitionFormatter.GetEvents(definition)).HasSize(expected);
@@ -27,8 +27,8 @@ namespace Markify.Rendering.T4.Tests
 
         [Theory]
         [ContainerDefinitionData(new string[0], 0, values: new object[] { new string[0] })]
-        [ContainerDefinitionData(new string[] { "public" }, 1, values: new object[] { new string[] { "public" } })]
-        [ContainerDefinitionData(new string[] { "public", "private" }, 1, values: new object[] { new string[] { "public", "private" } })]
+        [ContainerDefinitionData(new[] { "public" }, 1, values: new object[] { new[] { "public" } })]
+        [ContainerDefinitionData(new[] { "public", "private" }, 1, values: new object[] { new[] { "public", "private" } })]
         public void GetEvents_ShouldReturnExpectedGroupKey(string[] expected, TypeDefinition definition)
         {
             var actual = DefinitionFormatter.GetEvents(definition).Select(c => c.Key);
@@ -38,7 +38,7 @@ namespace Markify.Rendering.T4.Tests
 
         [Theory]
         [ContainerDefinitionData(new string[0], 0)]
-        [ContainerDefinitionData(new string[] { "public" }, 100)]
+        [ContainerDefinitionData(new[] { "public" }, 100)]
         public void GetEvents_ShouldNotReturnListWithNullElement(TypeDefinition definition)
         {
             var actual = DefinitionFormatter.GetEvents(definition).SelectMany(c => c);
@@ -48,10 +48,10 @@ namespace Markify.Rendering.T4.Tests
 
         [Theory]
         [ContainerDefinitionData(new string[0], 0, values: new object[] { 0 })]
-        [ContainerDefinitionData(new string[] { "public" }, 1, values: new object[] { 1 })]
-        [ContainerDefinitionData(new string[] { "public" }, 10, values: new object[] { 10 })]
-        [ContainerDefinitionData(new string[] { "public", "private" }, 1, values: new object[] { 2 })]
-        [ContainerDefinitionData(new string[] { "public", "private" }, 10, values: new object[] { 20 })]
+        [ContainerDefinitionData(new[] { "public" }, 1, values: new object[] { 1 })]
+        [ContainerDefinitionData(new[] { "public" }, 10, values: new object[] { 10 })]
+        [ContainerDefinitionData(new[] { "public", "private" }, 1, values: new object[] { 2 })]
+        [ContainerDefinitionData(new[] { "public", "private" }, 10, values: new object[] { 20 })]
         public void GetEvents_ShouldReturnExpectedEventsCount(int expected, TypeDefinition definition)
         {
             var actual = DefinitionFormatter.GetEvents(definition).SelectMany(c => c);

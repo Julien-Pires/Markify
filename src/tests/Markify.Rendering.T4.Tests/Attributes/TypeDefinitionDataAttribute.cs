@@ -88,7 +88,7 @@ namespace Markify.Rendering.T4.Tests.Attributes
         #region Constructors
 
         public DelegateDefinitionDataAttribute(int parametersCount, params object[] values)
-            : base(new ISpecimenBuilder[] 
+            : base(new[] 
             {
                 new TypeDefinitionBuilder(StructureKind.Delegate),
                 DefaultIdentityBuilder,
