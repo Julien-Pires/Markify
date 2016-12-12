@@ -1,17 +1,23 @@
-﻿Public MustInherit Class AbstractClass
+﻿Public MustInherit Class AbstractType
 End Class
 
-Partial Public Class PartialClass
+Public Partial Class PartialType
 End Class
 
-Public NotInheritable Class SealedClass
+Public NotInheritable Class SealedType
 End Class
 
-Public Static Class StaticClass
+Public Static Class StaticType
 End Class
 
-Partial Public MustInherit Class AbstractPartialClass
+Public Partial MustInherit Class PartialAbstractType
 End Class
 
-Partial Public NotInheritable Class SealedPartialClass
+Public MustInherit Partial Class AbstractPartialType
+End Class
+
+Public Partial NotInheritable Class PartialSealedType
+End Class
+
+Public NotInheritable Partial Class SealedPartialType
 End Class

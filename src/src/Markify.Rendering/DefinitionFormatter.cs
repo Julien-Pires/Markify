@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.FSharp.Core;
 using Markify.Models.Definitions;
+using Optional;
 
 namespace Markify.Rendering
 {
@@ -17,13 +19,95 @@ namespace Markify.Rendering
         private const string Interface = "interface";
         private const string Enum = "enum";
         private const string Delegate = "delegate";
+        private const string FullPropertyAccess = "Read/Write";
+        private const string ReadOnlyProperty = "Read-Only";
+        private const string WriteOnlyProperty = "Write-Only";
+
+        private static readonly Dictionary<string, HashSet<string>> VisibilityPrecedence = new Dictionary
+            <string, HashSet<string>>
+        {
+            ["public"] = new HashSet<string>
+            {
+                "internal", "protected", "private" ,
+                "internal protected", "protected internal", "friend protected", "protected friend"
+            },
+            ["internal"] = new HashSet<string> { "protected", "private" },
+            ["friend"] = new HashSet<string> { "protected", "private" },
+            ["protected"] = new HashSet<string> { "internal", "private" },
+            ["internal protected"] = new HashSet<string> { "private" },
+            ["protected internal"] = new HashSet<string> { "private" },
+            ["friend protected"] = new HashSet<string> { "private" },
+            ["protected friend"] = new HashSet<string> { "private" },
+            ["private"] = new HashSet<string>()
+        };
 
         #endregion
 
         #region Common Helper
 
-        private static T GetValueOrDefault<T>(FSharpOption<T> option, T def = default(T)) => 
-            FSharpOption<T>.get_IsSome(option) ? option.Value : def;
+        public static T GetValueOrDefault<T>(this FSharpOption<T> option, T defaultValue = default(T)) => 
+            FSharpOption<T>.get_IsSome(option) ? option.Value : defaultValue;
+
+        public static bool IsSome<T>(this FSharpOption<T> option) => FSharpOption<T>.get_IsSome(option);
+
+        private static Option<ClassDefinition> GetContainerTypeDefinition(TypeDefinition definition)
+        {
+            Option<ClassDefinition> result;
+            switch(definition.Tag)
+            {
+                case TypeDefinition.Tags.Class:
+                    result = Option.Some(((TypeDefinition.Class)definition).Item);
+                    break;
+
+                case TypeDefinition.Tags.Struct:
+                    result = Option.Some(((TypeDefinition.Struct)definition).Item);
+                    break;
+
+                case TypeDefinition.Tags.Interface:
+                    result = Option.Some(((TypeDefinition.Interface)definition).Item);
+                    break;
+
+                default:
+                    result = Option.None<ClassDefinition>();
+                    break;
+            }
+
+            return result;
+        }
+
+        private static Option<EnumDefinition> GetEnumDefinition(TypeDefinition definition)
+        {
+            Option<EnumDefinition> result;
+            switch (definition.Tag)
+            {
+                case TypeDefinition.Tags.Enum:
+                    result = Option.Some(((TypeDefinition.Enum)definition).Item);
+                    break;
+
+                default:
+                    result = Option.None<EnumDefinition>();
+                    break;
+            }
+
+            return result;
+        }
+
+        private static Option<DelegateDefinition> GetDelegateDefinition(TypeDefinition definition)
+        {
+            Option<DelegateDefinition> result;
+            switch(definition.Tag)
+            {
+                case TypeDefinition.Tags.Delegate:
+                    result = Option.Some(((TypeDefinition.Delegate)definition).Item);
+                    break;
+
+                default:
+                    result = Option.None<DelegateDefinition>();
+                    break;
+            }
+
+            return result;
+        }
 
         #endregion
 
@@ -34,31 +118,27 @@ namespace Markify.Rendering
             if(definition == null)
                 throw new ArgumentNullException(nameof(definition));
 
-            string result;
-            switch(definition.Kind)
+            string result = string.Empty;
+            switch(definition.Tag)
             {
-                case StructureKind.Class:
+                case TypeDefinition.Tags.Class:
                     result = Class;
                     break;
 
-                case StructureKind.Struct:
+                case TypeDefinition.Tags.Struct:
                     result = Struct;
                     break;
 
-                case StructureKind.Interface:
+                case TypeDefinition.Tags.Interface:
                     result = Interface;
                     break;
 
-                case StructureKind.Enum:
+                case TypeDefinition.Tags.Enum:
                     result = Enum;
                     break;
 
-                case StructureKind.Delegate:
+                case TypeDefinition.Tags.Delegate:
                     result = Delegate;
-                    break;
-
-                default:
-                    result = string.Empty;
                     break;
             }
 
@@ -70,7 +150,7 @@ namespace Markify.Rendering
             if (definition == null)
                 throw new ArgumentNullException(nameof(definition));
 
-            return definition.AccessModifiers.Any() ? string.Join(AccessModifierDelimiter, definition.AccessModifiers) : DefaultAccessModifier;
+            return definition.Identity.AccessModifiers.Any() ? string.Join(AccessModifierDelimiter, definition.Identity.AccessModifiers) : DefaultAccessModifier;
         }
 
         public static string GetModifiers(TypeDefinition definition)
@@ -78,7 +158,7 @@ namespace Markify.Rendering
             if(definition == null)
                 throw new ArgumentNullException(nameof(definition));
 
-            return string.Join(Delimiter, definition.Modifiers);
+            return string.Join(Delimiter, definition.Identity.Modifiers);
         }
 
         public static string GetParents(TypeDefinition definition)
@@ -86,7 +166,7 @@ namespace Markify.Rendering
             if (definition == null)
                 throw new ArgumentNullException(nameof(definition));
 
-            return string.Join(Delimiter, definition.BaseTypes);
+            return string.Join(Delimiter, definition.Identity.BaseTypes);
         }
 
         public static string GetNamespace(TypeDefinition definition)
@@ -97,17 +177,110 @@ namespace Markify.Rendering
             return GetValueOrDefault(definition.Identity.Namespace, string.Empty);
         }
 
-        public static string GetNameWithParameters(TypeDefinition definition)
+        public static string GetNameWithParameters(TypeIdentity identity)
+        {
+            if (identity == null)
+                throw new ArgumentNullException(nameof(identity));
+
+            if (!identity.Parameters.Any())
+                return identity.Name;
+
+            var parameters = string.Join(", ", identity.Parameters.Select(c => c.Name));
+
+            return $"{identity.Name}<{parameters}>";
+        }
+
+        public static Option<string> GetReturnType(TypeDefinition definition)
+        {
+            if(definition == null)
+                throw new ArgumentNullException(nameof(definition));
+
+            return GetDelegateDefinition(definition).Match(
+                c => Option.Some(c.ReturnType),
+                Option.None<string>);
+        }
+
+        #endregion
+
+        #region Members Definition Helper
+
+        private static IEnumerable<IGrouping<string, TMember>> GetMembers<TMember>(TypeDefinition definition, 
+            Func<ClassDefinition, IEnumerable<TMember>> membersSelector, 
+            Func<TMember, string> groupBySelector)
         {
             if (definition == null)
                 throw new ArgumentNullException(nameof(definition));
 
-            if (!definition.Parameters.Any())
-                return definition.Identity.Name;
+            var members = GetContainerTypeDefinition(definition).Match(membersSelector, Enumerable.Empty<TMember>);
 
-            var parameters = string.Join(", ", definition.Parameters.Select(c => c.Identity));
+            return members.GroupBy(groupBySelector);
+        }
 
-            return $"{definition.Identity.Name}<{parameters}>";
+        public static IEnumerable<IGrouping<string, PropertyDefinition>> GetProperties(TypeDefinition definition)
+        {
+            return GetMembers(definition, c => c.Properties, c => string.Join(" ", c.AccessModifiers));
+        }
+
+        public static IEnumerable<IGrouping<string, FieldDefinition>> GetFields(TypeDefinition definition)
+        {
+            return GetMembers(definition, c => c.Fields, c => string.Join(" ", c.AccessModifiers));
+        }
+
+        public static IEnumerable<IGrouping<string, EventDefinition>> GetEvents(TypeDefinition definition)
+        {
+            return GetMembers(definition, c => c.Events, c => string.Join(" ", c.AccessModifiers));
+        }
+
+        public static IEnumerable<IGrouping<string, DelegateDefinition>> GetMethods(TypeDefinition definition)
+        {
+            return GetMembers(definition, c => c.Methods, c => string.Join(" ", c.Identity.AccessModifiers));
+        }
+
+        public static IEnumerable<EnumValue> GetEnumValues(TypeDefinition definition)
+        {
+            if (definition == null)
+                throw new ArgumentNullException(nameof(definition));
+
+            return GetEnumDefinition(definition).Match(
+                c => c.Values,
+                Enumerable.Empty<EnumValue>);
+        }
+
+        public static IEnumerable<ParameterDefinition> GetParameters(TypeDefinition definition)
+        {
+            if (definition == null)
+                throw new ArgumentNullException(nameof(definition));
+
+            return GetDelegateDefinition(definition).Match(
+                c => c.Parameters,
+                Enumerable.Empty<ParameterDefinition>);
+        }
+
+        private static bool IsAccessorAccessible(IEnumerable<string> propertyVisiblity, FSharpOption<AccessorDefinition> definition)
+        {
+            if (!definition.IsSome())
+                return false;
+
+            var accessor = definition.Value;
+            var visibility = string.Join(" ", propertyVisiblity).ToLower();
+            HashSet<string> precedence;
+            if (!VisibilityPrecedence.TryGetValue(visibility, out precedence))
+                return true;
+
+            return !precedence.Contains(string.Join(" ", accessor.AccessModifiers).ToLower());
+        }
+
+        public static string GetPropertyAccess(PropertyDefinition definition)
+        {
+            if(definition == null)
+                throw new ArgumentNullException(nameof(definition));
+
+            var isReadAccessible = IsAccessorAccessible(definition.AccessModifiers, definition.IsRead);
+            var isWriteAccessible = IsAccessorAccessible(definition.AccessModifiers, definition.IsWrite);
+            if (isReadAccessible)
+                return isWriteAccessible ? FullPropertyAccess : ReadOnlyProperty;
+
+            return isWriteAccessible ? WriteOnlyProperty : string.Empty;
         }
 
         #endregion

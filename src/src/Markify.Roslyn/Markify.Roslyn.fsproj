@@ -53,13 +53,12 @@
     <None Include="Script.fsx" />
     <Content Include="packages.config" />
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="CommonType.fs" />
-    <Compile Include="NodeFactory.fs" />
+    <Compile Include="Common.fs" />
+    <Compile Include="DefinitionHelper.fs" />
+    <Compile Include="SyntaxHelper.fs" />
     <Compile Include="CSharpModule.fs" />
     <Compile Include="VisualBasicModule.fs" />
-    <Compile Include="TypeExtension.fs" />
-    <Compile Include="SourceConverter.fs" />
-    <Compile Include="SourceAnalyzer.fs" />
+    <Compile Include="PartialMerger.fs" />
     <Compile Include="RoslynAnalyzer.fs" />
     <Compile Include="RoslynModule.fs" />
   </ItemGroup>

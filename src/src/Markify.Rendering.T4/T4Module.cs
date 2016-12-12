@@ -14,7 +14,11 @@ namespace Markify.Rendering.T4
 
         private static readonly TemplateTuple[] Templates =
         {
-            new TemplateTuple(new TypeTemplate(), typeof(TypeDefinition)), 
+            new TemplateTuple(new TypeTemplate(), typeof(TypeDefinition.Class)),
+            new TemplateTuple(new TypeTemplate(), typeof(TypeDefinition.Struct)),
+            new TemplateTuple(new TypeTemplate(), typeof(TypeDefinition.Interface)),
+            new TemplateTuple(new TypeTemplate(), typeof(TypeDefinition.Enum)),
+            new TemplateTuple(new TypeTemplate(), typeof(TypeDefinition.Delegate))
         };
 
         #endregion

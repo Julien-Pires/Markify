@@ -1,2 +1,2 @@
-﻿Partial Public Interface IPartialInterface
+﻿Partial Public Interface PartialType
 End Interface

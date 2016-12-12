@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Solution>
+  <Projects>
+    <Project>
+      <Files>
+        <Uri>Source/Class/ClassGenerics</Uri>
+      </Files>
+    </Project>
+    <Project>
+      <Files>
+        <Uri>Source/Struct/StructGenerics</Uri>
+      </Files>
+    </Project>
+    <Project>
+      <Files>
+        <Uri>Source/Interface/InterfaceGenerics</Uri>
+      </Files>
+    </Project>
+    <Project>
+      <Files>
+        <Uri>Source/Delegate/DelegateGenerics</Uri>
+      </Files>
+    </Project>
+  </Projects>
+</Solution>

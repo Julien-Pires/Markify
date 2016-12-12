@@ -23,7 +23,7 @@ module DocumentHelper =
         | ext when ext.StartsWith(".") -> ext.Substring(1)
         | _ -> ext
 
-    let createPage project ext definition =
+    let createPage project ext (definition : TypeDefinition) =
         let path = Path.Combine (project, convertIdentityToPath definition.Identity)
         let cleanedExt = cleanExtension ext
         {   Name = sprintf "%s.%s" definition.Identity.Name cleanedExt

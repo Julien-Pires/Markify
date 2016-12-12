@@ -1,18 +1,14 @@
-﻿public class PublicClass { }
+﻿public class PublicType { }
 
-internal class InternalClass { }
+internal class InternalType { }
 
-public class PrivateFoo
+public partial class ParentType
 {
-    private class PrivateClass { }
-}
+    private class PrivateType { }
 
-public class ProtectedFoo
-{
-    protected class ProtectedClass { }
-}
+    protected class ProtectedType { }
 
-public class ProtectedInternalFoo
-{
-    protected internal class ProtectedInternalClass { }
+    protected internal class ProtectedInternalType { }
+
+    internal protected class InternalProtectedType { }
 }

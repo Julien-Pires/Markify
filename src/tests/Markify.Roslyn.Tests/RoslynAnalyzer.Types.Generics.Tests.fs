@@ -2,128 +2,139 @@
 
 module RoslynAnalyzerTypesGenericsTests =
     open System
-    
     open Markify.Roslyn
-
     open Markify.Models.IDE
     open Markify.Models.Definitions
-
     open Markify.Core.Analyzers
-
+    open DefinitionsHelper
     open Attributes
-
     open Xunit
     open Swensen.Unquote
 
     [<Theory>]
-    [<ProjectData("ClassProject", ProjectLanguage.CSharp, 0, "SingleClass")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.CSharp, 2, "GenericInterface`2")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.CSharp, 2, "GenericClass`2")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.CSharp, 1, "GenericStruct`1")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.CSharp, 1, "Do`1")>]
-    [<ProjectData("ClassProject", ProjectLanguage.VisualBasic, 0, "SingleClass")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.VisualBasic, 2, "GenericInterface`2")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.VisualBasic, 2, "GenericClass`2")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.VisualBasic, 1, "GenericStruct`1")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.VisualBasic, 1, "Do`1")>]
-    let ``Process project should return type with correct generic parameters`` (count, name, sut: RoslynAnalyzer, project) =
-        let typeDef =
-            (sut :> IProjectAnalyzer)
-            |> (fun c -> c.Analyze(project))
-            |> (fun c -> c.Types)
-            |> Seq.find (fun c -> c.Identity.Name = name)
+    [<MultiProjectData("AllTypesGenerics", ProjectLanguage.CSharp, "SingleGenericType`1", 1)>]
+    [<MultiProjectData("AllTypesGenerics", ProjectLanguage.CSharp, "MultipleGenericType`2", 2)>]
+    [<MultiProjectData("AllTypesGenerics", ProjectLanguage.VisualBasic, "SingleGenericType`1", 1)>]
+    [<MultiProjectData("AllTypesGenerics", ProjectLanguage.VisualBasic, "MultipleGenericType`2", 2)>]
+    let ``Analyze should return correct parameters count when type has some`` (name, expected, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
+        let actual =
+            projects
+            |> Seq.fold (fun acc c ->
+                let library = (sut :> IProjectAnalyzer).Analyze c.Project
+                let typeDefinition =
+                    library.Types
+                    |> Seq.find (fun d -> getFullname d.Identity = name)
+                typeDefinition::acc) []
 
-        test <@ Seq.length typeDef.Parameters = count @>
+        test <@ actual |> List.forall (fun c -> c.Identity.Parameters |> Seq.length = expected) @>
 
     [<Theory>]
-    [<ProjectData("GenericsProject", ProjectLanguage.CSharp, "T", "GenericClass`2")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.CSharp, "T", "GenericInterface`2")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.CSharp, "Y", "GenericInterface`2")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.CSharp, "T", "GenericStruct`1")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.CSharp, "T", "Do`1")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.VisualBasic, "T", "GenericClass`2")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.VisualBasic, "T", "GenericInterface`2")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.VisualBasic, "Y", "GenericInterface`2")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.VisualBasic, "T", "GenericStruct`1")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.VisualBasic, "T", "Do`1")>]
-    let ``Process project should return correct parameter name when type is generic`` (parameterName, name, sut: RoslynAnalyzer, project) =
-        let typeDef =
-            (sut :> IProjectAnalyzer)
-            |> (fun c -> c.Analyze(project))
-            |> (fun c -> c.Types)
-            |> Seq.find (fun c -> c.Identity.Name = name)
-        let parameter =
-            typeDef.Parameters
-            |> Seq.tryFind (fun c -> c.Identity = parameterName)
+    [<MultiProjectData("AllTypesGenerics", ProjectLanguage.CSharp, "SingleGenericType`1")>]
+    [<MultiProjectData("AllTypesGenerics", ProjectLanguage.CSharp, "MultipleGenericType`2")>]
+    [<MultiProjectData("AllTypesGenerics", ProjectLanguage.VisualBasic, "SingleGenericType`1")>]
+    [<MultiProjectData("AllTypesGenerics", ProjectLanguage.VisualBasic, "MultipleGenericType`2")>]
+    let ``Analyze should return correct type name when type has some parameters`` (expected, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
+        let actual =
+            projects
+            |> Seq.fold (fun acc c ->
+                let library = (sut :> IProjectAnalyzer).Analyze c.Project
+                let typeDefinitions =
+                    library.Types
+                    |> Seq.filter (fun d -> d.Identity.Name = expected)
+                typeDefinitions::acc) []
 
-        test <@ parameter.IsSome @>
+        test <@ actual |> List.forall (fun c -> c |> Seq.length >= 1) @>
+
+    [<Theory>]
+    [<MultiProjectData("AllTypesGenerics", ProjectLanguage.CSharp, "SingleGenericType`1", "T")>]
+    [<MultiProjectData("AllTypesGenerics", ProjectLanguage.CSharp, "MultipleGenericType`2", "T")>]
+    [<MultiProjectData("AllTypesGenerics", ProjectLanguage.CSharp, "MultipleGenericType`2", "Y")>]
+    [<MultiProjectData("AllTypesGenerics", ProjectLanguage.VisualBasic, "SingleGenericType`1", "T")>]
+    [<MultiProjectData("AllTypesGenerics", ProjectLanguage.VisualBasic, "MultipleGenericType`2", "T")>]
+    [<MultiProjectData("AllTypesGenerics", ProjectLanguage.VisualBasic, "MultipleGenericType`2", "Y")>]
+    let ``Analyze should return correct parameter name when type has some`` (name, expected, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
+        let actual =
+            projects
+            |> Seq.fold (fun acc c ->
+                let library = (sut :> IProjectAnalyzer).Analyze c.Project
+                let typeDefinition =
+                    library.Types
+                    |> Seq.find (fun d -> getFullname d.Identity = name)
+                let parameters =
+                    typeDefinition.Identity.Parameters
+                    |> Seq.filter (fun d -> d.Name = expected)
+                parameters::acc) []
+
+        test <@ actual |> List.forall (fun c -> c |> Seq.length >= 1) @>
     
     [<Theory>]
-    [<ProjectData("GenericsProject", ProjectLanguage.CSharp, "", "T", "GenericClass`2")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.CSharp, "in", "T", "GenericInterface`2")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.CSharp, "out", "Y", "GenericInterface`2")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.CSharp, "", "T", "GenericStruct`1")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.CSharp, "in", "T", "Do`1")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.VisualBasic, "", "T", "GenericClass`2")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.VisualBasic, "In", "T", "GenericInterface`2")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.VisualBasic, "Out", "Y", "GenericInterface`2")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.VisualBasic, "", "T", "GenericStruct`1")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.VisualBasic, "In", "T", "Do`1")>]
-    let ``Process project should return modifiers when type is generic`` (modifier: string, parameterName, name, sut: RoslynAnalyzer, project) =
-        let typeDef =
-            (sut :> IProjectAnalyzer)
-            |> (fun c -> c.Analyze(project))
-            |> (fun c -> c.Types)
-            |> Seq.find (fun c -> c.Identity.Name = name)
-        let parameter =
-            typeDef.Parameters
-            |> Seq.find (fun c -> c.Identity = parameterName)
+    [<MultiProjectData("AllTypesGenerics", ProjectLanguage.CSharp, "SingleGenericType`1", "T", "")>]
+    [<MultiProjectData("VariantGenericsType", ProjectLanguage.CSharp, "CovariantGenericType`1", "T", "in")>]
+    [<MultiProjectData("VariantGenericsType", ProjectLanguage.CSharp, "ContravariantGenericType`1", "T", "out")>]
+    [<MultiProjectData("AllTypesGenerics", ProjectLanguage.VisualBasic, "SingleGenericType`1", "T", "")>]
+    [<MultiProjectData("VariantGenericsType", ProjectLanguage.VisualBasic, "CovariantGenericType`1", "T", "In")>]
+    [<MultiProjectData("VariantGenericsType", ProjectLanguage.VisualBasic, "ContravariantGenericType`1", "T", "Out")>]
+    let ``Analyze should return correct parameter modifier`` (name, parameter, modifier, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
+        let expected =
+            match modifier with
+            | "" -> None
+            | x -> Some x
+        let actual =
+            projects
+            |> Seq.fold (fun acc c ->
+                let library = (sut :> IProjectAnalyzer).Analyze c.Project
+                let typeDefinition =
+                    library.Types
+                    |> Seq.find (fun d -> getFullname d.Identity = name)
+                let parameter =
+                    typeDefinition.Identity.Parameters
+                    |> Seq.find (fun d -> d.Name = parameter)
+                parameter::acc) []
 
-        test <@ modifier = parameter.Modifier @>
-
-    [<Theory>]
-    [<ProjectData("GenericsProject", ProjectLanguage.CSharp, 2, "T", "GenericClass`2")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.CSharp, 0, "Y", "GenericInterface`2")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.CSharp, 1, "T", "GenericStruct`1")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.CSharp, 3, "T", "Do`1")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.VisualBasic, 2, "T", "GenericClass`2")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.VisualBasic, 0, "Y", "GenericInterface`2")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.VisualBasic, 1, "T", "GenericStruct`1")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.VisualBasic, 3, "T", "Do`1")>]
-    let ``Process project should return parameters constraints when type is generic`` (count, parameterName, name, sut: RoslynAnalyzer, project) =
-        let typeDef =
-            (sut :> IProjectAnalyzer)
-            |> (fun c -> c.Analyze(project))
-            |> (fun c -> c.Types)
-            |> Seq.find (fun c -> c.Identity.Name = name)
-        let parameter =
-            typeDef.Parameters
-            |> Seq.find (fun c -> c.Identity = parameterName)
-
-        test <@ Seq.length parameter.Constraints = count @>
+        test <@ actual |> List.forall (fun c -> c.Modifier = expected) @>
 
     [<Theory>]
-    [<ProjectData("GenericsProject", ProjectLanguage.CSharp, "T", "class;IList<string>", "GenericClass`2")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.CSharp, "Y", "", "GenericInterface`2")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.CSharp, "T", "struct", "GenericStruct`1")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.CSharp, "T", "class;IDisposable;new()", "Do`1")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.VisualBasic, "T", "Class;IList(Of String)", "GenericClass`2")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.VisualBasic, "Y", "", "GenericInterface`2")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.VisualBasic, "T", "Structure", "GenericStruct`1")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.VisualBasic, "T", "Class;IDisposable;New", "Do`1")>]
-    let ``Process project should return correct constraint name when generic parameters has constraints`` (parameterName, constraints: string, name, sut: RoslynAnalyzer, project) =
-        let expectedConstraints = constraints.Split ([|';'|], StringSplitOptions.RemoveEmptyEntries)
-        
-        let typeDef =
-            (sut :> IProjectAnalyzer)
-            |> (fun c -> c.Analyze(project))
-            |> (fun c -> c.Types)
-            |> Seq.find (fun c -> c.Identity.Name = name)
-        let parameter =
-            typeDef.Parameters
-            |> Seq.find (fun c -> c.Identity = parameterName)
-        let parameterConstraints = 
-            parameter.Constraints 
-            |> Seq.filter (fun c -> Seq.contains c expectedConstraints)
+    [<MultiProjectData("AllTypesGenerics", ProjectLanguage.CSharp, "SingleGenericType`1", "T", 0)>]
+    [<MultiProjectData("AllTypesGenerics", ProjectLanguage.CSharp, "MultipleGenericType`2", "Y", 1)>]
+    [<MultiProjectData("AllTypesGenerics", ProjectLanguage.CSharp, "MultipleGenericType`2", "T", 2)>]
+    [<MultiProjectData("AllTypesGenerics", ProjectLanguage.VisualBasic, "SingleGenericType`1", "T", 0)>]
+    [<MultiProjectData("AllTypesGenerics", ProjectLanguage.VisualBasic, "MultipleGenericType`2", "Y", 1)>]
+    [<MultiProjectData("AllTypesGenerics", ProjectLanguage.VisualBasic, "MultipleGenericType`2", "T", 2)>]
+    let ``Analyze should return correct parameter constraints count when parameter has some`` (name, parameter, expected, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
+        let actual =
+            projects
+            |> Seq.fold (fun acc c ->
+                let library = (sut :> IProjectAnalyzer).Analyze c.Project
+                let typeDefinition =
+                    library.Types
+                    |> Seq.find (fun d -> getFullname d.Identity = name)
+                let parameter =
+                    typeDefinition.Identity.Parameters
+                    |> Seq.find (fun d -> d.Name = parameter)
+                parameter.Constraints::acc) []
 
-        test <@ Seq.length expectedConstraints = Seq.length parameterConstraints @>
+        test <@ actual |> List.forall (fun c -> c |> Seq.length = expected) @>
+
+    [<Theory>]
+    [<MultiProjectData("AllTypesGenerics", ProjectLanguage.CSharp, "SingleGenericType`1", "T", "")>]
+    [<MultiProjectData("AllTypesGenerics", ProjectLanguage.CSharp, "MultipleGenericType`2", "Y", "struct")>]
+    [<MultiProjectData("AllTypesGenerics", ProjectLanguage.CSharp, "MultipleGenericType`2", "T", "class;IList<string>")>]
+    [<MultiProjectData("AllTypesGenerics", ProjectLanguage.VisualBasic, "SingleGenericType`1", "T", "")>]
+    [<MultiProjectData("AllTypesGenerics", ProjectLanguage.VisualBasic, "MultipleGenericType`2", "Y", "Structure")>]
+    [<MultiProjectData("AllTypesGenerics", ProjectLanguage.VisualBasic, "MultipleGenericType`2", "T", "Class;IList(Of String)")>]
+    let ``Analyze should return correct constraint name when parameter has some`` (name, parameter, constraints : string, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
+        let expected = Set <| constraints.Split ([|';'|], StringSplitOptions.RemoveEmptyEntries)
+        let actual =
+            projects
+            |> Seq.fold (fun acc c ->
+                let library = (sut :> IProjectAnalyzer).Analyze c.Project
+                let typeDefinition =
+                    library.Types
+                    |> Seq.find (fun d -> getFullname d.Identity = name)
+                let parameter =
+                    typeDefinition.Identity.Parameters
+                    |> Seq.find (fun d -> d.Name = parameter)
+                let parameterConstraints = Set parameter.Constraints
+                parameterConstraints::acc) []
+
+        test <@ actual |> List.forall ((Set.isSubset) expected) @>

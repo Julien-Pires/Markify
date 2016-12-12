@@ -5,137 +5,100 @@ module RoslynAnalyzerTypesTests =
     open Markify.Models.IDE
     open Markify.Models.Definitions
     open Markify.Core.Analyzers
-
     open Attributes
-
+    open DefinitionsHelper
     open Xunit
     open Swensen.Unquote
 
-    let getName name = 
-        match name with
-        | "" -> None
-        | _ -> Some name
+    [<Theory>]
+    [<MultiProjectData("AllTypesSamples", ProjectLanguage.CSharp)>]
+    [<MultiProjectData("EmptySourceSamples", ProjectLanguage.CSharp)>]
+    [<MultiProjectData("AllTypesSamples", ProjectLanguage.VisualBasic)>]
+    [<MultiProjectData("EmptySourceSamples", ProjectLanguage.VisualBasic)>]
+    let ``Analyze should return expected types count`` (sut : RoslynAnalyzer, projects : ProjectInfo[]) =
+        let expected = 
+            projects
+            |> Seq.map (fun c -> c.Count) 
+            |> Seq.toList
+        let actual =
+            projects
+            |> Seq.fold (fun acc c ->
+                let library = (sut :> IProjectAnalyzer).Analyze c.Project
+                (library.Types |> Seq.length)::acc) []
+            |> List.rev
+
+        test <@ actual = expected @>
 
     [<Theory>]
-    [<ProjectData("EmptySourceProject", ProjectLanguage.CSharp, StructureKind.Class)>]
-    [<ProjectData("ClassProject", ProjectLanguage.CSharp, StructureKind.Class)>]
-    [<ProjectData("InterfaceProject", ProjectLanguage.CSharp, StructureKind.Interface)>]
-    [<ProjectData("StructProject", ProjectLanguage.CSharp, StructureKind.Struct)>]
-    [<ProjectData("EnumProject", ProjectLanguage.CSharp, StructureKind.Enum)>]
-    [<ProjectData("DelegateProject", ProjectLanguage.CSharp, StructureKind.Delegate)>]
-    [<ProjectData("ClassProject", ProjectLanguage.VisualBasic, StructureKind.Class)>]
-    [<ProjectData("InterfaceProject", ProjectLanguage.VisualBasic, StructureKind.Interface)>]
-    [<ProjectData("StructProject", ProjectLanguage.VisualBasic, StructureKind.Struct)>]
-    [<ProjectData("EnumProject", ProjectLanguage.VisualBasic, StructureKind.Enum)>]
-    [<ProjectData("DelegateProject", ProjectLanguage.VisualBasic, StructureKind.Delegate)>]
-    let ``Process projects should return expected types count`` (kind, sut : RoslynAnalyzer, info : ProjectInfo) = 
-        let library = (sut :> IProjectAnalyzer).Analyze info.Project
-        let typesCount =
-            library.Types
-            |> Seq.filter (fun c -> c.Kind = kind)
-            |> Seq.length
+    [<MultiProjectData("AllTypesDuplicate", ProjectLanguage.CSharp, "FooType")>]
+    [<MultiProjectData("AllTypesDuplicate", ProjectLanguage.CSharp, "ParentType.NestedType")>]
+    [<MultiProjectData("AllTypesDuplicate", ProjectLanguage.CSharp, "FooNamespace.InNamespaceType")>]
+    [<MultiProjectData("AllTypesDuplicate", ProjectLanguage.VisualBasic, "FooType")>]
+    [<MultiProjectData("AllTypesDuplicate", ProjectLanguage.VisualBasic, "ParentType.NestedType")>]
+    [<MultiProjectData("AllTypesDuplicate", ProjectLanguage.VisualBasic, "FooNamespace.InNamespaceType")>]
+    let ``Analyze should return no duplicate types`` (fullname, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
+        let actual =
+            projects
+            |> Seq.fold (fun acc c -> 
+                let library = (sut :> IProjectAnalyzer).Analyze c.Project
+                let types =
+                    library.Types
+                    |> Seq.filter (fun d -> getFullname d.Identity = fullname)
+                types::acc) []
 
-        test <@ typesCount = info.Count @>
+        test <@ actual |> Seq.forall (fun c -> c |> Seq.length = 1) @>
 
     [<Theory>]
-    [<ProjectData("ClassProject", ProjectLanguage.CSharp, "ParentClass", "", "")>]
-    [<ProjectData("InterfaceProject", ProjectLanguage.CSharp, "IParentInterface", "", "")>]
-    [<ProjectData("StructProject", ProjectLanguage.CSharp, "NestedStruct", "ParentStruct", "")>]
-    [<ProjectData("EnumProject", ProjectLanguage.CSharp, "InNamespaceEnum", "", "FooSpace")>]
-    [<ProjectData("DelegateProject", ProjectLanguage.CSharp, "SingleDelegate", "", "")>]
-    [<ProjectData("ClassProject", ProjectLanguage.VisualBasic, "InNamespaceClass", "", "FooSpace")>]
-    [<ProjectData("InterfaceProject", ProjectLanguage.VisualBasic, "INestedInterface", "IParentInterface", "")>]
-    [<ProjectData("StructProject", ProjectLanguage.VisualBasic, "SingleStruct", "", "")>]
-    [<ProjectData("EnumProject", ProjectLanguage.VisualBasic, "SingleEnum", "", "")>]
-    [<ProjectData("DelegateProject", ProjectLanguage.VisualBasic, "NestedDelegate", "ParentClass", "")>]
-    let ``Process project should return no duplicate types`` (name, parents, nspace, sut: RoslynAnalyzer, project) =
-        let fullname = {
-            Name = name
-            Parents = getName parents
-            Namespace = getName nspace
-        }
-        let typeDef =
-            (sut :> IProjectAnalyzer)
-            |> (fun c -> c.Analyze project)
-            |> (fun c -> c.Types)
-            |> Seq.filter (fun c -> c.Identity = fullname)
-
-        test <@ Seq.length typeDef = 1 @>
-
-    [<Theory>]
-    [<ProjectData("ClassProject", ProjectLanguage.CSharp, "ParentClass")>]
-    [<ProjectData("ClassProject", ProjectLanguage.CSharp, "InNamespaceClass")>]
-    [<ProjectData("InterfaceProject", ProjectLanguage.CSharp, "IInNamespaceInterface")>]
-    [<ProjectData("StructProject", ProjectLanguage.CSharp, "NestedStruct")>]
-    [<ProjectData("EnumProject", ProjectLanguage.CSharp, "NestedEnum")>]
-    [<ProjectData("DelegateProject", ProjectLanguage.CSharp, "InNamespaceDelegate")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.CSharp, "GenericClass`2")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.CSharp, "Do`1")>]
-    [<ProjectData("ClassProject", ProjectLanguage.VisualBasic, "ParentClass")>]
-    [<ProjectData("ClassProject", ProjectLanguage.VisualBasic, "InNamespaceClass")>]
-    [<ProjectData("InterfaceProject", ProjectLanguage.VisualBasic, "IInNamespaceInterface")>]
-    [<ProjectData("StructProject", ProjectLanguage.VisualBasic, "NestedStruct")>]
-    [<ProjectData("EnumProject", ProjectLanguage.VisualBasic, "NestedEnum")>]
-    [<ProjectData("DelegateProject", ProjectLanguage.VisualBasic, "InNamespaceDelegate")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.VisualBasic, "GenericClass`2")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.VisualBasic, "Do`1")>]
-    let ``Process project should return type with correct name`` (name, sut: RoslynAnalyzer, project) =
-        let typeDef = 
-            (sut :> IProjectAnalyzer)
-            |> (fun c -> c.Analyze project)
-            |> (fun c -> c.Types)
-            |> Seq.tryFind (fun c -> c.Identity.Name = name)
-
-        test <@ typeDef.IsSome @>
+    [<MultiProjectData("AllTypesSamples", ProjectLanguage.CSharp, "FooType")>]
+    [<MultiProjectData("AllTypesSamples", ProjectLanguage.CSharp, "NestedType")>]
+    [<MultiProjectData("AllTypesSamples", ProjectLanguage.CSharp, "InNamespaceType")>]
+    [<MultiProjectData("AllTypesSamples", ProjectLanguage.CSharp, "DeeperNestedType")>]
+    [<MultiProjectData("AllTypesSamples", ProjectLanguage.VisualBasic, "FooType")>]
+    [<MultiProjectData("AllTypesSamples", ProjectLanguage.VisualBasic, "NestedType")>]
+    [<MultiProjectData("AllTypesSamples", ProjectLanguage.VisualBasic, "InNamespaceType")>]
+    [<MultiProjectData("AllTypesSamples", ProjectLanguage.VisualBasic, "DeeperNestedType")>]
+    let ``Analyze should return type with correct name`` (name, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
+        let actual =
+            projects
+            |> Seq.fold (fun acc c ->
+                let library = (sut :> IProjectAnalyzer).Analyze c.Project
+                let types =
+                    library.Types
+                    |> Seq.filter (fun d -> d.Identity.Name = name)
+                types::acc) []
+                
+        test <@ actual |> List.forall (fun c -> c |> Seq.length >= 1) @>
     
     [<Theory>]
-    [<ProjectData("ClassProject", ProjectLanguage.CSharp, "SingleClass", "", "")>]
-    [<ProjectData("ClassProject", ProjectLanguage.CSharp, "NestedClass", "ParentClass", "")>]
-    [<ProjectData("ClassProject", ProjectLanguage.CSharp, "InNamespaceClass", "", "FooSpace")>]
-    [<ProjectData("ClassProject", ProjectLanguage.CSharp, "ChildClass", "AnotherParentClass", "FooSpace.InnerSpace")>]
-    [<ProjectData("InterfaceProject", ProjectLanguage.CSharp, "IInNamespaceInterface", "", "FooSpace")>]
-    [<ProjectData("StructProject", ProjectLanguage.CSharp, "InNamespaceStruct", "", "FooSpace")>]
-    [<ProjectData("EnumProject", ProjectLanguage.CSharp, "InNamespaceEnum", "", "FooSpace")>]
-    [<ProjectData("DelegateProject", ProjectLanguage.CSharp, "InNamespaceDelegate", "", "FooSpace")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.CSharp, "GenericClass`2", "", "")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.CSharp, "Do`1", "", "")>]
-    [<ProjectData("ClassProject", ProjectLanguage.VisualBasic, "SingleClass", "", "")>]
-    [<ProjectData("ClassProject", ProjectLanguage.VisualBasic, "NestedClass", "ParentClass", "")>]
-    [<ProjectData("ClassProject", ProjectLanguage.VisualBasic, "InNamespaceClass", "", "FooSpace")>]
-    [<ProjectData("ClassProject", ProjectLanguage.VisualBasic, "ChildClass", "AnotherParentClass", "FooSpace.InnerSpace")>]
-    [<ProjectData("InterfaceProject", ProjectLanguage.VisualBasic, "IInNamespaceInterface", "", "FooSpace")>]
-    [<ProjectData("StructProject", ProjectLanguage.VisualBasic, "InNamespaceStruct", "", "FooSpace")>]
-    [<ProjectData("EnumProject", ProjectLanguage.VisualBasic, "InNamespaceEnum", "", "FooSpace")>]
-    [<ProjectData("DelegateProject", ProjectLanguage.VisualBasic, "InNamespaceDelegate", "", "FooSpace")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.VisualBasic, "GenericClass`2", "", "")>]
-    [<ProjectData("GenericsProject", ProjectLanguage.VisualBasic, "Do`1", "", "")>]
-    let ``Process project should return types with correct fullname`` (name, parents, nspace, sut: RoslynAnalyzer, project) =
-        let fullname = {
-            Name = name
-            Parents = getName parents
-            Namespace = getName nspace
-        }
-        let typeDef = 
-            (sut :> IProjectAnalyzer)
-            |> (fun c -> c.Analyze project)
-            |> (fun c -> c.Types)
-            |> Seq.tryFind (fun c -> c.Identity = fullname)
+    [<MultiProjectData("AllTypesSamples", ProjectLanguage.CSharp, "FooType")>]
+    [<MultiProjectData("AllTypesSamples", ProjectLanguage.CSharp, "ParentType.NestedType")>]
+    [<MultiProjectData("AllTypesSamples", ProjectLanguage.CSharp, "ParentType.AnotherNestedType.DeeperNestedType")>]
+    [<MultiProjectData("AllTypesSamples", ProjectLanguage.CSharp, "FooNamespace.InNamespaceType")>]
+    [<MultiProjectData("AllTypesSamples", ProjectLanguage.CSharp, "FooNamespace.BarNamespace.ParentType.NestedType")>]
+    [<MultiProjectData("AllTypesSamples", ProjectLanguage.VisualBasic, "FooType")>]
+    [<MultiProjectData("AllTypesSamples", ProjectLanguage.VisualBasic, "ParentType.NestedType")>]
+    [<MultiProjectData("AllTypesSamples", ProjectLanguage.VisualBasic, "ParentType.AnotherNestedType.DeeperNestedType")>]
+    [<MultiProjectData("AllTypesSamples", ProjectLanguage.VisualBasic, "FooNamespace.InNamespaceType")>]
+    [<MultiProjectData("AllTypesSamples", ProjectLanguage.VisualBasic, "FooNamespace.BarNamespace.ParentType.NestedType")>]
+    let ``Analyze should return types with correct fullname`` (fullname, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
+        let actual =
+            projects
+            |> Seq.fold (fun acc c -> 
+                let library = (sut :> IProjectAnalyzer).Analyze c.Project
+                let types = 
+                    library.Types
+                    |> Seq.filter (fun d -> getFullname d.Identity = fullname)
+                types::acc) []
 
-        test <@ typeDef.IsSome @>
+        test <@ actual |> List.forall (fun c -> c |> Seq.length = 1) @>
 
     [<Theory>]
-    [<ProjectData("InvalidFileProject", ProjectLanguage.CSharp, 0)>]
-    [<ProjectData("InvalidFileProject", ProjectLanguage.VisualBasic, 0)>]
-    let ``Process project should return nothing when file does not exists`` (expected, sut : RoslynAnalyzer, project) =
-        let library = (sut :> IProjectAnalyzer).Analyze project
-        let actual = Seq.length library.Types
+    [<MultiProjectData("InvalidFileProject", ProjectLanguage.Unsupported, 0)>]
+    let ``Analyze should return nothing when file does not exists or is not supported`` (expected, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
+        let actual =
+            projects
+            |> Seq.fold (fun acc c -> 
+                let library = (sut :> IProjectAnalyzer).Analyze c.Project
+                library.Types::acc) []
 
-        test <@ actual = expected @>
-
-    [<Theory>]
-    [<ProjectData("ClassProject", ProjectLanguage.Unsupported, 0)>]
-    let ```Process project should return nothing when file has unknown extension`` (expected, sut : RoslynAnalyzer, project) =
-        let library = (sut :> IProjectAnalyzer).Analyze project
-        let actual = Seq.length library.Types
-
-        test <@ actual = expected @>
+        test <@ actual |> List.forall (fun c -> c |> Seq.length = expected) @>

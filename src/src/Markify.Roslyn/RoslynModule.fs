@@ -9,10 +9,8 @@ type RoslynModule() =
     inherit NinjectModule()
 
     override this.Load () =
-        let languageHelpers = [
-            CSharpHelper() :> NodeHelper, ["cs"]
-            VisualBasicHelper() :> NodeHelper, ["vb"]
-        ]
+        let analyzers = seq {
+            yield CSharpAnalyzer.analyze, seq { yield "cs" }
+            yield VisualBasicAnalyzer.analyze, seq { yield "vb" } }
 
-        this.Bind<SourceConverter>().ToSelf().WithConstructorArgument(languageHelpers) |> ignore
-        this.Bind<IProjectAnalyzer>().To<RoslynAnalyzer>() |> ignore
+        this.Bind<IProjectAnalyzer>().To<RoslynAnalyzer>().WithConstructorArgument(analyzers) |> ignore

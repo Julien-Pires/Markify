@@ -10,26 +10,32 @@ module RoslynAnalyzerNamespacesTests =
     open Swensen.Unquote
 
     [<Theory>]
-    [<ProjectData("EmptySourceProject", ProjectLanguage.CSharp, 0)>]
-    [<ProjectData("ClassProject", ProjectLanguage.CSharp, 2)>]
-    [<ProjectData("EnumProject", ProjectLanguage.CSharp, 1)>]
-    [<ProjectData("EmptySourceProject", ProjectLanguage.VisualBasic, 0)>]
-    [<ProjectData("ClassProject", ProjectLanguage.VisualBasic, 2)>]
-    [<ProjectData("EnumProject", ProjectLanguage.VisualBasic, 1)>]
-    let ``Proces projects should return expected namespaces count`` (expected, sut: RoslynAnalyzer, project) =
-        let library = (sut :> IProjectAnalyzer).Analyze project
+    [<MultiProjectData("EmptySourceSamples", ProjectLanguage.CSharp, 0)>]
+    [<MultiProjectData("AllTypesSamples", ProjectLanguage.CSharp, 2)>]
+    [<MultiProjectData("EmptySourceSamples", ProjectLanguage.VisualBasic, 0)>]
+    [<MultiProjectData("AllTypesSamples", ProjectLanguage.VisualBasic, 2)>]
+    let ``Analyze should return expected namespaces count`` (expected, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
+        let actual =
+            projects
+            |> Seq.fold (fun acc c ->
+                let library = (sut :> IProjectAnalyzer).Analyze c.Project
+                let count = 
+                    library.Namespaces
+                    |> Seq.length
+                count::acc) []
 
-        test <@ Seq.length library.Namespaces = expected @>
+        test <@ actual |> List.forall ((=) expected) @>
 
     [<Theory>]
-    [<ProjectData("ClassProject", ProjectLanguage.CSharp, "FooSpace")>]
-    [<ProjectData("ClassProject", ProjectLanguage.CSharp, "FooSpace.InnerSpace")>]
-    [<ProjectData("ClassProject", ProjectLanguage.VisualBasic, "FooSpace")>]
-    [<ProjectData("ClassProject", ProjectLanguage.VisualBasic, "FooSpace.InnerSpace")>]
-    let ``Process projects should return correct namespace name`` (expected, sut: RoslynAnalyzer, project) =
-        let library = (sut :> IProjectAnalyzer).Analyze project
-        let nspace =
-            library.Namespaces
-            |> Seq.tryFind (fun c -> c.Name = expected)
+    [<MultiProjectData("AllTypesSamples", ProjectLanguage.CSharp, "FooNamespace")>]
+    [<MultiProjectData("AllTypesSamples", ProjectLanguage.CSharp, "FooNamespace.BarNamespace")>]
+    [<MultiProjectData("AllTypesSamples", ProjectLanguage.VisualBasic, "FooNamespace")>]
+    [<MultiProjectData("AllTypesSamples", ProjectLanguage.VisualBasic, "FooNamespace.BarNamespace")>]
+    let ``Analyze should return correct namespace name`` (expected, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
+        let actual =
+            projects
+            |> Seq.fold (fun acc c ->
+                let library = (sut :> IProjectAnalyzer).Analyze c.Project
+                library.Namespaces::acc) []
 
-        test <@ nspace.IsSome @>
+        test <@ actual |> List.forall (fun c -> c |> Seq.exists (fun d -> d.Name = expected)) @>

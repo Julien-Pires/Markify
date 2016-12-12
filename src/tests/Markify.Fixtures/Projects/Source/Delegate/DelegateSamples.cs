@@ -1,11 +1,27 @@
-﻿public delegate void SingleDelegate();
+﻿public delegate void FooType();
 
-public class ParentClass
+public partial class ParentType
 {
-    public delegate void NestedDelegate();
+    public delegate void NestedType();
 }
 
-namespace FooSpace
+public partial class ParentType
 {
-    public delegate void InNamespaceDelegate();
+    public partial class AnotherNestedType
+    {
+        public delegate void DeeperNestedType();
+    }
+}
+
+namespace FooNamespace
+{
+    public delegate void InNamespaceType();
+}
+
+namespace FooNamespace.BarNamespace
+{
+    public partial class ParentType
+    {
+        public delegate void NestedType();
+    }
 }

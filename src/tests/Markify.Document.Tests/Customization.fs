@@ -41,15 +41,17 @@
                         let identity = {
                             Name = sprintf "Type%i" c;
                             Parents = Some "Parent"
-                            Namespace = None }
-                        let typeDef = {
-                            Identity = identity
-                            Kind = StructureKind.Class
+                            Namespace = None
                             AccessModifiers = Seq.empty
                             Modifiers = Seq.empty
                             BaseTypes = Seq.empty
                             Parameters = Seq.empty }
-                        typeDef)
+                        Class { 
+                            Identity = identity 
+                            Fields = []
+                            Properties = []
+                            Events = [] 
+                            Methods = [] })
             let lib = {
                 Project = name
                 Namespaces = Seq.empty

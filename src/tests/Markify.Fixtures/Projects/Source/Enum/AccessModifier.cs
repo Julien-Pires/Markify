@@ -1,18 +1,14 @@
-﻿public enum PublicEnum { }
+﻿public enum PublicType { }
 
-internal enum InternalEnum { }
+internal enum InternalType { }
 
-public class PrivateFoo
+public partial class ParentType
 {
-    private enum PrivateEnum { }
-}
+    private enum PrivateType { }
 
-public class ProtectedFoo
-{
-    protected enum ProtectedEnum { }
-}
+    protected enum ProtectedType { }
 
-public class ProtectedInternalFoo
-{
-    protected internal enum ProtectedInternalEnum { }
+    protected internal enum ProtectedInternalType { }
+
+    internal protected enum InternalProtectedType { }
 }

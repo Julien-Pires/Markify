@@ -1,19 +1,26 @@
-﻿Public Class SingleClass
+﻿Public Class FooType
 End Class
 
-Public Class ParentClass
-    Public Class NestedClass
+Public Partial Class ParentType
+    Public Partial Class NestedType
     End Class
 End Class
 
-Namespace FooSpace
-    Public Class InNamespaceClass
+Public Partial Class ParentType
+    Public Partial Class AnotherNestedType
+        Public Class DeeperNestedType
+        End Class
+    End Class
+End Class
+
+Namespace FooNamespace
+    Public Class InNamespaceType
     End Class
 End Namespace
 
-namespace FooSpace.InnerSpace
-    Public Class AnotherParentClass
-        public Class ChildClass
+Namespace FooNamespace.BarNamespace
+    Public Partial Class ParentType
+        Public Class NestedType
         End Class
     End Class
 End Namespace

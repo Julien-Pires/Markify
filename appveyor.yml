@@ -33,9 +33,22 @@ after_test:
         $xunitConsole = (Resolve-Path "src/packages/xunit.runner.console.2.*/tools/xunit.console.exe").ToString()
 
         foreach($test in $tests) {
-          & .\src\packages\OpenCover.*\tools\OpenCover.Console.exe -register:user -target:"$xunitConsole" -targetargs:".\src\tests\$test\bin\$env:CONFIGURATION\$test.dll -noshadow" -skipautoprops -hideskipped:All -filter:"$filter" -excludebyattribute:*.ExcludeFromCodeCoverage* -output:coverage.xml -mergeoutput
+          & .\src\packages\OpenCover.*\tools\OpenCover.Console.exe -register:user `
+          -target:"$xunitConsole" -targetargs:".\src\tests\$test\bin\$env:CONFIGURATION\$test.dll -noshadow" `
+          -skipautoprops -hideskipped:All `
+          -filter:"$filter" `
+          -excludebyattribute:*.ExcludeFromCodeCoverage* `
+          -excludebyfile:*.tt `
+          -output:coverage.xml -mergeoutput
         }
 
         $coveralls = (Resolve-Path "src/packages/coveralls.net.*/tools/csmacnz.coveralls.exe").ToString()
 
-        & $coveralls --opencover -i coverage.xml --repoToken $env:COVERALLS_REPO_TOKEN --commitId $env:APPVEYOR_REPO_COMMIT --commitBranch $env:APPVEYOR_REPO_BRANCH --commitAuthor $env:APPVEYOR_REPO_COMMIT_AUTHOR --commitEmail $env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL --commitMessage $env:APPVEYOR_REPO_COMMIT_MESSAGE --jobId $env:APPVEYOR_JOB_ID
+        & $coveralls --opencover -i coverage.xml `
+        --repoToken $env:COVERALLS_REPO_TOKEN `
+        --commitId $env:APPVEYOR_REPO_COMMIT `
+        --commitBranch $env:APPVEYOR_REPO_BRANCH `
+        --commitAuthor $env:APPVEYOR_REPO_COMMIT_AUTHOR `
+        --commitEmail $env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL `
+        --commitMessage $env:APPVEYOR_REPO_COMMIT_MESSAGE `
+        --jobId $env:APPVEYOR_JOB_ID

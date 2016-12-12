@@ -64,6 +64,9 @@
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="IO.Tests.fs" />
     <Compile Include="Hash.Tests.fs" />
+    <Content Include="Foo.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />

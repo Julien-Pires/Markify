@@ -1,11 +1,27 @@
-﻿public enum SingleEnum { }
+﻿public enum FooType { }
 
-public class ParentEnum
+public partial class ParentType
 {
-    public enum NestedEnum { }
+    public enum NestedType { }
 }
 
-namespace FooSpace
+public partial class ParentType
 {
-    public enum InNamespaceEnum { }
+    public partial class AnotherNestedType
+    {
+        public enum DeeperNestedType { }
+    }
+}
+
+namespace FooNamespace
+{
+    public enum InNamespaceType { }
+}
+
+namespace FooNamespace.BarNamespace
+{
+    public partial class ParentType
+    {
+        public enum NestedType { }
+    }
 }

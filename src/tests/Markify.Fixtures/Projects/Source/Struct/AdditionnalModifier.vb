@@ -1,2 +1,2 @@
-﻿Partial Public Structure PartialStruct
+﻿Partial Public Structure PartialType
 End Structure

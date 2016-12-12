@@ -1,18 +1,14 @@
-﻿public interface IPublicInterface { }
+﻿public interface PublicType { }
 
-internal interface IInternalInterface { }
+internal interface InternalType { }
 
-public interface IPrivateFoo
+public partial interface ParentType
 {
-    private interface IPrivateInterface { }
-}
+    private interface PrivateType { }
 
-public interface IProtectedFoo
-{
-    protected interface IProtectedInterface { }
-}
+    protected interface ProtectedType { }
 
-public interface IProtectedInternalFoo
-{
-    protected internal interface IProtectedInternalInterface { }
+    protected internal interface ProtectedInternalType { }
+
+    internal protected interface InternalProtectedType { }
 }

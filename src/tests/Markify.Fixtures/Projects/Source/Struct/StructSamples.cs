@@ -1,11 +1,27 @@
-﻿public struct SingleStruct { }
+﻿public struct FooType { }
 
-public struct ParentStruct
+public partial struct ParentType
 {
-    public struct NestedStruct { }
+    public partial struct NestedType { }
 }
 
-namespace FooSpace
+public partial struct ParentType
 {
-    public struct InNamespaceStruct { }
+    public partial struct AnotherNestedType
+    {
+        public struct DeeperNestedType { }
+    }
+}
+
+namespace FooNamespace
+{
+    public struct InNamespaceType { }
+}
+
+namespace FooNamespace.BarNamespace
+{
+    public partial struct ParentType
+    {
+        public struct NestedType { }
+    }
 }

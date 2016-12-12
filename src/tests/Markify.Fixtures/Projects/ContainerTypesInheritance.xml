@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Solution>
+  <Projects>
+    <Project>
+      <Files>
+        <Uri>Source/Class/ClassInheritance</Uri>
+      </Files>
+    </Project>
+    <Project>
+      <Files>
+        <Uri>Source/Struct/StructInheritance</Uri>
+      </Files>
+    </Project>
+    <Project>
+      <Files>
+        <Uri>Source/Interface/InterfaceInheritance</Uri>
+      </Files>
+    </Project>
+  </Projects>
+</Solution>

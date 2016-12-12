@@ -1,11 +1,27 @@
-﻿public interface ISingleInterface { }
+﻿public interface FooType { }
 
-public interface IParentInterface
+public partial interface ParentType
 {
-    public interface INestedInterface { }
+    public partial interface NestedType { }
 }
 
-namespace FooSpace
+public partial interface ParentType
 {
-    public interface IInNamespaceInterface { }
+    public partial interface AnotherNestedType
+    {
+        public interface DeeperNestedType { }
+    }
+}
+
+namespace FooNamespace
+{
+    public interface InNamespaceType { }
+}
+
+namespace FooNamespace.BarNamespace
+{
+    public partial interface ParentType
+    {
+        public interface NestedType { }
+    }
 }

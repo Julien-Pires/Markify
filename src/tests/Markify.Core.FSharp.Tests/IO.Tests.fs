@@ -8,57 +8,41 @@
     open Xunit
     open Swensen.Unquote
 
-    let getSuccess ioResult =
-        match ioResult with
-        | Success s -> Some s
-        | _ -> None
+    let isSuccess = function
+        | Success _ -> true
+        | _ -> false
 
-    let getFailure ioResult = 
-        match ioResult with
-        | Failure f -> Some f
-        | _ -> None
+    let isFailure  = function
+        | Failure _ -> true
+        | _ -> false
 
-    let getFullpath path =
-        let dir = new UriBuilder(Assembly.GetExecutingAssembly().CodeBase)
-        let cleanDir = Path.GetDirectoryName (Uri.UnescapeDataString dir.Path)
-        Path.Combine (cleanDir, path)
+    let getFailure = function
+        | Failure x -> Some x
+        | _ -> None
 
     [<Theory>]
     [<InlineData("", false)>]
-    [<InlineData("foo.txt", false)>]
-    [<InlineData("Foo/Bar/FooBar.txt", false)>]
-    [<InlineData("Projects/Source/EmptySource.cs", true)>]
-    let ``Detect file exists with correct value`` (path, exists) =
+    [<InlineData("Foo.txt", true)>]
+    let ``FileExists should return expected value`` (path, expected) =
         let actual = IO.fileExists path
 
-        test <@ Success exists = actual @>
-
-    [<Theory>]
-    [<InlineData("Projects/ClassProject.xml")>]
-    [<InlineData("Projects/Source/EmptySource.cs")>]
-    let ``Read text file when file exists with success`` (path) =
-        let actual = IO.readFile path
-
-        test <@ (getSuccess actual).IsSome @>
+        test <@ Success expected = actual @>
 
     [<Theory>]
     [<InlineData("Foo.txt")>]
-    [<InlineData("Foo/Bar.xml")>]
-    let ``Read text file when file does not exists with failure value`` (path) =
+    let ``ReadFile should return success when file exists`` (path) =
         let actual = IO.readFile path
-        let ex = getFailure actual
 
-        test <@ ex.IsSome @>
-        test <@ String.IsNullOrWhiteSpace ex.Value.Message = false @>
-        test <@ String.IsNullOrWhiteSpace ex.Value.Stack = false @>
+        test <@ actual |> isSuccess @>
 
     [<Theory>]
     [<InlineData("")>]
     [<InlineData("$ù!ù:@@")>]
-    let ```Read text file when using wrong parameters with failure value`` (path) =
+    [<InlineData("Bar.txt")>]
+    [<InlineData("Foo/Bar.txt")>]
+    let ``ReadFile should return failure when path is incorrect`` (path) =
         let actual = IO.readFile path
-        let ex = getFailure actual
 
-        test <@ ex.IsSome @>
-        test <@ String.IsNullOrWhiteSpace ex.Value.Message = false @>
-        test <@ String.IsNullOrWhiteSpace ex.Value.Stack = false @>
+        test <@ actual |> isFailure @>
+        test <@ actual |> getFailure |> fun c -> String.IsNullOrWhiteSpace (c.Value.Message) = false @>
+        test <@ actual |> getFailure |> fun c -> String.IsNullOrWhiteSpace (c.Value.Stack) = false @>

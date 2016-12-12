@@ -1,20 +1,19 @@
-﻿Public Class PublicClass
+﻿Public Class PublicType
 End Class
 
-Friend Class InternalClass
+Friend Class InternalType
 End Class
 
-Public Class PrivateFoo
-    Private Class PrivateClass
+Public Partial Class ParentType
+    Private Class PrivateType
     End Class
-End Class
 
-Public Class ProtectedFoo
-    Protected Class ProtectedClass
+    Protected Class ProtectedType
     End Class
-End Class
 
-Public Class ProtectedInternalFoo
-    Protected Friend Class ProtectedInternalClass
+    Protected Friend Class ProtectedInternalType
+    End Class
+
+    Friend Protected Class InternalProtectedType
     End Class
 End Class

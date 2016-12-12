@@ -1,18 +1,14 @@
-﻿public struct PublicStruct { }
+﻿public struct PublicType { }
 
-internal struct InternalStruct { }
+internal struct InternalType { }
 
-public struct PrivateFoo
+public partial struct ParentType
 {
-    private struct PrivateStruct { }
-}
+    private struct PrivateType { }
 
-public class ProtectedFoo
-{
-    protected struct ProtectedStruct { }
-}
+    protected struct ProtectedType { }
 
-public class ProtectedInternalFoo
-{
-    protected internal struct ProtectedInternalStruct { }
+    protected internal struct ProtectedInternalType { }
+
+    internal protected struct InternalProtectedType { }
 }
