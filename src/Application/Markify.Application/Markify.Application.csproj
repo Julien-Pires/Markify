@@ -1,0 +1,232 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <UseCodebase>true</UseCodebase>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectTypeGuids>{82b43b9b-a64c-4715-b499-d71e9ca2bd60};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectGuid>{B7973B9F-7AC3-4D73-B23A-94627E86B202}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Markify.Application</RootNamespace>
+    <AssemblyName>Markify.Application</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <GeneratePkgDefFile>true</GeneratePkgDefFile>
+    <IncludeAssemblyInVSIXContainer>true</IncludeAssemblyInVSIXContainer>
+    <IncludeDebugSymbolsInVSIXContainer>true</IncludeDebugSymbolsInVSIXContainer>
+    <IncludeDebugSymbolsInLocalVSIXDeployment>true</IncludeDebugSymbolsInLocalVSIXDeployment>
+    <CopyBuildOutputToOutputDirectory>true</CopyBuildOutputToOutputDirectory>
+    <CopyOutputSymbolsToOutputDirectory>false</CopyOutputSymbolsToOutputDirectory>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <RegisterForComInterop>false</RegisterForComInterop>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Controllers\CommandsController.cs" />
+    <Compile Include="Commands\GenerateCurrentProjectCommand.cs" />
+    <Compile Include="Commands\GenerateSolutionDocumentation.cs" />
+    <Compile Include="Services\RenderingModule.cs" />
+    <Compile Include="Services\IO\PageWriter.cs" />
+    <Compile Include="Services\Processing\DocumentationGenerator.cs" />
+    <Compile Include="Services\IDocumentationGenerator.cs" />
+    <Compile Include="Services\Processing\ProjectProcessor.cs" />
+    <Compile Include="Services\Settings\SolutionExplorerFilterProvider.cs" />
+    <Compile Include="Services\ServicesModule.cs" />
+    <Compile Include="Services\Processing\IProjectProcessor.cs" />
+    <Compile Include="Services\Processing\IRenderer.cs" />
+    <Compile Include="MarkifyPackage.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\Processing\Renderer.cs" />
+    <Compile Include="Services\Settings\IDocumentSettingsProvider.cs" />
+    <Compile Include="Services\Settings\DocumentSettingsProvider.cs" />
+    <Compile Include="Services\T4Module.cs" />
+    <Compile Include="Services\VisualStudioModule.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="source.extension.vsixmanifest">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="envdte80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="FSharp.Core, Version=4.4.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.VisualStudio.Imaging, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.VisualStudio.Imaging.14.3.25407\lib\net45\Microsoft.VisualStudio.Imaging.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>..\..\packages\Microsoft.VisualStudio.OLE.Interop.7.10.6070\lib\Microsoft.VisualStudio.OLE.Interop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.14.0, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.VisualStudio.Shell.14.0.14.3.25407\lib\Microsoft.VisualStudio.Shell.14.0.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Immutable.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.VisualStudio.Shell.Immutable.10.0.10.0.30319\lib\net40\Microsoft.VisualStudio.Shell.Immutable.10.0.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Immutable.14.0, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.VisualStudio.Shell.Immutable.14.0.14.3.25407\lib\net45\Microsoft.VisualStudio.Shell.Immutable.14.0.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>..\..\packages\Microsoft.VisualStudio.Shell.Interop.7.10.6071\lib\Microsoft.VisualStudio.Shell.Interop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop.8.0, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>..\..\packages\Microsoft.VisualStudio.Shell.Interop.8.0.8.0.50727\lib\Microsoft.VisualStudio.Shell.Interop.8.0.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop.9.0, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>..\..\packages\Microsoft.VisualStudio.Shell.Interop.9.0.9.0.30729\lib\Microsoft.VisualStudio.Shell.Interop.9.0.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Threading, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.VisualStudio.Threading.14.1.131\lib\net45\Microsoft.VisualStudio.Threading.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Utilities, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.VisualStudio.Utilities.14.3.25407\lib\net45\Microsoft.VisualStudio.Utilities.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Ninject, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Ninject.3.2.2.0\lib\net45-full\Ninject.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Optional, Version=3.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Optional.3.1.0\lib\net461\Optional.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Collections.Immutable, Version=1.1.37.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Collections.Immutable.1.1.37\lib\dotnet\System.Collections.Immutable.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Design" />
+  </ItemGroup>
+  <ItemGroup>
+    <VSCTCompile Include="MarkifyPackage.vsct">
+      <ResourceName>Menus.ctmenu</ResourceName>
+    </VSCTCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="VSPackage.resx">
+      <MergeWithCTO>true</MergeWithCTO>
+      <ManifestResourceName>VSPackage</ManifestResourceName>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Services\DocumentationOrganizerModule.cs" />
+    <Content Include="Resources\GenerateCurrentProjectCommand.png" />
+    <Content Include="Resources\GenerateSolutionDocumentation.png" />
+    <Content Include="Resources\GenerateSolutionDocumentationPackage.ico" />
+    <Content Include="Resources\MarkifyPackage.ico" />
+    <Compile Include="Services\RoslynModule.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\Markify.Core.FSharp\Markify.Core.FSharp.fsproj">
+      <Project>{d9a8fb2a-fc1a-4a2b-a5a3-17d72b712a04}</Project>
+      <Name>Markify.Core.FSharp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Domain\Markify.Domain.Compiler\Markify.Domain.Compiler.fsproj">
+      <Project>{a4959db4-7b61-4e7e-918f-59647879a50d}</Project>
+      <Name>Markify.Domain.Compiler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Domain\Markify.Domain.Document\Markify.Domain.Document.fsproj">
+      <Project>{5FD3A38E-D96D-4749-A8D3-D1F8D769D65B}</Project>
+      <Name>Markify.Domain.Document</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Domain\Markify.Domain.IDE\Markify.Domain.Ide.fsproj">
+      <Project>{A55C060A-C3BF-4EB6-8439-CD5DC3614CFD}</Project>
+      <Name>Markify.Domain.Ide</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Domain\Markify.Domain.Rendering\Markify.Domain.Rendering.fsproj">
+      <Project>{6F0497E4-0698-4AE0-B2C8-0CDC87C2FF10}</Project>
+      <Name>Markify.Domain.Rendering</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Services\VisualStudio\Markify.Services.VisualStudio\Markify.Services.VisualStudio.csproj">
+      <Project>{26BADDBD-FAB7-4613-B0D0-AAAAF092F5D9}</Project>
+      <Name>Markify.Services.VisualStudio</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Services\Roslyn\Markify.Services.Roslyn.Common\Markify.Services.Roslyn.Common.fsproj">
+      <Project>{40DF054B-D8BF-4561-8501-5AD5F4E7874A}</Project>
+      <Name>Markify.Services.Roslyn.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Services\Roslyn\Markify.Services.Roslyn.CSharp\Markify.Services.Roslyn.CSharp.fsproj">
+      <Project>{40B61BEC-6D13-4ED1-BC73-17104C77E932}</Project>
+      <Name>Markify.Services.Roslyn.CSharp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Services\Roslyn\Markify.Services.Roslyn.VisualBasic\Markify.Services.Roslyn.VisualBasic.fsproj">
+      <Project>{9752648a-d9da-44e1-9dc9-e65483ac7d3c}</Project>
+      <Name>Markify.Services.Roslyn.VisualBasic</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Services\Document\Markify.Services.Document\Markify.Services.Document.fsproj">
+      <Project>{ebc40e4e-db5b-4ec0-9186-860350d2a4cf}</Project>
+      <Name>Markify.Services.Document</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Services\Rendering\Markify.Services.Rendering.T4\Markify.Services.Rendering.T4.csproj">
+      <Project>{BAD50507-B3A7-4B18-A870-A7AF22D5EBD3}</Project>
+      <Name>Markify.Services.Rendering.T4</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Services\Rendering\Markify.Services.Rendering\Markify.Services.Rendering.csproj">
+      <Project>{6B9CE3E8-68DA-4EB9-8362-58A289B51E76}</Project>
+      <Name>Markify.Services.Rendering</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Services\Roslyn\Markify.Services.Roslyn\Markify.Services.Roslyn.fsproj">
+      <Project>{2940ad3d-13e8-4025-860c-47fc94932b52}</Project>
+      <Name>Markify.Services.Roslyn</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
