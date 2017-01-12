@@ -53,7 +53,10 @@
   <ItemGroup>
     <Content Include="packages.config" />
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="VisualBasicModule.fs" />
+    <Compile Include="VisualBasicHelper.fs" />
+    <Compile Include="FactoryHelper.fs" />
+    <Compile Include="DefinitionsFactory.fs" />
+    <Compile Include="VisualBasicAnalyzer.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CodeAnalysis">

@@ -4,5 +4,4 @@ open Markify.Domain.Compiler
 
 type SourceContent = {
     Namespaces : NamespaceDefinition list
-    Types : TypeDefinition list
-}
+    Types : TypeDefinition list }

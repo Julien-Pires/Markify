@@ -3,6 +3,8 @@
 open System.Reflection
 open Markify.Services.Roslyn
 open Markify.Services.Roslyn.Common
+open Markify.Services.Roslyn.Csharp
+open Markify.Services.Roslyn.VisualBasic
 open Ploeh.AutoFixture.Kernel
 
 type LanguageAnalyzerArgs () =
