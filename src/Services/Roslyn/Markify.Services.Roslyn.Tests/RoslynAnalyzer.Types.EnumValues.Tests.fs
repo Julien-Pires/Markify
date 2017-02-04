@@ -9,10 +9,10 @@ module RoslynAnalyzerTypesEnumValuesTests =
     open Swensen.Unquote
     
     [<Theory>]
-    [<MultiProjectData("EnumValues", ProjectLanguage.CSharp, "BarType", 0)>]
-    [<MultiProjectData("EnumValues", ProjectLanguage.CSharp, "FooType", 4)>]
-    [<MultiProjectData("EnumValues", ProjectLanguage.VisualBasic, "BarType", 0)>]
-    [<MultiProjectData("EnumValues", ProjectLanguage.VisualBasic, "FooType", 4)>]
+    [<MultiProjectData("TypeMembers/EnumValues", ProjectLanguage.CSharp, "BarType", 0)>]
+    [<MultiProjectData("TypeMembers/EnumValues", ProjectLanguage.CSharp, "FooType", 4)>]
+    [<MultiProjectData("TypeMembers/EnumValues", ProjectLanguage.VisualBasic, "BarType", 0)>]
+    [<MultiProjectData("TypeMembers/EnumValues", ProjectLanguage.VisualBasic, "FooType", 4)>]
     let ``Analyze should return correct enum value count`` (name, expected, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
         let actual =
             projects
@@ -28,10 +28,10 @@ module RoslynAnalyzerTypesEnumValuesTests =
         test <@ actual |> List.forall ((=) expected) @>
 
     [<Theory>]
-    [<MultiProjectData("EnumValues", ProjectLanguage.CSharp, "FooType", "Foo")>]
-    [<MultiProjectData("EnumValues", ProjectLanguage.CSharp, "FooType", "FooBar")>]
-    [<MultiProjectData("EnumValues", ProjectLanguage.VisualBasic, "FooType", "Foo")>]
-    [<MultiProjectData("EnumValues", ProjectLanguage.VisualBasic, "FooType", "FooBar")>]
+    [<MultiProjectData("TypeMembers/EnumValues", ProjectLanguage.CSharp, "FooType", "Foo")>]
+    [<MultiProjectData("TypeMembers/EnumValues", ProjectLanguage.CSharp, "FooType", "FooBar")>]
+    [<MultiProjectData("TypeMembers/EnumValues", ProjectLanguage.VisualBasic, "FooType", "Foo")>]
+    [<MultiProjectData("TypeMembers/EnumValues", ProjectLanguage.VisualBasic, "FooType", "FooBar")>]
     let ``Analyze should return correct enum value name`` (name, expected, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
         let actual =
             projects
@@ -47,10 +47,10 @@ module RoslynAnalyzerTypesEnumValuesTests =
         test <@ actual |> List.forall ((<>) None) @>
 
     [<Theory>]
-    [<MultiProjectData("EnumValues", ProjectLanguage.CSharp, "FooType" , "Foo", "0")>]
-    [<MultiProjectData("EnumValues", ProjectLanguage.CSharp, "FooType" , "BarFoo", "")>]
-    [<MultiProjectData("EnumValues", ProjectLanguage.VisualBasic, "FooType" , "Foo", "0")>]
-    [<MultiProjectData("EnumValues", ProjectLanguage.VisualBasic, "FooType" , "BarFoo", "")>]
+    [<MultiProjectData("TypeMembers/EnumValues", ProjectLanguage.CSharp, "FooType" , "Foo", "0")>]
+    [<MultiProjectData("TypeMembers/EnumValues", ProjectLanguage.CSharp, "FooType" , "BarFoo", "")>]
+    [<MultiProjectData("TypeMembers/EnumValues", ProjectLanguage.VisualBasic, "FooType" , "Foo", "0")>]
+    [<MultiProjectData("TypeMembers/EnumValues", ProjectLanguage.VisualBasic, "FooType" , "BarFoo", "")>]
     let ``Analyze should return correct enum underlying value`` (name, valueName, value, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
         let expected = 
             match value with

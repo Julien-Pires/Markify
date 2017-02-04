@@ -10,16 +10,16 @@ module RoslynAnalyzerTypesInheritanceTests =
     open Swensen.Unquote
 
     [<Theory>]
-    [<MultiProjectData("ContainerTypesInheritance", ProjectLanguage.CSharp, "ImplementInterfaceType", "IDisposable")>]
-    [<MultiProjectData("ContainerTypesInheritance", ProjectLanguage.CSharp, "ImplementGenericInterfaceType", "IList<String>")>]
-    [<MultiProjectData("ClassTypeInheritance", ProjectLanguage.CSharp, "InheritType", "Exception")>]
-    [<MultiProjectData("ClassTypeInheritance", ProjectLanguage.CSharp, "MixedInheritanceType", "Exception;IDisposable")>]
-    [<MultiProjectData("EnumTypeInheritance", ProjectLanguage.CSharp, "InheritType", "int")>]
-    [<MultiProjectData("ContainerTypesInheritance", ProjectLanguage.VisualBasic, "ImplementInterfaceType", "IDisposable")>]
-    [<MultiProjectData("ContainerTypesInheritance", ProjectLanguage.VisualBasic, "ImplementGenericInterfaceType", "IList(Of String)")>]
-    [<MultiProjectData("ClassTypeInheritance", ProjectLanguage.VisualBasic, "InheritType", "Exception")>]
-    [<MultiProjectData("ClassTypeInheritance", ProjectLanguage.VisualBasic, "MixedInheritanceType", "Exception;IDisposable")>]
-    [<MultiProjectData("EnumTypeInheritance", ProjectLanguage.VisualBasic, "InheritType", "Integer")>]
+    [<MultiProjectData("TypesInformations/ContainerInheritance", ProjectLanguage.CSharp, "ImplementInterfaceType", "IDisposable")>]
+    [<MultiProjectData("TypesInformations/ContainerInheritance", ProjectLanguage.CSharp, "ImplementGenericInterfaceType", "IList<String>")>]
+    [<MultiProjectData("TypesInformations/ClassInheritance", ProjectLanguage.CSharp, "InheritType", "Exception")>]
+    [<MultiProjectData("TypesInformations/ClassInheritance", ProjectLanguage.CSharp, "MixedInheritanceType", "Exception;IDisposable")>]
+    [<MultiProjectData("TypesInformations/EnumInheritance", ProjectLanguage.CSharp, "InheritType", "int")>]
+    [<MultiProjectData("TypesInformations/ContainerInheritance", ProjectLanguage.VisualBasic, "ImplementInterfaceType", "IDisposable")>]
+    [<MultiProjectData("TypesInformations/ContainerInheritance", ProjectLanguage.VisualBasic, "ImplementGenericInterfaceType", "IList(Of String)")>]
+    [<MultiProjectData("TypesInformations/ClassInheritance", ProjectLanguage.VisualBasic, "InheritType", "Exception")>]
+    [<MultiProjectData("TypesInformations/ClassInheritance", ProjectLanguage.VisualBasic, "MixedInheritanceType", "Exception;IDisposable")>]
+    [<MultiProjectData("TypesInformations/EnumInheritance", ProjectLanguage.VisualBasic, "InheritType", "Integer")>]
     let ``Analyze should return base types when type has some`` (fullname, types : string, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
         let expected = Set <| types.Split(';')
         let actual =

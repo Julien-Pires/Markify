@@ -4,29 +4,13 @@ open System
 open System.IO
 open System.Reflection
 open System.Xml.Serialization
-open Markify.Roslyn
+open Markify.Services.Roslyn.Fixtures
 open Markify.Domain.Ide;
 open Ploeh.AutoFixture
 
-[<XmlRoot("Project")>]
-type ProjectContent() =
-    [<XmlArray("Files")>]
-    [<XmlArrayItem("Uri")>]
-    member val Files : string[] = [||] with get, set
-
-    [<XmlElement("Count")>]
-    member val Count : int = 0 with get, set
-
-[<XmlRoot("Solution")>]
-type SolutionContent() =
-    [<XmlArray("Projects")>]
-    [<XmlArrayItem("Project")>]
-    member val Projects : ProjectContent[] = [||] with get, set
-
 type ProjectInfo = {
     Project : Project
-    Count : int
-}
+    Count : int }
 
 type ProjectContextCustomization (file, language) =
     let file = file
@@ -41,7 +25,12 @@ type ProjectContextCustomization (file, language) =
         match language with
         | ProjectLanguage.CSharp -> "csproj"
         | ProjectLanguage.VisualBasic -> "vbproj"
-        | _ -> ""  
+        | _ -> ""
+
+    let (|IsValidSolution|_|) (path : string) =
+        match path.Split([|'/'|], StringSplitOptions.RemoveEmptyEntries) with
+        | [|x; y|] -> Some (x, y)
+        | _ -> None
 
     let getFullPath path =
         let basePath = UriBuilder (Assembly.GetExecutingAssembly().CodeBase)
@@ -64,14 +53,22 @@ type ProjectContextCustomization (file, language) =
         {   Project = project
             Count = content.Count }
 
-    member this.ReadXml<'T> path =
-        let fullPath = getFullPath (sprintf "Projects/%s" path)
+    member this.ReadXml<'T> (path : string) =
         let serializer = XmlSerializer(typeof<'T>)
-        use stream = new StreamReader(fullPath)
+        use stream = new StreamReader(path)
         serializer.Deserialize stream :?> 'T
         
     member this.GetProjects path =
-        (this.ReadXml<SolutionContent> (sprintf "%s.xml" path)).Projects
+        match path with
+        | IsValidSolution x ->
+            let file, solutionName = x
+            (sprintf "Projects/%s.xml" file)
+            |> getFullPath
+            |> this.ReadXml
+            |> fun (c : Solutions) -> c.AllSolution
+            |> Seq.find (fun (c : SolutionContent) -> c.Name = solutionName)
+            |> fun c -> c.Projects
+        | _ -> raise (ArgumentException("Incorrect path format, must be of the form file/SolutionName", "path"))
 
     member this.BuildMultiProjects path =
         this.GetProjects path

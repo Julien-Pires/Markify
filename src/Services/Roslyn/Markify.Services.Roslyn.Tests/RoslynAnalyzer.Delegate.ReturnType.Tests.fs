@@ -13,8 +13,8 @@ module RoslynAnalyzerDelegateReturnTypeTests =
         | _ -> None
 
     [<Theory>]
-    [<MultiProjectData("DelegateParameters", ProjectLanguage.CSharp,"WithoutParameters", "void")>]
-    [<MultiProjectData("DelegateParameters", ProjectLanguage.VisualBasic,"WithoutParameters", "Void")>]
+    [<MultiProjectData("TypeMembers/DelegateParameters", ProjectLanguage.CSharp,"WithoutParameters", "void")>]
+    [<MultiProjectData("TypeMembers/DelegateParameters", ProjectLanguage.VisualBasic,"WithoutParameters", "Void")>]
     let ``Analyze should return expected delegate return type`` (typename, expected, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
         let actual =
             projects

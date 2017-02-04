@@ -8,10 +8,10 @@ module RoslynAnalyzerNamespacesTests =
     open Swensen.Unquote
 
     [<Theory>]
-    [<MultiProjectData("EmptySourceSamples", ProjectLanguage.CSharp, 0)>]
-    [<MultiProjectData("AllTypesSamples", ProjectLanguage.CSharp, 2)>]
-    [<MultiProjectData("EmptySourceSamples", ProjectLanguage.VisualBasic, 0)>]
-    [<MultiProjectData("AllTypesSamples", ProjectLanguage.VisualBasic, 2)>]
+    [<MultiProjectData("TypesInformations/EmptySourceSamples", ProjectLanguage.CSharp, 0)>]
+    [<MultiProjectData("TypesInformations/AllTypesSamples", ProjectLanguage.CSharp, 2)>]
+    [<MultiProjectData("TypesInformations/EmptySourceSamples", ProjectLanguage.VisualBasic, 0)>]
+    [<MultiProjectData("TypesInformations/AllTypesSamples", ProjectLanguage.VisualBasic, 2)>]
     let ``Analyze should return expected namespaces count`` (expected, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
         let actual =
             projects
@@ -25,10 +25,10 @@ module RoslynAnalyzerNamespacesTests =
         test <@ actual |> List.forall ((=) expected) @>
 
     [<Theory>]
-    [<MultiProjectData("AllTypesSamples", ProjectLanguage.CSharp, "FooNamespace")>]
-    [<MultiProjectData("AllTypesSamples", ProjectLanguage.CSharp, "FooNamespace.BarNamespace")>]
-    [<MultiProjectData("AllTypesSamples", ProjectLanguage.VisualBasic, "FooNamespace")>]
-    [<MultiProjectData("AllTypesSamples", ProjectLanguage.VisualBasic, "FooNamespace.BarNamespace")>]
+    [<MultiProjectData("TypesInformations/AllTypesSamples", ProjectLanguage.CSharp, "FooNamespace")>]
+    [<MultiProjectData("TypesInformations/AllTypesSamples", ProjectLanguage.CSharp, "FooNamespace.BarNamespace")>]
+    [<MultiProjectData("TypesInformations/AllTypesSamples", ProjectLanguage.VisualBasic, "FooNamespace")>]
+    [<MultiProjectData("TypesInformations/AllTypesSamples", ProjectLanguage.VisualBasic, "FooNamespace.BarNamespace")>]
     let ``Analyze should return correct namespace name`` (expected, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
         let actual =
             projects

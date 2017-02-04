@@ -23,12 +23,12 @@ module RoslynAnalyzerTypesMethodsTests =
         |> Seq.find (fun c -> c.Name = parameterName)
 
     [<Theory>]
-    [<MultiProjectData("ClassMethods", ProjectLanguage.CSharp, "FooType", 11)>]
-    [<MultiProjectData("StructMethods", ProjectLanguage.CSharp, "FooType", 9)>]
-    [<MultiProjectData("InterfaceMethods", ProjectLanguage.CSharp, "FooType", 6)>]
-    [<MultiProjectData("ClassMethods", ProjectLanguage.VisualBasic, "FooType", 9)>]
-    [<MultiProjectData("StructMethods", ProjectLanguage.VisualBasic, "FooType", 7)>]
-    [<MultiProjectData("InterfaceMethods", ProjectLanguage.VisualBasic, "FooType", 5)>]
+    [<MultiProjectData("TypeMembers/ClassMethods", ProjectLanguage.CSharp, "FooType", 11)>]
+    [<MultiProjectData("TypeMembers/StructMethods", ProjectLanguage.CSharp, "FooType", 9)>]
+    [<MultiProjectData("TypeMembers/InterfaceMethods", ProjectLanguage.CSharp, "FooType", 6)>]
+    [<MultiProjectData("TypeMembers/ClassMethods", ProjectLanguage.VisualBasic, "FooType", 9)>]
+    [<MultiProjectData("TypeMembers/StructMethods", ProjectLanguage.VisualBasic, "FooType", 7)>]
+    [<MultiProjectData("TypeMembers/InterfaceMethods", ProjectLanguage.VisualBasic, "FooType", 5)>]
     let ``Analyze should return expected methods count`` (typeName, expected, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
         let actual =
             projects
@@ -43,12 +43,12 @@ module RoslynAnalyzerTypesMethodsTests =
         test <@ actual |> List.forall (fun c -> (c |> Seq.length) = expected) @>
 
     [<Theory>]
-    [<MultiProjectData("ClassMethods", ProjectLanguage.CSharp, "FooType", "PublicMethod")>]
-    [<MultiProjectData("StructMethods", ProjectLanguage.CSharp, "FooType", "PublicMethod")>]
-    [<MultiProjectData("InterfaceMethods", ProjectLanguage.CSharp, "FooType", "IntMethod")>]
-    [<MultiProjectData("ClassMethods", ProjectLanguage.VisualBasic, "FooType", "PublicMethod")>]
-    [<MultiProjectData("StructMethods", ProjectLanguage.VisualBasic, "FooType", "PublicMethod")>]
-    [<MultiProjectData("InterfaceMethods", ProjectLanguage.VisualBasic, "FooType", "IntMethod")>]
+    [<MultiProjectData("TypeMembers/ClassMethods", ProjectLanguage.CSharp, "FooType", "PublicMethod")>]
+    [<MultiProjectData("TypeMembers/StructMethods", ProjectLanguage.CSharp, "FooType", "PublicMethod")>]
+    [<MultiProjectData("TypeMembers/InterfaceMethods", ProjectLanguage.CSharp, "FooType", "IntMethod")>]
+    [<MultiProjectData("TypeMembers/ClassMethods", ProjectLanguage.VisualBasic, "FooType", "PublicMethod")>]
+    [<MultiProjectData("TypeMembers/StructMethods", ProjectLanguage.VisualBasic, "FooType", "PublicMethod")>]
+    [<MultiProjectData("TypeMembers/InterfaceMethods", ProjectLanguage.VisualBasic, "FooType", "IntMethod")>]
     let ``Analyze should return expected method name`` (typeName, methodName, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
         let actual =
             projects
@@ -64,12 +64,12 @@ module RoslynAnalyzerTypesMethodsTests =
         test <@ actual |> List.forall (fun c -> (c |> Seq.length) = 1) @>
 
     [<Theory>]
-    [<MultiProjectData("ContainerMethods", ProjectLanguage.CSharp, "FooType", "Method", "private")>]
-    [<MultiProjectData("ClassMethods", ProjectLanguage.CSharp, "FooType", "InternalProtectedMethod", "internal;protected")>]
-    [<MultiProjectData("InterfaceMethods", ProjectLanguage.CSharp, "FooType", "Method", "public")>]
-    [<MultiProjectData("ContainerMethods", ProjectLanguage.VisualBasic, "FooType", "Method", "Private")>]
-    [<MultiProjectData("ClassMethods", ProjectLanguage.VisualBasic, "FooType", "InternalProtectedMethod", "Friend;Protected")>]
-    [<MultiProjectData("InterfaceMethods", ProjectLanguage.VisualBasic, "FooType", "Method", "Public")>]
+    [<MultiProjectData("TypeMembers/ContainerMethods", ProjectLanguage.CSharp, "FooType", "Method", "private")>]
+    [<MultiProjectData("TypeMembers/ClassMethods", ProjectLanguage.CSharp, "FooType", "InternalProtectedMethod", "internal;protected")>]
+    [<MultiProjectData("TypeMembers/InterfaceMethods", ProjectLanguage.CSharp, "FooType", "Method", "public")>]
+    [<MultiProjectData("TypeMembers/ContainerMethods", ProjectLanguage.VisualBasic, "FooType", "Method", "Private")>]
+    [<MultiProjectData("TypeMembers/ClassMethods", ProjectLanguage.VisualBasic, "FooType", "InternalProtectedMethod", "Friend;Protected")>]
+    [<MultiProjectData("TypeMembers/InterfaceMethods", ProjectLanguage.VisualBasic, "FooType", "Method", "Public")>]
     let ``Analyze should return expected method access modifiers`` (typeName, methodName, modifiers : string, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
         let expected = Set <| modifiers.Split ([|';'|], StringSplitOptions.RemoveEmptyEntries)
         let actual =
@@ -83,10 +83,10 @@ module RoslynAnalyzerTypesMethodsTests =
         test <@ actual |> List.forall ((=) expected) @>
 
     [<Theory>]
-    [<MultiProjectData("ClassMethods", ProjectLanguage.CSharp, "FooType", "VirtualMethod", "virtual")>]
-    [<MultiProjectData("ContainerMethods", ProjectLanguage.CSharp, "FooType", "PartialMethod", "partial")>]
-    [<MultiProjectData("ClassMethods", ProjectLanguage.VisualBasic, "FooType", "VirtualMethod", "Overridable")>]
-    [<MultiProjectData("ContainerMethods", ProjectLanguage.VisualBasic, "FooType", "PartialMethod", "Partial")>]
+    [<MultiProjectData("TypeMembers/ClassMethods", ProjectLanguage.CSharp, "FooType", "VirtualMethod", "virtual")>]
+    [<MultiProjectData("TypeMembers/ContainerMethods", ProjectLanguage.CSharp, "FooType", "PartialMethod", "partial")>]
+    [<MultiProjectData("TypeMembers/ClassMethods", ProjectLanguage.VisualBasic, "FooType", "VirtualMethod", "Overridable")>]
+    [<MultiProjectData("TypeMembers/ContainerMethods", ProjectLanguage.VisualBasic, "FooType", "PartialMethod", "Partial")>]
     let ``Analyze should return expected method modifiers`` (typeName, methodName, modifiers : string, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
         let expected = Set <| modifiers.Split ([|';'|], StringSplitOptions.RemoveEmptyEntries)
         let actual =
@@ -100,10 +100,10 @@ module RoslynAnalyzerTypesMethodsTests =
         test <@ actual |> List.forall ((=) expected) @>
     
     [<Theory>]
-    [<MultiProjectData("AllTypesMethods", ProjectLanguage.CSharp, "FooType", "SingleGenericMethod", 1)>]
-    [<MultiProjectData("AllTypesMethods", ProjectLanguage.CSharp, "FooType", "MultiGenericMethod", 2)>]
-    [<MultiProjectData("AllTypesMethods", ProjectLanguage.VisualBasic, "FooType", "SingleGenericMethod", 1)>]
-    [<MultiProjectData("AllTypesMethods", ProjectLanguage.VisualBasic, "FooType", "MultiGenericMethod", 2)>]
+    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp, "FooType", "SingleGenericMethod", 1)>]
+    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp, "FooType", "MultiGenericMethod", 2)>]
+    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.VisualBasic, "FooType", "SingleGenericMethod", 1)>]
+    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.VisualBasic, "FooType", "MultiGenericMethod", 2)>]
     let ``Analyze should return expected method generic parameters count`` (typeName, methodName, expected, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
         let actual =
             projects
@@ -116,10 +116,10 @@ module RoslynAnalyzerTypesMethodsTests =
         test <@ actual |> List.forall (fun c -> (c |> Seq.length) = expected) @>
 
     [<Theory>]
-    [<MultiProjectData("AllTypesMethods", ProjectLanguage.CSharp, "FooType", "SingleGenericMethod", "T")>]
-    [<MultiProjectData("AllTypesMethods", ProjectLanguage.CSharp, "FooType", "MultiGenericMethod", "Y")>]
-    [<MultiProjectData("AllTypesMethods", ProjectLanguage.VisualBasic, "FooType", "SingleGenericMethod", "T")>]
-    [<MultiProjectData("AllTypesMethods", ProjectLanguage.VisualBasic, "FooType", "MultiGenericMethod", "Y")>]
+    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp, "FooType", "SingleGenericMethod", "T")>]
+    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp, "FooType", "MultiGenericMethod", "Y")>]
+    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.VisualBasic, "FooType", "SingleGenericMethod", "T")>]
+    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.VisualBasic, "FooType", "MultiGenericMethod", "Y")>]
     let ``Analyze should return expected method generic parameter name`` (typeName, methodName, parameterName, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
         let actual =
             projects
@@ -134,12 +134,12 @@ module RoslynAnalyzerTypesMethodsTests =
         test <@ actual |> List.forall (fun c -> (c |> Seq.length) = 1) @>
 
     [<Theory>]
-    [<MultiProjectData("AllTypesMethods", ProjectLanguage.CSharp, "FooType", "SingleGenericMethod", "T", 0)>]
-    [<MultiProjectData("AllTypesMethods", ProjectLanguage.CSharp, "FooType", "MultiGenericMethod", "T", 1)>]
-    [<MultiProjectData("AllTypesMethods", ProjectLanguage.CSharp, "FooType", "MultiGenericMethod", "Y", 2)>]
-    [<MultiProjectData("AllTypesMethods", ProjectLanguage.VisualBasic, "FooType", "SingleGenericMethod", "T", 0)>]
-    [<MultiProjectData("AllTypesMethods", ProjectLanguage.VisualBasic, "FooType", "MultiGenericMethod", "T", 1)>]
-    [<MultiProjectData("AllTypesMethods", ProjectLanguage.VisualBasic, "FooType", "MultiGenericMethod", "Y", 2)>]
+    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp, "FooType", "SingleGenericMethod", "T", 0)>]
+    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp, "FooType", "MultiGenericMethod", "T", 1)>]
+    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp, "FooType", "MultiGenericMethod", "Y", 2)>]
+    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.VisualBasic, "FooType", "SingleGenericMethod", "T", 0)>]
+    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.VisualBasic, "FooType", "MultiGenericMethod", "T", 1)>]
+    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.VisualBasic, "FooType", "MultiGenericMethod", "Y", 2)>]
     let ``Analyze should return expected method generic parameter constraints count`` (typeName, methodName, parameterName, expected, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
         let actual =
             projects
@@ -154,10 +154,10 @@ module RoslynAnalyzerTypesMethodsTests =
         test <@ actual |> List.forall (fun c -> (c |> Seq.length) = expected) @>
 
     [<Theory>]
-    [<MultiProjectData("AllTypesMethods", ProjectLanguage.CSharp, "FooType", "MultiGenericMethod", "T", "IList")>]
-    [<MultiProjectData("AllTypesMethods", ProjectLanguage.CSharp, "FooType", "MultiGenericMethod", "Y", "IDisposable;IEnumerable")>]
-    [<MultiProjectData("AllTypesMethods", ProjectLanguage.VisualBasic, "FooType", "MultiGenericMethod", "T", "IList")>]
-    [<MultiProjectData("AllTypesMethods", ProjectLanguage.VisualBasic, "FooType", "MultiGenericMethod", "Y", "IDisposable;IEnumerable")>]
+    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp, "FooType", "MultiGenericMethod", "T", "IList")>]
+    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp, "FooType", "MultiGenericMethod", "Y", "IDisposable;IEnumerable")>]
+    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.VisualBasic, "FooType", "MultiGenericMethod", "T", "IList")>]
+    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.VisualBasic, "FooType", "MultiGenericMethod", "Y", "IDisposable;IEnumerable")>]
     let ``Analyze should return expected method generic parameter constraint name`` (typeName, methodName, parameterName, constraints : string, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
         let expected = Set <| constraints.Split ([|';'|], StringSplitOptions.RemoveEmptyEntries)
         let actual =
@@ -174,12 +174,12 @@ module RoslynAnalyzerTypesMethodsTests =
         test <@ actual |> List.forall ((=) expected) @>
 
     [<Theory>]
-    [<MultiProjectData("AllTypesMethods", ProjectLanguage.CSharp,"FooType", "Method", 0)>]
-    [<MultiProjectData("AllTypesMethods", ProjectLanguage.CSharp,"FooType", "SingleGenericMethod", 1)>]
-    [<MultiProjectData("AllTypesMethods", ProjectLanguage.CSharp,"FooType", "WithParametersMethod", 3)>]
-    [<MultiProjectData("AllTypesMethods", ProjectLanguage.VisualBasic,"FooType", "Method", 0)>]
-    [<MultiProjectData("AllTypesMethods", ProjectLanguage.VisualBasic,"FooType", "SingleGenericMethod", 1)>]
-    [<MultiProjectData("AllTypesMethods", ProjectLanguage.VisualBasic,"FooType", "WithParametersMethod", 3)>]
+    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp,"FooType", "Method", 0)>]
+    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp,"FooType", "SingleGenericMethod", 1)>]
+    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp,"FooType", "WithParametersMethod", 3)>]
+    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.VisualBasic,"FooType", "Method", 0)>]
+    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.VisualBasic,"FooType", "SingleGenericMethod", 1)>]
+    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.VisualBasic,"FooType", "WithParametersMethod", 3)>]
     let ``Analyze should return expected method parameters count`` (typeName, methodName, expected, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
         let actual =
             projects
@@ -191,10 +191,10 @@ module RoslynAnalyzerTypesMethodsTests =
         test <@ actual |> List.forall (fun c -> (c |> Seq.length) = expected) @>
 
     [<Theory>]
-    [<MultiProjectData("AllTypesMethods", ProjectLanguage.CSharp,"FooType", "SingleGenericMethod", "foo")>]
-    [<MultiProjectData("AllTypesMethods", ProjectLanguage.CSharp,"FooType", "WithParametersMethod", "bar")>]
-    [<MultiProjectData("AllTypesMethods", ProjectLanguage.VisualBasic,"FooType", "SingleGenericMethod", "foo")>]
-    [<MultiProjectData("AllTypesMethods", ProjectLanguage.VisualBasic,"FooType", "WithParametersMethod", "bar")>]
+    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp,"FooType", "SingleGenericMethod", "foo")>]
+    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp,"FooType", "WithParametersMethod", "bar")>]
+    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.VisualBasic,"FooType", "SingleGenericMethod", "foo")>]
+    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.VisualBasic,"FooType", "WithParametersMethod", "bar")>]
     let ``Analyze should return expected method parameter name`` (typeName, methodName, expected, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
         let actual =
             projects
@@ -206,11 +206,11 @@ module RoslynAnalyzerTypesMethodsTests =
         test <@ actual |> List.forall (fun c -> c |> Seq.exists (fun d -> d.Name = expected)) @>
 
     [<Theory>]
-    [<MultiProjectData("AllTypesMethods", ProjectLanguage.CSharp,"FooType", "WithParametersMethod", "foo", "int")>]
-    [<MultiProjectData("AllTypesMethods", ProjectLanguage.CSharp,"FooType", "SingleGenericMethod", "foo", "T")>]
-    [<MultiProjectData("AllTypesMethods", ProjectLanguage.CSharp,"FooType", "WithNoNameParameterMethod", "__arglist", "__arglist")>]
-    [<MultiProjectData("AllTypesMethods", ProjectLanguage.VisualBasic,"FooType", "WithParametersMethod", "foo", "Integer")>]
-    [<MultiProjectData("AllTypesMethods", ProjectLanguage.VisualBasic,"FooType", "SingleGenericMethod", "foo", "T")>]
+    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp,"FooType", "WithParametersMethod", "foo", "int")>]
+    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp,"FooType", "SingleGenericMethod", "foo", "T")>]
+    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp,"FooType", "WithNoNameParameterMethod", "__arglist", "__arglist")>]
+    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.VisualBasic,"FooType", "WithParametersMethod", "foo", "Integer")>]
+    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.VisualBasic,"FooType", "SingleGenericMethod", "foo", "T")>]
     let ``Analyze should return expected method parameter type`` (typeName, methodName, parameterName, expected, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
         let actual =
             projects
@@ -225,8 +225,8 @@ module RoslynAnalyzerTypesMethodsTests =
         test <@ actual |> List.forall (fun c -> c.Type = expected) @>
 
     [<Theory>]
-    [<MultiProjectData("AllTypesMethods", ProjectLanguage.CSharp,"FooType", "WithParametersMethod", "foo")>]
-    [<MultiProjectData("AllTypesMethods", ProjectLanguage.VisualBasic,"FooType", "WithParametersMethod", "foo")>]
+    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp,"FooType", "WithParametersMethod", "foo")>]
+    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.VisualBasic,"FooType", "WithParametersMethod", "foo")>]
     let ``Analyze should return no modifier when method parameter has none`` (typeName, methodName, parameterName, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
         let actual =
             projects
@@ -238,13 +238,13 @@ module RoslynAnalyzerTypesMethodsTests =
                     |> findParameter parameterName
                 parameter.Modifier::acc) []
 
-        test <@ actual |> List.forall (fun c -> c = None) @>
+        test <@ actual |> List.forall ((=) None) @>
 
     [<Theory>]
-    [<MultiProjectData("AllTypesMethods", ProjectLanguage.CSharp,"FooType", "WithParametersMethod", "bar", "ref")>]
-    [<MultiProjectData("AllTypesMethods", ProjectLanguage.CSharp,"FooType", "WithParametersMethod", "foobar", "out")>]
-    [<MultiProjectData("AllTypesMethods", ProjectLanguage.VisualBasic,"FooType", "WithParametersMethod", "bar", "ByRef")>]
-    [<MultiProjectData("AllTypesMethods", ProjectLanguage.VisualBasic,"FooType", "WithParametersMethod", "foobar", "ByVal")>]
+    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp,"FooType", "WithParametersMethod", "bar", "ref")>]
+    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp,"FooType", "WithParametersMethod", "foobar", "out")>]
+    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.VisualBasic,"FooType", "WithParametersMethod", "bar", "ByRef")>]
+    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.VisualBasic,"FooType", "WithParametersMethod", "foobar", "ByVal")>]
     let ``Analyze should return expected method parameter modifiers`` (typeName, methodName, parameterName, expected, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
         let actual =
             projects
@@ -256,11 +256,11 @@ module RoslynAnalyzerTypesMethodsTests =
                     |> findParameter parameterName
                 parameter.Modifier::acc) []
 
-        test <@ actual |> List.forall (fun c -> c = Some expected) @>
+        test <@ actual |> List.forall ((=) (Some expected)) @>
 
     [<Theory>]
-    [<MultiProjectData("AllTypesMethods", ProjectLanguage.CSharp,"FooType", "WithParametersMethod", "foo")>]
-    [<MultiProjectData("AllTypesMethods", ProjectLanguage.VisualBasic,"FooType", "WithParametersMethod", "foo")>]
+    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp,"FooType", "WithParametersMethod", "foo")>]
+    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.VisualBasic,"FooType", "WithParametersMethod", "foo")>]
     let ``Analyze should return no default value when method parameter has none`` (typeName, methodName, parameterName, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
         let actual =
             projects
@@ -272,11 +272,11 @@ module RoslynAnalyzerTypesMethodsTests =
                     |> findParameter parameterName
                 parameter.DefaultValue::acc) []
 
-        test <@ actual |> List.forall (fun c -> c = None) @>
+        test <@ actual |> List.forall ((=) None) @>
 
     [<Theory>]
-    [<MultiProjectData("AllTypesMethods", ProjectLanguage.CSharp,"FooType", "SingleGenericMethod", "foo", "default(T)")>]
-    [<MultiProjectData("AllTypesMethods", ProjectLanguage.VisualBasic,"FooType", "SingleGenericMethod", "foo", "Nothing")>]
+    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp,"FooType", "SingleGenericMethod", "foo", "default(T)")>]
+    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.VisualBasic,"FooType", "SingleGenericMethod", "foo", "Nothing")>]
     let ``Analyze should return expected method parameter default value`` (typeName, methodName, parameterName, expected, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
         let actual =
             projects
@@ -288,13 +288,13 @@ module RoslynAnalyzerTypesMethodsTests =
                     |> findParameter parameterName
                 parameter.DefaultValue::acc) []
 
-        test <@ actual |> List.forall (fun c -> c = Some expected) @>
+        test <@ actual |> List.forall ((=) (Some expected)) @>
 
     [<Theory>]
-    [<MultiProjectData("AllTypesMethods", ProjectLanguage.CSharp,"FooType", "IntMethod", "int")>]
-    [<MultiProjectData("AllTypesMethods", ProjectLanguage.CSharp,"FooType", "SingleGenericMethod", "T")>]
-    [<MultiProjectData("AllTypesMethods", ProjectLanguage.VisualBasic,"FooType", "IntMethod", "Integer")>]
-    [<MultiProjectData("AllTypesMethods", ProjectLanguage.VisualBasic,"FooType", "SingleGenericMethod", "T")>]
+    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp,"FooType", "IntMethod", "int")>]
+    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp,"FooType", "SingleGenericMethod", "T")>]
+    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.VisualBasic,"FooType", "IntMethod", "Integer")>]
+    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.VisualBasic,"FooType", "SingleGenericMethod", "T")>]
     let ``Analyze should return expected method return type`` (typeName, methodName, expected, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
         let actual =
             projects

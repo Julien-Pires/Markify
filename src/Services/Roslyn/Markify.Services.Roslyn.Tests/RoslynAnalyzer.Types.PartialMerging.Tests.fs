@@ -32,10 +32,10 @@ module RoslynAnalyzerTypesPartialMergingTests =
         | _ -> Seq.empty
 
     [<Theory>]
-    [<MultiProjectData("ContainerPartial", ProjectLanguage.CSharp, "FooType", 4)>]
-    [<MultiProjectData("InterfacePartial", ProjectLanguage.CSharp, "FooType", 2)>]
-    [<MultiProjectData("ContainerPartial", ProjectLanguage.VisualBasic, "FooType", 4)>]
-    [<MultiProjectData("InterfacePartial", ProjectLanguage.VisualBasic, "FooType", 2)>]
+    [<MultiProjectData("TypesInformations/ContainerPartial", ProjectLanguage.CSharp, "FooType", 4)>]
+    [<MultiProjectData("TypesInformations/InterfacePartial", ProjectLanguage.CSharp, "FooType", 2)>]
+    [<MultiProjectData("TypesInformations/ContainerPartial", ProjectLanguage.VisualBasic, "FooType", 4)>]
+    [<MultiProjectData("TypesInformations/InterfacePartial", ProjectLanguage.VisualBasic, "FooType", 2)>]
     let ``Analyze should gather methods from partial type`` (name, expected, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
         let actual =
             projects
@@ -50,8 +50,8 @@ module RoslynAnalyzerTypesPartialMergingTests =
         test <@ actual |> List.forall(fun c -> (c |> Seq.length) = expected) @>
         
     [<Theory>]
-    [<MultiProjectData("AllTypesPartial", ProjectLanguage.CSharp, "FooType", 2)>]
-    [<MultiProjectData("AllTypesPartial", ProjectLanguage.VisualBasic, "FooType", 2)>]
+    [<MultiProjectData("TypesInformations/AllTypesPartial", ProjectLanguage.CSharp, "FooType", 2)>]
+    [<MultiProjectData("TypesInformations/AllTypesPartial", ProjectLanguage.VisualBasic, "FooType", 2)>]
     let ``Analyze should gather properties from partial type`` (name, expected, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
         let actual =
             projects
@@ -66,8 +66,8 @@ module RoslynAnalyzerTypesPartialMergingTests =
         test <@ actual |> List.forall(fun c -> (c |> Seq.length) = expected) @>
 
     [<Theory>]
-    [<MultiProjectData("ContainerPartial", ProjectLanguage.CSharp, "FooType", 2)>]
-    [<MultiProjectData("ContainerPartial", ProjectLanguage.VisualBasic, "FooType", 2)>]
+    [<MultiProjectData("TypesInformations/ContainerPartial", ProjectLanguage.CSharp, "FooType", 2)>]
+    [<MultiProjectData("TypesInformations/ContainerPartial", ProjectLanguage.VisualBasic, "FooType", 2)>]
     let ``Analyze should gather fields from partial type`` (name, expected, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
         let actual =
             projects
@@ -82,8 +82,8 @@ module RoslynAnalyzerTypesPartialMergingTests =
         test <@ actual |> List.forall(fun c -> (c |> Seq.length) = expected) @>
 
     [<Theory>]
-    [<MultiProjectData("AllTypesPartial", ProjectLanguage.CSharp, "FooType", 2)>]
-    [<MultiProjectData("AllTypesPartial", ProjectLanguage.VisualBasic, "FooType", 2)>]
+    [<MultiProjectData("TypesInformations/AllTypesPartial", ProjectLanguage.CSharp, "FooType", 2)>]
+    [<MultiProjectData("TypesInformations/AllTypesPartial", ProjectLanguage.VisualBasic, "FooType", 2)>]
     let ``Analyze should gather events from partial type`` (name, expected, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
         let actual =
             projects
@@ -98,8 +98,8 @@ module RoslynAnalyzerTypesPartialMergingTests =
         test <@ actual |> List.forall(fun c -> (c |> Seq.length) = expected) @>
 
     [<Theory>]
-    [<MultiProjectData("ClassPartial", ProjectLanguage.CSharp, "FooType", 2)>]
-    [<MultiProjectData("ClassPartial", ProjectLanguage.VisualBasic, "FooType", 2)>]
+    [<MultiProjectData("TypesInformations/ClassPartial", ProjectLanguage.CSharp, "FooType", 2)>]
+    [<MultiProjectData("TypesInformations/ClassPartial", ProjectLanguage.VisualBasic, "FooType", 2)>]
     let ``Analyze should gather modifiers from partial type`` (name, expected, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
         let actual =
             projects
@@ -114,8 +114,8 @@ module RoslynAnalyzerTypesPartialMergingTests =
         test <@ actual |> List.forall(fun c -> (c |> Seq.length) = expected) @>
 
     [<Theory>]
-    [<MultiProjectData("AllTypesPartial", ProjectLanguage.CSharp, "FooType", 2)>]
-    [<MultiProjectData("AllTypesPartial", ProjectLanguage.VisualBasic, "FooType", 2)>]
+    [<MultiProjectData("TypesInformations/AllTypesPartial", ProjectLanguage.CSharp, "FooType", 2)>]
+    [<MultiProjectData("TypesInformations/AllTypesPartial", ProjectLanguage.VisualBasic, "FooType", 2)>]
     let ``Analyze should gather inherited types from partial type`` (name, expected, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
         let actual =
             projects
