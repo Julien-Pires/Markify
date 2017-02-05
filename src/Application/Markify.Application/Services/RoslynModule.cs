@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Markify.Domain.Compiler;
 using Markify.Services.Roslyn;
@@ -17,10 +16,10 @@ namespace Markify.Application.Services
 
         public override void Load()
         {
-            var analyzers = new[]
+            IEnumerable<ILanguageAnalyzer> analyzers = new ILanguageAnalyzer[]
             {
-                Tuple.Create<Func<string, SourceContent>, IEnumerable<string>>(CSharpAnalyzer.analyze, new [] { "cs" }),
-                Tuple.Create<Func<string, SourceContent>, IEnumerable<string>>(VisualBasicAnalyzer.analyze, new [] { "vb" })
+                new CSharpAnalyzer(),
+                new VisualBasicAnalyzer()
             };
 
             Bind<IProjectAnalyzer>().To<RoslynAnalyzer>().WithConstructorArgument(analyzers);

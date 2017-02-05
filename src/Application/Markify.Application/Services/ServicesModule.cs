@@ -2,8 +2,8 @@
 using Markify.Application.Services.IO;
 using Markify.Application.Services.Processing;
 using Markify.Application.Services.Settings;
-using Markify.Domain.Ide;
 using Markify.Domain.Rendering;
+using Markify.Services.VisualStudio;
 using Ninject.Modules;
 
 namespace Markify.Application.Services

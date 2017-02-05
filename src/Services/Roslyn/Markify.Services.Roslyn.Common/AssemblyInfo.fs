@@ -1,4 +1,4 @@
-﻿namespace Markify.Roslyn.Common.AssemblyInfo
+﻿namespace Markify.Services.Roslyn.Common.AssemblyInfo
 
 open System.Reflection
 open System.Runtime.CompilerServices
@@ -7,11 +7,11 @@ open System.Runtime.InteropServices
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[<assembly: AssemblyTitle("Markify.Roslyn.Common")>]
+[<assembly: AssemblyTitle("Markify.Services.Roslyn.Common")>]
 [<assembly: AssemblyDescription("")>]
 [<assembly: AssemblyConfiguration("")>]
 [<assembly: AssemblyCompany("")>]
-[<assembly: AssemblyProduct("Markify.Roslyn.Common")>]
+[<assembly: AssemblyProduct("Markify.Services.Roslyn.Common")>]
 [<assembly: AssemblyCopyright("Copyright ©  2016")>]
 [<assembly: AssemblyTrademark("")>]
 [<assembly: AssemblyCulture("")>]

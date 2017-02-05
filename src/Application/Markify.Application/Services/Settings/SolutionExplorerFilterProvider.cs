@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Markify.Domain.Ide;
+using Markify.Services.VisualStudio;
 
 namespace Markify.Application.Services.Settings
 {

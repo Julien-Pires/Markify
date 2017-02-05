@@ -5,7 +5,7 @@ open Markify.Services.Roslyn.Common
 open Microsoft.CodeAnalysis
 open Microsoft.CodeAnalysis.VisualBasic
 
-module VisualBasicAnalyzer =
+module VisualBasicParser =
     let getDefinitions (root : SyntaxNode) =
         root.DescendantNodes()
         |> Seq.fold (fun (acc :SourceContent) c ->
@@ -28,3 +28,8 @@ module VisualBasicAnalyzer =
         let tree = VisualBasicSyntaxTree.ParseText source
         let root = tree.GetRoot()
         getDefinitions root
+
+type VisualBasicAnalyzer() = 
+    interface ILanguageAnalyzer with
+        member this.Extensions = ["vb"] |> List.toSeq
+        member this.Analyze source = VisualBasicParser.analyze source

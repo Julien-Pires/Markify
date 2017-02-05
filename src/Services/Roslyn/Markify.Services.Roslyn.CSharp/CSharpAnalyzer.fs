@@ -4,7 +4,7 @@ open Markify.Services.Roslyn.Common
 open Microsoft.CodeAnalysis
 open Microsoft.CodeAnalysis.CSharp
 
-module CSharpAnalyzer =
+module CSharpParser =
     let getDefinitions (root : SyntaxNode) =
         root.DescendantNodes()
         |> Seq.fold (fun (acc : SourceContent) c ->
@@ -27,3 +27,8 @@ module CSharpAnalyzer =
         let tree = CSharpSyntaxTree.ParseText source
         let root = tree.GetRoot()
         getDefinitions root
+
+type CSharpAnalyzer() = 
+    interface ILanguageAnalyzer with
+        member this.Extensions = ["cs"] |> List.toSeq
+        member this.Analyze source = CSharpParser.analyze source

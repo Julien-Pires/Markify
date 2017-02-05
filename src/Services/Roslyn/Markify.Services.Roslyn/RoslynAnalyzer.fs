@@ -8,13 +8,12 @@ open Markify.Domain.Compiler
 open Markify.Domain.Ide
 open Markify.Services.Roslyn.Common
 
-type RoslynAnalyzer (languageAnalyzers : ((string -> SourceContent) * string seq) seq) =
+type RoslynAnalyzer (languageAnalyzers : ILanguageAnalyzer seq) =
     let languageAnalyzers =
         languageAnalyzers
         |> Seq.fold (fun acc c ->
-            let analyzer, extensions = c
-            extensions
-            |> Seq.map (fun d -> (d.ToLower(), analyzer))
+            c.Extensions
+            |> Seq.map (fun d -> (d.ToLower(), c))
             |> Seq.append acc) Seq.empty
         |> Map.ofSeq
 
@@ -39,7 +38,7 @@ type RoslynAnalyzer (languageAnalyzers : ((string -> SourceContent) * string seq
                     match analyzer with
                     | None -> acc
                     | Some x ->
-                        let { SourceContent.Types=types; Namespaces=namespaces } = x <| readFile c.AbsolutePath
+                        let { SourceContent.Types=types; Namespaces=namespaces } = x.Analyze <| readFile c.AbsolutePath
                         let accTypes, accNamespaces = acc
                         (   List.append types accTypes,
                             List.append namespaces accNamespaces)) ([],[])
