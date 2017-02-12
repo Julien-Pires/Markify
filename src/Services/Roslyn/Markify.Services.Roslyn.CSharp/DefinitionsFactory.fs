@@ -44,21 +44,16 @@ module StructureDefinitionFactory =
         | [] -> defaultModifier
         | x -> x
 
-    let getFields (structureSyntax : TypeDeclarationSyntax) defaultAccessModifier =
-        structureSyntax.Members
-        |> Seq.fold(fun acc c ->
-            match c with
-            | IsField x -> 
-                x.Declaration.Variables
-                |> Seq.fold (fun acc2 d ->
-                    let field = {
-                        FieldDefinition.Name = d.Identifier.Text
-                        Type = x.Declaration.Type.ToString()
-                        AccessModifiers = getMemberAccessModifiers x.Modifiers defaultAccessModifier
-                        Modifiers = getAdditionalModifiers x.Modifiers
-                        DefaultValue = getMemberDefaultValue d.Initializer }
-                    field::acc2) acc
-            | _ -> acc) []
+    let getFields (fieldSyntax : FieldDeclarationSyntax) defaultAccessModifier =
+        fieldSyntax.Declaration.Variables
+        |> Seq.fold (fun acc c ->
+            let field = {
+                FieldDefinition.Name = c.Identifier.Text
+                Type = fieldSyntax.Declaration.Type.ToString()
+                AccessModifiers = getMemberAccessModifiers fieldSyntax.Modifiers defaultAccessModifier
+                Modifiers = getAdditionalModifiers fieldSyntax.Modifiers
+                DefaultValue = getMemberDefaultValue c.Initializer }
+            field::acc) []
 
     let getPropertyAccessors (propertySyntax : PropertyDeclarationSyntax) defaultAccessModifier =
         let getSingleAccessor (accessors : AccessorDeclarationSyntax seq) accessorType =
@@ -73,65 +68,69 @@ module StructureDefinitionFactory =
         | null -> (Some { AccessorDefinition.AccessModifiers = defaultAccessModifier }, None)
         | x -> (getSingleAccessor x.Accessors SyntaxKind.GetKeyword, getSingleAccessor x.Accessors SyntaxKind.SetKeyword)
 
-    let getProperties (structureSyntax : TypeDeclarationSyntax) defaultAccessModifier =
-        structureSyntax.Members
-        |> Seq.fold (fun acc c ->
-            match c with
-            | IsProperty x ->
-                let accessModifiers = getMemberAccessModifiers x.Modifiers defaultAccessModifier
-                let read, write = getPropertyAccessors x accessModifiers
-                let property = {
-                    Name = x.Identifier.Text 
-                    AccessModifiers = accessModifiers
-                    Modifiers = getAdditionalModifiers x.Modifiers
-                    Type = x.Type.ToString()
-                    DefaultValue = getMemberDefaultValue x.Initializer
-                    IsWrite = write
-                    IsRead = read }
-                property::acc
-            | _ -> acc) []
+    let getProperty (propertySyntax : PropertyDeclarationSyntax) defaultAccessModifier =
+        let accessModifiers = getMemberAccessModifiers propertySyntax.Modifiers defaultAccessModifier
+        let read, write = getPropertyAccessors propertySyntax accessModifiers
+        {   Name = propertySyntax.Identifier.Text 
+            AccessModifiers = accessModifiers
+            Modifiers = getAdditionalModifiers propertySyntax.Modifiers
+            Type = propertySyntax.Type.ToString()
+            DefaultValue = getMemberDefaultValue propertySyntax.Initializer
+            IsWrite = write
+            IsRead = read }
 
-    let getMethods (structureSyntax : TypeDeclarationSyntax) defaultAccessModifier =
-        structureSyntax.Members
-        |> Seq.fold (fun acc c ->
-            match c with
-            | IsMethod x ->
-                let identity = {
-                    (createIdentity structureSyntax) with
-                        Name = SyntaxHelper.getName x.Identifier 0
-                        AccessModifiers = getMemberAccessModifiers x.Modifiers defaultAccessModifier
-                        Modifiers = getAdditionalModifiers x.Modifiers
-                        Parameters = getGenericParameterDefinitions x.TypeParameterList x.ConstraintClauses   }
-                let methodDefinition = {
-                    Identity = identity
-                    Parameters = getDelegateParameters x.ParameterList
-                    ReturnType = x.ReturnType.ToString() }
-                methodDefinition::acc
-            | _ -> acc ) []
+    let getMethod (methodSyntax : MethodDeclarationSyntax) defaultAccessModifier =
+        let identity = {
+            (createIdentity methodSyntax.Parent) with
+                Name = SyntaxHelper.getName methodSyntax.Identifier 0
+                AccessModifiers = getMemberAccessModifiers methodSyntax.Modifiers defaultAccessModifier
+                Modifiers = getAdditionalModifiers methodSyntax.Modifiers
+                Parameters = getGenericParameterDefinitions methodSyntax.TypeParameterList methodSyntax.ConstraintClauses   }
+        {   Identity = identity
+            Parameters = getDelegateParameters methodSyntax.ParameterList
+            ReturnType = methodSyntax.ReturnType.ToString() }
 
-    let getEvents (structureSyntax : TypeDeclarationSyntax) defaultAccessModifier =
-        structureSyntax.Members
-        |> Seq.fold (fun acc c -> 
-            match c with
-            | IsEventDeclaration x ->
-                let event = {
-                    EventDefinition.Name = x.Identifier.Text 
-                    Type = x.Type.ToString()
+    let getEvents (eventSyntax : MemberDeclarationSyntax) defaultAccessModifier =
+        match eventSyntax with
+        | IsEventDeclaration x ->
+            [{  EventDefinition.Name = x.Identifier.Text 
+                Type = x.Type.ToString()
+                AccessModifiers = getMemberAccessModifiers x.Modifiers defaultAccessModifier
+                Modifiers = getAdditionalModifiers x.Modifiers }]
+        | IsEventField x -> 
+            let declaration = x.Declaration
+            declaration.Variables
+            |> Seq.fold (fun acc d -> 
+                let event = { 
+                    EventDefinition.Name = d.Identifier.Text 
+                    Type = declaration.Type.ToString()
                     AccessModifiers = getMemberAccessModifiers x.Modifiers defaultAccessModifier
                     Modifiers = getAdditionalModifiers x.Modifiers }
-                event::acc
-            | IsEventField x -> 
-                let declaration = x.Declaration
-                declaration.Variables
-                |> Seq.fold (fun acc d -> 
-                    let event = { 
-                        EventDefinition.Name = d.Identifier.Text 
-                        Type = declaration.Type.ToString()
-                        AccessModifiers = getMemberAccessModifiers x.Modifiers defaultAccessModifier
-                        Modifiers = getAdditionalModifiers x.Modifiers }
-                    event::acc) []
-                |> List.append acc
-            | _ -> acc) []
+                event::acc) []
+        | _ -> []
+
+    let getMembers (structureSyntax : TypeDeclarationSyntax) defaultAccessModifiers =
+        let members = ([], [], [], [])
+        structureSyntax.Members
+        |> Seq.fold (fun acc c ->
+            match c with
+            | IsMethod x -> 
+                let (m, p, f, e) = acc
+                let methodDefinition = getMethod x defaultAccessModifiers
+                (methodDefinition::m, p, f, e)
+            | IsField x ->
+                let (m, p, f, e) = acc
+                let fieldsDefinition = getFields x defaultAccessModifiers
+                (m, p, fieldsDefinition |> List.append f, e)
+            | IsProperty x ->
+                let (m, p, f, e) = acc
+                let propertyDefinition = getProperty x defaultAccessModifiers
+                (m, propertyDefinition::p, f, e)
+            | IsEvent x ->
+                let (m, p, f, e) = acc
+                let eventsDefinition = getEvents x defaultAccessModifiers
+                (m, p, f, eventsDefinition |> List.append e)
+            | _ -> acc) members
 
     let createDefinition (structureSyntax : TypeDeclarationSyntax)=
         let parameters = getGenericParameterDefinitions structureSyntax.TypeParameterList structureSyntax.ConstraintClauses
@@ -143,11 +142,12 @@ module StructureDefinitionFactory =
                 BaseTypes = getBaseTypes structureSyntax
                 Parameters = parameters  }
         let defaultAccessModifier = getDefaultMemberVisibility structureSyntax
+        let methods, properties, fields, events = getMembers structureSyntax defaultAccessModifier
         {   Identity = identity
-            Fields = getFields structureSyntax defaultAccessModifier
-            Properties = getProperties structureSyntax defaultAccessModifier
-            Events = getEvents structureSyntax defaultAccessModifier 
-            Methods = getMethods structureSyntax defaultAccessModifier }
+            Fields = fields
+            Properties = properties
+            Events = events
+            Methods = methods }
 
     let create structureSyntax =
         let definition = createDefinition structureSyntax
