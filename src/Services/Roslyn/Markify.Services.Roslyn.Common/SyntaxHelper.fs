@@ -35,3 +35,18 @@ module SyntaxHelper =
                 | null -> None
                 | _ -> loop parentNode.Parent
         loop node.Parent
+
+    let findDefinitionNodes (isVisitable : SyntaxNode -> SyntaxNode option) (isDefinition : SyntaxNode -> SyntaxNode option) (node : SyntaxNode) =
+        let rec loop acc nodes =
+            let definitions = 
+                nodes
+                |> Seq.choose isDefinition
+                |> Seq.append acc
+            let visitables =
+                nodes
+                |> Seq.choose isVisitable
+                |> Seq.collect (fun c -> c.ChildNodes())
+            match Seq.isEmpty visitables with
+            | false -> loop definitions visitables
+            | true -> definitions
+        loop Seq.empty (node.ChildNodes())

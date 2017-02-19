@@ -4,10 +4,23 @@ open VisualBasicSyntaxHelper
 open Markify.Services.Roslyn.Common
 open Microsoft.CodeAnalysis
 open Microsoft.CodeAnalysis.VisualBasic
+open SyntaxHelper
 
 module VisualBasicParser =
+    let isDefinitionNode = function
+        | IsStructureType x -> Some (x :> SyntaxNode)
+        | IsNamespace x -> Some (x :> SyntaxNode)
+        | IsEnum x -> Some (x :> SyntaxNode)
+        | IsDelegate x -> Some (x :> SyntaxNode)
+        | _ -> None
+
+    let isVisitableNode = function
+        | IsStructureType x -> Some (x :> SyntaxNode)
+        | IsNamespace x -> Some (x :> SyntaxNode)
+        | _ -> None
+
     let getDefinitions (root : SyntaxNode) =
-        root.DescendantNodes()
+        findDefinitionNodes isVisitableNode isDefinitionNode root
         |> Seq.fold (fun (acc :SourceContent) c ->
             match c with
             | IsStructureType x ->
