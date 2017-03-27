@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Markify.Domain.Ide;
 using Markify.Services.VisualStudio.Tests.Attributes;
 using NFluent;
 using Xunit;
@@ -60,6 +61,18 @@ namespace Markify.Services.VisualStudio.Tests.VisualStudioEnvironment
             var actual = solution.Projects;
 
             Check.That(actual.All(c => !string.IsNullOrWhiteSpace(c.Name))).IsTrue();
+        }
+
+        [Theory]
+        [VisualStudioEnvironmentData(project: 1, language: vsCMLanguageVC, values: new object[] { Unsupported })]
+        [VisualStudioEnvironmentData(project: 1, language: vsCMLanguageCSharp, values: new object[]{ CSharp })]
+        [VisualStudioEnvironmentData(project: 1, language: vsCMLanguageVB, values: new object[] { VisualBasic })]
+        public void Projects_ShouldHaveExpectedLanguage(ProjectLanguage expected, VisualStudio.VisualStudioEnvironment sut)
+        {
+            var solution = sut.CurrentSolution.Value;
+            var actual = solution.Projects;
+
+            Check.That(actual.Select(c => c.Language)).Contains(expected);
         }
     }
 }

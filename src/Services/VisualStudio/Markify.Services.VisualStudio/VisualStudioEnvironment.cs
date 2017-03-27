@@ -90,7 +90,7 @@ namespace Markify.Services.VisualStudio
             if (_filterProvider.AllowedExtensions.Any())
                 files = files.Where(IsValidFile);
 
-            return new Project(project.Name, path, ProjectLanguage.Unsupported, files);
+            return new Project(project.Name, path, project.GetLanguage(), files);
         }
 
         #endregion

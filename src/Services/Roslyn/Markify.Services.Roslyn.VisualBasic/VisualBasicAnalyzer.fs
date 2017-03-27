@@ -1,6 +1,7 @@
 ﻿namespace Markify.Services.Roslyn.VisualBasic
 
 open VisualBasicSyntaxHelper
+open Markify.Domain.Ide
 open Markify.Services.Roslyn.Common
 open Microsoft.CodeAnalysis
 open Microsoft.CodeAnalysis.VisualBasic
@@ -44,5 +45,14 @@ module VisualBasicParser =
 
 type VisualBasicAnalyzer() = 
     interface ILanguageAnalyzer with
-        member this.Extensions = ["vb"] |> List.toSeq
         member this.Analyze source = VisualBasicParser.analyze source
+
+type VisualBasicSyntax() =
+    interface ILanguageSyntax with
+        member this.Partial = SyntaxFactory.Token(SyntaxKind.PartialKeyword).Text
+
+[<Language(ProjectLanguage.VisualBasic)>]
+type VisualBasicModule() =
+    interface ILanguageModule with
+        member this.Analyzer = VisualBasicAnalyzer() :> ILanguageAnalyzer
+        member this.Syntax = VisualBasicSyntax() :> ILanguageSyntax

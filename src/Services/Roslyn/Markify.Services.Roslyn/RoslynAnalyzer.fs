@@ -7,53 +7,52 @@ open Markify.Core.FSharp.Builders
 open Markify.Domain.Compiler
 open Markify.Domain.Ide
 open Markify.Services.Roslyn.Common
+open Markify.Core.FSharp
 
-type RoslynAnalyzer (languageAnalyzers : ILanguageAnalyzer seq) =
-    let languageAnalyzers =
-        languageAnalyzers
+type RoslynAnalyzer (languages : ILanguageModule seq) =
+    let getLanguage languageModule =
+        let languageType = languageModule.GetType()
+        let attr = languageType.GetCustomAttributes(typeof<LanguageAttribute>, false)   
+        match attr |> Seq.tryHead with
+        | None -> ProjectLanguage.Unsupported
+        | Some x -> (x :?> LanguageAttribute).Language
+
+    let languageModules =
+        languages
         |> Seq.fold (fun acc c ->
-            c.Extensions
-            |> Seq.map (fun d -> (d.ToLower(), c))
-            |> Seq.append acc) Seq.empty
-        |> Map.ofSeq
+            match getLanguage c with
+            | ProjectLanguage.Unsupported -> acc
+            | x -> (x, c)::acc) []
+        |> Map.ofList
 
     let readFile file =
         match IO.readFile file with
         | Success x -> x
         | _ -> ""
 
-    let findAnalyzer file =
-        let ext =
-            match Path.GetExtension (file) with
-            | "" -> String.Empty
-            | x -> x.Substring(1)
-        languageAnalyzers.TryFind <| ext.ToLower()
+    let merge types newTypes languageSyntax = MapBuilder(){
+        yield! MissingTypeMerger.merge types newTypes
+        yield! PartialMerger.merge types newTypes languageSyntax
+        yield! types
+    }
+
+    let analyzeSources (files : Uri seq) (analyzer : ILanguageAnalyzer) (languageSyntax : ILanguageSyntax) =
+        let types, namespaces =            
+            Seq.fold (fun acc (c : Uri) ->
+                let types, namespaces = acc
+                let content = analyzer.Analyze <| readFile c.AbsolutePath
+                (   merge types content.Types languageSyntax,
+                    content.Namespaces |> List.append namespaces)) (Map.empty, []) files
+        (   types |> Seq.map (fun d -> d.Value) |> Seq.toList,
+            namespaces |> List.distinct )    
 
     interface IProjectAnalyzer with
         member this.Analyze (project : Project) : AssemblyDefinition =
-            let typeDefinitions, namespaceDefinitions =
-                project.Files
-                |> Seq.fold (fun acc c ->
-                    let analyzer = findAnalyzer c.AbsolutePath
-                    match analyzer with
-                    | None -> acc
-                    | Some x ->
-                        let { SourceContent.Types=types; Namespaces=namespaces } = x.Analyze <| readFile c.AbsolutePath
-                        let accTypes, accNamespaces = acc
-                        (   List.append types accTypes,
-                            List.append namespaces accNamespaces)) ([],[])
-                |> fun (types, namespaces) ->
-                    let cleanTypes =
-                        types
-                        |> List.groupBy (fun c -> getFullname c.Identity)
-                        |> List.fold (fun acc c ->
-                            let _, typesList = c
-                            let definition = PartialMerger.mergePartialTypes typesList
-                            definition::acc) []
-                    let cleanNamespaces = 
-                        namespaces 
-                        |> List.distinctBy (fun c -> c.Name)
-                    (cleanTypes, cleanNamespaces)
+            let languageModule = languageModules.TryFind project.Language
+            let types, namespaces =
+                match languageModule with
+                | None -> ([],[])
+                | Some x -> analyzeSources project.Files x.Analyzer x.Syntax
             {   Project = project.Name
-                Namespaces = namespaceDefinitions
-                Types = typeDefinitions }
+                Namespaces = namespaces
+                Types = types }

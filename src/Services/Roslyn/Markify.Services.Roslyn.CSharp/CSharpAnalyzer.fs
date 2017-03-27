@@ -1,5 +1,6 @@
 ﻿namespace Markify.Services.Roslyn.Csharp
 
+open Markify.Domain.Ide
 open Markify.Services.Roslyn.Common
 open Microsoft.CodeAnalysis
 open Microsoft.CodeAnalysis.CSharp
@@ -43,5 +44,14 @@ module CSharpParser =
 
 type CSharpAnalyzer() = 
     interface ILanguageAnalyzer with
-        member this.Extensions = ["cs"] |> List.toSeq
         member this.Analyze source = CSharpParser.analyze source
+
+type CSharpSyntax() =
+    interface ILanguageSyntax with
+        member this.Partial = SyntaxFactory.Token(SyntaxKind.PartialKeyword).Text
+
+[<Language(ProjectLanguage.CSharp)>]
+type CSharpModule() =
+    interface ILanguageModule with
+        member this.Analyzer = CSharpAnalyzer() :> ILanguageAnalyzer
+        member this.Syntax = CSharpSyntax() :> ILanguageSyntax

@@ -13,10 +13,10 @@ type LanguageAnalyzerArgs () =
             match request with
             | :? ParameterInfo as x ->
                 let isExpectedObject = typeof<RoslynAnalyzer> = x.Member.DeclaringType
-                let isExpectedArg = typeof<ILanguageAnalyzer seq> = x.ParameterType
+                let isExpectedArg = typeof<ILanguageModule seq> = x.ParameterType
                 match (isExpectedObject, isExpectedArg) with
                 | (true, true) -> seq {
-                    yield CSharpAnalyzer() :> ILanguageAnalyzer
-                    yield VisualBasicAnalyzer() :> ILanguageAnalyzer } :> obj
+                    yield CSharpModule() :> ILanguageModule
+                    yield VisualBasicModule() :> ILanguageModule } :> obj
                 | _ -> NoSpecimen() :> obj
             | _ -> NoSpecimen() :> obj

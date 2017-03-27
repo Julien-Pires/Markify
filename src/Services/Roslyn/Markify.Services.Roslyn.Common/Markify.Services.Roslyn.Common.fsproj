@@ -129,6 +129,11 @@
       <Project>{a4959db4-7b61-4e7e-918f-59647879a50d}</Project>
       <Private>True</Private>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\Domain\Markify.Domain.Ide\Markify.Domain.Ide.fsproj">
+      <Name>Markify.Domain.Ide</Name>
+      <Project>{a55c060a-c3bf-4eb6-8439-cd5dc3614cfd}</Project>
+      <Private>True</Private>
+    </ProjectReference>
   </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
