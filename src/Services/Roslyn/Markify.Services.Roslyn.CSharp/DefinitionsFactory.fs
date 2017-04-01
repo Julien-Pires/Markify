@@ -110,27 +110,22 @@ module StructureDefinitionFactory =
         | _ -> []
 
     let getMembers (structureSyntax : TypeDeclarationSyntax) defaultAccessModifiers =
-        let members = ([], [], [], [])
         structureSyntax.Members
         |> Seq.fold (fun acc c ->
             match c with
-            | IsMethod x -> 
-                let (m, p, f, e) = acc
-                let methodDefinition = getMethod x defaultAccessModifiers
-                (methodDefinition::m, p, f, e)
             | IsField x ->
-                let (m, p, f, e) = acc
                 let fieldsDefinition = getFields x defaultAccessModifiers
-                (m, p, fieldsDefinition |> List.append f, e)
+                { acc with StructureMembers.Fields = List.append fieldsDefinition acc.Fields }
             | IsProperty x ->
-                let (m, p, f, e) = acc
                 let propertyDefinition = getProperty x defaultAccessModifiers
-                (m, propertyDefinition::p, f, e)
+                { acc with Properties = propertyDefinition::acc.Properties }
+            | IsMethod x ->
+                let methodDefinition = getMethod x defaultAccessModifiers
+                { acc with Methods = methodDefinition::acc.Methods }
             | IsEvent x ->
-                let (m, p, f, e) = acc
                 let eventsDefinition = getEvents x defaultAccessModifiers
-                (m, p, f, eventsDefinition |> List.append e)
-            | _ -> acc) members
+                { acc with Events = List.append eventsDefinition acc.Events }
+            | _ -> acc) { Fields = []; Properties = []; Methods = []; Events = [] }
 
     let createDefinition (structureSyntax : TypeDeclarationSyntax)=
         let parameters = getGenericParameterDefinitions structureSyntax.TypeParameterList structureSyntax.ConstraintClauses
@@ -142,12 +137,12 @@ module StructureDefinitionFactory =
                 BaseTypes = getBaseTypes structureSyntax
                 Parameters = parameters  }
         let defaultAccessModifier = getDefaultMemberVisibility structureSyntax
-        let methods, properties, fields, events = getMembers structureSyntax defaultAccessModifier
+        let members = getMembers structureSyntax defaultAccessModifier
         {   Identity = identity
-            Fields = fields
-            Properties = properties
-            Events = events
-            Methods = methods }
+            Fields = members.Fields
+            Properties = members.Properties
+            Events = members.Events
+            Methods = members.Methods }
 
     let create structureSyntax =
         let definition = createDefinition structureSyntax

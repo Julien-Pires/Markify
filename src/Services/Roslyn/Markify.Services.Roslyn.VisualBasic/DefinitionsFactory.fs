@@ -138,22 +138,12 @@ module StructureDefinitionFactory =
             ReturnType = getReturnType methodSyntax.SubOrFunctionKeyword methodSyntax.AsClause }
     
     let getMembers (structureSyntax : TypeBlockSyntax) defaultAccessModifiers =
-        let members = ([], [], [], [])
         structureSyntax.Members
         |> Seq.fold (fun acc c -> 
             match c with
-            | IsMethod x ->
-                let (m, p, f, e) = acc
-                let methodDefinition = getMethod x defaultAccessModifiers
-                (methodDefinition::m, p, f, e)
-            | IsEvent x ->
-                let (m, p, f, e) = acc
-                let eventDefinition = getEvent x defaultAccessModifiers
-                (m, p, f, eventDefinition::e)
             | IsField x ->
-                let (m, p, f, e) = acc
                 let fieldsDefinition = getFields x defaultAccessModifiers
-                (m, p, fieldsDefinition |> List.append f, e)
+                { acc with StructureMembers.Fields = List.append fieldsDefinition acc.Fields }
             | IsProperty _ ->
                 let property = 
                     match c with
@@ -161,11 +151,15 @@ module StructureDefinitionFactory =
                     | IsPropertyStatement x -> Some <| getPropertyFromStatement x defaultAccessModifiers
                     | _ -> None
                 match property with
-                | Some x -> 
-                    let (m, p, f, e) = acc
-                    (m, x::p, f, e)
+                | Some x -> { acc with Properties = x::acc.Properties }
                 | None -> acc
-            | _ -> acc) members
+            | IsMethod x ->
+                let methodDefinition = getMethod x defaultAccessModifiers
+                { acc with Methods = methodDefinition::acc.Methods }
+            | IsEvent x ->
+                let eventDefinition = getEvent x defaultAccessModifiers
+                { acc with Events = eventDefinition::acc.Events }
+            | _ -> acc) { Fields = []; Properties = []; Methods = []; Events = [] }
 
     let createDefinition (structureSyntax : TypeBlockSyntax) =
         let parameters = getGenericParameterDefinitions structureSyntax.BlockStatement.TypeParameterList
@@ -178,12 +172,12 @@ module StructureDefinitionFactory =
                 BaseTypes = getBaseType structureSyntax
                 Parameters = parameters }
         let defaultAccessModifier = getDefaultMemberVisibility structureSyntax
-        let methods, properties, fields, events = getMembers structureSyntax defaultAccessModifier
+        let members = getMembers structureSyntax defaultAccessModifier
         {   Identity = identity
-            Fields = fields
-            Properties = properties
-            Events = events 
-            Methods = methods }
+            Fields = members.Fields
+            Properties = members.Properties
+            Events = members.Events 
+            Methods = members.Methods }
 
     let create structureSyntax =
         let definition = createDefinition structureSyntax
