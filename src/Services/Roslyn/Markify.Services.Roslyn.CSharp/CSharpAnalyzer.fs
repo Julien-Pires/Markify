@@ -1,12 +1,26 @@
 ﻿namespace Markify.Services.Roslyn.Csharp
 
+open Markify.Domain.Ide
 open Markify.Services.Roslyn.Common
 open Microsoft.CodeAnalysis
 open Microsoft.CodeAnalysis.CSharp
+open SyntaxHelper
 
 module CSharpParser =
+    let isDefinitionNode = function
+        | IsStructureType x -> Some (x :> SyntaxNode)
+        | IsNamespace x -> Some (x :> SyntaxNode)
+        | IsEnum x -> Some (x :> SyntaxNode)
+        | IsDelegate x -> Some (x :> SyntaxNode)
+        | _ -> None
+
+    let isVisitableNode = function
+        | IsStructureType x -> Some (x :> SyntaxNode)
+        | IsNamespace x -> Some (x :> SyntaxNode)
+        | _ -> None
+
     let getDefinitions (root : SyntaxNode) =
-        root.DescendantNodes()
+        findDefinitionNodes isVisitableNode isDefinitionNode root
         |> Seq.fold (fun (acc : SourceContent) c ->
             match c with
             | IsStructureType x ->
@@ -30,5 +44,14 @@ module CSharpParser =
 
 type CSharpAnalyzer() = 
     interface ILanguageAnalyzer with
-        member this.Extensions = ["cs"] |> List.toSeq
         member this.Analyze source = CSharpParser.analyze source
+
+type CSharpSyntax() =
+    interface ILanguageSyntax with
+        member this.Partial = SyntaxFactory.Token(SyntaxKind.PartialKeyword).Text
+
+[<Language(ProjectLanguage.CSharp)>]
+type CSharpModule() =
+    interface ILanguageModule with
+        member this.Analyzer = CSharpAnalyzer() :> ILanguageAnalyzer
+        member this.Syntax = CSharpSyntax() :> ILanguageSyntax

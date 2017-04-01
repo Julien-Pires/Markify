@@ -52,6 +52,12 @@ module VisualBasicSyntaxHelper =
         | :? PropertyBlockSyntax as x -> Some x
         | _ -> None
 
+    let (|IsProperty|_|) (node : SyntaxNode) =
+        match node with
+        | IsPropertyBlock x -> Some (x :> DeclarationStatementSyntax)
+        | IsPropertyStatement x -> Some (x :> DeclarationStatementSyntax)
+        | _ -> None
+
     let (|IsField|_|) (node : SyntaxNode) =
         match node with
         | :? FieldDeclarationSyntax as x -> Some x
@@ -63,14 +69,10 @@ module VisualBasicSyntaxHelper =
         | :? MethodBlockSyntax as x -> Some (x.BlockStatement :?> MethodStatementSyntax)
         | _ -> None
 
-    let (|IsEventStatement|_|) (node : SyntaxNode) =
+    let (|IsEvent|_|) (node : SyntaxNode) =
         match node with
+        | :? EventBlockSyntax as x -> Some x.EventStatement
         | :? EventStatementSyntax as x -> Some x
-        | _ -> None
-
-    let (|IsEventBlock|_|) (node : SyntaxNode) =
-        match node with
-        | :? EventBlockSyntax as x -> Some x
         | _ -> None
 
 open Microsoft.CodeAnalysis.VisualBasic

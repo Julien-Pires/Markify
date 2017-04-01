@@ -67,6 +67,12 @@ module CSharpSyntaxHelper =
         | :? EventFieldDeclarationSyntax as x -> Some x
         | _ -> None
 
+    let (|IsEvent|_|) (node : SyntaxNode) = 
+        match node with
+        | IsEventDeclaration x -> Some (x :> MemberDeclarationSyntax)
+        | IsEventField x -> Some (x :> MemberDeclarationSyntax)
+        | _ -> None
+
 open Microsoft.CodeAnalysis.CSharp
 
 [<AutoOpen>]

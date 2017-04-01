@@ -16,10 +16,10 @@ namespace Markify.Application.Services
 
         public override void Load()
         {
-            IEnumerable<ILanguageAnalyzer> analyzers = new ILanguageAnalyzer[]
+            IEnumerable<ILanguageModule> analyzers = new ILanguageModule[]
             {
-                new CSharpAnalyzer(),
-                new VisualBasicAnalyzer()
+                new CSharpModule(), 
+                new VisualBasicModule(),
             };
 
             Bind<IProjectAnalyzer>().To<RoslynAnalyzer>().WithConstructorArgument(analyzers);

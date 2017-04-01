@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -59,6 +59,9 @@
     <Compile Include="CSharpAnalyzer.fs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="FSharp.Core">
+      <HintPath>..\..\..\packages\FSharp.Core.4.1.2\lib\net45\FSharp.Core.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CodeAnalysis">
       <HintPath>..\..\..\packages\Microsoft.CodeAnalysis.Common.1.2.2\lib\net45\Microsoft.CodeAnalysis.dll</HintPath>
       <Private>True</Private>
@@ -68,9 +71,6 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="mscorlib" />
-    <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.AppContext">
       <HintPath>..\..\..\packages\System.AppContext.4.1.0\lib\net46\System.AppContext.dll</HintPath>
@@ -131,6 +131,9 @@
       <HintPath>..\..\..\packages\System.Threading.Thread.4.0.0\lib\net46\System.Threading.Thread.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.ValueTuple">
+      <HintPath>..\..\..\packages\System.ValueTuple.4.3.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml.XmlDocument">
@@ -150,6 +153,11 @@
     <ProjectReference Include="..\..\..\Domain\Markify.Domain.Compiler\Markify.Domain.Compiler.fsproj">
       <Name>Markify.Domain.Compiler</Name>
       <Project>{a4959db4-7b61-4e7e-918f-59647879a50d}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Domain\Markify.Domain.Ide\Markify.Domain.Ide.fsproj">
+      <Name>Markify.Domain.Ide</Name>
+      <Project>{a55c060a-c3bf-4eb6-8439-cd5dc3614cfd}</Project>
       <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\Markify.Services.Roslyn.Common\Markify.Services.Roslyn.Common.fsproj">
