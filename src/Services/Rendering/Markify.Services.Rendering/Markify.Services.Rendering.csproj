@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Markify.Services.Rendering</RootNamespace>
     <AssemblyName>Markify.Services.Rendering</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,12 +32,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FSharp.Core, Version=4.4.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\FSharp.Core.4.1.2\lib\net45\FSharp.Core.dll</HintPath>
+      <HintPath>..\..\..\packages\FSharp.Core.4.2.3\lib\net45\FSharp.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Optional, Version=3.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Optional.3.2.0\lib\net461\Optional.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\..\packages\Optional.3.2.0\lib\net462\Optional.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -45,6 +45,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommentFormatter.cs" />
     <Compile Include="DefinitionFormatter.cs" />
     <Compile Include="ITemplate.cs" />
     <Compile Include="ITemplatesProvider.cs" />

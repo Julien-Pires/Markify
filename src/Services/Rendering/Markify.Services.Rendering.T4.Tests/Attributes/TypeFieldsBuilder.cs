@@ -22,7 +22,7 @@ namespace Markify.Services.Rendering.T4.Tests.Attributes
         public TypeFieldsBuilder(int count, IEnumerable<string> visiblity)
         {
             _count = count;
-            _visibility = visiblity;
+            _visibility = visiblity ?? new string[0];
         }
 
         #endregion

@@ -16,20 +16,42 @@ namespace Markify.Services.Rendering.T4.Tests
         }
 
         [Theory]
-        [ContainerDefinitionData(new string[0], 0, values: new object[] { 0 })]
-        [ContainerDefinitionData(new[] { "public" }, 1, values: new object[] { 1 })]
-        [ContainerDefinitionData(new[] { "public", "private" }, 1, values: new object[] { 2 })]
-        [ContainerDefinitionData(new[] { "public", "private", "protected internal" }, 1, values: new object[] { 3 })]
-        public void GetMethods_ShouldReturnMethodsByVisiblity_WhenDefinitionHasSome(int expected, TypeDefinition definition)
+        [ClassDefinitionData]
+        [InterfaceDefinitionData]
+        [StructDefinitionData]
+        public void GetMethods_ShouldReturnNoMethods_WhenTypeDoesNotHave(TypeDefinition definition)
+        {
+            Check.That(DefinitionFormatter.GetMethods(definition)).IsEmpty();
+        }
+
+        [Theory]
+        [EnumDefinitionData]
+        [DelegateDefinitionData]
+        public void GetMethods_ShouldReturnNoMethods_WhenTypeCannotHaveMethods(TypeDefinition definition)
+        {
+            Check.That(DefinitionFormatter.GetMethods(definition)).IsEmpty();
+        }
+
+        [Theory]
+        [ClassDefinitionData(membersVisibility: new[] { "public" }, membersCount: 1, values: new object[] { 1 })]
+        [ClassDefinitionData(membersVisibility: new[] { "public", "private" }, membersCount: 1, values: new object[] { 2 })]
+        [InterfaceDefinitionData(membersVisibility: new[] { "public" }, membersCount: 1, values: new object[] { 1 })]
+        [InterfaceDefinitionData(membersVisibility: new[] { "public", "private" }, membersCount: 1, values: new object[] { 2 })]
+        [StructDefinitionData(membersVisibility: new[] { "public" }, membersCount: 1, values: new object[] { 1 })]
+        [StructDefinitionData(membersVisibility: new[] { "public", "private" }, membersCount: 1, values: new object[] { 2 })]
+        public void GetMethods_ShouldReturnMethodsByVisiblity_WhenTypeHasSome(int expected, TypeDefinition definition)
         {
             Check.That(DefinitionFormatter.GetMethods(definition)).HasSize(expected);
         }
 
         [Theory]
-        [ContainerDefinitionData(new string[0], 0, values: new object[] { new string[0] })]
-        [ContainerDefinitionData(new[] { "public" }, 1, values: new object[] { new[] { "public" } })]
-        [ContainerDefinitionData(new[] { "public", "private" }, 1, values: new object[] { new[] { "public", "private" } })]
-        public void GetMethods_ShouldReturnExpectedGroupKey(string[] expected, TypeDefinition definition)
+        [ClassDefinitionData(membersVisibility: new[] { "public" }, membersCount: 1, values: new object[] { new[] { "public" } })]
+        [ClassDefinitionData(membersVisibility: new[] { "public", "private" }, membersCount: 1, values: new object[] { new[] { "public", "private" } })]
+        [InterfaceDefinitionData(membersVisibility: new[] { "public" }, membersCount: 1, values: new object[] { new[] { "public" } })]
+        [InterfaceDefinitionData(membersVisibility: new[] { "public", "private" }, membersCount: 1, values: new object[] { new[] { "public", "private" } })]
+        [StructDefinitionData(membersVisibility: new[] { "public" }, membersCount: 1, values: new object[] { new[] { "public" } })]
+        [StructDefinitionData(membersVisibility: new[] { "public", "private" }, membersCount: 1, values: new object[] { new[] { "public", "private" } })]
+        public void GetMethods_ShouldReturnExpectedGroupKey_WhenTypeHasSome(string[] expected, TypeDefinition definition)
         {
             var actual = DefinitionFormatter.GetMethods(definition).Select(c => c.Key);
 
@@ -37,9 +59,10 @@ namespace Markify.Services.Rendering.T4.Tests
         }
 
         [Theory]
-        [ContainerDefinitionData(new string[0], 0)]
-        [ContainerDefinitionData(new[] { "public" }, 100)]
-        public void GetMethods_ShouldNotReturnListWithNullElement(TypeDefinition definition)
+        [ClassDefinitionData(membersVisibility: new[] { "public" }, membersCount: 100)]
+        [InterfaceDefinitionData(membersVisibility: new[] { "public" }, membersCount: 100)]
+        [StructDefinitionData(membersVisibility: new[] { "public" }, membersCount: 100)]
+        public void GetMethods_ShouldNotReturnNullElement_WhenTypeHasSome(TypeDefinition definition)
         {
             var actual = DefinitionFormatter.GetMethods(definition).SelectMany(c => c);
 
@@ -47,24 +70,17 @@ namespace Markify.Services.Rendering.T4.Tests
         }
 
         [Theory]
-        [ContainerDefinitionData(new string[0], 0, values: new object[] { 0 })]
-        [ContainerDefinitionData(new[] { "public" }, 1, values: new object[] { 1 })]
-        [ContainerDefinitionData(new[] { "public" }, 10, values: new object[] { 10 })]
-        [ContainerDefinitionData(new[] { "public", "private" }, 1, values: new object[] { 2 })]
-        [ContainerDefinitionData(new[] { "public", "private" }, 10, values: new object[] { 20 })]
-        public void GetMethods_ShouldReturnExpectedMethodsCount(int expected, TypeDefinition definition)
+        [ClassDefinitionData(membersVisibility: new[] { "public" }, membersCount: 1, values: new object[] { 1 })]
+        [ClassDefinitionData(membersVisibility: new[] { "public" }, membersCount: 10, values: new object[] { 10 })]
+        [InterfaceDefinitionData(membersVisibility: new[] { "public" }, membersCount: 1, values: new object[] { 1 })]
+        [InterfaceDefinitionData(membersVisibility: new[] { "public" }, membersCount: 10, values: new object[] { 10 })]
+        [StructDefinitionData(membersVisibility: new[] { "public" }, membersCount: 1, values: new object[] { 1 })]
+        [StructDefinitionData(membersVisibility: new[] { "public" }, membersCount: 10, values: new object[] { 10 })]
+        public void GetMethods_ShouldReturnExactMethodsCount_WhenTypeHasSome(int expected, TypeDefinition definition)
         {
-            var actual = DefinitionFormatter.GetMethods(definition).SelectMany(c => c);
+            var actual = DefinitionFormatter.GetProperties(definition).Select(c => c.Count());
 
-            Check.That(actual).HasSize(expected);
-        }
-
-        [Theory]
-        [EnumDefinitionData(0)]
-        [DelegateDefinitionData(0)]
-        public void GetMethods_ShouldReturnEmptyList_WhenDefinitionIsNotValid(TypeDefinition definition)
-        {
-            Check.That(DefinitionFormatter.GetMethods(definition)).IsEmpty();
+            Check.That(actual).IsOnlyMadeOf(expected);
         }
     }
 }

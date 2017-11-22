@@ -1,8 +1,12 @@
 ﻿namespace Markify.Services.Roslyn.Tests
 
-module DefinitionsHelper =
-    open Markify.Domain.Compiler
+open Markify.Domain.Compiler
 
+module LibraryHelper =
+    let getDefinition name library = 
+        library.Types |> Seq.find (fun c -> c.Identity.Name = name)
+
+module DefinitionsHelper =
     let (|IsClass|_|) definition =
         match definition with
         | Class x -> Some definition

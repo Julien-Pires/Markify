@@ -1,6 +1,7 @@
 ﻿namespace Markify.Services.Roslyn.Csharp
 
 open Microsoft.CodeAnalysis
+open Microsoft.CodeAnalysis.CSharp
 open Microsoft.CodeAnalysis.CSharp.Syntax
 
 [<AutoOpen>]
@@ -72,8 +73,6 @@ module CSharpSyntaxHelper =
         | IsEventDeclaration x -> Some (x :> MemberDeclarationSyntax)
         | IsEventField x -> Some (x :> MemberDeclarationSyntax)
         | _ -> None
-
-open Microsoft.CodeAnalysis.CSharp
 
 [<AutoOpen>]
 module CSharpKeywordHelper =

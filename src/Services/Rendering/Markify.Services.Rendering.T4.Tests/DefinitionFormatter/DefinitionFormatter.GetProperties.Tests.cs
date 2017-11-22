@@ -15,34 +15,47 @@ namespace Markify.Services.Rendering.T4.Tests
             Check.ThatCode(() => DefinitionFormatter.GetProperties(null)).Throws<ArgumentNullException>();
         }
 
+        [Theory]
+        [ClassDefinitionData]
+        [InterfaceDefinitionData]
+        [StructDefinitionData]
+        public void GetProperties_ShouldReturnNoProperties_WhenTypeDoesNotHave(TypeDefinition definition)
+        {
+            Check.That(DefinitionFormatter.GetProperties(definition)).IsEmpty();
+        }
+
+        [Theory]
+        [DelegateDefinitionData]
+        [EnumDefinitionData]
+        public void GetProperties_ShouldReturnNoProperties_WhenTypeCannotHaveProperties(TypeDefinition definition)
+        {
+            Check.That(DefinitionFormatter.GetProperties(definition)).IsEmpty();
+        }
+
 		[Theory]
-		[ContainerDefinitionData(new string[0], 0, values: new object[] { 0 })]
-        [ContainerDefinitionData(new string[0], 0, StructureKind.Delegate, values: new object[] { 0 })]
-        [ContainerDefinitionData(new [] { "public" }, 1, values: new object[] { 1 })]
-        [ContainerDefinitionData(new[] { "public", "internal" }, 1, values: new object[] { 2 })]
-        [ContainerDefinitionData(new[] { "Public", "Friend" }, 10, values: new object[] { 2 })]
-        public void GetProperties_ShouldReturnPropertiesByVisiblity_WhenDefinitionHasSome(int expected, TypeDefinition definition)
+        [ClassDefinitionData(membersVisibility: new [] { "public" }, membersCount: 1, values: new object[] { 1 })]
+        [ClassDefinitionData(membersVisibility: new[] { "public", "internal" }, membersCount: 1, values: new object[] { 2 })]
+		[InterfaceDefinitionData(membersVisibility: new[] { "public" }, membersCount: 1, values: new object[] { 1 })]
+		[InterfaceDefinitionData(membersVisibility: new[] { "public", "internal" }, membersCount: 1, values: new object[] { 2 })]
+		[StructDefinitionData(membersVisibility: new[] { "public" }, membersCount: 1, values: new object[] { 1 })]
+		[StructDefinitionData(membersVisibility: new[] { "public", "internal" }, membersCount: 1, values: new object[] { 2 })]
+        public void GetProperties_ShouldReturnPropertiesByVisiblity_WhenTypeHasSome(int expected, TypeDefinition definition)
 		{
 		    Check.That(DefinitionFormatter.GetProperties(definition)).HasSize(expected);
 		}
 
         [Theory]
-        [ContainerDefinitionData(new string[0], 0, values: new object[] { 0 })]
-        [ContainerDefinitionData(new []{ "public" }, 1, values: new object[] { 1 })]
-        [ContainerDefinitionData(new[] { "public", "private" }, 1, values: new object[] { 2 })]
-        [ContainerDefinitionData(new[] { "public", "private" }, 10, values: new object[] { 20 })]
-        public void GetProperties_ShouldReturnExactPropertiesCount(int expected, TypeDefinition definition)
+        [ClassDefinitionData(membersVisibility: new[] { "public" }, membersCount: 1, values: new object[] { 1 })]
+        [ClassDefinitionData(membersVisibility: new[] { "public", "internal" }, membersCount: 10, values: new object[] { 20 })]
+        [InterfaceDefinitionData(membersVisibility: new[] { "public" }, membersCount: 1, values: new object[] { 1 })]
+        [InterfaceDefinitionData(membersVisibility: new[] { "public", "internal" }, membersCount: 10, values: new object[] { 20 })]
+        [StructDefinitionData(membersVisibility: new[] { "public" }, membersCount: 1, values: new object[] { 1 })]
+        [StructDefinitionData(membersVisibility: new[] { "public", "internal" }, membersCount: 10, values: new object[] { 20 })]
+        public void GetProperties_ShouldReturnExactPropertiesCount_WhenTypeHasSome(int expected, TypeDefinition definition)
         {
-            var actual = DefinitionFormatter.GetProperties(definition).SelectMany(c => c);
+            var actual = DefinitionFormatter.GetProperties(definition).Aggregate(0, (acc, c) => acc + c.Count());
 
-            Check.That(actual).HasSize(expected);
-        }
-
-        [Theory]
-        [EnumDefinitionData(0)]
-        public void GetProperties_ShouldReturnEmptyList_WhenDefinitionIsNotValidType(TypeDefinition definition)
-        {
-            Check.That(DefinitionFormatter.GetProperties(definition)).IsEmpty();
+            Check.That(actual).IsEqualTo(expected);
         }
     }
 }

@@ -15,33 +15,41 @@ namespace Markify.Services.Rendering.T4.Tests
             Check.ThatCode(() => DefinitionFormatter.GetFields(null)).Throws<ArgumentNullException>();
         }
 
-		[Theory]
-		[ContainerDefinitionData(new string[0], 0, values: new object[] { 0 })]
-        [ContainerDefinitionData(new string[0], 0, StructureKind.Delegate, values: new object[] { 0 })]
-        [ContainerDefinitionData(new [] { "public" }, 1, values: new object[] { 1 })]
-        [ContainerDefinitionData(new[] { "public", "internal" }, 1, values: new object[] { 2 })]
-        [ContainerDefinitionData(new[] { "Public", "Friend" }, 10, values: new object[] { 2 })]
-        public void GetFields_ShouldReturnFieldsByVisiblity_WhenDefinitionHasSome(int expected, TypeDefinition definition)
+        [Theory]
+        [ClassDefinitionData]
+        [InterfaceDefinitionData]
+        [StructDefinitionData]
+        public void GetFields_ShouldReturnNoFields_WhenTypeDoesNotHave(TypeDefinition definition)
+        {
+            Check.That(DefinitionFormatter.GetFields(definition)).IsEmpty();
+        }
+
+        [Theory]
+        [ClassDefinitionData(membersVisibility: new[] { "public" }, membersCount: 1, values: new object[] { 1 })]
+        [ClassDefinitionData(membersVisibility: new[] { "public", "internal" }, membersCount: 1, values: new object[] { 2 })]
+        [StructDefinitionData(membersVisibility: new[] { "public" }, membersCount: 1, values: new object[] { 1 })]
+        [StructDefinitionData(membersVisibility: new[] { "public", "internal" }, membersCount: 1, values: new object[] { 2 })]
+        public void GetFields_ShouldReturnFieldsByVisiblity_WhenTypeHasSome(int expected, TypeDefinition definition)
 		{
 		    Check.That(DefinitionFormatter.GetFields(definition)).HasSize(expected);
 		}
 
         [Theory]
-        [ContainerDefinitionData(new string[0], 0, values: new object[] { 0 })]
-        [ContainerDefinitionData(new []{ "public" }, 1, values: new object[] { 1 })]
-        [ContainerDefinitionData(new[] { "public", "private" }, 1, values: new object[] { 2 })]
-        [ContainerDefinitionData(new[] { "public", "private" }, 10, values: new object[] { 20 })]
-        public void GetFields_ShouldReturnExactFieldsCount(int expected, TypeDefinition definition)
+        [ClassDefinitionData(membersVisibility: new[] { "public" }, membersCount: 1, values: new object[] { 1 })]
+        [ClassDefinitionData(membersVisibility: new[] { "public", "internal" }, membersCount: 10, values: new object[] { 20 })]
+        [StructDefinitionData(membersVisibility: new[] { "public" }, membersCount: 1, values: new object[] { 1 })]
+        [StructDefinitionData(membersVisibility: new[] { "public", "internal" }, membersCount: 10, values: new object[] { 20 })]
+        public void GetFields_ShouldReturnExactFieldsCount_WhenTypeHasSome(int expected, TypeDefinition definition)
         {
-            var actual = DefinitionFormatter.GetFields(definition).SelectMany(c => c);
+            var actual = DefinitionFormatter.GetFields(definition).Aggregate(0, (acc, c) => acc + c.Count());
 
-            Check.That(actual).HasSize(expected);
+            Check.That(actual).IsEqualTo(expected);
         }
 
         [Theory]
-        [EnumDefinitionData(0)]
-        [DelegateDefinitionData(0)]
-        public void GetFields_ShouldReturnEmptyList_WhenDefinitionIsNotValid(TypeDefinition definition)
+        [EnumDefinitionData]
+        [DelegateDefinitionData]
+        public void GetFields_ShouldReturnNoFields_WhenTypeCannotHaveFields(TypeDefinition definition)
         {
             Check.That(DefinitionFormatter.GetFields(definition)).IsEmpty();
         }

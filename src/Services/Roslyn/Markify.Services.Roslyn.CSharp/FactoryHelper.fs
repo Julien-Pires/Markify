@@ -1,5 +1,6 @@
 ﻿namespace Markify.Services.Roslyn.Csharp
 
+open System
 open Markify.Domain.Compiler
 open Markify.Services.Roslyn.Common
 open Microsoft.CodeAnalysis
@@ -102,3 +103,6 @@ module DefinitionFactoryHelper =
                 Modifier = (getAdditionalModifiers c.Modifiers) |> List.tryHead 
                 DefaultValue = getMemberDefaultValue c.Default })
         |> Seq.toList
+
+    let getTypeComments node = {
+        Comments = CommentBuilder.getComments node }

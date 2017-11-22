@@ -29,10 +29,10 @@ namespace Markify.Services.Rendering.T4.Tests.Attributes
             _name = name;
             _parent = parent;
             _namespace = nspace;
-            _modifiers = modifiers;
-            _accessModifiers = accessModifiers;
-            _baseTypes = baseTypes;
-            _parameters = parameters;
+            _modifiers = modifiers ?? new string[0];
+            _accessModifiers = accessModifiers ?? new string[0];
+            _baseTypes = baseTypes ?? new string[0];
+            _parameters = parameters ?? new string[0];
         }
 
         #endregion

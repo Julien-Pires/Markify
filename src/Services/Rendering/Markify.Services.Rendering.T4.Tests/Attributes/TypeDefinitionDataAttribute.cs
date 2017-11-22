@@ -43,38 +43,154 @@ namespace Markify.Services.Rendering.T4.Tests.Attributes
     {
         #region Constructors
 
-        public ContainerDefinitionDataAttribute(string name, string parent, string nspace, StructureKind kind, 
-            string[] parameters, params object[] values)
+        protected ContainerDefinitionDataAttribute(
+            StructureKind kind = StructureKind.Class,
+            string name = "Foo", 
+            string parent = "", 
+            string nspace = "",
+            string[] modifiers = null, 
+            string[] accessModifiers = null,
+            string[] baseTypes = null,
+            string[] generics = null,
+            bool hasComments = false,
+            int membersCount = 0,
+            string[] membersVisibility = null,
+            string setVisibilty = null, 
+            string getVisibility = null,
+            object[] values = null)
             : base(new ISpecimenBuilder[] 
             {
-                new TypeIdentityBuilder(name, parent, nspace, parameters: parameters),
-                new TypeDefinitionBuilder(kind)
-            }, values)
-        {
-        }
-
-        public ContainerDefinitionDataAttribute(string name, string[] modifiers, string[] accessModifiers, 
-            string[] baseTypes, params object[] values)
-            : base(new [] 
-            {
-                new TypeIdentityBuilder(name, modifiers: modifiers, accessModifiers: accessModifiers, baseTypes: baseTypes),
-                DefaultDefinitionBuilder
-            }, values)
-        {
-        }
-
-        public ContainerDefinitionDataAttribute(string[] membersVisibility, int membersCount, 
-            StructureKind kind = StructureKind.Class, string setVisibilty = null, string getVisibility = null,
-            object[] values = null)
-            : base(new [] 
-            {
-                new TypeDefinitionBuilder(kind), 
-                DefaultIdentityBuilder,
-                new TypePropertiesBuilder(membersCount, membersVisibility, setVisibilty, getVisibility),
-                new TypeFieldsBuilder(membersCount, membersVisibility), 
+                new TypeDefinitionBuilder(kind),
+                new TypeIdentityBuilder(name, parent, nspace, modifiers, accessModifiers, baseTypes, generics),
+                new PropertiesBuilder(membersCount, membersVisibility, setVisibilty, getVisibility), 
+                new TypeFieldsBuilder(membersCount, membersVisibility),
                 new TypeEventsBuilder(membersCount, membersVisibility),
-                new TypeMethodsBuilder(membersCount, membersVisibility), 
+                new TypeMethodsBuilder(membersCount, membersVisibility),
+                new TypeCommentBuilder(hasComments)
             }, values ?? new object[0])
+        {
+        }
+
+        #endregion
+    }
+
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
+    internal class ClassDefinitionDataAttribute : ContainerDefinitionDataAttribute
+    {
+        #region Constructors
+
+        public ClassDefinitionDataAttribute(
+            string name = "Foo",
+            string parent = "",
+            string nspace = "",
+            string[] modifiers = null,
+            string[] accessModifiers = null,
+            string[] baseTypes = null,
+            string[] generics = null,
+            bool hasComments = false,
+            int membersCount = 0,
+            string[] membersVisibility = null,
+            string setVisibilty = null,
+            string getVisibility = null,
+            object[] values = null)
+            : base(
+                StructureKind.Class,
+                name,
+                parent,
+                nspace,
+                modifiers,
+                accessModifiers,
+                baseTypes,
+                generics,
+                hasComments,
+                membersCount,
+                membersVisibility,
+                setVisibilty,
+                getVisibility,
+                values
+            )
+        {
+        }
+
+        #endregion
+    }
+
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
+    internal class StructDefinitionDataAttribute : ContainerDefinitionDataAttribute
+    {
+        #region Constructors
+
+        public StructDefinitionDataAttribute(
+            string name = "Foo",
+            string parent = "",
+            string nspace = "",
+            string[] modifiers = null,
+            string[] accessModifiers = null,
+            string[] baseTypes = null,
+            string[] generics = null,
+            bool hasComments = false,
+            int membersCount = 0,
+            string[] membersVisibility = null,
+            string setVisibilty = null,
+            string getVisibility = null,
+            object[] values = null)
+            : base(
+                StructureKind.Struct,
+                name,
+                parent,
+                nspace,
+                modifiers,
+                accessModifiers,
+                baseTypes,
+                generics,
+                hasComments,
+                membersCount,
+                membersVisibility,
+                setVisibilty,
+                getVisibility,
+                values
+            )
+        {
+        }
+
+        #endregion
+    }
+
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
+    internal class InterfaceDefinitionDataAttribute : ContainerDefinitionDataAttribute
+    {
+        #region Constructors
+
+        public InterfaceDefinitionDataAttribute(
+            string name = "Foo",
+            string parent = "",
+            string nspace = "",
+            string[] modifiers = null,
+            string[] accessModifiers = null,
+            string[] baseTypes = null,
+            string[] generics = null,
+            bool hasComments = false,
+            int membersCount = 0,
+            string[] membersVisibility = null,
+            string setVisibilty = null,
+            string getVisibility = null,
+            object[] values = null)
+            : base(
+                StructureKind.Interface,
+                name,
+                parent,
+                nspace,
+                modifiers,
+                accessModifiers,
+                baseTypes,
+                generics,
+                hasComments,
+                membersCount,
+                membersVisibility,
+                setVisibilty,
+                getVisibility,
+                values
+            )
         {
         }
 
@@ -86,13 +202,24 @@ namespace Markify.Services.Rendering.T4.Tests.Attributes
     {
         #region Constructors
 
-        public DelegateDefinitionDataAttribute(int parametersCount, params object[] values)
-            : base(new[] 
+        public DelegateDefinitionDataAttribute(
+            string name = "Foo",
+            string parent = "",
+            string nspace = "",
+            string[] modifiers = null,
+            string[] accessModifiers = null,
+            string[] baseTypes = null,
+            string[] generics = null,
+            int parameters = 0, 
+            bool hasComments = false, 
+            object[] values = null)
+            : base(new ISpecimenBuilder[]
             {
                 new TypeDefinitionBuilder(StructureKind.Delegate),
-                DefaultIdentityBuilder,
-                new DelegateParametersBuilder(parametersCount)
-            }, values)
+                new TypeIdentityBuilder(name, parent, nspace, modifiers, accessModifiers, baseTypes, generics),
+                new DelegateParametersBuilder(parameters),
+                new TypeCommentBuilder(hasComments) 
+            }, values ?? new object[0])
         {
         }
 
@@ -104,13 +231,22 @@ namespace Markify.Services.Rendering.T4.Tests.Attributes
     {
         #region Constructors
 
-        public EnumDefinitionDataAttribute(int valueCount, params object[] values) 
-            : base(new []
+        public EnumDefinitionDataAttribute(
+            string name = "Foo",
+            string parent = "",
+            string nspace = "",
+            string[] accessModifiers = null,
+            string[] baseTypes = null,
+            int enumValues = 0, 
+            bool hasComments = false,
+            object[] values = null)
+            : base(new ISpecimenBuilder[]
             {
                 new TypeDefinitionBuilder(StructureKind.Enum),
-                DefaultIdentityBuilder,
-                new EnumValuesBuilder(valueCount)
-            }, values)
+                new TypeIdentityBuilder(name, parent, nspace, null, accessModifiers, baseTypes),
+                new EnumValuesBuilder(enumValues),
+                new TypeCommentBuilder(hasComments) 
+            }, values ?? new object[0])
         {
         }
 

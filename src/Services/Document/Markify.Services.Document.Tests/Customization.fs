@@ -45,6 +45,7 @@ module Customization =
                             Parameters = Seq.empty }
                         Class { 
                             Identity = identity 
+                            Comments = { Comments = [] }
                             Fields = []
                             Properties = []
                             Events = [] 

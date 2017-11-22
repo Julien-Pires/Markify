@@ -18,6 +18,7 @@ type TypeIdentity = {
 
 type EnumDefinition = {
     Identity : TypeIdentity
+    Comments : TypeComments
     Values : EnumValue seq }
 
 type ParameterDefinition = {
@@ -28,11 +29,13 @@ type ParameterDefinition = {
 
 type DelegateDefinition = {
     Identity : TypeIdentity 
+    Comments : TypeComments
     Parameters : ParameterDefinition seq 
     ReturnType : TypeName }
 
 type ClassDefinition = {
     Identity : TypeIdentity
+    Comments : TypeComments
     Fields : FieldDefinition seq
     Properties : PropertyDefinition seq
     Events : EventDefinition seq 

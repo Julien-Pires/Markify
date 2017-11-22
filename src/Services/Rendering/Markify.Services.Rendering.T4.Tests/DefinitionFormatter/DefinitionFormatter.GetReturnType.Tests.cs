@@ -16,8 +16,8 @@ namespace Markify.Services.Rendering.T4.Tests
         }
 
         [Theory]
-        [DelegateDefinitionData(0)]
-        public void GetReturnType_ShouldReturnDelegateReturnType_WhenDefinitionIsDelegate(TypeDefinition definition)
+        [DelegateDefinitionData]
+        public void GetReturnType_ShouldReturnReturnType_WhenDefinitionIsDelegate(TypeDefinition definition)
         {
             var actual = ((TypeDefinition.Delegate) definition).Item.ReturnType;
 
@@ -25,7 +25,10 @@ namespace Markify.Services.Rendering.T4.Tests
         }
 
         [Theory]
-        [EnumDefinitionData(0)]
+        [ClassDefinitionData]
+        [InterfaceDefinitionData]
+        [StructDefinitionData]
+        [EnumDefinitionData]
         public void GetReturnType_ShouldReturnNone_WhenDefinitionIsNotDelegate(TypeDefinition definition)
         {
             Check.That(DefinitionFormatter.GetReturnType(definition)).IsEqualTo(Option.None<string>());

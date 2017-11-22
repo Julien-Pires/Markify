@@ -31,11 +31,11 @@ after_test:
 
         $filter = "+[Markify*]* -[*.Tests]*"
 
-        $xunitConsole = (Resolve-Path "src/packages/xunit.runner.console.2.*/tools/xunit.console.exe").ToString()
+        $xunitConsole = (Resolve-Path "src/packages/xunit.runner.console.2.*/tools/net452/xunit.console.exe").ToString()
 
         foreach($test in $tests) {
           & .\src\packages\OpenCover.*\tools\OpenCover.Console.exe -register:user `
-          -target:"$xunitConsole" -targetargs:".\src\$($test[1])\$($test[0])\bin\$env:CONFIGURATION\$($test[0]).dll -noshadow" `
+          -target:"$xunitConsole" -targetargs:".\src\$($test[1])\$($test[0])\bin\$env:CONFIGURATION\$($test[0]).dll -noshadow -parallel none" `
           -skipautoprops -hideskipped:All `
           -filter:"$filter" `
           -excludebyattribute:*.ExcludeFromCodeCoverage* `

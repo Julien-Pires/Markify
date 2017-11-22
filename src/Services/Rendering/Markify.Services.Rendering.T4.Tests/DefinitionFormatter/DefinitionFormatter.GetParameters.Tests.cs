@@ -15,16 +15,18 @@ namespace Markify.Services.Rendering.T4.Tests
         }
 
         [Theory]
-        [DelegateDefinitionData(0, 0)]
-        [DelegateDefinitionData(10, 10)]
+        [DelegateDefinitionData(parameters: 0, values: new object[] { 0 })]
+        [DelegateDefinitionData(parameters : 10, values : new object[] { 10 })]
         public void GetParameters_ShouldReturnExpectedParameterCount(int expected, TypeDefinition definition)
         {
             Check.That(DefinitionFormatter.GetParameters(definition)).HasSize(expected);
         }
 
         [Theory]
-        [ContainerDefinitionData("Foo", null, null, null)]
-        [EnumDefinitionData(0)]
+        [ClassDefinitionData]
+        [InterfaceDefinitionData]
+        [StructDefinitionData]
+        [EnumDefinitionData]
         public void GetParameters_ShouldReturnEmptySequence_WhenDefinitionIsNotDelegate(TypeDefinition definition)
         {
             Check.That(DefinitionFormatter.GetParameters(definition)).HasSize(0);
