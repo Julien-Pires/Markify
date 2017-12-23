@@ -7,104 +7,100 @@ module RoslynAnalyzerTypesEventsTests =
     open Markify.Services.Roslyn
     open Swensen.Unquote
     open Xunit
-    
-    let getEvents = function
-        | Class c | Struct c | Interface c -> c.Events
-        | _ -> Seq.empty
-
-    let findEvent (types : TypeDefinition seq) typeName eventName =
-        types
-        |> Seq.find (fun d -> d.Identity.Name = typeName)
-        |> getEvents
-        |> Seq.find (fun d -> d.Name = eventName)
+    open TestHelper
 
     [<Theory>]
-    [<MultiProjectData("TypeMembers/ContainerProperties", ProjectLanguage.CSharp, "FooType", 0)>]
-    [<MultiProjectData("TypeMembers/ClassEvents", ProjectLanguage.CSharp, "FooType", 8)>]
-    [<MultiProjectData("TypeMembers/ContainerProperties", ProjectLanguage.VisualBasic, "FooType", 0)>]
-    [<MultiProjectData("TypeMembers/ClassEvents", ProjectLanguage.VisualBasic, "FooType", 6)>]
-    let ``Analyze should return expected type events count`` (name, expected, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
-        let actual =
-            projects
-            |> Seq.fold (fun acc c -> 
-                let library = (sut :> IProjectAnalyzer).Analyze c.Project
-                let count =
-                    library.Types
-                    |> Seq.find (fun c -> c.Identity.Name = name)
-                    |> getEvents
-                count::acc) []
-
-        test <@ actual |> List.forall (fun c -> (c |> Seq.length) = expected) @>
+    [<ProjectData("Events", "TypeWithNoEvent")>]
+    let ``Analyze should return definition with no events when type has none``(name, sut : RoslynAnalyzer, project) =
+        let library = (sut :> IProjectAnalyzer).Analyze project
+        let actual = 
+            TestHelper.getDefinitions name library 
+            |> Seq.map DefinitionsHelper.getEvents
+        
+        test <@ actual |> Seq.forall (Seq.isEmpty) @>
 
     [<Theory>]
-    [<MultiProjectData("TypeMembers/AllTypesEvents", ProjectLanguage.CSharp, "FooType", "PrivateEvent")>]
-    [<MultiProjectData("TypeMembers/ContainerEvents", ProjectLanguage.CSharp, "FooType", "ExplicitEvent")>]
-    [<MultiProjectData("TypeMembers/AllTypesEvents", ProjectLanguage.VisualBasic, "FooType", "PrivateEvent")>]
-    [<MultiProjectData("TypeMembers/ContainerEvents", ProjectLanguage.VisualBasic, "FooType", "ExplicitEvent")>]
-    let ``Analyze should return expected event name`` (name, expected, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
-        let actual =
-            projects
-            |> Seq.fold (fun acc c -> 
-                let library = (sut :> IProjectAnalyzer).Analyze c.Project
-                let events =
-                    library.Types
-                    |> Seq.find (fun d -> d.Identity.Name = name)
-                    |> getEvents
-                    |> Seq.filter (fun d -> d.Name = expected)
-                events::acc) []
-
-        test <@ actual |> List.forall (fun c -> (c |> Seq.length) = 1) @>
+    [<ProjectData("Events", "TypeWithEvents")>]
+    let ``Analyze should return definition with events when type has some`` (name, sut : RoslynAnalyzer, project) =
+        let library = (sut :> IProjectAnalyzer).Analyze project
+        let actual = 
+            TestHelper.getDefinitions name library 
+            |> Seq.map DefinitionsHelper.getEvents
+        
+        test <@ actual |> Seq.forall (Seq.isEmpty >> not) @>
 
     [<Theory>]
-    [<MultiProjectData("TypeMembers/AllTypesEvents", ProjectLanguage.CSharp, "FooType", "PrivateEvent", "EventHandler")>]
-    [<MultiProjectData("TypeMembers/AllTypesEvents", ProjectLanguage.CSharp, "FooType", "GenericEvent", "EventHandler<EventArgs>")>]
-    [<MultiProjectData("TypeMembers/AllTypesEvents", ProjectLanguage.VisualBasic, "FooType", "PrivateEvent", "EventHandler")>]
-    [<MultiProjectData("TypeMembers/AllTypesEvents", ProjectLanguage.VisualBasic, "FooType", "GenericEvent", "EventHandler(Of EventArgs)")>]
-    let ``Analyze should return expected type event`` (name, eventName, expected, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
-        let actual =
-            projects
-            |> Seq.fold (fun acc c -> 
-                let library = (sut :> IProjectAnalyzer).Analyze c.Project
-                let event = findEvent library.Types name eventName
-                event::acc) []
+    [<ProjectData("Events", "TypeWithEvents", "Event")>]
+    [<ProjectData("Events", "TypeWithEvents", "GenericEvent")>]
+    let ``Analyze should return expected event name`` (name, event, sut : RoslynAnalyzer, project) =
+        let library = (sut :> IProjectAnalyzer).Analyze project
+        let actual = 
+            TestHelper.getDefinitions name library
+            |> Seq.map DefinitionsHelper.getEvents
 
-        test <@ actual |> List.forall (fun c -> c.Type = expected) @>
+        test <@ actual |> Seq.forall (fun c -> c |> Seq.exists (fun d -> d.Name = event)) @>
 
     [<Theory>]
-    [<MultiProjectData("TypeMembers/ContainerEvents", ProjectLanguage.CSharp, "FooType", "PrivateEvent", "private")>]
-    [<MultiProjectData("TypeMembers/ContainerEvents", ProjectLanguage.CSharp, "FooType", "InternalEvent", "internal")>]
-    [<MultiProjectData("TypeMembers/ClassEvents", ProjectLanguage.CSharp, "FooType", "ProtectedInternalEvent", "protected;internal")>]
-    [<MultiProjectData("TypeMembers/InterfaceEvents", ProjectLanguage.CSharp, "FooType", "GenericEvent", "public")>]
-    [<MultiProjectData("TypeMembers/ContainerEvents", ProjectLanguage.VisualBasic, "FooType", "PrivateEvent", "Private")>]
-    [<MultiProjectData("TypeMembers/ContainerEvents", ProjectLanguage.VisualBasic, "FooType", "InternalEvent", "Friend")>]
-    [<MultiProjectData("TypeMembers/ClassEvents", ProjectLanguage.VisualBasic, "FooType", "ProtectedInternalEvent", "Protected;Friend")>]
-    [<MultiProjectData("TypeMembers/InterfaceEvents", ProjectLanguage.VisualBasic, "FooType", "GenericEvent", "Public")>]
-    let ``Analyze should return expected event access modifiers`` (name, eventName, modifiers : string, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
-        let expected = Set <| modifiers.Split ([|';'|], StringSplitOptions.RemoveEmptyEntries)
+    [<ProjectData("Events", "TypeWithEvents", "Event", "EventHandler")>]
+    [<SingleLanguageProjectData("Events", ProjectLanguage.CSharp, "TypeWithEvents", "GenericEvent", "EventHandler<EventArgs>")>]
+    [<SingleLanguageProjectData("Events", ProjectLanguage.VisualBasic, "TypeWithEvents", "GenericEvent", "EventHandler(Of EventArgs)")>]
+    let ``Analyze should return expected type event`` (name, event, expected, sut : RoslynAnalyzer, project) =
+        let library = (sut :> IProjectAnalyzer).Analyze project
         let actual =
-            projects
-            |> Seq.fold (fun acc c ->
-                let library = (sut :> IProjectAnalyzer).Analyze c.Project
-                let event = findEvent library.Types name eventName
-                let accessModifiers = Set event.AccessModifiers
-                accessModifiers::acc) []
-
-        test <@ actual |> List.forall ((=) expected) @>
+            TestHelper.getDefinitions name library
+            |> TestHelper.getEvent event
+        
+        test <@ actual |> Seq.forall (fun c -> c.Type = expected) @>
 
     [<Theory>]
-    [<MultiProjectData("TypeMembers/ContainerEvents", ProjectLanguage.CSharp, "FooType", "PrivateEvent", "")>]
-    [<MultiProjectData("TypeMembers/ContainerEvents", ProjectLanguage.CSharp, "FooType", "StaticEvent", "static")>]
-    [<MultiProjectData("TypeMembers/ClassEvents", ProjectLanguage.CSharp, "FooType", "AbstractEvent", "sealed;override")>]
-    [<MultiProjectData("TypeMembers/ContainerEvents", ProjectLanguage.VisualBasic, "FooType", "PrivateEvent", "")>]
-    [<MultiProjectData("TypeMembers/ContainerEvents", ProjectLanguage.VisualBasic, "FooType", "StaticEvent", "Shared")>]
-    let ``Analyze should return expected event modifiers`` (name, eventName, modifiers : string, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
-        let expected = Set <| modifiers.Split ([|';'|], StringSplitOptions.RemoveEmptyEntries)
+    [<ProjectData("Events", "TypeWithEvents", "Class;Struct", "Event", "private")>]
+    [<ProjectData("Events", "TypeWithEvents", "Interface", "Event", "public")>]
+    let ``Analyze should return default event access modifier when event has none`` (name, namespaces : string, event, modifier, sut : RoslynAnalyzer, project) =
+        let expected = LanguageHelper.getModifier project.Language modifier
+        let library = (sut :> IProjectAnalyzer).Analyze project
         let actual =
-            projects
-            |> Seq.fold (fun acc c ->
-                let library = (sut :> IProjectAnalyzer).Analyze c.Project
-                let event = findEvent library.Types name eventName
-                let accessModifiers = Set event.Modifiers
-                accessModifiers::acc) []
+            TestHelper.filterDefinitions name (namespaces.Split (';')) library
+            |> TestHelper.getEvent event
 
-        test <@ actual |> List.forall ((=) expected) @>
+        test <@ actual |> Seq.forall (fun c -> c.AccessModifiers |> Seq.contains expected) @>
+
+    [<Theory>]
+    [<ProjectData("Events", "TypeWithEvents", "Class;Struct;Interface", "GenericEvent", "public")>]
+    [<ProjectData("Events", "TypeWithEvents", "Class;Struct", "InternalEvent", "internal")>]
+    [<ProjectData("Events", "TypeWithEvents", "Class;Struct", "PrivateEvent", "private")>]
+    [<ProjectData("Events", "TypeWithEvents", "Class", "ProtectedInternalEvent", "protected;internal")>]
+    [<ProjectData("Events", "TypeWithEvents", "Class", "ProtectedEvent  ", "protected")>]
+    let ``Analyze should return event access modifiers when event has some`` (name, namespaces : string, event, modifiers : string, sut : RoslynAnalyzer, project) =
+        let expected = TestHelper.getModifiers modifiers project.Language
+        let library = (sut :> IProjectAnalyzer).Analyze project
+        let actual =
+            TestHelper.filterDefinitions name (namespaces.Split (';')) library
+            |> TestHelper.getEvent event
+
+        test <@ actual |> Seq.map (fun c -> Set c.AccessModifiers)
+                       |> Seq.forall (Set.isSubset expected) @>
+
+    [<Theory>]
+    [<ProjectData("Events", "TypeWithEvents", "Event")>]
+    let ``Analyze should return no modifiers when event has none`` (name, event, sut : RoslynAnalyzer, project) =
+        let library = (sut :> IProjectAnalyzer).Analyze project
+        let actual =
+            TestHelper.getDefinitions name library
+            |> TestHelper.getEvent event
+
+        test <@ actual |> Seq.forall (fun c -> c.Modifiers |> Seq.isEmpty) @>
+
+    [<Theory>]
+    [<ProjectData("Events", "TypeWithEvents", "Class;Struct", "StaticEvent", "static")>]
+    [<ProjectData("Events", "TypeWithEvents", "Class", "VirtualEvent", "virtual")>]
+    [<ProjectData("Events", "TypeWithEvents", "Class", "SealedEvent", "sealed;override")>]
+    [<ProjectData("Events", "AbstractTypeWithEvents", "Class", "AbstractEvent", "abstract")>]
+    let ``Analyze should return modifiers when event has some`` (name, namespaces : string, event, modifiers : string, sut : RoslynAnalyzer, project) =
+        let expected = TestHelper.getMemberModifiers modifiers project.Language
+        let library = (sut :> IProjectAnalyzer).Analyze project
+        let actual =
+            TestHelper.filterDefinitions name (namespaces.Split (';')) library
+            |> TestHelper.getEvent event
+
+        test <@ actual |> Seq.map (fun c -> Set c.Modifiers)
+                       |> Seq.forall (Set.isSubset expected) @>

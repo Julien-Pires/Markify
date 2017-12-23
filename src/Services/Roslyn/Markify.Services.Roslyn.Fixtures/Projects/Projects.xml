@@ -1,10 +1,97 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ProjectFixtures>
   <Projects>
+    
+    <!-- Type Definitions -->
+    <Project>
+      <Name>Empty</Name>
+      <Files></Files>
+    </Project>
+    <Project>
+      <Name>Organization</Name>
+      <Files>
+        <Uri>Source/Types/Organization</Uri>
+      </Files>
+    </Project>
+    <Project>
+      <Name>Duplicates</Name>
+      <Files>
+        <Uri>Source/Types/Organization</Uri>
+        <Uri>Source/Types/Organization</Uri>
+      </Files>
+    </Project>
+    <Project>
+      <Name>Inheritance</Name>
+      <Files>
+        <Uri>Source/Types/Inheritance</Uri>
+      </Files>
+    </Project>
+    <Project>
+      <Name>PartialType</Name>
+      <Files>
+        <Uri>Source/Types/Partial</Uri>
+      </Files>
+    </Project>
     <Project>
       <Name>Comments</Name>
       <Files>
         <Uri>Source/Comments/Common</Uri>
+      </Files>
+    </Project>
+    <Project>
+      <Name>AccessModifiers</Name>
+      <Files>
+        <Uri>Source/Modifiers/AccessModifiers</Uri>
+      </Files>
+    </Project>
+    <Project>
+      <Name>Modifiers</Name>
+      <Files>
+        <Uri>Source/Modifiers/Modifiers</Uri>
+      </Files>
+    </Project>
+    <Project>
+      <Name>Delegates</Name>
+      <Files>
+        <Uri>Source/Types/Delegates</Uri>
+      </Files>
+    </Project>
+    <Project>
+      <Name>Generics</Name>
+      <Files>
+        <Uri>Source/Types/Generics</Uri>
+      </Files>
+    </Project>
+    <Project>
+      <Name>Enum</Name>
+      <Files>
+        <Uri>Source/Types/Enum</Uri>
+      </Files>
+    </Project>
+    
+    <!-- Type Members -->
+    <Project>
+      <Name>Properties</Name>
+      <Files>
+        <Uri>Source/Members/Properties</Uri>
+      </Files>
+    </Project> 
+    <Project>
+      <Name>Events</Name>
+      <Files>
+        <Uri>Source/Members/Events</Uri>
+      </Files>
+    </Project>
+    <Project>
+      <Name>Fields</Name>
+      <Files>
+        <Uri>Source/Members/Fields</Uri>
+      </Files>
+    </Project>
+    <Project>
+      <Name>Methods</Name>
+      <Files>
+        <Uri>Source/Members/Methods</Uri>
       </Files>
     </Project>
   </Projects>

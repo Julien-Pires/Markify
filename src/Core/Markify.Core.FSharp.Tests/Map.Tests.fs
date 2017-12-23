@@ -6,10 +6,9 @@ open Xunit
 open Ploeh.AutoFixture.Xunit2
 
 module Map_Tests =
-    
     [<Fact>]
     let ``MapBuilder should return empty map when there is no instruction``() =
-        let actual = MapBuilder(){ printf "Foo" }
+        let actual = MapBuilder(){ sprintf "Foo" |> ignore }
 
         test <@ Map.isEmpty actual @>
 

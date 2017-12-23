@@ -8,299 +8,253 @@ module RoslynAnalyzerTypesMethodsTests =
     open Xunit
     open Swensen.Unquote
 
-    let getMethods = function
-        | Class c | Struct c | Interface c -> c.Methods
-        | _ -> Seq.empty
-
-    let findMethod methodName (types : TypeDefinition seq) typeName =
-        types
-        |> Seq.find (fun d -> d.Identity.Name = typeName)
-        |> getMethods
-        |> Seq.find (fun d -> d.Identity.Name = methodName)
-
-    let findParameter parameterName definition =
-        definition.Parameters
-        |> Seq.find (fun c -> c.Name = parameterName)
-
     [<Theory>]
-    [<MultiProjectData("TypeMembers/ClassMethods", ProjectLanguage.CSharp, "FooType", 11)>]
-    [<MultiProjectData("TypeMembers/StructMethods", ProjectLanguage.CSharp, "FooType", 9)>]
-    [<MultiProjectData("TypeMembers/InterfaceMethods", ProjectLanguage.CSharp, "FooType", 6)>]
-    [<MultiProjectData("TypeMembers/ClassMethods", ProjectLanguage.VisualBasic, "FooType", 9)>]
-    [<MultiProjectData("TypeMembers/StructMethods", ProjectLanguage.VisualBasic, "FooType", 7)>]
-    [<MultiProjectData("TypeMembers/InterfaceMethods", ProjectLanguage.VisualBasic, "FooType", 5)>]
-    let ``Analyze should return expected methods count`` (typeName, expected, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
+    [<ProjectData("Methods", "TypeWithNoMethods")>]
+    let ``Analyze should return definition with no methods when type has none``(name, sut : RoslynAnalyzer, project) =
+        let library = (sut :> IProjectAnalyzer).Analyze project
         let actual =
-            projects
-            |> Seq.fold (fun acc c ->
-                let library = (sut :> IProjectAnalyzer).Analyze c.Project
-                let count =
-                    library.Types
-                    |> Seq.find (fun d -> d.Identity.Name = typeName)
-                    |> getMethods
-                count::acc) []
-
-        test <@ actual |> List.forall (fun c -> (c |> Seq.length) = expected) @>
-
-    [<Theory>]
-    [<MultiProjectData("TypeMembers/ClassMethods", ProjectLanguage.CSharp, "FooType", "PublicMethod")>]
-    [<MultiProjectData("TypeMembers/StructMethods", ProjectLanguage.CSharp, "FooType", "PublicMethod")>]
-    [<MultiProjectData("TypeMembers/InterfaceMethods", ProjectLanguage.CSharp, "FooType", "IntMethod")>]
-    [<MultiProjectData("TypeMembers/ClassMethods", ProjectLanguage.VisualBasic, "FooType", "PublicMethod")>]
-    [<MultiProjectData("TypeMembers/StructMethods", ProjectLanguage.VisualBasic, "FooType", "PublicMethod")>]
-    [<MultiProjectData("TypeMembers/InterfaceMethods", ProjectLanguage.VisualBasic, "FooType", "IntMethod")>]
-    let ``Analyze should return expected method name`` (typeName, methodName, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
-        let actual =
-            projects
-            |> Seq.fold (fun acc c ->
-                let library = (sut :> IProjectAnalyzer).Analyze c.Project
-                let methods =
-                    library.Types
-                    |> Seq.find (fun d -> d.Identity.Name = typeName)
-                    |> getMethods
-                    |> Seq.filter (fun d -> d.Identity.Name = methodName)
-                methods::acc) []
+            TestHelper.getDefinitions name library 
+            |> Seq.map DefinitionsHelper.getMethods
         
-        test <@ actual |> List.forall (fun c -> (c |> Seq.length) = 1) @>
-
-    [<Theory>]
-    [<MultiProjectData("TypeMembers/ContainerMethods", ProjectLanguage.CSharp, "FooType", "Method", "private")>]
-    [<MultiProjectData("TypeMembers/ClassMethods", ProjectLanguage.CSharp, "FooType", "InternalProtectedMethod", "internal;protected")>]
-    [<MultiProjectData("TypeMembers/InterfaceMethods", ProjectLanguage.CSharp, "FooType", "Method", "public")>]
-    [<MultiProjectData("TypeMembers/ContainerMethods", ProjectLanguage.VisualBasic, "FooType", "Method", "Private")>]
-    [<MultiProjectData("TypeMembers/ClassMethods", ProjectLanguage.VisualBasic, "FooType", "InternalProtectedMethod", "Friend;Protected")>]
-    [<MultiProjectData("TypeMembers/InterfaceMethods", ProjectLanguage.VisualBasic, "FooType", "Method", "Public")>]
-    let ``Analyze should return expected method access modifiers`` (typeName, methodName, modifiers : string, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
-        let expected = Set <| modifiers.Split ([|';'|], StringSplitOptions.RemoveEmptyEntries)
-        let actual =
-            projects
-            |> Seq.fold (fun acc c ->
-                let library = (sut :> IProjectAnalyzer).Analyze c.Project
-                let methodDefinition = findMethod methodName library.Types typeName
-                let accessModifiers = Set methodDefinition.Identity.AccessModifiers
-                accessModifiers::acc) []
-
-        test <@ actual |> List.forall ((=) expected) @>
-
-    [<Theory>]
-    [<MultiProjectData("TypeMembers/ClassMethods", ProjectLanguage.CSharp, "FooType", "VirtualMethod", "virtual")>]
-    [<MultiProjectData("TypeMembers/ContainerMethods", ProjectLanguage.CSharp, "FooType", "PartialMethod", "partial")>]
-    [<MultiProjectData("TypeMembers/ClassMethods", ProjectLanguage.VisualBasic, "FooType", "VirtualMethod", "Overridable")>]
-    [<MultiProjectData("TypeMembers/ContainerMethods", ProjectLanguage.VisualBasic, "FooType", "PartialMethod", "Partial")>]
-    let ``Analyze should return expected method modifiers`` (typeName, methodName, modifiers : string, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
-        let expected = Set <| modifiers.Split ([|';'|], StringSplitOptions.RemoveEmptyEntries)
-        let actual =
-            projects
-            |> Seq.fold (fun acc c ->
-                let library = (sut :> IProjectAnalyzer).Analyze c.Project
-                let methodDefinition = findMethod methodName library.Types typeName
-                let accessModifiers = Set methodDefinition.Identity.Modifiers
-                accessModifiers::acc) []
-
-        test <@ actual |> List.forall ((=) expected) @>
+        test <@ actual |> Seq.forall (Seq.isEmpty) @>
     
     [<Theory>]
-    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp, "FooType", "SingleGenericMethod", 1)>]
-    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp, "FooType", "MultiGenericMethod", 2)>]
-    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.VisualBasic, "FooType", "SingleGenericMethod", 1)>]
-    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.VisualBasic, "FooType", "MultiGenericMethod", 2)>]
-    let ``Analyze should return expected method generic parameters count`` (typeName, methodName, expected, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
+    [<ProjectData("Methods", "TypeWithMethods")>]
+    let ``Analyze should return definition with methods when type has some`` (name, sut : RoslynAnalyzer, project) =
+        let library = (sut :> IProjectAnalyzer).Analyze project
         let actual =
-            projects
-            |> Seq.fold (fun acc c ->
-                let library = (sut :> IProjectAnalyzer).Analyze c.Project
-                let methodDefinition = findMethod methodName library.Types typeName
-                let parameters = methodDefinition.Identity.Parameters
-                parameters::acc) []
-
-        test <@ actual |> List.forall (fun c -> (c |> Seq.length) = expected) @>
-
-    [<Theory>]
-    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp, "FooType", "SingleGenericMethod", "T")>]
-    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp, "FooType", "MultiGenericMethod", "Y")>]
-    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.VisualBasic, "FooType", "SingleGenericMethod", "T")>]
-    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.VisualBasic, "FooType", "MultiGenericMethod", "Y")>]
-    let ``Analyze should return expected method generic parameter name`` (typeName, methodName, parameterName, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
-        let actual =
-            projects
-            |> Seq.fold (fun acc c ->
-                let library = (sut :> IProjectAnalyzer).Analyze c.Project
-                let methodDefinition = findMethod methodName library.Types typeName
-                let parameter = 
-                    methodDefinition.Identity.Parameters
-                    |> Seq.filter (fun d -> d.Name = parameterName)
-                parameter::acc) []
-
-        test <@ actual |> List.forall (fun c -> (c |> Seq.length) = 1) @>
-
-    [<Theory>]
-    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp, "FooType", "SingleGenericMethod", "T", 0)>]
-    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp, "FooType", "MultiGenericMethod", "T", 1)>]
-    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp, "FooType", "MultiGenericMethod", "Y", 2)>]
-    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.VisualBasic, "FooType", "SingleGenericMethod", "T", 0)>]
-    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.VisualBasic, "FooType", "MultiGenericMethod", "T", 1)>]
-    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.VisualBasic, "FooType", "MultiGenericMethod", "Y", 2)>]
-    let ``Analyze should return expected method generic parameter constraints count`` (typeName, methodName, parameterName, expected, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
-        let actual =
-            projects
-            |> Seq.fold (fun acc c ->
-                let library = (sut :> IProjectAnalyzer).Analyze c.Project
-                let methodDefinition = findMethod methodName library.Types typeName
-                let parameter =
-                    methodDefinition.Identity.Parameters
-                    |> Seq.find (fun d -> d.Name = parameterName)
-                parameter.Constraints::acc)[]
-
-        test <@ actual |> List.forall (fun c -> (c |> Seq.length) = expected) @>
-
-    [<Theory>]
-    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp, "FooType", "MultiGenericMethod", "T", "IList")>]
-    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp, "FooType", "MultiGenericMethod", "Y", "IDisposable;IEnumerable")>]
-    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.VisualBasic, "FooType", "MultiGenericMethod", "T", "IList")>]
-    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.VisualBasic, "FooType", "MultiGenericMethod", "Y", "IDisposable;IEnumerable")>]
-    let ``Analyze should return expected method generic parameter constraint name`` (typeName, methodName, parameterName, constraints : string, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
-        let expected = Set <| constraints.Split ([|';'|], StringSplitOptions.RemoveEmptyEntries)
-        let actual =
-            projects
-            |> Seq.fold (fun acc c ->
-                let library = (sut :> IProjectAnalyzer).Analyze c.Project
-                let methodDefinition = findMethod methodName library.Types typeName
-                let parameter =
-                    methodDefinition.Identity.Parameters
-                    |> Seq.find (fun d -> d.Name = parameterName)
-                let parameterConstraints = Set parameter.Constraints
-                parameterConstraints::acc) []
-
-        test <@ actual |> List.forall ((=) expected) @>
-
-    [<Theory>]
-    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp,"FooType", "Method", 0)>]
-    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp,"FooType", "SingleGenericMethod", 1)>]
-    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp,"FooType", "WithParametersMethod", 3)>]
-    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.VisualBasic,"FooType", "Method", 0)>]
-    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.VisualBasic,"FooType", "SingleGenericMethod", 1)>]
-    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.VisualBasic,"FooType", "WithParametersMethod", 3)>]
-    let ``Analyze should return expected method parameters count`` (typeName, methodName, expected, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
-        let actual =
-            projects
-            |> Seq.fold (fun acc c ->
-                let library = (sut :> IProjectAnalyzer).Analyze c.Project
-                let methodDefinition = findMethod methodName library.Types typeName
-                methodDefinition.Parameters::acc) []
-
-        test <@ actual |> List.forall (fun c -> (c |> Seq.length) = expected) @>
-
-    [<Theory>]
-    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp,"FooType", "SingleGenericMethod", "foo")>]
-    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp,"FooType", "WithParametersMethod", "bar")>]
-    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.VisualBasic,"FooType", "SingleGenericMethod", "foo")>]
-    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.VisualBasic,"FooType", "WithParametersMethod", "bar")>]
-    let ``Analyze should return expected method parameter name`` (typeName, methodName, expected, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
-        let actual =
-            projects
-            |> Seq.fold (fun acc c ->
-                let library = (sut :> IProjectAnalyzer).Analyze c.Project
-                let methodDefinition = findMethod methodName library.Types typeName
-                methodDefinition.Parameters::acc) []
+            TestHelper.getDefinitions name library 
+            |> Seq.map DefinitionsHelper.getMethods
         
-        test <@ actual |> List.forall (fun c -> c |> Seq.exists (fun d -> d.Name = expected)) @>
+        test <@ actual |> Seq.forall (Seq.isEmpty >> not) @>
 
     [<Theory>]
-    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp,"FooType", "WithParametersMethod", "foo", "int")>]
-    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp,"FooType", "SingleGenericMethod", "foo", "T")>]
-    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp,"FooType", "WithNoNameParameterMethod", "__arglist", "__arglist")>]
-    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.VisualBasic,"FooType", "WithParametersMethod", "foo", "Integer")>]
-    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.VisualBasic,"FooType", "SingleGenericMethod", "foo", "T")>]
-    let ``Analyze should return expected method parameter type`` (typeName, methodName, parameterName, expected, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
-        let actual =
-            projects
-            |> Seq.fold (fun acc c ->
-                let library = (sut :> IProjectAnalyzer).Analyze c.Project
-                let parameter =
-                    (library.Types, typeName)
-                    ||> findMethod methodName
-                    |> findParameter parameterName
-                parameter::acc) []
+    [<ProjectData("Methods", "TypeWithMethods", "WithoutParameters")>]
+    [<ProjectData("Methods", "TypeWithMethods", "WithGenericParameters")>]
+    let ``Analyze should return expected method name`` (name, method, sut : RoslynAnalyzer, project) =
+        let library = (sut :> IProjectAnalyzer).Analyze project
+        let actual = 
+            TestHelper.getDefinitions name library 
+            |> Seq.map DefinitionsHelper.getMethods
 
-        test <@ actual |> List.forall (fun c -> c.Type = expected) @>
+        test <@ actual |> Seq.forall (fun c -> c |> Seq.exists (fun d -> d.Identity.Name = method)) @>
 
     [<Theory>]
-    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp,"FooType", "WithParametersMethod", "foo")>]
-    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.VisualBasic,"FooType", "WithParametersMethod", "foo")>]
-    let ``Analyze should return no modifier when method parameter has none`` (typeName, methodName, parameterName, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
+    [<ProjectData("Methods", "TypeWithMethods", "Class;Struct", "WithNoModifierMethod", "private")>]
+    [<ProjectData("Methods", "TypeWithMethods", "Interface", "WithNoModifierMethod", "public")>]
+    let ``Analyze should return default method access modifier when method has none`` (name, namespaces : string, method, modifier, sut : RoslynAnalyzer, project) =
+        let expected = LanguageHelper.getModifier project.Language modifier
+        let library = (sut :> IProjectAnalyzer).Analyze project
         let actual =
-            projects
-            |> Seq.fold (fun acc c ->
-                let library = (sut :> IProjectAnalyzer).Analyze c.Project
-                let parameter =
-                    (library.Types, typeName)
-                    ||> findMethod methodName
-                    |> findParameter parameterName
-                parameter.Modifier::acc) []
+            TestHelper.filterDefinitions name (namespaces.Split (';')) library
+            |> TestHelper.getMethod method
 
-        test <@ actual |> List.forall ((=) None) @>
+        test <@ actual |> Seq.forall (fun c -> c.Identity.AccessModifiers |> Seq.contains expected) @>
 
     [<Theory>]
-    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp,"FooType", "WithParametersMethod", "bar", "ref")>]
-    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp,"FooType", "WithParametersMethod", "foobar", "out")>]
-    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.VisualBasic,"FooType", "WithParametersMethod", "bar", "ByRef")>]
-    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.VisualBasic,"FooType", "WithParametersMethod", "foobar", "ByVal")>]
-    let ``Analyze should return expected method parameter modifiers`` (typeName, methodName, parameterName, expected, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
+    [<ProjectData("Methods", "TypeWithMethods", "Class;Struct;Interface", "WithoutParameters", "public")>]
+    [<ProjectData("Methods", "TypeWithMethods", "Class;Struct", "InternalMethod", "internal")>]
+    [<ProjectData("Methods", "TypeWithMethods", "Class;Struct", "PrivateMethod", "private")>]
+    [<ProjectData("Methods", "TypeWithMethods", "Class", "ProtectedInternalMethod", "protected;internal")>]
+    [<ProjectData("Methods", "TypeWithMethods", "Class", "ProtectedMethod", "protected")>]
+    let ``Analyze should return method access modifiers when method has some`` (name, namespaces : string, method, modifiers : string, sut : RoslynAnalyzer, project) =
+        let expected = TestHelper.getModifiers modifiers project.Language
+        let library = (sut :> IProjectAnalyzer).Analyze project
         let actual =
-            projects
-            |> Seq.fold (fun acc c ->
-                let library = (sut :> IProjectAnalyzer).Analyze c.Project
-                let parameter =
-                    (library.Types, typeName)
-                    ||> findMethod methodName
-                    |> findParameter parameterName
-                parameter.Modifier::acc) []
+            TestHelper.filterDefinitions name (namespaces.Split (';')) library
+            |> TestHelper.getMethod method
 
-        test <@ actual |> List.forall ((=) (Some expected)) @>
+        test <@ actual |> Seq.map (fun c -> Set c.Identity.AccessModifiers)
+                       |> Seq.forall (Set.isSubset expected) @>
+    
+    [<Theory>]
+    [<ProjectData("Methods", "TypeWithMethods", "WithoutParameters")>]
+    let ``Analyze should return no modifiers when property has none`` (name, method, sut : RoslynAnalyzer, project) =
+        let library = (sut :> IProjectAnalyzer).Analyze project
+        let actual = 
+            TestHelper.getDefinitions name library 
+            |> TestHelper.getMethod method
+
+        test <@ actual |> Seq.forall (fun c -> c.Identity.Modifiers |> Seq.isEmpty) @>
+    
+    [<Theory>]
+    [<ProjectData("Methods", "TypeWithMethods", "Class;Struct", "StaticMethod", "static")>]
+    [<ProjectData("Methods", "TypeWithMethods", "Class;Struct", "PartialMethod", "partial")>]
+    [<ProjectData("Methods", "TypeWithMethods", "Class", "VirtualMethod", "virtual")>]
+    [<ProjectData("Methods", "TypeWithMethods", "Class", "SealedMethod", "sealed")>]
+    [<ProjectData("Methods", "TypeWithMethods", "Class", "SealedMethod", "override")>]
+    let ``Analyze should return modifiers when property has some`` (name, namespaces : string, method, modifiers, sut : RoslynAnalyzer, project) =
+        let expected = LanguageHelper.getMemberModifiers project.Language modifiers
+        let library = (sut :> IProjectAnalyzer).Analyze project
+        let actual =
+            TestHelper.filterDefinitions name (namespaces.Split (';')) library
+            |> TestHelper.getMethod method
+
+        test <@ actual |> Seq.forall (fun c -> c.Identity.Modifiers |> Seq.contains expected) @>
+    
+    [<Theory>]
+    [<ProjectData("Methods", "TypeWithMethods", "WithoutParameters")>]
+    let ``Analyze should return no generic parameters when method has none`` (name, method, sut : RoslynAnalyzer, project) =
+        let library = (sut :> IProjectAnalyzer).Analyze project
+        let actual = 
+            TestHelper.getDefinitions name library
+            |> TestHelper.getMethod method
+
+        <@ actual |> Seq.forall (fun c -> c.Identity.Parameters |> Seq.isEmpty) @>
 
     [<Theory>]
-    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp,"FooType", "WithParametersMethod", "foo")>]
-    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.VisualBasic,"FooType", "WithParametersMethod", "foo")>]
-    let ``Analyze should return no default value when method parameter has none`` (typeName, methodName, parameterName, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
-        let actual =
-            projects
-            |> Seq.fold (fun acc c ->
-                let library = (sut :> IProjectAnalyzer).Analyze c.Project
-                let parameter =
-                    (library.Types, typeName)
-                    ||> findMethod methodName
-                    |> findParameter parameterName
-                parameter.DefaultValue::acc) []
+    [<ProjectData("Methods", "TypeWithMethods", "WithOneParameter")>]
+    [<ProjectData("Methods", "TypeWithMethods", "WithMultipleParameters")>]
+    let ``Analyze should return generic parameters when method has some`` (name, method, sut : RoslynAnalyzer, project) =
+        let library = (sut :> IProjectAnalyzer).Analyze project
+        let actual = 
+            TestHelper.getDefinitions name library 
+            |> TestHelper.getMethod method
 
-        test <@ actual |> List.forall ((=) None) @>
+        <@ actual |> Seq.forall (fun c -> c.Identity.Parameters |> (Seq.isEmpty >> not)) @>
 
     [<Theory>]
-    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp,"FooType", "SingleGenericMethod", "foo", "default(T)")>]
-    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.VisualBasic,"FooType", "SingleGenericMethod", "foo", "Nothing")>]
-    let ``Analyze should return expected method parameter default value`` (typeName, methodName, parameterName, expected, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
+    [<ProjectData("Methods", "TypeWithMethods", "SingleGenericType")>]
+    let ``Analyze should return no generic constraint when generic method has none`` (name, method, sut : RoslynAnalyzer, project) =
+        let library = (sut :> IProjectAnalyzer).Analyze project
         let actual =
-            projects
-            |> Seq.fold (fun acc c ->
-                let library = (sut :> IProjectAnalyzer).Analyze c.Project
-                let parameter =
-                    (library.Types, typeName)
-                    ||> findMethod methodName
-                    |> findParameter parameterName
-                parameter.DefaultValue::acc) []
+            TestHelper.getDefinitions name library
+            |> TestHelper.getMethod method
+            |> Seq.map (fun c -> c.Identity.Parameters)
 
-        test <@ actual |> List.forall ((=) (Some expected)) @>
+        <@ actual |> Seq.collect id
+                  |> Seq.forall (fun c -> c.Constraints |> Seq.isEmpty) @>
 
     [<Theory>]
-    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp,"FooType", "IntMethod", "int")>]
-    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.CSharp,"FooType", "SingleGenericMethod", "T")>]
-    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.VisualBasic,"FooType", "IntMethod", "Integer")>]
-    [<MultiProjectData("TypeMembers/AllTypesMethods", ProjectLanguage.VisualBasic,"FooType", "SingleGenericMethod", "T")>]
-    let ``Analyze should return expected method return type`` (typeName, methodName, expected, sut : RoslynAnalyzer, projects : ProjectInfo[]) =
+    [<ProjectData("Methods", "TypeWithMethods", "MultipleGenericType")>]
+    let ``Analyze should return generic constraint when generic method has some`` (name, method, sut : RoslynAnalyzer, project) =
+        let library = (sut :> IProjectAnalyzer).Analyze project
         let actual =
-            projects
-            |> Seq.fold (fun acc c ->
-                let library = (sut :> IProjectAnalyzer).Analyze c.Project
-                let methodDefinition = findMethod methodName library.Types typeName
-                methodDefinition.ReturnType::acc) []
+            TestHelper.getDefinitions name library
+            |> TestHelper.getMethod method
+            |> Seq.map (fun c -> c.Identity.Parameters)
 
-        test <@ actual |> List.forall ((=) expected) @>
+        <@ actual |> Seq.collect id
+                  |> Seq.forall (fun c -> c.Constraints |> (Seq.isEmpty >> not)) @>
+
+    [<Theory>]
+    [<ProjectData("Methods", "TypeWithMethods", "MultipleGenericType", "T", "Int32")>]
+    [<ProjectData("Methods", "TypeWithMethods", "MultipleGenericType", "Y", "Int32")>]
+    let ``Analyze should return expected generic constraint`` (name, method, generic, expected, sut : RoslynAnalyzer, project) =
+        let library = (sut :> IProjectAnalyzer).Analyze project
+        let actual =
+            TestHelper.getDefinitions name library
+            |> TestHelper.getMethod method
+            |> Seq.collect (fun c -> c.Identity.Parameters)
+            |> Seq.filter (fun c -> c.Name = generic)
+
+        <@ actual |> Seq.forall (fun c -> c.Constraints |> Seq.contains expected) @>
+    
+    [<Theory>]
+    [<ProjectData("Methods", "TypeWithMethods", "WithoutParameters")>]
+    let ``Analyze should return no parameters when method has none`` (name, method, sut : RoslynAnalyzer, project) =
+        let library = (sut :> IProjectAnalyzer).Analyze project
+        let actual = 
+            TestHelper.getDefinitions name library 
+            |> TestHelper.getMethod method
+
+        <@ actual |> Seq.forall (fun c -> c.Parameters |> Seq.isEmpty) @>
+
+    [<Theory>]
+    [<ProjectData("Methods", "TypeWithMethods", "WithOneParameter")>]
+    [<ProjectData("Methods", "TypeWithMethods", "WithMultipleParameters")>]
+    let ``Analyze should return parameters when method has some`` (name, method, sut : RoslynAnalyzer, project) =
+        let library = (sut :> IProjectAnalyzer).Analyze project
+        let actual = 
+            TestHelper.getDefinitions name library 
+            |> TestHelper.getMethod method
+
+        <@ actual |> Seq.forall (fun c -> c.Parameters |> (Seq.isEmpty >> not)) @>
+
+    [<Theory>]
+    [<ProjectData("Methods", "TypeWithMethods", "WithOneParameter", "foo")>]
+    [<ProjectData("Methods", "TypeWithMethods", "WithMultipleParameters", "bar")>]
+    let ``Analyze should return expected method parameter name`` (name, method, parameter, sut : RoslynAnalyzer, project) =
+        let library = (sut :> IProjectAnalyzer).Analyze project
+        let actual = 
+            TestHelper.getDefinitions name library 
+            |> TestHelper.getMethod method
+
+        test <@ actual |> Seq.forall (fun c -> c.Parameters |> Seq.exists (fun c -> c.Name = parameter)) @>
+    
+    [<Theory>]
+    [<ProjectData("Methods", "TypeWithMethods", "WithMultipleParameters", "foo", "Int32")>]
+    [<ProjectData("Methods", "TypeWithMethods", "WithMultipleParameters", "bar", "Single")>]
+    [<ProjectData("Methods", "TypeWithMethods", "WithGenericParameters`1", "foo", "T")>]
+    let ``Analyze should return expected method parameter type`` (name, method, parameter, expected, sut : RoslynAnalyzer, project) =
+        let library = (sut :> IProjectAnalyzer).Analyze project
+        let actual = 
+            TestHelper.getDefinitions name library 
+            |> TestHelper.getMethod method
+            |> Seq.collect (fun c -> c.Parameters)
+            |> Seq.filter (fun c -> c.Name = parameter)
+
+        <@ actual |> Seq.forall (fun c -> c.Type = expected) @>
+
+    [<Theory>]
+    [<ProjectData("Methods", "TypeWithMethods", "WithOneParameter", "foo")>]
+    let ``Analyze should return no modifier when delegate parameter has none`` (name, method, parameter, sut : RoslynAnalyzer, project) =
+        let library = (sut :> IProjectAnalyzer).Analyze project
+        let actual = 
+            TestHelper.getDefinitions name library
+            |> TestHelper.getMethod method
+            |> Seq.collect (fun c -> c.Parameters)
+            |> Seq.filter (fun c -> c.Name = parameter)
+
+        <@ actual |> Seq.forall (fun c -> c.Modifier = None) @>
+
+    [<Theory>]
+    [<ProjectData("Methods", "TypeWithMethods", "WithParametersModifiers", "foo", "ref")>]
+    [<ProjectData("Methods", "TypeWithMethods", "WithParametersModifiers", "foo", "out")>]
+    let ``Analyze should return modifiers when delegate parameter has some`` (name, method, parameter, modifier, sut : RoslynAnalyzer, project) =
+        let expected = LanguageHelper.getMemberModifiers project.Language modifier
+        let library = (sut :> IProjectAnalyzer).Analyze project
+        let actual = 
+            TestHelper.getDefinitions name library
+            |> TestHelper.getMethod method
+            |> Seq.collect (fun c -> c.Parameters)
+            |> Seq.filter (fun c -> c.Name = parameter)
+        
+        <@ actual |> Seq.forall (fun c -> c.Modifier = Some expected) @>
+
+    [<Theory>]
+    [<ProjectData("Methods", "TypeWithMethods", "WithOneParameter", "foo")>]
+    let ``Analyze should return no default value when method parameter has none`` (name, method, parameter, sut : RoslynAnalyzer, project) =
+        let library = (sut :> IProjectAnalyzer).Analyze project
+        let actual = 
+            TestHelper.getDefinitions name library
+            |> TestHelper.getMethod method
+            |> Seq.collect (fun c -> c.Parameters)
+            |> Seq.filter (fun c -> c.Name = parameter)
+
+        <@ actual |> Seq.forall (fun c -> c.DefaultValue = None) @>
+
+    [<Theory>]
+    [<ProjectData("Methods", "TypeWithMethods", "WithDefaultParameters", "foo", "1")>]
+    let ``Analyze should return default value when method parameter has some`` (name, method, parameter, expected, sut : RoslynAnalyzer, project) =
+        let library = (sut :> IProjectAnalyzer).Analyze project
+        let actual = 
+            TestHelper.getDefinitions name library
+            |> TestHelper.getMethod method
+            |> Seq.collect (fun c -> c.Parameters)
+            |> Seq.filter (fun c -> c.Name = parameter)
+        
+        <@ actual |> Seq.forall (fun c -> c.DefaultValue = Some expected) @>
+
+    [<Theory>]
+    [<ProjectData("Methods", "TypeWithMethods", "WithoutParameters", "void")>]
+    [<ProjectData("Methods", "TypeWithMethods", "WithReturnType", "Int32")>]
+    [<ProjectData("Methods", "TypeWithMethods", "WithGenericReturnType`1", "T")>]
+    let ``Analyze should return expected delegate return type`` (name, method, expected, sut : RoslynAnalyzer, project) =
+        let expected = LanguageHelper.getType project.Language expected
+        let library = (sut :> IProjectAnalyzer).Analyze project
+        let actual = 
+            TestHelper.getDefinitions name library
+            |> TestHelper.getMethod method
+
+        test <@ actual |> Seq.forall (fun c -> c.ReturnType = expected) @>

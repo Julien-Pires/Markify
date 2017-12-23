@@ -57,14 +57,13 @@
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
     <Content Include="app.config" />
+    <Content Include="packages.config" />
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="Customization.fs" />
     <Compile Include="LanguageModuleArgs.fs" />
     <Compile Include="ProjectCustomization.fs" />
     <Compile Include="TypeAttribute.fs" />
-    <Compile Include="LanguageAnalyzerArgs.fs" />
-    <Compile Include="Attributes.fs" />
     <Compile Include="DefinitionsHelper.fs" />
+    <Compile Include="TestHelper.fs" />
     <Compile Include="RoslynAnalyzer.Types.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Types.Generics.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Types.Modifiers.Tests.fs" />
@@ -81,7 +80,6 @@
     <Compile Include="RoslynAnalyzer.Delegate.Parameters.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Delegate.ReturnType.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Namespaces.Tests.fs" />
-    <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Esent.Interop">

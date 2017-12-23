@@ -10,6 +10,18 @@ open System.Reflection
 open Markify.Services.Roslyn.VisualBasic
 open Markify.Services.Roslyn.Common
 
+module LanguageModules =
+    let modules = [
+        (ProjectLanguage.CSharp, CSharpModule() :> ILanguageModule);
+        (ProjectLanguage.VisualBasic, VisualBasicModule() :> ILanguageModule)]
+
+    let getModules includes =
+        modules 
+        |> Seq.filter (fun c ->
+            match includes with
+            | [] -> true
+            | _ -> includes |> Seq.contains (fst c))
+
 [<AttributeUsage(AttributeTargets.Method, AllowMultiple = true)>]
 type MultipleDataAttribute([<ParamArray>] attributes : DataAttribute[]) =
     inherit DataAttribute()
@@ -29,31 +41,19 @@ type LanguageDataAttribute(project, language, languageModule : ILanguageModule, 
         fixture.Customize(ProjectCustomization(project, language))
 
 [<AttributeUsage(AttributeTargets.Method, AllowMultiple = true)>]
-type MultiLanguageDataAttribute(project, [<ParamArray>] values) =
+type MultiLanguageDataAttribute(project, includesOnly, [<ParamArray>] values) =
     inherit MultipleDataAttribute(
-        LanguageDataAttribute(project, ProjectLanguage.CSharp, CSharpModule(), values),
-        LanguageDataAttribute(project, ProjectLanguage.VisualBasic, VisualBasicModule(), values))
+        (LanguageModules.getModules >> (MultiLanguageDataAttribute.GetLanguageAttributes project values)) includesOnly)
+
+    static member private GetLanguageAttributes project values languageModules =
+        languageModules 
+        |> Seq.map (fun c -> LanguageDataAttribute(project, fst c, snd c, values) :> DataAttribute)
+        |> Seq.toArray
 
 [<AttributeUsage(AttributeTargets.Method, AllowMultiple = true)>]
 type ProjectDataAttribute(project, [<ParamArray>] values) =
-    inherit MultiLanguageDataAttribute((sprintf "Projects/%s" project), values)
+    inherit MultiLanguageDataAttribute((sprintf "Projects/%s" project), [], values)
 
 [<AttributeUsage(AttributeTargets.Method, AllowMultiple = true)>]
-type ClassDataAttribute(project, [<ParamArray>] values) =
-    inherit MultiLanguageDataAttribute((sprintf "Class/%s" project), values)
-
-[<AttributeUsage(AttributeTargets.Method, AllowMultiple = true)>]
-type StructDataAttribute(project, [<ParamArray>] values) =
-    inherit MultiLanguageDataAttribute((sprintf "Struct/%s" project), values)
-
-[<AttributeUsage(AttributeTargets.Method, AllowMultiple = true)>]
-type InterfaceDataAttribute(project, [<ParamArray>] values) =
-    inherit MultiLanguageDataAttribute((sprintf "Interface/%s" project), values)
-
-[<AttributeUsage(AttributeTargets.Method, AllowMultiple = true)>]
-type EnumDataAttribute(project, [<ParamArray>] values) =
-    inherit MultiLanguageDataAttribute((sprintf "Enum/%s" project), values)
-
-[<AttributeUsage(AttributeTargets.Method, AllowMultiple = true)>]
-type DelegateDataAttribute(project, [<ParamArray>] values) =
-    inherit MultiLanguageDataAttribute((sprintf "Delegate/%s" project), values)
+type SingleLanguageProjectDataAttribute(project, language, [<ParamArray>] values) =
+    inherit MultiLanguageDataAttribute((sprintf "Projects/%s" project), [language], values)

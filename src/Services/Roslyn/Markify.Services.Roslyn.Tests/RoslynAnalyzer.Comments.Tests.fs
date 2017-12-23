@@ -5,15 +5,6 @@ module RoslynAnalyzerCommentsTests =
     open Markify.Services.Roslyn
     open Xunit
     open Swensen.Unquote
-
-    let getComments = function
-        | Class x | Struct x | Interface x -> x.Comments.Comments
-        | Enum x -> x.Comments.Comments
-        | Delegate x -> x.Comments.Comments
-
-    let getComment commentName definition =
-        getComments definition
-        |> Seq.tryFind (fun c -> c.Name = commentName)
     
     [<Theory>]
     [<ProjectData("Comments", "EnumWithoutComments", "Foo")>]
@@ -21,14 +12,13 @@ module RoslynAnalyzerCommentsTests =
     [<ProjectData("Comments", "StructWithoutComments`2", "Foo")>]
     [<ProjectData("Comments", "InterfaceWithoutComments`2", "Foo")>]
     [<ProjectData("Comments", "DelegateWithoutComments`2", "Foo")>]
-    let ``Analyze should return comment when comment does not exist on type`` (name, commentName, sut : RoslynAnalyzer, project : ProjectInfo) =
-        let library = (sut :> IProjectAnalyzer).Analyze project.Project
-        let actual =
-            library
-            |> LibraryHelper.getDefinition name
-            |> getComment commentName
+    let ``Analyze should return no comment when comment does not exist on type`` (name, commentName, sut : RoslynAnalyzer, project) =
+        let library = (sut :> IProjectAnalyzer).Analyze project
+        let actual = 
+            TestHelper.getDefinition name library
+            |> DefinitionsHelper.getComment commentName
         
-        test <@ actual.IsNone @>
+        test <@ actual = None @>
         
     [<Theory>]
     [<ProjectData("Comments", "EnumWithSimpleComments", "summary")>]
@@ -36,12 +26,11 @@ module RoslynAnalyzerCommentsTests =
     [<ProjectData("Comments", "StructWithSimpleComments`2", "summary")>]
     [<ProjectData("Comments", "InterfaceWithSimpleComments`2", "summary")>]
     [<ProjectData("Comments", "DelegateWithSimpleComments`2", "summary")>]
-    let ``Analyze should return comment when paired tag comment exists on type`` (name, commentName, sut : RoslynAnalyzer, project : ProjectInfo) =
-        let library = (sut :> IProjectAnalyzer).Analyze project.Project
+    let ``Analyze should return comment when paired tag comment exists on type`` (name, commentName, sut : RoslynAnalyzer, project) =
+        let library = (sut :> IProjectAnalyzer).Analyze project
         let actual = 
-            library
-            |> LibraryHelper.getDefinition name
-            |> getComment commentName
+            TestHelper.getDefinition name library 
+            |> DefinitionsHelper.getComment commentName
         
         test <@ actual.IsSome @>
 
@@ -51,12 +40,11 @@ module RoslynAnalyzerCommentsTests =
     [<ProjectData("Comments", "StructWithSimpleComments`2", "inheritdoc")>]
     [<ProjectData("Comments", "InterfaceWithSimpleComments`2", "inheritdoc")>]
     [<ProjectData("Comments", "DelegateWithSimpleComments`2", "inheritdoc")>]
-    let ``Analyze should return comment when unpaired tag comment exists on type``(name, commentName, sut : RoslynAnalyzer, project : ProjectInfo) =
-        let library = (sut :> IProjectAnalyzer).Analyze project.Project
-        let actual =
-            library
-            |> LibraryHelper.getDefinition name
-            |> getComment commentName
+    let ``Analyze should return comment when unpaired tag comment exists on type``(name, commentName, sut : RoslynAnalyzer, project) =
+        let library = (sut :> IProjectAnalyzer).Analyze project
+        let actual = 
+            TestHelper.getDefinition name library 
+            |> DefinitionsHelper.getComment commentName
 
         test <@ actual.IsSome @>
 
@@ -65,12 +53,11 @@ module RoslynAnalyzerCommentsTests =
     [<ProjectData("Comments", "StructWithSimpleComments`2", "typeparam")>]
     [<ProjectData("Comments", "InterfaceWithSimpleComments`2", "typeparam")>]
     [<ProjectData("Comments", "DelegateWithSimpleComments`2", "typeparam")>]
-    let ``Analyze should return multiple comments when type has multiple identical comments``(name, commentName, sut : RoslynAnalyzer, project : ProjectInfo) =
-        let library = (sut :> IProjectAnalyzer).Analyze project.Project
-        let actual =
-            library
-            |> LibraryHelper.getDefinition name
-            |> getComments
+    let ``Analyze should return multiple comments when type has multiple identical comments``(name, commentName, sut : RoslynAnalyzer, project) =
+        let library = (sut :> IProjectAnalyzer).Analyze project
+        let actual = 
+            TestHelper.getDefinition name library
+            |> DefinitionsHelper.getComments
             |> Seq.filter (fun c -> c.Name = commentName)
 
         test <@ actual |> Seq.length > 1 @>

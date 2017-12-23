@@ -33,8 +33,9 @@ module ProjectReader =
 
     let readXml (path : string) =
         let serializer = XmlSerializer(typeof<Projects>)
-        use stream = new StreamReader(path)
-        serializer.Deserialize stream :?> Projects
+        use fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read)
+        use reader = new StreamReader(fileStream)
+        serializer.Deserialize reader :?> Projects
 
     let read path =
         match path with
@@ -49,21 +50,18 @@ type ProjectCustomization (file, language) =
     let extension = ProjectHelper.getFileExtension language
     let projectExtension = ProjectHelper.getProjectExtension language
 
-    let buildProject (content : ProjectContent) = 
-        let project = {   
-            Name = "Test"
-            Path = Uri(sprintf "c:/Test/Test.%s" projectExtension)
-            Language = language
-            Files =
-                content.Files
-                |> Seq.map (fun c ->
-                    let fullpath = ProjectHelper.getFullPath <| sprintf "Projects/%s" c
-                    match language with                
-                    | ProjectLanguage.Unsupported -> fullpath
-                    | _ -> sprintf "%s.%s" fullpath extension)
-                |> Seq.map Uri }
-        {   Project = project
-            Count = content.Count }
+    let buildProject (content : ProjectContent) = {   
+        Name = "Test"
+        Path = Uri(sprintf "c:/Test/Test.%s" projectExtension)
+        Language = language
+        Files =
+            content.Files
+            |> Seq.map (fun c ->
+                let fullpath = ProjectHelper.getFullPath <| sprintf "Projects/%s" c
+                match language with                
+                | ProjectLanguage.Unsupported -> fullpath
+                | _ -> sprintf "%s.%s" fullpath extension)
+            |> Seq.map Uri }
     
     let create = ProjectReader.read >> buildProject
 

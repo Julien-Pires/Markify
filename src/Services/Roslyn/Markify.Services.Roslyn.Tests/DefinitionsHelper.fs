@@ -2,9 +2,98 @@
 
 open Markify.Domain.Compiler
 
-module LibraryHelper =
-    let getDefinition name library = 
-        library.Types |> Seq.find (fun c -> c.Identity.Name = name)
+module LanguageHelper =
+    open Markify.Domain.Ide
+
+    let cSharpModifiers =
+        Map.empty.
+            Add("public", "public").
+            Add("private", "private").
+            Add("protected", "protected").
+            Add("internal", "internal").
+            Add("partial", "partial").
+            Add("sealed", "sealed").
+            Add("abstract", "abstract").
+            Add("static", "static").
+            Add("virtual", "virtual").
+            Add("override", "override").
+            Add("in", "in").
+            Add("out", "out").
+            Add("class", "class").
+            Add("struct", "struct").
+            Add("const", "const").
+            Add("readonly", "readonly").
+            Add("ref", "ref")
+    
+    let visualBasicModifiers =
+        Map.empty.
+            Add("public", "Public").
+            Add("private", "Private").
+            Add("protected", "Protected").
+            Add("internal", "Friend").
+            Add("partial", "Partial").
+            Add("sealed", "NotInheritable").
+            Add("abstract", "MustInherit").
+            Add("static", "Static").
+            Add("virtual", "Overridable").
+            Add("override", "Overrides").
+            Add("in", "In").
+            Add("out", "Out").
+            Add("class", "Class").
+            Add("struct", "Structure").
+            Add("Dim", "Dim").
+            Add("const", "Const").
+            Add("readonly", "ReadOnly").
+            Add("ref", "ByRef")
+
+    let visualBasicMemberModifiers =
+        [   visualBasicModifiers |> Map.toSeq; 
+            Map.empty.
+                Add("sealed", "NotOverridable").
+                Add("static", "Shared").
+                Add("out", "ByVal")
+            |> Map.toSeq]
+        |> Seq.concat
+        |> Map
+
+    let cSharpTypes =
+        Map.empty.
+            Add("void", "void")
+
+    let visualBasicTypes =
+        Map.empty.
+            Add("void", "Void")
+
+    let modifiers = 
+        Map.empty.
+            Add(ProjectLanguage.CSharp, cSharpModifiers).
+            Add(ProjectLanguage.VisualBasic, visualBasicModifiers)
+
+    let memberModifiers =
+        Map.empty.
+            Add(ProjectLanguage.CSharp, cSharpModifiers).
+            Add(ProjectLanguage.VisualBasic, visualBasicMemberModifiers)
+    
+    let types =
+        Map.empty.
+            Add(ProjectLanguage.CSharp, cSharpTypes).
+            Add(ProjectLanguage.VisualBasic, visualBasicTypes)
+
+    let getModifier language m =
+        let modifier = modifiers.[language]
+        match modifier.TryFind m with
+        | Some x -> x
+        | None -> m
+
+    let getMemberModifiers language modifier =
+        memberModifiers.[language]
+        |> Map.find modifier
+
+    let getType language t =
+        let types = types.[language]
+        match types.TryFind t with
+        | Some x -> x
+        | None -> t
 
 module DefinitionsHelper =
     let (|IsClass|_|) definition =
@@ -38,12 +127,28 @@ module DefinitionsHelper =
         | (Some x, None) | (None, Some x) -> sprintf "%s.%s" x identity.Name
         | _ -> identity.Name
 
+    let getBaseTypes = function
+        | Class x | Struct x | Interface x -> x.Identity.BaseTypes
+        | _ -> Seq.empty
+
+    let getModifiers = function
+        | Class x | Struct x | Interface x -> x.Identity.Modifiers
+        | _ -> Seq.empty
+
     let getProperties = function
         | Class c | Struct c | Interface c -> c.Properties
         | _ -> Seq.empty
 
     let getFields = function
         | Class c | Struct c -> c.Fields
+        | _ -> Seq.empty
+
+    let getMethods = function
+        | Class x | Struct x | Interface x -> x.Methods
+        | _ -> Seq.empty
+
+    let getEvents = function
+        | Class x | Struct x | Interface x -> x.Events
         | _ -> Seq.empty
 
     let getProperty (definitions : TypeDefinition seq) name property =
@@ -62,10 +167,19 @@ module DefinitionsHelper =
         | Enum c -> c.Values
         | _ -> Seq.empty
 
-module TestHelper =
-    let isSemanticEqual opt1 opt2 =
-        match opt1, opt2 with
-        | Some x, Some y -> true
-        | None, None -> true
-        | _ -> false
-    
+    let getComments = function
+        | Class x | Struct x | Interface x -> x.Comments.Comments
+        | Enum x -> x.Comments.Comments
+        | Delegate x -> x.Comments.Comments
+
+    let getComment commentName definition =
+        getComments definition
+        |> Seq.tryFind (fun c -> c.Name = commentName)
+
+    let getReturnType = function
+        | Delegate x -> Some x.ReturnType
+        | _ -> None
+
+    let getParameters = function
+        | Delegate x -> x.Parameters
+        | _ -> Seq.empty
