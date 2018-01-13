@@ -1,9 +1,9 @@
 version: 1.0.{build}
 image: Visual Studio 2017
 configuration:
-- Debug
+  - Debug
 before_build:
-- cmd: nuget restore src\Markify.sln -verbosity detailed
+  - cmd: nuget restore src\Markify.sln -verbosity detailed
 build:
   project: src/Markify.sln
   verbosity: minimal
@@ -12,12 +12,6 @@ environment:
        secure: LzNrIl+p3PFuAPMSM+HwdnXT+edzlFsl/owok+qNPpOiVhkOIk1hQN9ZuPnzULzO
 test:
   assemblies:
-  - src\Services\Roslyn\Markify.Services.Roslyn.Tests\bin\Debug\Markify.Services.Roslyn.Tests.dll
-  - src\Core\Markify.Core.FSharp.Tests\bin\Debug\Markify.Core.FSharp.Tests.dll
-  - src\Services\Document\Markify.Services.Document.Tests\bin\Debug\Markify.Services.Document.Tests.dll
-  - src\Services\VisualStudio\Markify.Services.VisualStudio.Tests\bin\Debug\Markify.Services.VisualStudio.Tests.dll
-  - src\Services\Rendering\Markify.Services.Rendering.Tests\bin\Debug\Markify.Services.Rendering.Tests.dll
-  - src\Services\Rendering\Markify.Services.Rendering.T4.Tests\bin\Debug\Markify.Services.Rendering.T4.Tests.dll
 after_test:
     - ps: >-
         $tests = (
