@@ -20,7 +20,7 @@ namespace Markify.Services.Rendering.T4.Tests
         [StructDefinitionData]
         [EnumDefinitionData]
         [DelegateDefinitionData]
-        public void GetModifiers_ShouldReturnEmpty_WhenTypeHasNoModifiers(string expected, TypeDefinition definition)
+        public void GetModifiers_ShouldReturnEmpty_WhenTypeHasNoModifiers(TypeDefinition definition)
         {
             Check.That(DefinitionFormatter.GetModifiers(definition)).IsEmpty();
         }

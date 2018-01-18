@@ -19,7 +19,7 @@ namespace Markify.Services.Rendering.T4.Tests
         [InterfaceDefinitionData]
         [StructDefinitionData]
         [EnumDefinitionData]
-        public void GetParents_ShouldReturnEmptyString_WhenTypeHasNoBaseType(string expected, TypeDefinition definition)
+        public void GetParents_ShouldReturnEmptyString_WhenTypeHasNoBaseType(TypeDefinition definition)
         {
             Check.That(DefinitionFormatter.GetParents(definition)).IsEmpty();
         }
