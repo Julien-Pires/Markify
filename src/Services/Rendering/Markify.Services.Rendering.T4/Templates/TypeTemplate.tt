@@ -8,13 +8,33 @@
 <#@ import namespace="Markify.Domain.Compiler" #>
 <# var definition = (TypeDefinition)Session["Content"]; #>
 ### **<#= MarkdownHelper.EscapeString(DefinitionFormatter.GetNameWithParameters(definition.Identity)) #>** : <#= DefinitionFormatter.GetAccessModifiers(definition) #> <#= DefinitionFormatter.GetKind(definition) #>
-<#= DefinitionFormatter.GetNamespace(definition) #>
+<# 
+	var summary = DefinitionFormatter.GetTypeComment(definition, c => c.Summary);
+	if(summary.IsSome())
+	{
+#>
+<#= summary.Value.GetText() #>
+<#
+	}
+
+	var remarks = DefinitionFormatter.GetTypeComment(definition, c => c.Remarks);
+	if(remarks.IsSome())
+	{
+#>
+>**Remarks**
+>
+<#= MarkdownHelper.ToBlockquote(remarks.Value.GetText().Trim()) #>
+<#
+	}
+#>
 ***
+**Assembly**: <#= DefinitionFormatter.GetNamespace(definition) #>
 <#
 	var modifiers = DefinitionFormatter.GetModifiers(definition);
 	if(!string.IsNullOrWhiteSpace(modifiers))
 	{
 #>
+
 **Modifiers**: <#= modifiers #>
 <#
 	}
@@ -26,6 +46,25 @@
 
 **Implements**: <#= MarkdownHelper.EscapeString(parents) #>
 <#
+	}
+
+	var typeParameters = DefinitionFormatter.GetTypeComment(definition, c => c.TypeParameters);
+	if(typeParameters.Any())
+	{
+#>
+
+**Type parameters**:
+<#
+		foreach(var param in typeParameters)
+		{
+			var name = param.Parameter.FirstOrDefault(c => c.Name == "name");
+			if(name != null)
+			{
+#>
+* <#= name.Value.Value #> : <#= param.GetText() #>
+<#
+			}
+		}
 	}
 
 	var returnType = DefinitionFormatter.GetReturnType(definition);
@@ -42,7 +81,7 @@ var fields = DefinitionFormatter.GetFields(definition);
 if(fields.Any())
 {
 #>
-
+***
 ## **Fields**
 <#	
 	foreach(var group in fields)
@@ -169,4 +208,15 @@ if(parameters.Any())
 <#
 	}
 }
+
+var example = DefinitionFormatter.GetTypeComment(definition, c => c.Example);
+if(example.IsSome())
+{
+#>
+
+## **Example**
+
+<#= example.Value.GetText() #>
+<#
+	}
 #>

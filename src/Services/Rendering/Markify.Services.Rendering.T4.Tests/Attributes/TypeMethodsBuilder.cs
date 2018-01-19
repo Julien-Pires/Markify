@@ -22,7 +22,7 @@ namespace Markify.Services.Rendering.T4.Tests.Attributes
         public TypeMethodsBuilder(int count, IEnumerable<string> visiblity)
         {
             _count = count;
-            _visibility = visiblity;
+            _visibility = visiblity ?? new string[0];
         }
 
         #endregion
@@ -31,8 +31,7 @@ namespace Markify.Services.Rendering.T4.Tests.Attributes
 
         public object Create(object request, ISpecimenContext context)
         {
-            var parameterInfo = request as ParameterInfo;
-            if (parameterInfo == null)
+            if (!(request is ParameterInfo parameterInfo))
                 return new NoSpecimen();
 
             if (parameterInfo.ParameterType != typeof(IEnumerable<DelegateDefinition>))
@@ -53,7 +52,11 @@ namespace Markify.Services.Rendering.T4.Tests.Attributes
                             Enumerable.Empty<string>(),
                             Enumerable.Empty<GenericParameterDefinition>());
 
-                        return new DelegateDefinition(identity, Enumerable.Empty<ParameterDefinition>(), string.Empty);
+                        return new DelegateDefinition(
+                            identity,
+                            new TypeComments(Enumerable.Empty<Comment>()), 
+                            Enumerable.Empty<ParameterDefinition>(), 
+                            string.Empty);
                     });
             });
         }

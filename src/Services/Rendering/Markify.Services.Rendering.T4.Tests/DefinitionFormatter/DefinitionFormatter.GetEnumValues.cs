@@ -15,9 +15,16 @@ namespace Markify.Services.Rendering.T4.Tests
         }
 
         [Theory]
-        [EnumDefinitionData(0, 0)]
-        [EnumDefinitionData(10, 10)]
-        public void GetEnumValues_ShouldReturnCorrectValuesCount(int expected, TypeDefinition definition)
+        [EnumDefinitionData]
+        public void GetEnumValues_ShouldReturnNoValues_WhenEnumHasNone(TypeDefinition definition)
+        {
+            Check.That(DefinitionFormatter.GetEnumValues(definition)).IsEmpty();
+        }
+
+        [Theory]
+        [EnumDefinitionData(enumValues: 1, values: new object[] { 1 })]
+        [EnumDefinitionData(enumValues: 100, values: new object[] { 100 })]
+        public void GetEnumValues_ShouldReturnExpectedValuesCount_WhenEnumHasSome(int expected, TypeDefinition definition)
         {
             Check.That(DefinitionFormatter.GetEnumValues(definition)).HasSize(expected);
         }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Markify.Domain.Compiler;
 using Markify.Services.Rendering.T4.Tests.Attributes;
 using NFluent;
@@ -16,28 +15,48 @@ namespace Markify.Services.Rendering.T4.Tests
         }
 
         [Theory]
-        [ContainerDefinitionData(new[] { "public" }, 1, setVisibilty: "public", values: new object []{ "write-only" })]
-        [ContainerDefinitionData(new[] { "public" }, 1, setVisibilty: "private", values: new object[] { "" })]
-        [ContainerDefinitionData(new[] { "private" }, 1, setVisibilty: "public", values: new object[] { "write-only" })]
-        [ContainerDefinitionData(new[] { "protected" }, 1, setVisibilty: "public", values: new object[] { "write-only" })]
-        [ContainerDefinitionData(new[] { "protected" }, 1, setVisibilty: "internal", values: new object[] { "" })]
-        [ContainerDefinitionData(new[] { "protected internal" }, 1, setVisibilty: "internal protected", values: new object[] { "write-only" })]
-        [ContainerDefinitionData(new[] { "public" }, 1, getVisibility: "public", values: new object[] { "read-only" })]
-        [ContainerDefinitionData(new[] { "public" }, 1, getVisibility: "private", values: new object[] { "" })]
-        [ContainerDefinitionData(new[] { "private" }, 1, getVisibility: "public", values: new object[] { "read-only" })]
-        [ContainerDefinitionData(new[] { "protected" }, 1, getVisibility: "public", values: new object[] { "read-only" })]
-        [ContainerDefinitionData(new[] { "protected" }, 1, getVisibility: "internal", values: new object[] { "" })]
-        [ContainerDefinitionData(new[] { "protected internal" }, 1, getVisibility: "internal protected", values: new object[] { "read-only" })]
-        [ContainerDefinitionData(new[] { "public" }, 1, setVisibilty: "public", getVisibility: "public", values: new object[] { "read/write" })]
-        [ContainerDefinitionData(new[] { "internal" }, 1, setVisibilty: "public", getVisibility: "public", values: new object[] { "read/write" })]
-        [ContainerDefinitionData(new[] { "protected" }, 1, setVisibilty: "private", getVisibility: "private", values: new object[] { "" })]
-        [ContainerDefinitionData(new[] { "internal protected" }, 1, setVisibilty: "protected internal", getVisibility: "internal protected", values: new object[] { "read/write" })]
-        public void GetPropertyAccess_ShouldReturnCorrectAccess_WhenPropertyHasAccessor(string expected,
-            TypeDefinition definition)
+        [PropertyData("public")]
+        [PropertyData("public", "private")]
+        [PropertyData("public", get: "private")]
+        [PropertyData("public", "internal")]
+        [PropertyData("public", get: "internal")]
+        [PropertyData("public", "private", "private")]
+        [PropertyData("public", "internal", "internal")]
+        public void GetPropertyAccess_ShouldReturnEmptyString_WhenAccesorArePrivate(PropertyDefinition definition)
         {
-            var sut = GetProperties(definition).First();
+            Check.That(DefinitionFormatter.GetPropertyAccess(definition)).IsEmpty();
+        }
 
-            Check.That(DefinitionFormatter.GetPropertyAccess(sut)).IsEqualIgnoringCase(expected);
+        [Theory]
+        [PropertyData("public", "public")]
+        [PropertyData("private", "public")]
+        [PropertyData("protected", "public")]
+        [PropertyData("protected internal", "protected internal")]
+        [PropertyData("public", "public", "private")]
+        public void GetPropertyAccess_ShouldReturnWriteOnly_WhenPropertyHasOnlySetAccessor(PropertyDefinition definition)
+        {
+            Check.That(DefinitionFormatter.GetPropertyAccess(definition)).IsEqualTo("Write-Only");
+        }
+
+        [Theory]
+        [PropertyData("public", get: "public")]
+        [PropertyData("private", get: "public")]
+        [PropertyData("protected", get: "public")]
+        [PropertyData("protected internal", get: "protected internal")]
+        [PropertyData("public", "private", "public")]
+        public void GetPropertyAccess_ShouldReturnReadOnly_WhenPropertyHasOnlyGetAccessor(PropertyDefinition definition)
+        {
+            Check.That(DefinitionFormatter.GetPropertyAccess(definition)).IsEqualTo("Read-Only");
+        }
+
+        [Theory]
+        [PropertyData("public", "public", "public")]
+        [PropertyData("protected", "public", "public")]
+        [PropertyData("internal", "public", "public")]
+        [PropertyData("internal protected", "internal protected", "internal protected")]
+        public void GetPropertyAccess_ShouldReturnReadAndWrite_WhenProprtyHasBothAccessor(PropertyDefinition definition)
+        {
+            Check.That(DefinitionFormatter.GetPropertyAccess(definition)).IsEqualTo("Read/Write");
         }
     }
 }

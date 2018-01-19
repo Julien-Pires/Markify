@@ -7,12 +7,12 @@ open System.Runtime.InteropServices
 // Les informations générales relatives à un assembly dépendent de 
 // l'ensemble d'attributs suivant. Changez les valeurs de ces attributs pour modifier les informations
 // associées à un assembly.
-[<assembly: AssemblyTitle("Markify.Core.FSharp")>]
+[<assembly: AssemblyTitle("Markify.Core.FSharp.Tests")>]
 [<assembly: AssemblyDescription("")>]
 [<assembly: AssemblyConfiguration("")>]
-[<assembly: AssemblyCompany("")>]
-[<assembly: AssemblyProduct("Markify.Core.FSharp")>]
-[<assembly: AssemblyCopyright("Copyright ©  2016")>]
+[<assembly: AssemblyCompany("Markify")>]
+[<assembly: AssemblyProduct("Markify.Core.FSharp.Tests")>]
+[<assembly: AssemblyCopyright("Markify © 2016 - 2018")>]
 [<assembly: AssemblyTrademark("")>]
 [<assembly: AssemblyCulture("")>]
 

@@ -15,9 +15,25 @@ namespace Markify.Services.Rendering.T4.Tests
         }
 
         [Theory]
-        [ContainerDefinitionData("Foo", new string[0], null, null, "")]
-        [ContainerDefinitionData("Foo", new[] { "sealed" }, null, null, "sealed")]
-        [ContainerDefinitionData("Foo", new[] { "sealed", "abstract" }, null, null, "sealed, abstract")]
+        [ClassDefinitionData]
+        [InterfaceDefinitionData]
+        [StructDefinitionData]
+        [EnumDefinitionData]
+        [DelegateDefinitionData]
+        public void GetModifiers_ShouldReturnEmpty_WhenTypeHasNoModifiers(TypeDefinition definition)
+        {
+            Check.That(DefinitionFormatter.GetModifiers(definition)).IsEmpty();
+        }
+
+        [Theory]
+        [ClassDefinitionData(modifiers: new[] { "sealed" }, values: new object[]{ "sealed" })]
+        [InterfaceDefinitionData(modifiers: new[] { "sealed" }, values: new object[] { "sealed" })]
+        [StructDefinitionData(modifiers: new[] { "sealed" }, values: new object[] { "sealed" })]
+        [DelegateDefinitionData(modifiers: new[] { "sealed" }, values: new object[] { "sealed" })]
+        [ClassDefinitionData(modifiers: new[] { "sealed", "abstract" }, values: new object[] { "sealed, abstract" })]
+        [InterfaceDefinitionData(modifiers: new[] { "sealed", "abstract" }, values: new object[] { "sealed, abstract" })]
+        [StructDefinitionData(modifiers: new[] { "sealed", "abstract" }, values: new object[] { "sealed, abstract" })]
+        [DelegateDefinitionData(modifiers: new[] { "sealed", "abstract" }, values: new object[] { "sealed, abstract" })]
         public void GetModifiers_ShouldReturnCorrectValue(string expected, TypeDefinition definition)
         {
             Check.That(DefinitionFormatter.GetModifiers(definition)).IsEqualTo(expected);

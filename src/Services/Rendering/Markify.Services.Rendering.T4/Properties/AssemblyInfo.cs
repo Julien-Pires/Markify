@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Markify.Rendering.T4")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Markify")]
 [assembly: AssemblyProduct("Markify.Rendering.T4")]
-[assembly: AssemblyCopyright("Julien Pires")]
+[assembly: AssemblyCopyright("Markify © 2016 - 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

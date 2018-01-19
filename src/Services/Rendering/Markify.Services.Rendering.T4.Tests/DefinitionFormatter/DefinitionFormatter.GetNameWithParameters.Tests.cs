@@ -15,15 +15,25 @@ namespace Markify.Services.Rendering.T4.Tests
         }
 
         [Theory]
-        [ContainerDefinitionData("Foo", null, null, StructureKind.Class, new string[] { }, "Foo")]
+        [ClassDefinitionData("Foo", generics: new string[]{}, values:new object[]{ "Foo" })]
+        [StructDefinitionData("Foo", generics: new string[] { }, values: new object[] { "Foo" })]
+        [InterfaceDefinitionData("Foo", generics: new string[] { }, values: new object[] { "Foo" })]
+        [DelegateDefinitionData("Foo", generics: new string[] { }, values: new object[] { "Foo" })]
         public void GetNameWithParameters_ShouldReturnOnlyName_WhenHasNoParameters(string expected, TypeDefinition definition)
         {
             Check.That(DefinitionFormatter.GetNameWithParameters(definition.Identity)).IsEqualTo(expected);
         }
 
         [Theory]
-        [ContainerDefinitionData("Foo", null, null, StructureKind.Class, new[] { "T" }, "Foo<T>")]
-        [ContainerDefinitionData("Foo", null, null, StructureKind.Class, new[] { "T", "Y", "Z" }, "Foo<T, Y, Z>")]
+        [ClassDefinitionData("Foo", generics: new [] { "T" }, values: new object[] { "Foo<T>" })]
+        [StructDefinitionData("Foo", generics: new [] { "T" }, values: new object[] { "Foo<T>" })]
+        [InterfaceDefinitionData("Foo", generics: new [] { "T" }, values: new object[] { "Foo<T>" })]
+        [DelegateDefinitionData("Foo", generics: new [] { "T" }, values: new object[] { "Foo<T>" })]
+
+        [ClassDefinitionData("Foo", generics: new [] { "T", "Y", "Z" }, values: new object[] { "Foo<T, Y, Z>" })]
+        [StructDefinitionData("Foo", generics: new [] { "T", "Y", "Z" }, values: new object[] { "Foo<T, Y, Z>" })]
+        [InterfaceDefinitionData("Foo", generics: new [] { "T", "Y", "Z" }, values: new object[] { "Foo<T, Y, Z>" })]
+        [DelegateDefinitionData("Foo", generics: new [] { "T", "Y", "Z" }, values: new object[] { "Foo<T, Y, Z>" })]
         public void GetNameWithParameters_ShouldReturnNameWithParameters_WhenHasParameters(string expected, TypeDefinition definition)
         {
             Check.That(DefinitionFormatter.GetNameWithParameters(definition.Identity)).IsEqualTo(expected);

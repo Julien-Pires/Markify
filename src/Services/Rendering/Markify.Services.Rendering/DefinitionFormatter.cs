@@ -284,5 +284,44 @@ namespace Markify.Services.Rendering
         }
 
         #endregion
+
+        #region Comments Helper
+
+        private static TypeComments GetTypeComment(TypeDefinition definition)
+        {
+            TypeComments comment;
+            switch (definition.Tag)
+            {
+                case TypeDefinition.Tags.Class:
+                case TypeDefinition.Tags.Struct:
+                case TypeDefinition.Tags.Interface:
+                    comment = GetContainerTypeDefinition(definition).ValueOr((ClassDefinition)null).Comments;
+                    break;
+
+                case TypeDefinition.Tags.Enum:
+                    comment = ((TypeDefinition.Enum)definition).Item.Comments;
+                    break;
+
+                case TypeDefinition.Tags.Delegate:
+                    comment = ((TypeDefinition.Delegate)definition).Item.Comments;
+                    break;
+
+                default:
+                    comment = null;
+                    break;
+            }
+
+            return comment;
+        }
+
+        public static T GetTypeComment<T>(TypeDefinition definition, 
+            Func<TypeComments, T> extractComment)
+        {
+            var comment = GetTypeComment(definition);
+
+            return extractComment(comment);
+        }
+
+        #endregion
     }
 }

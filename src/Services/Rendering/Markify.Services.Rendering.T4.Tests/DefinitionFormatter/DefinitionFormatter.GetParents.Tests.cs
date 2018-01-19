@@ -15,9 +15,23 @@ namespace Markify.Services.Rendering.T4.Tests
         }
 
         [Theory]
-        [ContainerDefinitionData("Foo", null, null, new string[]{}, "")]
-        [ContainerDefinitionData("Foo", null, null, new[] { "IDisposable" }, "IDisposable")]
-        [ContainerDefinitionData("Foo", null, null, new[] { "IDisposable", "IEnumerable" }, "IDisposable, IEnumerable")]
+        [ClassDefinitionData]
+        [InterfaceDefinitionData]
+        [StructDefinitionData]
+        [EnumDefinitionData]
+        public void GetParents_ShouldReturnEmptyString_WhenTypeHasNoBaseType(TypeDefinition definition)
+        {
+            Check.That(DefinitionFormatter.GetParents(definition)).IsEmpty();
+        }
+
+        [Theory]
+        [ClassDefinitionData(baseTypes: new []{ "IDisposable" }, values: new object[] { "IDisposable" })]
+        [InterfaceDefinitionData(baseTypes: new [] { "IDisposable" }, values: new object[] { "IDisposable" })]
+        [StructDefinitionData(baseTypes: new [] { "IDisposable" }, values: new object[] { "IDisposable" })]
+        [EnumDefinitionData(baseTypes: new [] { "byte" }, values: new object[] { "byte" })]
+        [ClassDefinitionData(baseTypes: new[] { "IDisposable", "IEnumerable" }, values: new object[] { "IDisposable, IEnumerable" })]
+        [InterfaceDefinitionData(baseTypes: new[] { "IDisposable", "IEnumerable" }, values: new object[] { "IDisposable, IEnumerable" })]
+        [StructDefinitionData(baseTypes: new[] { "IDisposable", "IEnumerable" }, values: new object[] { "IDisposable, IEnumerable" })]
         public void GetParents_ShouldReturnCorrectValue(string expected, TypeDefinition definition)
         {
             Check.That(DefinitionFormatter.GetParents(definition)).IsEqualTo(expected);

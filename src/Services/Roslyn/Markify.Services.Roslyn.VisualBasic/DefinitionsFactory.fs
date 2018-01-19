@@ -8,42 +8,82 @@ open Microsoft.CodeAnalysis.VisualBasic
 open Microsoft.CodeAnalysis.VisualBasic.Syntax
 
 module DelegateDefinitionFactory =
-    let create (delegateSyntax : DelegateStatementSyntax) =
-        let genericParameters = getGenericParameterDefinitions delegateSyntax.TypeParameterList 
+    let buildDefinition (delegateSyntax : DelegateStatementSyntax) =
+        let definition = {   
+            Identity = createIdentity delegateSyntax
+            Comments = { Comments = [] }
+            Parameters = []
+            ReturnType = getReturnType delegateSyntax.SubOrFunctionKeyword delegateSyntax.AsClause }
+        (delegateSyntax, definition)
+    
+    let buildIdentity (delegateSyntax : DelegateStatementSyntax, definition : DelegateDefinition) =
+        let parameters = getGenericParameterDefinitions delegateSyntax.TypeParameterList
         let identity = {
-            (createTypeIdentity delegateSyntax) with
-                Name = SyntaxHelper.getName delegateSyntax.Identifier (genericParameters |> Seq.length)
+            (definition.Identity) with
+                Name = SyntaxHelper.getName delegateSyntax.Identifier (parameters |> Seq.length)
                 AccessModifiers = getAccessModifiers delegateSyntax.Modifiers 
                 Modifiers = getAdditionalModifiers delegateSyntax.Modifiers 
-                Parameters = genericParameters }
-        Delegate { 
-            Identity = identity 
-            Parameters = getDelegateParameters delegateSyntax.ParameterList
-            ReturnType = getReturnType delegateSyntax.SubOrFunctionKeyword delegateSyntax.AsClause }
+                Parameters = parameters }
+        (delegateSyntax, { definition with Identity = identity })
+    
+    let buildParameters (delegateSyntax : DelegateStatementSyntax, definition : DelegateDefinition) =
+        let parameters = getDelegateParameters delegateSyntax.ParameterList
+        ( delegateSyntax, { definition with Parameters = parameters })
+
+    let buildComments (delegateSyntax, definition : DelegateDefinition) =
+        (delegateSyntax, { definition with Comments = getTypeComments delegateSyntax })
+
+    let create (delegateSyntax : DelegateStatementSyntax) =
+        let definition = 
+            delegateSyntax
+            |> buildDefinition
+            |> buildIdentity
+            |> buildComments
+            |> buildParameters
+        definition |> snd |> Delegate
 
 module EnumDefinitionFactory =
-    let getValues (enumSyntax : EnumBlockSyntax) =
-        enumSyntax.Members
-        |> Seq.map (fun c -> 
-            let enumValue = c :?> EnumMemberDeclarationSyntax
-            {   Name = enumValue.Identifier.Text
-                Value = getMemberDefaultValue enumValue.Initializer })
+    let buildDefinition (enumSyntax : EnumBlockSyntax) =
+        let definition = {   
+            Identity = createIdentity enumSyntax
+            Comments = { Comments = [] }
+            Values = [] }
+        (enumSyntax, definition)
 
     let getBaseType (node : EnumBlockSyntax) =
         match node.EnumStatement.UnderlyingType with
         | null -> []
         | x -> [x.Type().ToString()]
 
-    let create (enumSyntax : EnumBlockSyntax) =
+    let buildIdentity (enumSyntax : EnumBlockSyntax, definition : EnumDefinition) =
         let identity = {
-            (createTypeIdentity enumSyntax) with
+            (definition.Identity) with
                 Name = SyntaxHelper.getName enumSyntax.EnumStatement.Identifier 0
                 AccessModifiers = getAccessModifiers enumSyntax.EnumStatement.Modifiers 
                 Modifiers = getAdditionalModifiers enumSyntax.EnumStatement.Modifiers 
                 BaseTypes = getBaseType enumSyntax }
-        Enum { 
-            Identity = identity
-            Values = getValues enumSyntax }
+        (enumSyntax, { definition with Identity = identity })
+
+    let buildValues (enumSyntax : EnumBlockSyntax, definition : EnumDefinition) =
+        let values =
+            enumSyntax.Members
+            |> Seq.map (fun c ->
+                let enumValue = c :?> EnumMemberDeclarationSyntax
+                {   EnumValue.Name = enumValue.Identifier.Text
+                    Value = getMemberDefaultValue enumValue.Initializer })
+        (enumSyntax, { definition with Values = values })
+
+    let buildComments (enumSyntax : EnumBlockSyntax, definition : EnumDefinition) =
+        (enumSyntax, { definition with Comments = getTypeComments enumSyntax })
+
+    let create enumSyntax =
+        let definition =
+            enumSyntax
+            |> buildDefinition
+            |> buildIdentity
+            |> buildComments
+            |> buildValues
+        definition |> snd |> Enum
 
 module StructureDefinitionFactory =
     let getBaseType (node : TypeBlockSyntax) =
@@ -55,10 +95,6 @@ module StructureDefinitionFactory =
         types
         |> Seq.map (fun c -> c.ToString())
         |> Seq.toList
-
-    let getDefaultMemberVisibility = function
-        | IsInterface _ -> publicModifier
-        | _ -> privateModifier
 
     let getMemberAccessModifiers modifiers defaultModifier =
         match getAccessModifiers modifiers with
@@ -128,12 +164,13 @@ module StructureDefinitionFactory =
 
     let getMethod (methodSyntax : MethodStatementSyntax) defaultAccessModifier =
         let identity = {
-            (createTypeIdentity methodSyntax.Parent) with
+            (createIdentity methodSyntax.Parent) with
                 Name = SyntaxHelper.getName methodSyntax.Identifier 0
                 AccessModifiers = getMemberAccessModifiers methodSyntax.Modifiers defaultAccessModifier
                 Modifiers = getAdditionalModifiers methodSyntax.Modifiers
                 Parameters = getGenericParameterDefinitions methodSyntax.TypeParameterList }
         {   Identity = identity
+            Comments = { Comments = [] }
             Parameters = getDelegateParameters methodSyntax.ParameterList
             ReturnType = getReturnType methodSyntax.SubOrFunctionKeyword methodSyntax.AsClause }
     
@@ -161,26 +198,51 @@ module StructureDefinitionFactory =
                 { acc with Events = eventDefinition::acc.Events }
             | _ -> acc) { Fields = []; Properties = []; Methods = []; Events = [] }
 
-    let createDefinition (structureSyntax : TypeBlockSyntax) =
+    let buildDefinition (structureSyntax : TypeBlockSyntax) =
+        let definition = {   
+            Identity = createIdentity structureSyntax
+            Comments = { Comments = [] }
+            Fields = []
+            Properties = []
+            Events = []
+            Methods = [] }
+        (structureSyntax, definition)
+
+    let buildIdentity (structureSyntax : TypeBlockSyntax, definition : ClassDefinition) =
         let parameters = getGenericParameterDefinitions structureSyntax.BlockStatement.TypeParameterList
-        let modifiers = structureSyntax.BlockStatement.Modifiers
         let identity = {
-            (createTypeIdentity structureSyntax) with
+            (createIdentity structureSyntax) with
                 Name = SyntaxHelper.getName structureSyntax.BlockStatement.Identifier (parameters |> Seq.length)
-                AccessModifiers = getAccessModifiers modifiers 
-                Modifiers = getAdditionalModifiers modifiers 
+                AccessModifiers = getAccessModifiers structureSyntax.BlockStatement.Modifiers
+                Modifiers = getAdditionalModifiers structureSyntax.BlockStatement.Modifiers 
                 BaseTypes = getBaseType structureSyntax
                 Parameters = parameters }
+        (structureSyntax, { definition with Identity = identity })
+
+    let buildMembers (structureSyntax : TypeBlockSyntax, definition : ClassDefinition) =
         let defaultAccessModifier = getDefaultMemberVisibility structureSyntax
         let members = getMembers structureSyntax defaultAccessModifier
-        {   Identity = identity
-            Fields = members.Fields
-            Properties = members.Properties
-            Events = members.Events 
-            Methods = members.Methods }
+        let def = {   
+            definition with
+                Fields = members.Fields
+                Properties = members.Properties
+                Events = members.Events
+                Methods = members.Methods }
+        (structureSyntax, def)
+    
+    let buildComments (structureSyntax : TypeBlockSyntax, definition : ClassDefinition) =
+        let newDefinition = { definition with Comments = getTypeComments structureSyntax }
+        (structureSyntax, newDefinition)
+
+    let build structureSyntax = 
+        structureSyntax 
+        |> buildDefinition 
+        |> buildIdentity 
+        |> buildMembers
+        |> buildComments
 
     let create structureSyntax =
-        let definition = createDefinition structureSyntax
+        let definition = build structureSyntax |> snd
         match structureSyntax with
         | IsStruct _ -> Struct definition
         | IsInterface _ -> Interface definition

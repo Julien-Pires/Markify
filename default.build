@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<project name="NAnt Examples" default="sonarqube">
+    <property name="root.folder" value="${directory::get-current-directory()}" />
+    <property name="tools.folder" value="${root.folder}/tools" />
+
+    <property name="ci.fullBuildNumber" value="${environment::get-variable('APPVEYOR_BUILD_VERSION')}" if="${environment::variable-exists('APPVEYOR_BUILD_VERSION')}"/>
+    <property name="ci.fullBuildNumber" value="0" unless="${property::exists('ci.fullBuildNumber')}" />
+    
+    <target name="sonarqube">
+        <exec program="${tools.folder}/7-Zip/7za.exe" unless="${directory::exists('tools\sonarqube\cxx-runner')}">
+            <arg value="x" />
+            <arg value="-otools\sonarqube\cxx-runner" />
+            <arg value="tools\CxxSonarQubeMsbuidRunner.zip" />
+        </exec>
+
+        <exec program="${tools.folder}/7-Zip/7za.exe" unless="${directory::exists('tools\sonarqube\runner')}">
+            <arg value="x" />
+            <arg value="-otools\sonarqube\runner" />
+            <arg value="tools\sonar-scanner-msbuild-4.0.2.892.zip" />
+        </exec>
+
+        <!-- assumes coverage file has been created -->
+        <exec program='${tools.folder}\sonarqube\cxx-runner\CxxSonarQubeMsbuidRunner.exe'>
+            <arg value='/m:src\Markify.sln' />
+            <arg value='/d:sonar.sourceEncoding=UTF-8' />
+            <arg value='/d:sonar.verbose=true' />
+            <arg value="/d:sonar.login=${environment::get-variable('SONARQUBE_TOKEN')}" />
+            <arg value='/d:sonar.host.url=https://sonarcloud.io' />
+            <arg value='/d:sonar.organization=julien-pires-github' />
+            <arg value='/x:vs17' />
+            <arg value='/q:${tools.folder}\sonarqube\runner\MSBuild.SonarQube.Runner.exe' />
+            <arg value='/n:Markify' />
+            <arg value='/k:Markify' />
+            <arg value='/p:Configuration=debug,Platform=x86' />
+            <arg value='/v:"${ci.fullBuildNumber}"' />
+            <arg value='/d:sonar.cs.opencover.reportsPaths="${root.folder}\coverage.xml"' />
+            <arg value='/d:sonar.exclusions="**\*.config"' />
+        </exec>        
+    </target>
+</project>

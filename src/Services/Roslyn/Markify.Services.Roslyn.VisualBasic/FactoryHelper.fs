@@ -2,29 +2,22 @@
 
 open Markify.Domain.Compiler
 open Markify.Services.Roslyn.Common
+open Markify.Services.Roslyn.VisualBasic
 open Microsoft.CodeAnalysis
 open Microsoft.CodeAnalysis.VisualBasic
 open Microsoft.CodeAnalysis.VisualBasic.Syntax
 
 module DefinitionFactoryHelper =
-    let filterModifiers filter (modifiers : SyntaxTokenList) =
-        modifiers
-        |> Seq.filter filter
-        |> Seq.map (fun c -> c.Text)
-        |> Seq.toList
+    let getStructureIdentifier = function
+        | IsStructureType x -> Some x.BlockStatement.Identifier
+        | _ -> None
 
-    let getAccessModifiers modifiers =
-        modifiers
-        |> filterModifiers (fun c ->
-            accessModifiersList
-            |> Set.contains (c.Kind()))
+    let getNamespaceIdentifier = function
+        | IsNamespace x -> Some (x.NamespaceStatement.Name :> SyntaxNode)
+        | _ -> None
 
-    let getAdditionalModifiers modifiers =
-        modifiers
-        |> filterModifiers (fun c ->
-            accessModifiersList
-            |> Set.contains (c.Kind())
-            |> not)
+    let createIdentity : SyntaxNode -> TypeIdentity =
+        DefinitionHelper.createIdentity getStructureIdentifier getNamespaceIdentifier
 
     let getGenericParameters = function
         | null -> Seq.empty
@@ -53,16 +46,24 @@ module DefinitionFactoryHelper =
                 Constraints = constraints })
         |> Seq.toList
 
-    let getStructureTypeIdentifier = function
-        | IsStructureType x -> Some x.BlockStatement.Identifier
-        | _ -> None
+    let filterModifiers filter (modifiers : SyntaxTokenList) =
+        modifiers
+        |> Seq.filter filter
+        |> Seq.map (fun c -> c.Text)
+        |> Seq.toList
 
-    let getNamespaceIdentifier = function
-        | IsNamespace x -> Some (x.NamespaceStatement.Name :> SyntaxNode)
-        | _ -> None
+    let getAccessModifiers modifiers =
+        modifiers
+        |> filterModifiers (fun c ->
+            accessModifiersList
+            |> Set.contains (c.Kind()))
 
-    let createTypeIdentity : SyntaxNode -> TypeIdentity =
-        DefinitionHelper.createIdentity getStructureTypeIdentifier getNamespaceIdentifier
+    let getAdditionalModifiers modifiers =
+        modifiers
+        |> filterModifiers (fun c ->
+            accessModifiersList
+            |> Set.contains (c.Kind())
+            |> not)
 
     let getTypeFromAsClause (clause : AsClauseSyntax) =
         match clause with
@@ -73,6 +74,10 @@ module DefinitionFactoryHelper =
         match delegateType.Kind() with
         | SyntaxKind.SubKeyword -> "Void"
         | _ -> getTypeFromAsClause clause
+
+    let getDefaultMemberVisibility = function
+        | IsInterface _ -> publicModifier
+        | _ -> privateModifier
 
     let getMemberDefaultValue (initializer : EqualsValueSyntax) =
         match initializer with
@@ -87,3 +92,6 @@ module DefinitionFactoryHelper =
                 Modifier = (getAdditionalModifiers c.Modifiers) |> List.tryHead 
                 DefaultValue = getMemberDefaultValue c.Default })
         |> Seq.toList
+
+    let getTypeComments node = {
+        Comments = CommentBuilder.getComments node }
