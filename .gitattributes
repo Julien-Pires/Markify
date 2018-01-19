@@ -62,4 +62,6 @@
 #*.rtf   diff=astextplain
 #*.RTF   diff=astextplain
 
+build/* linguist-vendored 
+tools/* linguist-vendored
 src/Services/Roslyn/Markify.Services.Roslyn.Fixtures/* linguist-vendored
