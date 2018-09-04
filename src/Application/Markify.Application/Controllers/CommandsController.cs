@@ -8,16 +8,16 @@ namespace Markify.Application.Controllers
     {
         #region Fields
 
-        private readonly IIdeEnvironment _ide;
+        private readonly IIDEExplorer _ideExplorer;
         private readonly IDocumentationGenerator _generator;
 
         #endregion
 
         #region Constructors
 
-        public CommandsController(IIdeEnvironment ide, IDocumentationGenerator generator)
+        public CommandsController(IIDEExplorer ideExplorer, IDocumentationGenerator generator)
         {
-            _ide = ide;
+            _ideExplorer = ideExplorer;
             _generator = generator;
         }
 
@@ -27,11 +27,10 @@ namespace Markify.Application.Controllers
 
         public bool GenerateForCurrentProject()
         {
-            return _ide.CurrentProject.Match(
+            return _ideExplorer.ActiveProject.Match(
                 c =>
                 {
-                    var solution = _ide.CurrentSolution;
-                    var root = solution.Match(
+                    var root = _ideExplorer.ActiveSolution.Match(
                         d => d.Path,
                         () => c.Path
                     );
@@ -44,8 +43,8 @@ namespace Markify.Application.Controllers
 
         public bool GenerateForCurrentSolution()
         {
-            return _ide.CurrentSolution.Match(
-                c => _generator.Generate(c.Projects, c.Path),
+            return _ideExplorer.ActiveSolution.Match(
+                c => _generator.Generate(_ideExplorer.Projects, c.Path),
                 () => false
             );
         }

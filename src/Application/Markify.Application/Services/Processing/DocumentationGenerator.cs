@@ -28,7 +28,9 @@ namespace Markify.Application.Services.Processing
         public bool Generate(IEnumerable<Project> projects, Uri root)
         {
             if(projects == null)
+            {
                 return false;
+            }
 
             var tableOfContent = _projectProcessor.Process(projects, root);
 

@@ -81,7 +81,6 @@
     <Compile Include="Services\Processing\DocumentationGenerator.cs" />
     <Compile Include="Services\IDocumentationGenerator.cs" />
     <Compile Include="Services\Processing\ProjectProcessor.cs" />
-    <Compile Include="Services\Settings\SolutionExplorerFilterProvider.cs" />
     <Compile Include="Services\ServicesModule.cs" />
     <Compile Include="Services\Processing\IProjectProcessor.cs" />
     <Compile Include="Services\Processing\IRenderer.cs" />
@@ -107,9 +106,8 @@
     <Reference Include="envdte80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
-    <Reference Include="FSharp.Core, Version=4.4.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\FSharp.Core.4.2.3\lib\net45\FSharp.Core.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="FSharp.Core, Version=4.5.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\FSharp.Core.4.5.2\lib\net45\FSharp.Core.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.CoreUtility, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.VisualStudio.CoreUtility.15.5.27130\lib\net45\Microsoft.VisualStudio.CoreUtility.dll</HintPath>
@@ -266,10 +264,6 @@
       <Project>{40df054b-d8bf-4561-8501-5ad5f4e7874a}</Project>
       <Name>Markify.Services.Roslyn.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Services\VisualStudio\Markify.Services.VisualStudio\Markify.Services.VisualStudio.csproj">
-      <Project>{26BADDBD-FAB7-4613-B0D0-AAAAF092F5D9}</Project>
-      <Name>Markify.Services.VisualStudio</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Services\Roslyn\Markify.Services.Roslyn.CSharp\Markify.Services.Roslyn.CSharp.fsproj">
       <Project>{40B61BEC-6D13-4ED1-BC73-17104C77E932}</Project>
       <Name>Markify.Services.Roslyn.CSharp</Name>
@@ -293,6 +287,10 @@
     <ProjectReference Include="..\..\Services\Roslyn\Markify.Services.Roslyn\Markify.Services.Roslyn.fsproj">
       <Project>{2940ad3d-13e8-4025-860c-47fc94932b52}</Project>
       <Name>Markify.Services.Roslyn</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Services\VisualStudio\Markify.Services.VisualStudio\Markify.Services.VisualStudio.fsproj">
+      <Project>{17004eea-0459-48b3-9573-f8f91d8000bc}</Project>
+      <Name>Markify.Services.VisualStudio</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

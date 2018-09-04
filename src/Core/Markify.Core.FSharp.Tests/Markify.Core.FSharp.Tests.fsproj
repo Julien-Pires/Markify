@@ -57,6 +57,7 @@
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
     <Content Include="app.config" />
+    <Content Include="packages.config" />
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="IO.Tests.fs" />
     <Compile Include="Hash.Tests.fs" />
@@ -65,11 +66,10 @@
     <Content Include="Foo.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Core">
-      <HintPath>..\..\packages\FSharp.Core.4.2.3\lib\net45\FSharp.Core.dll</HintPath>
+      <HintPath>..\..\packages\FSharp.Core.4.5.2\lib\net45\FSharp.Core.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="Ploeh.AutoFixture">
