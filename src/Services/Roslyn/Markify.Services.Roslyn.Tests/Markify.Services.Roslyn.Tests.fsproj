@@ -59,8 +59,10 @@
     <Content Include="app.config" />
     <Content Include="packages.config" />
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="LanguageModuleArgs.fs" />
     <Compile Include="ProjectCustomization.fs" />
+    <Compile Include="Fixtures.fs" />
+    <Compile Include="LanguageModuleArgs.fs" />
+    <Compile Include="ProjectCustomizationOld.fs" />
     <Compile Include="TypeAttribute.fs" />
     <Compile Include="DefinitionsHelper.fs" />
     <Compile Include="TestHelper.fs" />
@@ -318,6 +320,7 @@
     <Reference Include="System.Xml.ReaderWriter">
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Xml.Serialization" />
     <Reference Include="System.Xml.XmlDocument">
       <HintPath>..\..\..\packages\System.Xml.XmlDocument.4.3.0\lib\net46\System.Xml.XmlDocument.dll</HintPath>
     </Reference>

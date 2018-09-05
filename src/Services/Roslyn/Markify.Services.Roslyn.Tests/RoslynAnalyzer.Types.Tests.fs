@@ -1,54 +1,61 @@
 ﻿namespace Markify.Services.Roslyn.Tests
 
+open Expecto
+open Fixtures
+open Swensen.Unquote
+open Markify.Services.Roslyn
+open Markify.Domain.Compiler
+open TestHelper
+
 module RoslynAnalyzerTypesTests =
-    open Markify.Services.Roslyn
-    open Markify.Domain.Compiler
-    open Xunit
-    open Swensen.Unquote
+    open Markify.Domain.Ide
 
-    [<Theory>]
-    [<ProjectData("Empty")>]
-    let ``Analyze should return no type defintion when project has no type`` (sut : RoslynAnalyzer, project) =
-        let actual = (sut :> IProjectAnalyzer).Analyze project
+    [<Tests>]
+    let analyzeTests =
+        testList "Analyze" [
+            yield! testFixture withRoslynAnalyzer [
+                yield! testRepeat (withProject "Empty" [ProjectLanguage.CSharp; ProjectLanguage.VisualBasic]) [
+                    "should returns no type when project is empty",
+                    fun project (sut : IProjectAnalyzer) ->
+                        let result = sut.Analyze project
 
-        test <@ actual.Types |> Seq.isEmpty @>
-    
-    [<Theory>]
-    [<ProjectData("Organization")>]
-    let ``Analyze should return type definition when project has some`` (sut : RoslynAnalyzer, project) =
-        let actual = (sut :> IProjectAnalyzer).Analyze project
+                        test <@ result.Types |> Seq.isEmpty @>
+                ]
 
-        test <@ actual.Types |> Seq.isEmpty |> not @>
+                yield! testRepeat (withProject "Organization" [ProjectLanguage.CSharp; ProjectLanguage.VisualBasic]) [
+                    "should returns types when project is not empty",
+                    fun project (sut : IProjectAnalyzer) ->
+                        let result = sut.Analyze project
 
-    [<Theory>]
-    [<ProjectData("Duplicates")>]
-    let ``Analyze should return no duplicate type definition`` (sut : RoslynAnalyzer, project) =
-        let library = (sut :> IProjectAnalyzer).Analyze project
-        let actual =
-            library.Types
-            |> Seq.map (fun c -> getFullname c.Identity)
-            |> Seq.groupBy id
+                        test <@ result.Types |> Seq.isEmpty |> not @>
+                ]
 
-        test <@ actual |> Seq.map (fun c -> snd c |> Seq.length)
-                       |> Seq.forall ((=) 1) @>
+                yield! testRepeat (withProject "Organization" [ProjectLanguage.CSharp; ProjectLanguage.VisualBasic]) [
+                    yield! testTheory ["FooType"; "NestedType"; "DeeperNestedType"] [
+                        "should return types with valid name",
+                        fun name project (sut: IProjectAnalyzer) ->
+                            let assemblies = sut.Analyze project
+                            let result = getDefinitions name assemblies
+                            
+                            test <@ result |> Seq.length > 0 @> ]
 
-    [<Theory>]
-    [<ProjectData("Organization", "FooType")>]
-    [<ProjectData("Organization", "NestedType")>]
-    [<ProjectData("Organization", "DeeperNestedType")>]
-    let ``Analyze should return type definition with correct name`` (name, sut : RoslynAnalyzer, project) =
-        let library = (sut :> IProjectAnalyzer).Analyze project
-        let actual = TestHelper.getDefinitions name library
+                    yield! testTheory ["FooType"; "ParentType.NestedType"; "ParentType.AnotherNestedType.DeeperNestedType"] [
+                        "should return types with valid fullname",
+                        fun fullname project (sut: IProjectAnalyzer) ->
+                            let fullnames = NamespaceHelper.AllTypes |> Seq.map (fun c -> sprintf "%s.%s" c fullname)
+                            let library = sut.Analyze project
+                            let actual = fullnames |> Seq.map (fun c -> TestHelper.getDefinitionByFullname c library)
 
-        test <@ (actual |> Seq.length) > 0 @>
-    
-    [<Theory>]
-    [<ProjectData("Organization", "FooType")>]
-    [<ProjectData("Organization", "ParentType.NestedType")>]
-    [<ProjectData("Organization", "ParentType.AnotherNestedType.DeeperNestedType")>]
-    let ``Analyze should return type definition with correct fullname`` (name, sut : RoslynAnalyzer, project) =
-        let fullnames = NamespaceHelper.AllTypes |> Seq.map (fun c -> sprintf "%s.%s" c name)
-        let library = (sut :> IProjectAnalyzer).Analyze project
-        let actual = fullnames |> Seq.map (fun c -> TestHelper.getDefinitionByFullname c library)
+                            test <@ (actual |> Seq.length) = (fullnames |> Seq.length) @>]
+                ]
 
-        test <@ (actual |> Seq.length) = (fullnames |> Seq.length) @>
+                yield! testRepeat (withProject "Duplicates" [ProjectLanguage.CSharp; ProjectLanguage.VisualBasic]) [
+                    "should returns no duplicate types",
+                    fun project (sut : IProjectAnalyzer) ->
+                        let assemblies = sut.Analyze project
+                        let result = assemblies.Types |> Seq.groupBy (fun c -> getFullname c.Identity)
+
+                        test <@ (result |> Seq.length) = (assemblies.Types |> Seq.length) @>
+                ]
+            ]
+        ]
