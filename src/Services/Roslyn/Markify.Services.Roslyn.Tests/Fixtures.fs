@@ -1,5 +1,6 @@
 ﻿namespace Markify.Services.Roslyn.Tests
 
+open Expecto
 open Markify.Domain.Compiler
 open Markify.Services.Roslyn
 open Markify.Services.Roslyn.Common
@@ -11,9 +12,10 @@ module Fixtures =
         CSharpModule() :> ILanguageModule
         VisualBasicModule() :> ILanguageModule ]
 
-    let testRepeat (setup: 'a -> 'b) (tests: (string * 'a) seq) =
+    let testRepeat setup tests =
         tests
-        |> Seq.map (fun (name, c) -> setup c |> Seq.mapi (fun index d -> (sprintf "%s - %i" name index, d)))
+        |> Seq.map (fun (name, c) -> 
+            setup c |> Seq.mapi (fun index d -> Tests.testCase (sprintf "%s - %i" name index) d))
         |> Seq.collect id
 
     let testTheory values tests = 
@@ -22,7 +24,7 @@ module Fixtures =
             values |> Seq.map (fun d -> (sprintf "%s (%A)" name d, c d)))
         |> Seq.collect id
 
-    let withRoslynAnalyzer f () = f <| (RoslynAnalyzer(modules) :> IProjectAnalyzer)
-
     let withProject name languages f = 
-        languages |> Seq.map (fun c -> f <| ProjectBuilder.create name c)
+        languages 
+        |> Seq.map (fun c ->
+            fun () -> f <|| (ProjectBuilder.create name c, (RoslynAnalyzer(modules) :> IProjectAnalyzer)))
