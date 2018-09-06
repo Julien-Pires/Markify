@@ -16,17 +16,14 @@ module Fixtures =
         CSharpModule() :> ILanguageModule
         VisualBasicModule() :> ILanguageModule ]
 
-    let testRepeat setup tests =
+    let testRepeat setup values tests =
         tests
-        |> Seq.map (fun (name, c) -> 
-            setup c |> Seq.mapi (fun index d -> Tests.testCase (sprintf "%s - %i" name index) d))
+        |> Seq.map (fun (name, c) ->
+            values |> Seq.map (fun value -> Tests.testCase (sprintf "%s - (%A)" name value) (setup value c)))
         |> Seq.collect id
 
     let testTheory values name test = 
-        values 
-        |> Seq.map (fun c -> (sprintf "%s (%A)" name c, test c))
+        values |> Seq.map (fun c -> (sprintf "%s (%A)" name c, test c))
 
-    let withProject name languages f = 
-        languages 
-        |> Seq.map (fun c ->
-            fun () -> f <|| (ProjectBuilder.create name c, (RoslynAnalyzer(modules) :> IProjectAnalyzer)))
+    let withProject name language f () = 
+        f <|| (ProjectBuilder.create name language, (RoslynAnalyzer(modules) :> IProjectAnalyzer))
