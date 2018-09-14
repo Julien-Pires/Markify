@@ -11,7 +11,7 @@ module RoslynAnalyzerTypesTests =
     [<Tests>]
     let analyzeTests =
         testList "Analyze" [
-            yield! testRepeat (withProject "Empty") [CSharp; VisualBasic] [
+            yield! testRepeat (withProject "Empty") allLanguages [
                 "should returns no type when project is empty",
                 fun project sut ->
                     let result = sut.Analyze project
@@ -19,7 +19,7 @@ module RoslynAnalyzerTypesTests =
                     test <@ result.Types |> Seq.isEmpty @>
             ]
 
-            yield! testRepeat (withProject "Organization") [CSharp; VisualBasic] [
+            yield! testRepeat (withProject "Organization") allLanguages [
                 "should returns types when project is not empty",
                 fun project (sut : IProjectAnalyzer) ->
                     let result = sut.Analyze project
@@ -27,7 +27,7 @@ module RoslynAnalyzerTypesTests =
                     test <@ result.Types |> Seq.isEmpty |> not @>
             ]
 
-            yield! testRepeat (withProject "Organization") [CSharp; VisualBasic] [
+            yield! testRepeat (withProject "Organization") allLanguages [
                 yield! testTheory ["FooType"; "NestedType"; "DeeperNestedType"]
                     "should return types with valid name"
                     (fun name project (sut: IProjectAnalyzer) ->
@@ -46,7 +46,7 @@ module RoslynAnalyzerTypesTests =
                         test <@ (actual |> Seq.length) = (fullnames |> Seq.length) @>)
             ]
 
-            yield! testRepeat (withProject "Duplicates") [CSharp; VisualBasic] [
+            yield! testRepeat (withProject "Duplicates") allLanguages [
                 "should returns no duplicate types",
                 fun project (sut : IProjectAnalyzer) ->
                     let assemblies = sut.Analyze project

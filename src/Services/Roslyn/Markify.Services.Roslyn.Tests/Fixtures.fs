@@ -11,6 +11,7 @@ open Markify.Services.Roslyn.VisualBasic
 module Fixtures =
     let CSharp = ProjectLanguage.CSharp
     let VisualBasic = ProjectLanguage.VisualBasic
+    let allLanguages = [CSharp; VisualBasic]
 
     let modules = [
         CSharpModule() :> ILanguageModule
