@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
 
 #region Class
 
@@ -13,8 +13,8 @@ namespace Class
     }
 
     public class MultipleGenericType<T, Y>
-        where T : class, IList<string>
-        where Y : struct
+        where T : struct
+        where Y : IEnumerable, class, new()
     {
     }
 }
@@ -34,8 +34,8 @@ namespace Struct
     }
 
     public struct MultipleGenericType<T, Y>
-        where T : class, IList<string>
-        where Y : struct
+        where T : struct
+        where Y : IEnumerable, class, new()
     {
     }
 }
@@ -55,8 +55,8 @@ namespace Interface
     }
 
     public interface MultipleGenericType<T, Y>
-        where T : class, IList<string>
-        where Y : struct
+        where T : struct
+        where Y : IEnumerable, class, new()
     {
     }
 
@@ -80,8 +80,8 @@ namespace Delegate
     public delegate void SingleGenericType<T>();
 
     public delegate void MultipleGenericType<T, Y>()
-        where T : class, IList<string>
-        where Y : struct;
+        where T : struct
+        where Y : IEnumerable, class, new();
 
     public delegate void CovariantGenericType<in T>();
 

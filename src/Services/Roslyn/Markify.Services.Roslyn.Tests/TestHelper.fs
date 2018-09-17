@@ -31,7 +31,11 @@ module TestHelper =
         |> Seq.collect id
         |> Seq.filter (fun c -> c.Identity.Name = name)
 
-    let getModifiers (modifiers : string) language =
+    let getModifiers language modifiers =
+        modifiers
+        |> List.map (LanguageHelper.getModifier language)
+
+    let getModifiersOld (modifiers : string) language =
         modifiers.Split (';') 
         |> Seq.map (LanguageHelper.getModifier language) 
         |> Set

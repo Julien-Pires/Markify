@@ -41,7 +41,7 @@ module RoslynAnalyzerTypesTests =
                     (fun fullname project (sut: IProjectAnalyzer) ->
                         let fullnames = NamespaceHelper.AllTypes |> Seq.map (fun c -> sprintf "%s.%s" c fullname)
                         let library = sut.Analyze project
-                        let actual = fullnames |> Seq.map (fun c -> TestHelper.getDefinitionByFullname c library)
+                        let actual = fullnames |> Seq.map (fun c -> getDefinitionByFullname c library)
 
                         test <@ (actual |> Seq.length) = (fullnames |> Seq.length) @>)
             ]

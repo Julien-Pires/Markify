@@ -16,7 +16,7 @@ module RoslynAnalyzerTypesModifiersTests =
     [<ProjectData("AccessModifiers", "ParentType.ProtectedInternalType", "protected;internal")>]
     [<ProjectData("AccessModifiers", "ParentType.InternalProtectedType", "protected;internal")>]
     let ``Analyze should return definition with access modifiers when type has some`` (name, modifiers : string, sut : RoslynAnalyzer, project) =
-        let expected = TestHelper.getModifiers modifiers project.Language
+        let expected = TestHelper.getModifiersOld modifiers project.Language
         let library = (sut :> IProjectAnalyzer).Analyze project
         let actual = 
             TestHelper.getDefinitions name library 
@@ -32,7 +32,7 @@ module RoslynAnalyzerTypesModifiersTests =
     [<ProjectData("Modifiers", "AbstractPartialType", "Class", "abstract;partial")>]
     [<ProjectData("Modifiers", "SealedPartialType", "Class", "sealed;partial")>]
     let ``Analyze should return definition with modifiers when type has some`` (name, namespaces : string, modifiers : string, sut : RoslynAnalyzer, project) =
-        let expected = TestHelper.getModifiers modifiers project.Language
+        let expected = TestHelper.getModifiersOld modifiers project.Language
         let library = (sut :> IProjectAnalyzer).Analyze project
         let actual = 
             TestHelper.filterDefinitions name (namespaces.Split (';')) library 

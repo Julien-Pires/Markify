@@ -1,4 +1,4 @@
-﻿Imports System.Collections.Generic
+﻿Imports System.Collections
 
 #Region "Class"
 
@@ -9,7 +9,7 @@ Namespace Class
     Public Class SingleGenericType(Of T)
     End Class
 
-    Public Class MultipleGenericType(Of T As {Class, IList(Of String)}, Y As Structure)
+    Public Class MultipleGenericType(Of T As Structure, Y As { IEnumerable, Class, New })
     End Class
 End Namespace
 
@@ -24,7 +24,7 @@ Namespace Struct
     Public Structure SingleGenericType(Of T)
     End Structure
 
-    Public Structure MultipleGenericType(Of T As {Class, IList(Of String)}, Y As Structure)
+    Public Structure MultipleGenericType(Of T As Structure, Y As { IEnumerable, Class, New })
     End Structure
 End Namespace
 
@@ -39,7 +39,7 @@ Namespace Interface
     Public Interface SingleGenericType(Of T)
     End Interface
 
-    Public Interface MultipleGenericType(Of T As {Class, IList(Of String)}, Y As Structure)
+    Public Interface MultipleGenericType(Of T As Structure, Y As { IEnumerable, Class, New })
     End Interface
 
     Public Interface CovariantGenericType(Of In T)
@@ -58,7 +58,7 @@ Namespace Delegate
 
     Public Delegate Sub SingleGenericType(Of T)()
 
-    Public Delegate Sub MultipleGenericType(Of T As {Class, IList(Of String)}, Y As Structure)()
+    Public Delegate Sub MultipleGenericType(Of T As Structure, Y As { IEnumerable, Class, New })()
 
     Public Delegate Sub CovariantGenericType(Of In T)()
 

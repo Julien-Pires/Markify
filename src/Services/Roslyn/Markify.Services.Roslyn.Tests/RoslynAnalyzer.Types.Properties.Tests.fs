@@ -59,7 +59,7 @@ module RoslynAnalyzerTypesPropertiesTests =
     [<ProjectData("Properties", "TypeWithProperties", "Class", "ProtectedInternalProperty", "protected;internal")>]
     [<ProjectData("Properties", "TypeWithProperties", "Class", "ProtectedProperty", "protected")>]
     let ``Analyze should return property access modifiers when property has some`` (name, namespaces : string, property, modifiers : string, sut : RoslynAnalyzer, project) =
-        let expected = TestHelper.getModifiers modifiers project.Language
+        let expected = TestHelper.getModifiersOld modifiers project.Language
         let library = (sut :> IProjectAnalyzer).Analyze project
         let actual =
             TestHelper.filterDefinitions name (namespaces.Split (';')) library

@@ -71,7 +71,7 @@ module RoslynAnalyzerTypesEventsTests =
     [<ProjectData("Events", "TypeWithEvents", "Class", "ProtectedInternalEvent", "protected;internal")>]
     [<ProjectData("Events", "TypeWithEvents", "Class", "ProtectedEvent  ", "protected")>]
     let ``Analyze should return event access modifiers when event has some`` (name, namespaces : string, event, modifiers : string, sut : RoslynAnalyzer, project) =
-        let expected = TestHelper.getModifiers modifiers project.Language
+        let expected = TestHelper.getModifiersOld modifiers project.Language
         let library = (sut :> IProjectAnalyzer).Analyze project
         let actual =
             TestHelper.filterDefinitions name (namespaces.Split (';')) library

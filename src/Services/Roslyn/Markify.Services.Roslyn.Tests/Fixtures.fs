@@ -8,6 +8,13 @@ open Markify.Services.Roslyn.Common
 open Markify.Services.Roslyn.Csharp
 open Markify.Services.Roslyn.VisualBasic
 
+[<RequireQualifiedAccess>]
+module Seq =
+    let forAllStrict predicate source = 
+        match source |> Seq.isEmpty with
+        | false -> Seq.forall predicate source
+        | true -> false
+
 module Fixtures =
     let CSharp = ProjectLanguage.CSharp
     let VisualBasic = ProjectLanguage.VisualBasic

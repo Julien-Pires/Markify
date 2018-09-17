@@ -56,7 +56,7 @@ module RoslynAnalyzerTypesFieldsTests =
     [<ProjectData("Fields", "TypeWithFields", "Class", "ProtectedInternalField", "protected;internal")>]
     [<ProjectData("Fields", "TypeWithFields", "Class", "ProtectedField", "protected")>]
     let ``Analyze should return field access modifiers when field has some`` (name, namespaces : string, field, modifiers : string, sut : RoslynAnalyzer, project) =
-        let expected = TestHelper.getModifiers modifiers project.Language
+        let expected = TestHelper.getModifiersOld modifiers project.Language
         let library = (sut :> IProjectAnalyzer).Analyze project
         let actual =
             TestHelper.filterDefinitions name (namespaces.Split(';')) library

@@ -23,7 +23,8 @@ module LanguageHelper =
             Add("struct", "struct").
             Add("const", "const").
             Add("readonly", "readonly").
-            Add("ref", "ref")
+            Add("ref", "ref").
+            Add("new()", "new()")
     
     let visualBasicModifiers =
         Map.empty.
@@ -44,7 +45,8 @@ module LanguageHelper =
             Add("Dim", "Dim").
             Add("const", "Const").
             Add("readonly", "ReadOnly").
-            Add("ref", "ByRef")
+            Add("ref", "ByRef").
+            Add("new()", "New")
 
     let visualBasicMemberModifiers =
         [   visualBasicModifiers |> Map.toSeq; 

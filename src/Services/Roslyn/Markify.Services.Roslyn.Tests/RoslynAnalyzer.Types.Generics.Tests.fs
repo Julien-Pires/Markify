@@ -1,96 +1,100 @@
 ﻿namespace Markify.Services.Roslyn.Tests
 
+open Markify.Services.Roslyn
+open Markify.Domain.Ide
+open Markify.Domain.Compiler
+open Expecto
+open Swensen.Unquote
+open Fixtures
+open TestHelper
+
 module RoslynAnalyzerTypesGenericsTests =
-    open Markify.Services.Roslyn
-    open Markify.Domain.Ide
-    open Markify.Domain.Compiler
-    open Xunit
-    open Swensen.Unquote
+    [<Tests>]
+    let analyzeTests =
+        testList "Analyze" [
+            yield! testRepeat (withProject "Generics") allLanguages [
+                yield! testTheory 
+                    ["NoGenericType"]
+                    "should return no generic parameters when type has none"
+                    (fun name project (sut: IProjectAnalyzer) ->
+                        let assemblies = sut.Analyze project
+                        let result = getDefinitions name assemblies
 
-    [<Theory>]
-    [<ProjectData("Generics", "NoGenericType")>]
-    let ``Analyze should return no generic parameters when type has none`` (name, sut : RoslynAnalyzer, project) =
-        let library = (sut :> IProjectAnalyzer).Analyze project
-        let actual = TestHelper.getDefinitions name library
+                        test <@ result |> Seq.collect (fun c -> c.Identity.Parameters)
+                                       |> Seq.isEmpty @>)
 
-        test <@ actual |> Seq.forall (fun c -> c.Identity.Parameters |> Seq.isEmpty) @>
+                yield! testTheory [
+                    ("SingleGenericType`1", 1); 
+                    ("MultipleGenericType`2", 2)]
+                    "should return generic parameters when type has some"
+                    (fun parameters project (sut: IProjectAnalyzer) ->
+                        let name, expected = parameters
+                        let assemblies = sut.Analyze project
+                        let result = getDefinitions name assemblies
+                        
+                        test <@ result |> Seq.map (fun c -> Seq.length c.Identity.Parameters)
+                                       |> Seq.forAllStrict ((=) expected) @>)
 
-    [<Theory>]
-    [<ProjectData("Properties", "SingleGenericType`1", 1)>]
-    [<ProjectData("Properties", "MultipleGenericType`2", 2)>]
-    let ``Analyze should return generic parameters when type has some`` (name, expected, sut : RoslynAnalyzer, project) =
-        let library = (sut :> IProjectAnalyzer).Analyze project
-        let actual = TestHelper.getDefinitions name library
+                yield! testTheory [
+                    ("SingleGenericType`1", "T")
+                    ("MultipleGenericType`2", "T")
+                    ("MultipleGenericType`2", "Y")]
+                    "should return valid generic parameter name when type has some"
+                    (fun parameters project (sut: IProjectAnalyzer) ->
+                        let name, expected = parameters
+                        let assemblies = sut.Analyze project
+                        let result = getDefinitions name assemblies
+                        
+                        test <@ result |> Seq.map (fun c -> c.Identity.Parameters)
+                                       |> Seq.forAllStrict (fun c -> c |> Seq.exists (fun d -> d.Name = expected)) @>)
+                
+                yield! testTheory 
+                    [("SingleGenericType`1", "T")]
+                    "should return no modifiers when generic parameter has none"
+                    (fun parameters project (sut: IProjectAnalyzer) ->
+                        let name, generic = parameters
+                        let assemblies = sut.Analyze project
+                        let result = getDefinitions name assemblies
 
-        test <@ actual |> Seq.map (fun c -> c.Identity.Parameters)
-                       |> Seq.forall (fun c -> c |> Seq.length = expected) @>
+                        test <@ result |> getGenericParameter generic
+                                       |> Seq.forAllStrict (fun c -> c.Modifier.IsNone) @>)
 
-    [<Theory>]
-    [<ProjectData("Properties", "SingleGenericType`1", "T")>]
-    [<ProjectData("Properties", "MultipleGenericType`2", "T")>]
-    [<ProjectData("Properties", "MultipleGenericType`2", "Y")>]
-    let ``Analyze should return generic parameter name when type has some`` (name, expected, sut : RoslynAnalyzer, project) =
-        let library = (sut :> IProjectAnalyzer).Analyze project
-        let actual = 
-            TestHelper.getDefinitions name library 
-            |> Seq.map (fun c -> c.Identity.Parameters)
+                yield! testTheory [
+                    ("CovariantGenericType`1", "T", "in")
+                    ("ContravariantGenericType`1", "T", "out")]
+                    "should return modifier when generic parameter has one"
+                    (fun parameters project (sut: IProjectAnalyzer) ->
+                        let name, generic, modifier = parameters
+                        let expected = LanguageHelper.getModifier project.Language modifier
+                        let assemblies = sut.Analyze project
+                        let result = getDefinitions name assemblies
+                        
+                        test <@ result |> getGenericParameter generic
+                                       |> Seq.forAllStrict (fun c -> c.Modifier = Some expected) @>)
 
-        test <@ actual |> Seq.forall (fun c -> c |> Seq.exists (fun d -> d.Name = expected)) @>
+                yield! testTheory 
+                    [("SingleGenericType`1", "T")]
+                    "should return no constraints when generic parameter has none"
+                    (fun parameters project (sut: IProjectAnalyzer) ->
+                        let name, generic = parameters
+                        let assemblies = sut.Analyze project
+                        let result = getDefinitions name assemblies
 
-    [<Theory>]
-    [<ProjectData("Properties", "SingleGenericType`1", "T")>]
-    let ``Analyze should return no modifier when generic parameter has none`` (name, parameter, sut : RoslynAnalyzer, project) =
-        let library = (sut :> IProjectAnalyzer).Analyze project
-        let actual = 
-            TestHelper.getDefinitions name library 
-            |> TestHelper.getGenericParameter parameter
+                        test <@ result |> getGenericParameter generic
+                                       |> Seq.forAllStrict (fun c -> Seq.isEmpty c.Constraints) @>)
 
-        test <@ actual |> Seq.forall (fun c -> c.Modifier.IsNone) @>
+                yield! testTheory [
+                    ("MultipleGenericType`2", "T", ["struct"])
+                    ("MultipleGenericType`2", "Y", ["IEnumerable"; "class"; "new()"])]
+                    "should return constraints when generic parameter has some"
+                    (fun parameters project (sut: IProjectAnalyzer) ->
+                        let name, generic, constraints = parameters
+                        let expected = TestHelper.getModifiers project.Language constraints
+                        let assemblies = sut.Analyze project
+                        let result = getDefinitions name assemblies
 
-    [<Theory>]
-    [<ProjectData("Properties", "SingleGenericType`1", "in")>]
-    [<ProjectData("Properties", "SingleGenericType`1", "out")>]
-    let ``Analyze should return correct parameter modifier`` (name, parameter, modifier, sut : RoslynAnalyzer, project) =
-        let expected = LanguageHelper.getModifier project.Language modifier
-        let library = (sut :> IProjectAnalyzer).Analyze project
-        let actual =
-            TestHelper.getDefinitions name library
-            |> TestHelper.getGenericParameter parameter
-
-        test <@ actual |> Seq.forall (fun c -> c.Modifier = Some expected) @>
-
-    [<Theory>]
-    [<ProjectData("Properties", "SingleGenericType`1", "T")>]
-    let ``Analyze should return no constraints when generic parameter has none`` (name, parameter, sut : RoslynAnalyzer, project) =
-        let library = (sut :> IProjectAnalyzer).Analyze project
-        let actual =
-            TestHelper.getDefinitions name library
-            |> TestHelper.getGenericParameter parameter
-
-        test <@ actual |> Seq.forall (fun c -> c.Constraints |> Seq.isEmpty) @>
-
-    [<Theory>]
-    [<ProjectData("Properties", "SingleGenericType`1", "T")>]
-    [<ProjectData("Properties", "MultipleGenericType`2", "T")>]
-    [<ProjectData("Properties", "MultipleGenericType`2", "Y")>]
-    let ``Analyze should return constraints when generic parameter has some`` (name, parameter, sut : RoslynAnalyzer, project) =
-        let library = (sut :> IProjectAnalyzer).Analyze project
-        let actual =
-            TestHelper.getDefinitions name library
-            |> TestHelper.getGenericParameter parameter
-
-        test <@ actual |> Seq.forall (fun c -> c.Constraints |> Seq.length > 0) @>
-
-    [<Theory>]
-    [<ProjectData("Properties", "MultipleGenericType`2", "Y", "struct")>]
-    [<SingleLanguageProjectData("Properties", ProjectLanguage.CSharp, "MultipleGenericType`2", "Y", "class;IList<string>")>]
-    [<SingleLanguageProjectData("Properties", ProjectLanguage.VisualBasic, "MultipleGenericType`2", "Y", "Class;IList(Of String)")>]
-    let ``Analyze should return correct constraint name when parameter has some`` (name, parameter, constraints : string, sut : RoslynAnalyzer, project) =
-        let expected = TestHelper.getModifiers constraints project.Language
-        let library = (sut :> IProjectAnalyzer).Analyze project
-        let actual =
-            TestHelper.getDefinitions name library
-            |> TestHelper.getGenericParameter parameter
-            |> Seq.map (fun c -> Set c.Constraints)
-
-        test <@ actual |> Seq.forall ((Set.isSubset) expected) @>
+                        test <@ result |> getGenericParameter generic
+                                       |> Seq.map (fun c -> Seq.toList c.Constraints)
+                                       |> Seq.forAllStrict ((=) expected) @>)
+            ]
+        ]
