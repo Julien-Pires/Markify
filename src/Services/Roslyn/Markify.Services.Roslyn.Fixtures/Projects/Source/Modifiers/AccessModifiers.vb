@@ -1,6 +1,9 @@
 ﻿#Region "Class"
 
 Namespace Class
+    Class NoAccessModifierType
+    End Class
+
     Public Class PublicType
     End Class
 
@@ -27,6 +30,9 @@ End Namespace
 #Region "Struct"
 
 Namespace Struct
+    Structure NoAccessModifierType
+    End Structure
+
     Public Structure PublicType
     End Structure
 
@@ -53,6 +59,9 @@ End Namespace
 #Region "Interface"
 
 Namespace Interface
+    Interface NoAccessModifierType
+    End Interface
+
     Public Interface PublicType
     End Interface
 
@@ -79,6 +88,9 @@ End Namespace
 #Region "Enum"
 
 Namespace Enum
+    Enum NoAccessModifierType
+    End Enum
+
     Public Enum PublicType
     End Enum
 
@@ -105,6 +117,8 @@ End Namespace
 #Region "Delegate"
 
 Namespace Delegate
+    Delegate Sub NoAccessModifierType()
+
     Public Delegate Sub PublicType()
 
     Friend Delegate Sub InternalType()

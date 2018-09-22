@@ -2,6 +2,10 @@
 
 namespace Class
 {
+    public class NoModifierType
+    {
+    }
+
     public abstract class AbstractType
     {
     }
@@ -33,6 +37,10 @@ namespace Class
 
 namespace Struct
 {
+    public struct NoModifierType
+    {
+    }
+
     public partial struct PartialType
     {
     }
@@ -44,6 +52,10 @@ namespace Struct
 
 namespace Interface
 {
+    public interface NoModifierType
+    {
+    }
+
     public partial interface PartialType
     {
     }

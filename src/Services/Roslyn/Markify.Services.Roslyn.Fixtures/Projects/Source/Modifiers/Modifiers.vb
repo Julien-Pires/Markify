@@ -1,6 +1,9 @@
 ﻿#Region "Class"
 
 Namespace Class
+    Public Class NoModifierType
+    End Class
+
     Public MustInherit Class AbstractType
     End Class
 
@@ -31,6 +34,9 @@ End Namespace
 #Region "Struct"
 
 Namespace Struct
+    Public Structure NoModifierType
+    End Structure
+
     Partial Public Structure PartialType
     End Structure
 End Namespace
@@ -40,6 +46,9 @@ End Namespace
 #Region "Inteface"
 
 Namespace Interface
+    Public Interface NoModifierType
+    End Interface
+
     Partial Public Interface PartialType
     End Interface
 End Namespace

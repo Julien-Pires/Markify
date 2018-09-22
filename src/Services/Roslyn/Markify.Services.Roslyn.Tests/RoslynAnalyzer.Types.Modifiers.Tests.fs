@@ -1,41 +1,65 @@
 ﻿namespace Markify.Services.Roslyn.Tests
 
+open Markify.Services.Roslyn
+open Markify.Domain.Ide
+open Markify.Domain.Compiler
+open Expecto
+open Swensen.Unquote
+open Fixtures
+
 module RoslynAnalyzerTypesModifiersTests =
-    open System
-    open Markify.Services.Roslyn
-    open Markify.Domain.Ide
-    open Markify.Domain.Compiler
-    open Xunit
-    open Swensen.Unquote
+    [<Tests>]
+    let analyzeTests =
+        testList "Analyze" [
+            yield! testRepeat (withProject "AccessModifiers") allLanguages [
+                yield "should returns definition with no access modifier when type has none",
+                fun project (sut : IProjectAnalyzer) ->
+                    let assemblies = sut.Analyze project
+                    let result = TestHelper.filterTypes "NoAccessModifierType" assemblies
+                        
+                    test <@ result |> Seq.forAllStrict (fun c -> Seq.isEmpty c.Identity.AccessModifiers) @>
 
-    [<Theory>]
-    [<ProjectData("AccessModifiers", "PublicType", "public")>]
-    [<ProjectData("AccessModifiers", "InternalType", "internal")>]
-    [<ProjectData("AccessModifiers", "ParentType.ProtectedType", "protected")>]
-    [<ProjectData("AccessModifiers", "ParentType.PrivateType", "private")>]
-    [<ProjectData("AccessModifiers", "ParentType.ProtectedInternalType", "protected;internal")>]
-    [<ProjectData("AccessModifiers", "ParentType.InternalProtectedType", "protected;internal")>]
-    let ``Analyze should return definition with access modifiers when type has some`` (name, modifiers : string, sut : RoslynAnalyzer, project) =
-        let expected = TestHelper.getModifiersOld modifiers project.Language
-        let library = (sut :> IProjectAnalyzer).Analyze project
-        let actual = 
-            TestHelper.getDefinitions name library 
-            |> Seq.map (fun c -> Set c.Identity.AccessModifiers)
+                yield! testTheory [
+                    ("PublicType", ["public"]);
+                    ("InternalType", ["internal"]);
+                    ("ParentType.ProtectedType", ["protected"]);
+                    ("ParentType.PrivateType", ["private"]);
+                    ("ParentType.ProtectedInternalType", ["protected"; "internal"]);
+                    ("ParentType.InternalProtectedType", ["protected"; "internal"]);] 
+                    "should returns definition with access modifiers when type has some"
+                    (fun parameters project (sut : IProjectAnalyzer) -> 
+                        let name, modifiers = parameters
+                        let expected = TestHelper.getModifiers project.Language modifiers
+                        let assemblies = sut.Analyze project
+                        let result = TestHelper.filterTypes name assemblies
+                        
+                        test <@ result |> Seq.map (fun c -> Set c.Identity.AccessModifiers)
+                                       |> Seq.forAllStrict ((Set.isSubset) (Set expected)) @>)
+            ]
 
-        test <@ actual |> Seq.forall ((Set.isSubset)expected) @>
+            yield! testRepeat (withProject "Modifiers") allLanguages [
+                yield "should returns defintion with no modifier when type has none",
+                fun project (sut : IProjectAnalyzer) ->
+                    let assemblies = sut.Analyze project
+                    let result = TestHelper.filterTypes "NoModifierType" assemblies
+                        
+                    test <@ result |> Seq.forAllStrict (fun c -> Seq.isEmpty c.Identity.Modifiers) @>
 
-    [<Theory>]
-    [<ProjectData("Modifiers", "PartialType", "Class;Struct;Interface", "partial")>]
-    [<ProjectData("Modifiers", "SealedType", "Class", "sealed")>]
-    [<ProjectData("Modifiers", "AbstractType", "Class", "abstract")>]
-    [<ProjectData("Modifiers", "StaticType", "Class", "static")>]
-    [<ProjectData("Modifiers", "AbstractPartialType", "Class", "abstract;partial")>]
-    [<ProjectData("Modifiers", "SealedPartialType", "Class", "sealed;partial")>]
-    let ``Analyze should return definition with modifiers when type has some`` (name, namespaces : string, modifiers : string, sut : RoslynAnalyzer, project) =
-        let expected = TestHelper.getModifiersOld modifiers project.Language
-        let library = (sut :> IProjectAnalyzer).Analyze project
-        let actual = 
-            TestHelper.filterDefinitions name (namespaces.Split (';')) library 
-            |> Seq.map (fun c -> Set c.Identity.Modifiers)
-
-        test <@ actual |> Seq.forall ((Set.isSubset) expected) @>
+                yield! testTheory [
+                    ("PartialType", ["partial"]);
+                    ("SealedType", ["sealed"]);
+                    ("AbstractType", ["abstract"]);
+                    ("StaticType", ["static"]);
+                    ("AbstractPartialType", ["abstract"; "partial"]);
+                    ("SealedPartialType", ["sealed"; "partial"])]
+                    "should returns definition with modifiers when type has some"
+                    (fun parameters project (sut : IProjectAnalyzer) -> 
+                        let name, modifiers = parameters
+                        let expected = TestHelper.getModifiers project.Language modifiers
+                        let assemblies = sut.Analyze project
+                        let result = TestHelper.filterTypes name assemblies
+                        
+                        test <@ result |> Seq.map (fun c -> Set c.Identity.Modifiers)
+                                       |> Seq.forAllStrict ((Set.isSubset) (Set expected)) @>)
+            ]
+        ]

@@ -2,6 +2,10 @@
 
 namespace Class
 {
+    class NoAccessModifierType
+    {
+    }
+
     public class PublicType
     {
     }
@@ -36,6 +40,10 @@ namespace Class
 
 namespace Struct
 {
+    struct NoAccessModifierType
+    {
+    }
+
     public struct PublicType
     {
     }
@@ -70,6 +78,10 @@ namespace Struct
 
 namespace Interface
 {
+    interface NoAccessModifierType
+    {
+    }
+
     public interface PublicType
     {
     }
@@ -104,6 +116,10 @@ namespace Interface
 
 namespace Enum
 {
+    enum NoAccessModifierType
+    {
+    }
+
     public enum PublicType
     {
     }
@@ -138,6 +154,8 @@ namespace Enum
 
 namespace Delegate
 {
+    delegate void NoAccessModifierType();
+
     public delegate void PublicType();
 
     internal delegate void InternalType();

@@ -1,5 +1,6 @@
 ﻿namespace Markify.Services.Roslyn.Tests
 
+open System.Text.RegularExpressions
 open Markify.Domain.Compiler
 
 module NamespaceHelper =
@@ -8,6 +9,22 @@ module NamespaceHelper =
     let ConcreteContainerTypes = ["Class"; "Struct"]
 
 module TestHelper =
+    let private isFullName name = Regex.Match(name, "\w+(\.\w+)+").Success
+        
+    let filterTypes name assemblies =
+        let isFullName = isFullName name
+        assemblies.Types
+        |> Seq.filter (fun c ->
+            let typeName =
+                match isFullName with
+                | true ->
+                    match c.Identity.Parents with
+                    | Some x -> sprintf "%s.%s" x c.Identity.Name
+                    | None -> c.Identity.Name
+                | false -> c.Identity.Name
+            typeName = name)
+        |> Seq.toList
+
     let getDefinition name library = 
         library.Types |> Seq.find (fun c -> c.Identity.Name = name)
 
