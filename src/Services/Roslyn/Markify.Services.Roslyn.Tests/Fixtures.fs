@@ -30,7 +30,7 @@ module Fixtures =
             values |> Seq.map (fun value -> Tests.testCase (sprintf "%s - (%A)" name value) (setup value c)))
         |> Seq.collect id
 
-    let testTheory values name test = 
+    let testTheory name values test = 
         values |> Seq.map (fun c -> (sprintf "%s (%A)" name c, test c))
 
     let withProject name language f () = 

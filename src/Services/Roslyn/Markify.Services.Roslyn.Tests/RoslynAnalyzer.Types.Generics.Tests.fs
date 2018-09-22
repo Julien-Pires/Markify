@@ -13,9 +13,8 @@ module RoslynAnalyzerTypesGenericsTests =
     let analyzeTests =
         testList "Analyze" [
             yield! testRepeat (withProject "Generics") allLanguages [
-                yield! testTheory 
+                yield! testTheory "should return no generic parameters when type has none"
                     ["NoGenericType"]
-                    "should return no generic parameters when type has none"
                     (fun name project (sut: IProjectAnalyzer) ->
                         let assemblies = sut.Analyze project
                         let result = getDefinitions name assemblies
@@ -23,10 +22,9 @@ module RoslynAnalyzerTypesGenericsTests =
                         test <@ result |> Seq.collect (fun c -> c.Identity.Parameters)
                                        |> Seq.isEmpty @>)
 
-                yield! testTheory [
-                    ("SingleGenericType`1", 1); 
+                yield! testTheory "should return generic parameters when type has some" 
+                    [("SingleGenericType`1", 1); 
                     ("MultipleGenericType`2", 2)]
-                    "should return generic parameters when type has some"
                     (fun parameters project (sut: IProjectAnalyzer) ->
                         let name, expected = parameters
                         let assemblies = sut.Analyze project
@@ -35,11 +33,10 @@ module RoslynAnalyzerTypesGenericsTests =
                         test <@ result |> Seq.map (fun c -> Seq.length c.Identity.Parameters)
                                        |> Seq.forAllStrict ((=) expected) @>)
 
-                yield! testTheory [
-                    ("SingleGenericType`1", "T")
-                    ("MultipleGenericType`2", "T")
+                yield! testTheory "should return valid generic parameter name when type has some" 
+                    [("SingleGenericType`1", "T");
+                    ("MultipleGenericType`2", "T");
                     ("MultipleGenericType`2", "Y")]
-                    "should return valid generic parameter name when type has some"
                     (fun parameters project (sut: IProjectAnalyzer) ->
                         let name, expected = parameters
                         let assemblies = sut.Analyze project
@@ -48,9 +45,8 @@ module RoslynAnalyzerTypesGenericsTests =
                         test <@ result |> Seq.map (fun c -> c.Identity.Parameters)
                                        |> Seq.forAllStrict (fun c -> c |> Seq.exists (fun d -> d.Name = expected)) @>)
                 
-                yield! testTheory 
+                yield! testTheory "should return no modifiers when generic parameter has none"
                     [("SingleGenericType`1", "T")]
-                    "should return no modifiers when generic parameter has none"
                     (fun parameters project (sut: IProjectAnalyzer) ->
                         let name, generic = parameters
                         let assemblies = sut.Analyze project
@@ -59,10 +55,10 @@ module RoslynAnalyzerTypesGenericsTests =
                         test <@ result |> getGenericParameter generic
                                        |> Seq.forAllStrict (fun c -> c.Modifier.IsNone) @>)
 
-                yield! testTheory [
-                    ("CovariantGenericType`1", "T", "in")
+                yield! testTheory "should return modifier when generic parameter has one" 
+                    [("CovariantGenericType`1", "T", "in");
                     ("ContravariantGenericType`1", "T", "out")]
-                    "should return modifier when generic parameter has one"
+                    
                     (fun parameters project (sut: IProjectAnalyzer) ->
                         let name, generic, modifier = parameters
                         let expected = LanguageHelper.getModifier project.Language modifier
@@ -72,9 +68,8 @@ module RoslynAnalyzerTypesGenericsTests =
                         test <@ result |> getGenericParameter generic
                                        |> Seq.forAllStrict (fun c -> c.Modifier = Some expected) @>)
 
-                yield! testTheory 
+                yield! testTheory "should return no constraints when generic parameter has none"
                     [("SingleGenericType`1", "T")]
-                    "should return no constraints when generic parameter has none"
                     (fun parameters project (sut: IProjectAnalyzer) ->
                         let name, generic = parameters
                         let assemblies = sut.Analyze project
@@ -83,10 +78,9 @@ module RoslynAnalyzerTypesGenericsTests =
                         test <@ result |> getGenericParameter generic
                                        |> Seq.forAllStrict (fun c -> Seq.isEmpty c.Constraints) @>)
 
-                yield! testTheory [
-                    ("MultipleGenericType`2", "T", ["struct"])
+                yield! testTheory "should return constraints when generic parameter has some"
+                    [("MultipleGenericType`2", "T", ["struct"]);
                     ("MultipleGenericType`2", "Y", ["IEnumerable"; "class"; "new()"])]
-                    "should return constraints when generic parameter has some"
                     (fun parameters project (sut: IProjectAnalyzer) ->
                         let name, generic, constraints = parameters
                         let expected = TestHelper.getModifiers project.Language constraints

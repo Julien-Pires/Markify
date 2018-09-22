@@ -28,22 +28,20 @@ module RoslynAnalyzerTypesTests =
             ]
 
             yield! testRepeat (withProject "Organization") allLanguages [
-                yield! testTheory [
-                    "FooType";
+                yield! testTheory "should return types with valid name"
+                    ["FooType";
                     "NestedType";
                     "DeeperNestedType"]
-                    "should return types with valid name"
                     (fun name project (sut: IProjectAnalyzer) ->
                         let assemblies = sut.Analyze project
                         let result = getDefinitions name assemblies
                             
                         test <@ result |> Seq.length > 0 @>)
 
-                yield! testTheory [
-                    "FooType";
+                yield! testTheory "should return types with valid fullname"
+                    ["FooType";
                     "ParentType.NestedType";
                     "ParentType.AnotherNestedType.DeeperNestedType"]
-                    "should return types with valid fullname"
                     (fun fullname project (sut: IProjectAnalyzer) ->
                         let fullnames = NamespaceHelper.AllTypes |> Seq.map (fun c -> sprintf "%s.%s" c fullname)
                         let library = sut.Analyze project

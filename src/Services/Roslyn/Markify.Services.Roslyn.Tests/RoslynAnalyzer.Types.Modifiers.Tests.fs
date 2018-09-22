@@ -19,14 +19,13 @@ module RoslynAnalyzerTypesModifiersTests =
                         
                     test <@ result |> Seq.forAllStrict (fun c -> Seq.isEmpty c.Identity.AccessModifiers) @>
 
-                yield! testTheory [
-                    ("PublicType", ["public"]);
+                yield! testTheory "should returns definition with access modifiers when type has some"
+                    [("PublicType", ["public"]);
                     ("InternalType", ["internal"]);
                     ("ParentType.ProtectedType", ["protected"]);
                     ("ParentType.PrivateType", ["private"]);
                     ("ParentType.ProtectedInternalType", ["protected"; "internal"]);
                     ("ParentType.InternalProtectedType", ["protected"; "internal"]);] 
-                    "should returns definition with access modifiers when type has some"
                     (fun parameters project (sut : IProjectAnalyzer) -> 
                         let name, modifiers = parameters
                         let expected = TestHelper.getModifiers project.Language modifiers
@@ -45,14 +44,13 @@ module RoslynAnalyzerTypesModifiersTests =
                         
                     test <@ result |> Seq.forAllStrict (fun c -> Seq.isEmpty c.Identity.Modifiers) @>
 
-                yield! testTheory [
-                    ("PartialType", ["partial"]);
+                yield! testTheory "should returns definition with modifiers when type has some"
+                    [("PartialType", ["partial"]);
                     ("SealedType", ["sealed"]);
                     ("AbstractType", ["abstract"]);
                     ("StaticType", ["static"]);
                     ("AbstractPartialType", ["abstract"; "partial"]);
                     ("SealedPartialType", ["sealed"; "partial"])]
-                    "should returns definition with modifiers when type has some"
                     (fun parameters project (sut : IProjectAnalyzer) -> 
                         let name, modifiers = parameters
                         let expected = TestHelper.getModifiers project.Language modifiers
