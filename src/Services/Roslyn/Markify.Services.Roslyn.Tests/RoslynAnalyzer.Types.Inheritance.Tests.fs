@@ -1,25 +1,28 @@
 ﻿namespace Markify.Services.Roslyn.Tests
 
+open Markify.Domain.Ide
+open Markify.Services.Roslyn
+open Markify.Domain.Compiler
+open Expecto
+open Swensen.Unquote
+open Fixtures
+
 module RoslynAnalyzerTypesInheritanceTests =
-    open System
-    open Markify.Services.Roslyn
-    open Markify.Domain.Compiler
-    open Xunit
-    open Swensen.Unquote
-    open Markify.Domain.Ide
-
-    [<Theory>]
-    [<ProjectData("Inheritance", "InheritType", "Exception")>]
-    [<ProjectData("Inheritance", "InheritPrimitiveType", "Int32")>]
-    [<ProjectData("Inheritance", "ImplementInterfaceType", "IDisposable")>]
-    [<ProjectData("Inheritance", "MixedInheritanceType", "Exception;IDisposable")>]
-    [<SingleLanguageProjectData("Inheritance", ProjectLanguage.CSharp, "ImplementGenericInterfaceType", "IList<String>")>]
-    [<SingleLanguageProjectData("Inheritance", ProjectLanguage.VisualBasic, "ImplementGenericInterfaceType", "IList(Of String)")>]
-    let ``Analyze should return base types when type has some`` (name, types : string, sut : RoslynAnalyzer, project) =
-        let expected = Set <| types.Split(';')
-        let library = (sut :> IProjectAnalyzer).Analyze project
-        let actual =
-            TestHelper.getDefinitions name library 
-            |> Seq.map (fun c -> Set c.Identity.BaseTypes)
-
-        test <@ actual |> Seq.forall ((Set.isSubset) expected) @>
+    [<Tests>]
+    let analyzeTests =
+        testList "Analyze" [
+            yield! testRepeat (withProject "Inheritance") allLanguages [
+                yield! testTheory "should return base types when type inherits from other types"
+                    [("InheritType", ["Exception"]);
+                    ("InheritPrimitiveType", ["Int32"]);
+                    ("ImplementInterfaceType", ["IDisposable"]);
+                    ("MixedInheritanceType", ["Exception"; "IDisposable"])]
+                    (fun parameters project (sut : IProjectAnalyzer) ->
+                        let name, expected = parameters
+                        let assemblies = sut.Analyze project
+                        let result = TestHelper.filterTypes name assemblies
+                        
+                        test <@ result |> Seq.map (fun c -> Set c.Identity.BaseTypes)
+                                       |> Seq.forAllStrict ((Set.isSubset) (Set expected)) @>)
+            ]
+        ]

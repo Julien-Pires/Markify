@@ -13,10 +13,6 @@ namespace Class
     {
     }
 
-    public class ImplementGenericInterfaceType : IList<String>
-    {
-    }
-
     public class MixedInheritanceType : Exception, IDisposable
     {
     }
@@ -31,10 +27,6 @@ namespace Struct
     public struct ImplementInterfaceType : IDisposable
     {
     }
-
-    public struct ImplementGenericInterfaceType : IList<String>
-    {
-    }
 }
 
 #endregion
@@ -44,10 +36,6 @@ namespace Struct
 namespace Interface
 {
     public interface ImplementInterfaceType : IDisposable
-    {
-    }
-
-    public interface ImplementGenericInterfaceType : IList<String>
     {
     }
 }
