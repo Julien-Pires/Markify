@@ -7,8 +7,7 @@
           <CodeCoverage>
             <ModulePaths>
               <Exclude>
-                <ModulePath>*.tests.dll</ModulePath>
-                <ModulePath>microsoft*.dll</ModulePath>
+                <ModulePath>.*microsoft.*</ModulePath>
               </Exclude>
             </ModulePaths>
             <UseVerifiableInstrumentation>True</UseVerifiableInstrumentation>
