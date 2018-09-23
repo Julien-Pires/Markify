@@ -7,6 +7,7 @@
           <CodeCoverage>
             <ModulePaths>
               <Exclude>
+                <ModulePath>.*fixtures.*</ModulePath>
                 <ModulePath>.*microsoft.*</ModulePath>
                 <ModulePath>.*moq.*</ModulePath>
               </Exclude>
