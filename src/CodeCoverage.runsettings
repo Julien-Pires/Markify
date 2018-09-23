@@ -8,6 +8,7 @@
             <ModulePaths>
               <Exclude>
                 <ModulePath>.*microsoft.*</ModulePath>
+                <ModulePath>.*moq.*</ModulePath>
               </Exclude>
             </ModulePaths>
             <UseVerifiableInstrumentation>True</UseVerifiableInstrumentation>
