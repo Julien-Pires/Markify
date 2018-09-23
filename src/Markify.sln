@@ -64,6 +64,11 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Markify.Services.VisualStud
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Markify.Services.VisualStudio", "Services\VisualStudio\Markify.Services.VisualStudio\Markify.Services.VisualStudio.fsproj", "{17004EEA-0459-48B3-9573-F8F91D8000BC}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D7A33C35-536A-4913-BBFB-2753F04C81EA}"
+	ProjectSection(SolutionItems) = preProject
+		CodeCoverage.runsettings = CodeCoverage.runsettings
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
