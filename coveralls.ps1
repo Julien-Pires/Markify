@@ -1,7 +1,7 @@
 $coverageFilePath = Resolve-Path -path "TestResults\*\*.coverage"
 $coverageFilePath = $coverageFilePath.ToString()
 
-CodeCoverage.exe analyze /output:coverage.xml "$coverageFilePath"
+."C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Team Tools\Dynamic Code Coverage Tools\CodeCoverage.exe" analyze /output:coverage.xml "$coverageFilePath"
 
 csmacnz.coveralls --dynamiccodecoverage -i coverage.xml `
     --repoToken $env:COVERALLS_REPO_TOKEN `
