@@ -3,7 +3,6 @@ $coverageFilePath = $coverageFilePath.ToString()
 
 ."C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Team Tools\Dynamic Code Coverage Tools\CodeCoverage.exe" analyze /output:coverage.xml "$coverageFilePath"
 
-dotnet tool install -g coveralls.net --version 1.0.0
 csmacnz.Coveralls --dynamiccodecoverage -i coverage.xml `
     --repoToken $env:COVERALLS_REPO_TOKEN `
     --commitId $env:Build.SourceVersion `
