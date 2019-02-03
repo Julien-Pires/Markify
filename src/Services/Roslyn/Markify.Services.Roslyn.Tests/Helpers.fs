@@ -2,7 +2,6 @@
 
 open System.Text.RegularExpressions
 open Markify.Domain.Compiler
-open Markify.Domain.Ide
 
 [<AutoOpen>]
 module LanguageHelper =
@@ -38,14 +37,12 @@ module LanguageHelper =
         Map.empty.
             Add("void", "Void")
 
-    let private findModifier modifier (map : Map<'a, 'a>) = function
-        | ProjectLanguage.CSharp -> modifier
-        | _ ->
-            match map.TryFind modifier with
-            | Some x -> x
-            | None -> modifier
+    let private findModifier modifier (map : Map<'a, 'a>) = 
+        match map.TryFind modifier with
+        | Some x -> x
+        | None -> modifier
 
-    let getModifier modifier = findModifier modifier visualBasicModifiers
+    let normalizeSyntax modifier = findModifier modifier visualBasicModifiers
 
     let getMemberModifiers language modifier = findModifier modifier visualBasicMemberModifiers
 
@@ -58,25 +55,50 @@ module TypeHelper =
         "Struct"
         "Interface"
         "Enum"
-        "Delegate"]
-        
+        "Delegate"] 
+
+    let doesNameMatch name (definition : TypeDefinition) =
+        let isFullName = Regex.Match(name, "\w+(\.\w+)+").Success
+        let typeName =
+            match isFullName with
+            | true ->
+                match (definition.Identity.Namespace, definition.Identity.Parents) with
+                | (Some x, Some y) -> sprintf "%s.%s.%s" x y definition.Identity.Name
+                | (Some x, _) | (_, Some x) -> sprintf "%s.%s" x definition.Identity.Name
+                | _ -> definition.Identity.Name
+            | false -> definition.Identity.Name
+        typeName.EndsWith(name)
+
     let inline findByName name (items : ^a seq) =
         items |> Seq.filter(fun c -> (^a: (member Name : string) c) = name)
 
     let filterTypes assemblies name =
-        let isFullName = Regex.Match(name, "\w+(\.\w+)+").Success
         assemblies.Types
-        |> Seq.filter (fun c ->
-            let typeName =
-                match isFullName with
-                | true ->
-                    match (c.Identity.Namespace, c.Identity.Parents) with
-                    | (Some x, Some y) -> sprintf "%s.%s.%s" x y c.Identity.Name
-                    | (Some x, _) | (_, Some x) -> sprintf "%s.%s" x c.Identity.Name
-                    | _ -> c.Identity.Name
-                | false -> c.Identity.Name
-            typeName.EndsWith(name))
+        |> Seq.filter (doesNameMatch name)
         |> Seq.toList
+
+    let findType assemblies name =
+        assemblies.Types |> Seq.find (doesNameMatch name)
+
+    let findClass assemblies name : ClassDefinition = 
+        match findType assemblies name with
+        | Class x -> x
+        | _ -> raise (System.InvalidCastException("Found type is not a class"))
+
+    let findStruct assemblies name : ClassDefinition = 
+        match findType assemblies name with
+        | Struct x -> x
+        | _ -> raise (System.InvalidCastException("Found type is not a struct"))
+
+    let findInterface assemblies name : ClassDefinition = 
+        match findType assemblies name with
+        | Interface x -> x
+        | _ -> raise (System.InvalidCastException("Found type is not an interface"))
+
+    let findDelegate assemblies name : DelegateDefinition = 
+        match findType assemblies name with
+        | Delegate x -> x
+        | _ -> raise (System.InvalidCastException("Found type is not a delegate"))
 
     let getProperties = function
         | Class c | Struct c | Interface c -> c.Properties
