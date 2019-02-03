@@ -61,11 +61,16 @@
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Fixtures.fs" />
     <Compile Include="Helpers.fs" />
-    <Compile Include="RoslynAnalyzer.Types.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Project.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Types.Class.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Types.Class.Generics.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Types.Struct.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Types.Struct.Generics.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Types.Interface.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Types.Interface.Generics.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Types.Delegate.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Types.Delegate.Generics.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Types.Enum.Tests.fs" />
     <Compile Include="ProjectCustomization.fs" />
     <Compile Include="RoslynAnalyzer.Types.Modifiers.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Types.Inheritance.Tests.fs" />
