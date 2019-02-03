@@ -43,7 +43,7 @@ module RoslynAnalyzerTypesMethodsTests =
     [<ProjectData("Methods", "TypeWithMethods", "Class;Struct", "WithNoModifierMethod", "private")>]
     [<ProjectData("Methods", "TypeWithMethods", "Interface", "WithNoModifierMethod", "public")>]
     let ``Analyze should return default method access modifier when method has none`` (name, namespaces : string, method, modifier, sut : RoslynAnalyzer, project) =
-        let expected = LanguageHelper.getModifier project.Language modifier
+        let expected = LanguageHelperOld.getModifier project.Language modifier
         let library = (sut :> IProjectAnalyzer).Analyze project
         let actual =
             TestHelper.filterDefinitions name (namespaces.Split (';')) library
@@ -84,7 +84,7 @@ module RoslynAnalyzerTypesMethodsTests =
     [<ProjectData("Methods", "TypeWithMethods", "Class", "SealedMethod", "sealed")>]
     [<ProjectData("Methods", "TypeWithMethods", "Class", "SealedMethod", "override")>]
     let ``Analyze should return modifiers when property has some`` (name, namespaces : string, method, modifiers, sut : RoslynAnalyzer, project) =
-        let expected = LanguageHelper.getMemberModifiers project.Language modifiers
+        let expected = LanguageHelperOld.getMemberModifiers project.Language modifiers
         let library = (sut :> IProjectAnalyzer).Analyze project
         let actual =
             TestHelper.filterDefinitions name (namespaces.Split (';')) library
@@ -212,7 +212,7 @@ module RoslynAnalyzerTypesMethodsTests =
     [<ProjectData("Methods", "TypeWithMethods", "WithParametersModifiers", "foo", "ref")>]
     [<ProjectData("Methods", "TypeWithMethods", "WithParametersModifiers", "foo", "out")>]
     let ``Analyze should return modifiers when delegate parameter has some`` (name, method, parameter, modifier, sut : RoslynAnalyzer, project) =
-        let expected = LanguageHelper.getMemberModifiers project.Language modifier
+        let expected = LanguageHelperOld.getMemberModifiers project.Language modifier
         let library = (sut :> IProjectAnalyzer).Analyze project
         let actual = 
             TestHelper.getDefinitions name library
@@ -251,7 +251,7 @@ module RoslynAnalyzerTypesMethodsTests =
     [<ProjectData("Methods", "TypeWithMethods", "WithReturnType", "Int32")>]
     [<ProjectData("Methods", "TypeWithMethods", "WithGenericReturnType`1", "T")>]
     let ``Analyze should return expected delegate return type`` (name, method, expected, sut : RoslynAnalyzer, project) =
-        let expected = LanguageHelper.getType project.Language expected
+        let expected = LanguageHelperOld.getType project.Language expected
         let library = (sut :> IProjectAnalyzer).Analyze project
         let actual = 
             TestHelper.getDefinitions name library

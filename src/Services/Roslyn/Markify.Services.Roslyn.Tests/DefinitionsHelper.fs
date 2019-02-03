@@ -2,7 +2,7 @@
 
 open Markify.Domain.Compiler
 
-module LanguageHelper =
+module LanguageHelperOld =
     open Markify.Domain.Ide
 
     let cSharpModifiers =

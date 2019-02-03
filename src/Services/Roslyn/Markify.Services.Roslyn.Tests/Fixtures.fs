@@ -16,15 +16,46 @@ module Seq =
         | true -> false
 
 module Fixtures =
+    let modules = [
+        CSharpModule() :> ILanguageModule
+        VisualBasicModule() :> ILanguageModule ]
+    
+    let buildProjects contents =
+        contents
+        |> Seq.map (fun c -> 
+            let language, content = c
+            content |> Seq.map (fun d -> {
+                new IProjectContent with
+                member __.Content = d
+                member __.Language = language
+            }))
+        |> Seq.map (fun c -> { 
+            Name = "Project"
+            Content = c |> Seq.toList })
+
+    let withSut f () = f <| (RoslynAnalyzer(modules) :> IProjectAnalyzer)
+    
+    let withProjects contents f =
+        let projects = buildProjects contents
+        let sut = RoslynAnalyzer(modules) :> IProjectAnalyzer
+        projects |> Seq.map (fun c -> f sut c)
+
+    let testRepeat repeater name test =
+        repeater test
+        |> Seq.map (fun c -> Tests.testCase name c)
+
+    let testRepeatParameterized name setup test =
+        setup
+        |> Seq.collect (fun (repeater, parameters) ->
+            repeater test |> Seq.map (fun c -> Tests.testCase name (c parameters)))
+
+    ////////////////////////////////////////////
+
     let CSharp = ProjectLanguage.CSharp
     let VisualBasic = ProjectLanguage.VisualBasic
     let allLanguages = [CSharp; VisualBasic]
 
-    let modules = [
-        CSharpModule() :> ILanguageModule
-        VisualBasicModule() :> ILanguageModule ]
-
-    let testRepeat setup values tests =
+    let testRepeatOld setup values tests =
         tests
         |> Seq.map (fun (name, c) ->
             values 
@@ -35,5 +66,5 @@ module Fixtures =
         values 
         |> Seq.map (fun c -> (sprintf "%s / %A" name c, test c))
 
-    let withProject name language f () = 
+    let withProjectOld name language f () = 
         f <|| (ProjectBuilder.create name language, (RoslynAnalyzer(modules) :> IProjectAnalyzer))

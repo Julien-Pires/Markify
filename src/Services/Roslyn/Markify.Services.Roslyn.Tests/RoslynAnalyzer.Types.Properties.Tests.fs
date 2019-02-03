@@ -1,96 +1,105 @@
 ﻿namespace Markify.Services.Roslyn.Tests
 
+open System
+open Markify.Domain.Ide
+open Markify.Domain.Compiler
+open Markify.Services.Roslyn
+open Xunit
+open Expecto
+open Swensen.Unquote
+open Fixtures
+
 module RoslynAnalyzerTypesPropertiesTests =
-    open System
-    open Markify.Domain.Ide
-    open Markify.Domain.Compiler
-    open Markify.Services.Roslyn
-    open Xunit
-    open Swensen.Unquote
+    [<Tests>]
+    let analyzeTests =
+        testList "Analyze" [
+            yield! testRepeatOld (withProjectOld "Properties") allLanguages [
+                yield "should return no properties when type has none",
+                fun project (sut : IProjectAnalyzer) -> 
+                    let assemblies = sut.Analyze project
+                    let result = filterTypes assemblies "TypeWithNoProperties"
 
-    [<Theory>]
-    [<ProjectData("Properties", "TypeWithNoProperties")>]
-    let ``Analyze should return definition with no properties when type has none``(name, sut : RoslynAnalyzer, project) =
-        let library = (sut :> IProjectAnalyzer).Analyze project
-        let actual = 
-            TestHelper.getDefinitions name library 
-            |> Seq.map DefinitionsHelper.getProperties
-        
-        test <@ actual |> Seq.forall (Seq.isEmpty) @>
-    
-    [<Theory>]
-    [<ProjectData("Properties", "TypeWithProperties")>]
-    let ``Analyze should return definition with properties when type has some`` (name, sut : RoslynAnalyzer, project) =
-        let library = (sut :> IProjectAnalyzer).Analyze project
-        let actual = 
-            TestHelper.getDefinitions name library 
-            |> Seq.map DefinitionsHelper.getProperties
-        
-        test <@ actual |> Seq.forall (Seq.isEmpty >> not) @>
+                    test <@ result |> Seq.map getProperties
+                                   |> Seq.forAllStrict Seq.isEmpty @>
 
-    [<Theory>]
-    [<ProjectData("Properties", "TypeWithProperties", "AutoProperty")>]
-    [<ProjectData("Properties", "TypeWithProperties", "ReadOnlyProperty")>]
-    [<ProjectData("Properties", "TypeWithProperties", "WriteOnlyProperty")>]
-    let ``Analyze should return expected property name`` (name, property, sut : RoslynAnalyzer, project) =
-        let library = (sut :> IProjectAnalyzer).Analyze project
-        let actual =
-            TestHelper.getDefinitions name library 
-            |> Seq.map DefinitionsHelper.getProperties
+                yield "should return properties when type has some",
+                fun project (sut : IProjectAnalyzer) -> 
+                    let assemblies = sut.Analyze project
+                    let result = filterTypes assemblies "TypeWithProperties"
 
-        test <@ actual |> Seq.forall (fun c -> c |> Seq.exists (fun d -> d.Name = property)) @>
+                    test <@ result |> Seq.map getProperties
+                                   |> Seq.forAllStrict (Seq.isEmpty >> not) @>
 
-    [<Theory>]
-    [<ProjectData("Properties", "TypeWithProperties", "Class;Struct", "WithNoModifierProperty", "private")>]
-    [<ProjectData("Properties", "TypeWithProperties", "Interface", "WithNoModifierProperty", "public")>]
-    let ``Analyze should return default property access modifier when property has none`` (name, namespaces : string, property, modifier, sut : RoslynAnalyzer, project) =
-        let expected = LanguageHelper.getModifier project.Language modifier
-        let library = (sut :> IProjectAnalyzer).Analyze project
-        let actual =
-            TestHelper.filterDefinitions name (namespaces.Split (';')) library
-            |> TestHelper.getProperty property
+                yield! testTheory "should return property with valid name when type has some"
+                    ["AutoProperty";
+                    "ReadOnlyProperty";
+                    "WriteOnlyProperty"]
+                    (fun property project (sut : IProjectAnalyzer) -> 
+                        let assemblies = sut.Analyze project
+                        let result = filterTypes assemblies "TypeWithProperties"
+                        
+                        test <@ result |> Seq.map getProperties
+                                       |> Seq.forAllStrict (Seq.exists (fun c -> c.Name = property)) @>)
+                
+                yield! testTheory "should return default acess modifier when property has no specified modifier"
+                    [("TypeWithPublicDefaultModifier", "public");
+                    ("TypeWithPrivateDefaultModifier", "private")]
+                    (fun parameters project (sut : IProjectAnalyzer) ->
+                        let name, modifier = parameters 
+                        let expected = getModifier modifier project.Language
+                        let assemblies = sut.Analyze project
+                        let result = filterTypes assemblies name
 
-        test <@ actual |> Seq.forall (fun c -> c.AccessModifiers |> Seq.contains expected) @>
+                        test <@ result |> Seq.map getProperties
+                                       |> Seq.map (Seq.find (fun c -> c.Name = "WithNoModifierProperty"))
+                                       |> Seq.forAllStrict (fun c -> Seq.contains expected c.AccessModifiers) @>)
+                
+                yield! testTheory "should return access modifiers when property has some"
+                    [(["Class"; "Struct"; "Interface"], "AutoProperty", ["public"]);
+                    (["Class"; "Struct"], "InternalProperty", ["internal"]);
+                    (["Class"; "Struct"], "PrivateProperty", ["private"]);
+                    (["Class"], "ProtectedInternalProperty", ["protected"; "internal"]);
+                    (["Class"], "ProtectedProperty", ["protected"])]
+                    (fun parameters project (sut : IProjectAnalyzer) ->
+                        let namespaces, property, modifiers = parameters
+                        let expected = modifiers |> Seq.map (fun c -> getModifier c project.Language)
+                        let assemblies = sut.Analyze project
+                        let result =
+                            namespaces
+                            |> Seq.map (fun c -> filterTypes assemblies (sprintf "%s.TypeWithProperties" c))
+                            |> Seq.collect id
+                        
+                        test <@ result |> Seq.map getProperties
+                                       |> Seq.map (Seq.find (fun c -> c.Name = property)) 
+                                       |> Seq.forAllStrict (fun c -> Set.isSubset (Set expected) (Set c.AccessModifiers)) @>)
 
-    [<Theory>]
-    [<ProjectData("Properties", "TypeWithProperties", "Class;Struct;Interface", "AutoProperty", "public")>]
-    [<ProjectData("Properties", "TypeWithProperties", "Class;Struct", "InternalProperty", "internal")>]
-    [<ProjectData("Properties", "TypeWithProperties", "Class;Struct", "PrivateProperty", "private")>]
-    [<ProjectData("Properties", "TypeWithProperties", "Class", "ProtectedInternalProperty", "protected;internal")>]
-    [<ProjectData("Properties", "TypeWithProperties", "Class", "ProtectedProperty", "protected")>]
-    let ``Analyze should return property access modifiers when property has some`` (name, namespaces : string, property, modifiers : string, sut : RoslynAnalyzer, project) =
-        let expected = TestHelper.getModifiersOld modifiers project.Language
-        let library = (sut :> IProjectAnalyzer).Analyze project
-        let actual =
-            TestHelper.filterDefinitions name (namespaces.Split (';')) library
-            |> TestHelper.getProperty property
+                yield "should return property with no modifiers when property has none",
+                fun project (sut : IProjectAnalyzer) ->
+                    let assemblies = sut.Analyze project
+                    let result = filterTypes assemblies "TypeWithProperties"
 
-        test <@ actual |> Seq.map (fun c -> Set c.AccessModifiers)
-                       |> Seq.forall (Set.isSubset expected) @>
-    
-    [<Theory>]
-    [<ProjectData("Properties", "TypeWithProperties", "AutoProperty")>]
-    let ``Analyze should return no modifiers when property has none`` (name, property, sut : RoslynAnalyzer, project) =
-        let library = (sut :> IProjectAnalyzer).Analyze project
-        let actual =
-            TestHelper.getDefinitions name library
-            |> TestHelper.getProperty property
+                    test <@ result |> Seq.map getProperties
+                                   |> Seq.map (Seq.filter (fun c -> c.Name = "AutoProperty"))
+                                   |> Seq.forAllStrict (Seq.exists (fun c -> Seq.isEmpty c.Modifiers)) @>
 
-        test <@ actual |> Seq.forall (fun c -> c.Modifiers |> Seq.isEmpty) @>
-    
-    [<Theory>]
-    [<ProjectData("Properties", "TypeWithProperties", "Class;Struct", "StaticProperty", "static")>]
-    [<ProjectData("Properties", "TypeWithProperties", "Class", "VirtualProperty", "virtual")>]
-    [<ProjectData("Properties", "TypeWithProperties", "Class", "SealedProperty", "sealed;override")>]
-    let ``Analyze should return modifiers when property has some`` (name, namespaces : string, property, modifiers : string, sut : RoslynAnalyzer, project) =
-        let expected = TestHelper.getMemberModifiers modifiers project.Language
-        let library = (sut :> IProjectAnalyzer).Analyze project
-        let actual =
-            TestHelper.filterDefinitions name (namespaces.Split (';')) library
-            |> TestHelper.getProperty property
-
-        test <@ actual |> Seq.map (fun c -> Set c.Modifiers)
-                       |> Seq.forall (Set.isSubset expected) @>
+                yield! testTheory "should return modifiers when property has some"
+                    [(["Class"; "Struct"], "StaticProperty", ["static"]);
+                    (["Class"], "SealedProperty", ["sealed"; "override"]);
+                    (["Class"], "VirtualProperty", ["virtual"])]
+                    (fun parameters project (sut : IProjectAnalyzer) ->
+                        let namespaces, property, modifiers = parameters
+                        let expected = modifiers |> Seq.map (fun c -> getModifier c project.Language)
+                        let assemblies = sut.Analyze project
+                        let result =
+                            namespaces
+                            |> Seq.map (fun c -> filterTypes assemblies (sprintf "%s.TypeWithProperties" c))
+                            |> Seq.collect id
+                        
+                        test <@ result |> Seq.map getProperties
+                                       |> Seq.map (Seq.find (fun c -> c.Name = property)) 
+                                       |> Seq.forAllStrict (fun c -> Set.isSubset (Set expected) (Set c.Modifiers)) @>)
+            ]
+        ]
     
     [<Theory>]
     [<ProjectData("Properties", "TypeWithProperties", "AutoProperty", "Int32")>]
@@ -151,7 +160,7 @@ module RoslynAnalyzerTypesPropertiesTests =
     [<ProjectData("Properties", "TypeWithProperties", "Class;Struct", "PrivateProperty", "private")>]
     [<ProjectData("Properties", "TypeWithProperties", "Class", "ProtectedProperty", "protected")>]
     let ``Analyze should return write accessor modifiers when accessor has some`` (name, namespaces : string, property, modifier, sut : RoslynAnalyzer, project) =
-        let expected = LanguageHelper.getModifier project.Language modifier
+        let expected = LanguageHelperOld.getModifier project.Language modifier
         let library = (sut :> IProjectAnalyzer).Analyze project
         let actual =
             TestHelper.filterDefinitions name (namespaces.Split (';')) library
@@ -190,7 +199,7 @@ module RoslynAnalyzerTypesPropertiesTests =
     [<ProjectData("Properties", "TypeWithProperties", "Class;Struct", "PrivateProperty", "private")>]
     [<ProjectData("Properties", "TypeWithProperties", "Class", "ProtectedProperty", "protected")>]
     let ``Analyze should return read accessor modifiers when accessor has some`` (name, namespaces : string, property, modifier, sut : RoslynAnalyzer, project) =
-        let expected = LanguageHelper.getModifier project.Language modifier
+        let expected = LanguageHelperOld.getModifier project.Language modifier
         let library = (sut :> IProjectAnalyzer).Analyze project
         let actual =
             TestHelper.filterDefinitions name (namespaces.Split (';')) library

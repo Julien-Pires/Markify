@@ -5,57 +5,109 @@ open Fixtures
 open Swensen.Unquote
 open Markify.Services.Roslyn
 open Markify.Domain.Compiler
-open TestHelper
 
 module RoslynAnalyzerTypesTests =
     [<Tests>]
-    let analyzeTests =
+    let emptyProjectTests =
         testList "Analyze" [
-            yield! testRepeat (withProject "Empty") allLanguages [
+            yield! testFixture withSut [
                 "should returns no type when project is empty",
-                fun project sut ->
-                    let result = sut.Analyze project
+                fun sut ->
+                    let emptyProject = { 
+                        Name = "EmptyProject"
+                        Content = [] }
+                    let result = sut.Analyze emptyProject
 
                     test <@ result.Types |> Seq.isEmpty @>
             ]
+        ]
 
-            yield! testRepeat (withProject "Organization") allLanguages [
-                "should returns types when project is not empty",
-                fun project (sut : IProjectAnalyzer) ->
+    [<Tests>]
+    let projectContentTests =
+        let contents = [
+            (
+                ProjectLanguage.CSharp,
+                ["
+                    public class FooType
+                    {
+                        public class NestedType
+                        {
+                            public class DeeperNestedType
+                            {
+                            }
+                        }
+                    }
+                "]
+            )
+            (
+                ProjectLanguage.VisualBasic, 
+                ["
+                    Public Class FooType
+                        Public Class NestedType
+                            Public Class DeeperNestedType
+                            End Class
+                        End Class
+                    End Class
+                "]
+            )
+        ]
+
+        testList "Analyze" [
+            yield! testRepeat (withProjects contents)
+                "should returns types when project is not empty"
+                (fun sut project () ->
                     let result = sut.Analyze project
 
-                    test <@ result.Types |> Seq.isEmpty |> not @>
-            ]
+                    test <@ result.Types |> Seq.isEmpty |> not @>)
 
-            yield! testRepeat (withProject "Organization") allLanguages [
-                yield! testTheory "should return types with valid name"
-                    ["FooType";
-                    "NestedType";
-                    "DeeperNestedType"]
-                    (fun name project (sut: IProjectAnalyzer) ->
-                        let assemblies = sut.Analyze project
-                        let result = getDefinitions name assemblies
+            yield! testRepeatParameterized "should return types with valid name" [
+                (withProjects contents, "FooType")
+                (withProjects contents, "NestedType")
+                (withProjects contents, "DeeperNestedType")]
+                (fun sut project name () ->
+                    let assemblies = sut.Analyze project
+                    let result = filterTypes assemblies name
                             
-                        test <@ result |> Seq.length > 0 @>)
+                    test <@ result |> Seq.length > 0 @>)
+            
+            yield! testRepeatParameterized "should return types with valid fullname" [
+                (withProjects contents, "FooType")
+                (withProjects contents, "ParentType.NestedType")
+                (withProjects contents, "ParentType.AnotherNestedType.DeeperNestedType")]
+                (fun sut project fullname () ->
+                    let assemblies = sut.Analyze project
+                    let result = filterTypes assemblies fullname
 
-                yield! testTheory "should return types with valid fullname"
-                    ["FooType";
-                    "ParentType.NestedType";
-                    "ParentType.AnotherNestedType.DeeperNestedType"]
-                    (fun fullname project (sut: IProjectAnalyzer) ->
-                        let fullnames = NamespaceHelper.AllTypes |> Seq.map (fun c -> sprintf "%s.%s" c fullname)
-                        let library = sut.Analyze project
-                        let actual = fullnames |> Seq.map (fun c -> getDefinitionByFullname c library)
+                    test <@ result |> Seq.length > 0 @>)
+        ]
 
-                        test <@ (actual |> Seq.length) = (fullnames |> Seq.length) @>)
-            ]
+    [<Tests>]
+    let duplicateContentTests =
+        let duplicates = [
+            (
+                ProjectLanguage.CSharp,
+                ["
+                    public class FooType { }
+                    public class FooType { }
+                "]
+            )
+            (
+                ProjectLanguage.VisualBasic, 
+                ["
+                    Public Class FooType
+                    End Class
+                    Public Class FooType
+                    End Class
+                "]
+            )
+        ]
 
-            yield! testRepeat (withProject "Duplicates") allLanguages [
-                "should returns no duplicate types",
-                fun project (sut : IProjectAnalyzer) ->
+        testList "Analyze" [
+            yield! testRepeat (withProjects duplicates)
+                "should returns no duplicate types"
+                (fun sut project () ->
                     let assemblies = sut.Analyze project
                     let result = assemblies.Types |> Seq.groupBy (fun c -> getFullname c.Identity)
 
-                    test <@ (result |> Seq.length) = (assemblies.Types |> Seq.length) @>
+                    test <@ (result |> Seq.length) = (assemblies.Types |> Seq.length) @>)
             ]
-        ]

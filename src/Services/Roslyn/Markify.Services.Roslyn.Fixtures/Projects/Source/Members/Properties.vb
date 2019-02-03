@@ -4,13 +4,11 @@ Namespace Class
     Public Class TypeWithNoProperties
     End Class
 
-    Public MustInherit Class AbstractTypeWithProperties
-        Public Overridable Property SealedProperty() As Int32
+    Public Class TypeWithPrivateDefaultModifier
+        Property WithNoModifierProperty() As Int32
     End Class
 
     Public Class TypeWithProperties
-        Inherits AbstractFooType
-
         Public Property AutoProperty() As Int32
 
         Public ReadOnly Property ReadOnlyProperty() As Int32
@@ -46,8 +44,6 @@ Namespace Class
 
         Protected Friend Property ProtectedInternalProperty() As Int32
 
-        Property WithNoModifierProperty() As Int32
-
         Public Shared Property StaticProperty() As Int32
 
         Public Overridable Property VirtualProperty() As Int32
@@ -62,6 +58,10 @@ End Namespace
 
 Namespace Struct
     Public Structure TypeWithNoProperties
+    End Structure
+
+    Public Structure TypeWithPrivateDefaultModifier
+        Property WithNoModifierProperty() As Int32
     End Structure
 
     Public Structure TypeWithProperties
@@ -96,8 +96,6 @@ Namespace Struct
 
         Friend Property InternalProperty() As Int32
 
-        Property WithNoModifierProperty() As Int32
-
         Public Shared Property StaticProperty() As Int32
     End Structure
 End Namespace
@@ -110,14 +108,16 @@ Namespace Interface
     Public Interface TypeWithNoProperties
     End Interface
 
+    Public Interface TypeWithPublicDefaultModifier
+        Property WithNoModifierProperty()
+    End Interface
+
     Public Interface TypeWithProperties
         Property AutoProperty() As Int32
 
         ReadOnly Property ReadOnlyProperty() As Int32
 
         WriteOnly Property WriteOnlyProperty() As Int32
-
-        Property WithNoModifierProperty()
     End Interface
 End Namespace
 

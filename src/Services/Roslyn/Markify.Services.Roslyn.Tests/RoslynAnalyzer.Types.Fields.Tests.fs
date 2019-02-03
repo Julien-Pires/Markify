@@ -41,7 +41,7 @@ module RoslynAnalyzerTypesFieldsTests =
     [<Theory>]
     [<ProjectData("Fields", "TypeWithFields", "Field", "private")>]
     let ``Analyze should return default access modifier when field has none`` (name, field, modifier, sut : RoslynAnalyzer, project) =
-        let expected = LanguageHelper.getModifier project.Language modifier
+        let expected = LanguageHelperOld.getModifier project.Language modifier
         let library = (sut :> IProjectAnalyzer).Analyze project
         let actual =
             TestHelper.getDefinitions name library

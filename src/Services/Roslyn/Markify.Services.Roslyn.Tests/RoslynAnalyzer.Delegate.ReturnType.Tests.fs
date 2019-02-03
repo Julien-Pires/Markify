@@ -12,7 +12,7 @@ module RoslynAnalyzerDelegateReturnTypeTests =
     [<ProjectData("Delegates", "WithReturnType", "Int32")>]
     [<ProjectData("Delegates", "WithGenericReturnType`1", "T")>]
     let ``Analyze should return expected delegate return type`` (name, returnType, sut : RoslynAnalyzer, project) =
-        let expected = LanguageHelper.getType project.Language returnType
+        let expected = LanguageHelperOld.getType project.Language returnType
         let library = (sut :> IProjectAnalyzer).Analyze project
         let actual = 
             TestHelper.getDefinition name library 

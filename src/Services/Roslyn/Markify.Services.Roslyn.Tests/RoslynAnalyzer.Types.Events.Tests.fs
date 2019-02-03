@@ -56,7 +56,7 @@ module RoslynAnalyzerTypesEventsTests =
     [<ProjectData("Events", "TypeWithEvents", "Class;Struct", "Event", "private")>]
     [<ProjectData("Events", "TypeWithEvents", "Interface", "Event", "public")>]
     let ``Analyze should return default event access modifier when event has none`` (name, namespaces : string, event, modifier, sut : RoslynAnalyzer, project) =
-        let expected = LanguageHelper.getModifier project.Language modifier
+        let expected = LanguageHelperOld.getModifier project.Language modifier
         let library = (sut :> IProjectAnalyzer).Analyze project
         let actual =
             TestHelper.filterDefinitions name (namespaces.Split (';')) library

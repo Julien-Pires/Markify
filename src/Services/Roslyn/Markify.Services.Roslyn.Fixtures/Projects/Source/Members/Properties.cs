@@ -6,23 +6,23 @@ namespace Class
     {
     }
 
-    public abstract class AbstractTypeWithProperties
+    public class TypeWithPrivateDefaultModifier
     {
-        public virtual Int32 SealedProperty { get; set; }
+        Int32 WithNoModifierProperty { get; set; }
     }
 
-    public class TypeWithProperties : AbstractFooType
+    public class TypeWithProperties
     {
         public Int32 AutoProperty { get; set; }
 
         public Int32 ReadOnlyProperty { get; }
 
-        public Int32 WithExpressionBody => 1;
-
         public Int32 WriteOnlyProperty
         {
             set { }
         }
+
+        public Int32 WithExpressionBody => 1;
 
         public Int32 WithGetterModifierProperty
         {
@@ -40,15 +40,13 @@ namespace Class
 
         private Int32 PrivateProperty { get; set; }
 
-        protected Int32 ProtectedProperty { get; set; }
-
         internal Int32 InternalProperty { get; set; }
 
-        protected internal Int32 ProtectedInternalProperty { get; set; }
-
-        Int32 WithNoModifierProperty { get; set; }
-
         public static Int32 StaticProperty { get; set; }
+
+        protected Int32 ProtectedProperty { get; set; }
+
+        protected internal Int32 ProtectedInternalProperty { get; set; }
 
         public virtual Int32 VirtualProperty { get; set; }
 
@@ -66,6 +64,11 @@ namespace Interface
     {
     }
 
+    public interface TypeWithPublicDefaultModifier
+    {
+        Int32 WithNoModifierProperty { get; set; }
+    }
+
     public interface TypeWithProperties
     {
         Int32 AutoProperty { get; set; }
@@ -73,8 +76,6 @@ namespace Interface
         Int32 ReadOnlyProperty { get; }
 
         Int32 WriteOnlyProperty { set; }
-
-        Int32 WithNoModifierProperty { get; set; }
     }
 }
 #endregion
@@ -87,18 +88,23 @@ namespace Struct
     {
     }
 
+    public struct TypeWithPrivateDefaultModifier
+    {
+        Int32 WithNoModifierProperty { get; set; }
+    }
+
     public struct TypeWithProperties
     {
         public Int32 AutoProperty { get; set; }
 
         public Int32 ReadOnlyProperty { get; }
 
-        public Int32 WithExpressionBody => 1;
-
         public Int32 WriteOnlyProperty
         {
             set { }
         }
+
+        public Int32 WithExpressionBody => 1;
 
         public Int32 WithGetterModifierProperty
         {
@@ -113,8 +119,6 @@ namespace Struct
         }
 
         public static Int32 WithInitialValueProperty { get; } = 1;
-
-        Int32 WithNoModifierProperty { get; set; }
 
         private Int32 PrivateProperty { get; set; }
 

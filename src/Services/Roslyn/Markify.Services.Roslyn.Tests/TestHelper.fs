@@ -54,12 +54,12 @@ module TestHelper =
 
     let getModifiersOld (modifiers : string) language =
         modifiers.Split (';') 
-        |> Seq.map (LanguageHelper.getModifier language) 
+        |> Seq.map (fun c -> LanguageHelperOld.getModifier language c) 
         |> Set
 
     let getMemberModifiers (modifiers : string) language =
         modifiers.Split (';') 
-        |> Seq.map (LanguageHelper.getMemberModifiers language) 
+        |> Seq.map (fun c -> LanguageHelperOld.getMemberModifiers language c) 
         |> Set
 
     let getGenericParameter name (definitions : TypeDefinition seq) =

@@ -11,11 +11,11 @@ module RoslynAnalyzerTypesModifiersTests =
     [<Tests>]
     let analyzeTests =
         testList "Analyze" [
-            yield! testRepeat (withProject "AccessModifiers") allLanguages [
+            yield! testRepeatOld (withProjectOld "AccessModifiers") allLanguages [
                 yield "should returns definition with no access modifier when type has none",
                 fun project (sut : IProjectAnalyzer) ->
                     let assemblies = sut.Analyze project
-                    let result = TestHelper.filterTypes "NoAccessModifierType" assemblies
+                    let result = filterTypes assemblies "NoAccessModifierType"
                         
                     test <@ result |> Seq.forAllStrict (fun c -> Seq.isEmpty c.Identity.AccessModifiers) @>
 
@@ -25,22 +25,22 @@ module RoslynAnalyzerTypesModifiersTests =
                     ("ParentType.ProtectedType", ["protected"]);
                     ("ParentType.PrivateType", ["private"]);
                     ("ParentType.ProtectedInternalType", ["protected"; "internal"]);
-                    ("ParentType.InternalProtectedType", ["protected"; "internal"]);] 
+                    ("ParentType.InternalProtectedType", ["protected"; "internal"]);]
                     (fun parameters project (sut : IProjectAnalyzer) -> 
                         let name, modifiers = parameters
-                        let expected = TestHelper.getModifiers project.Language modifiers
+                        let expected = modifiers |> List.map (fun c -> getModifier c project.Language)
                         let assemblies = sut.Analyze project
-                        let result = TestHelper.filterTypes name assemblies
+                        let result = filterTypes assemblies name
                         
                         test <@ result |> Seq.map (fun c -> Set c.Identity.AccessModifiers)
                                        |> Seq.forAllStrict ((Set.isSubset) (Set expected)) @>)
             ]
 
-            yield! testRepeat (withProject "Modifiers") allLanguages [
+            yield! testRepeatOld (withProjectOld "Modifiers") allLanguages [
                 yield "should returns defintion with no modifier when type has none",
                 fun project (sut : IProjectAnalyzer) ->
                     let assemblies = sut.Analyze project
-                    let result = TestHelper.filterTypes "NoModifierType" assemblies
+                    let result = filterTypes assemblies "NoModifierType"
                         
                     test <@ result |> Seq.forAllStrict (fun c -> Seq.isEmpty c.Identity.Modifiers) @>
 
@@ -53,9 +53,9 @@ module RoslynAnalyzerTypesModifiersTests =
                     ("SealedPartialType", ["sealed"; "partial"])]
                     (fun parameters project (sut : IProjectAnalyzer) -> 
                         let name, modifiers = parameters
-                        let expected = TestHelper.getModifiers project.Language modifiers
+                        let expected = modifiers |> List.map (fun c -> getModifier c project.Language)
                         let assemblies = sut.Analyze project
-                        let result = TestHelper.filterTypes name assemblies
+                        let result = filterTypes assemblies name
                         
                         test <@ result |> Seq.map (fun c -> Set c.Identity.Modifiers)
                                        |> Seq.forAllStrict ((Set.isSubset) (Set expected)) @>)

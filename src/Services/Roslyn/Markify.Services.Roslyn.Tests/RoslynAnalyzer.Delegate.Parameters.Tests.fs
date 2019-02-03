@@ -65,7 +65,7 @@ module RoslynAnalyzerDelegateParametersTests =
     [<ProjectData("Delegates", "WithParametersModifiers", "foo", "ref")>]
     [<ProjectData("Delegates", "WithParametersModifiers", "foo", "out")>]
     let ``Analyze should return modifiers when delegate parameter has some`` (name, parameter, modifier, sut : RoslynAnalyzer, project) =
-        let expected = LanguageHelper.getMemberModifiers project.Language modifier
+        let expected = LanguageHelperOld.getMemberModifiers project.Language modifier
         let library = (sut :> IProjectAnalyzer).Analyze project
         let actual = 
             TestHelper.getDefinition name library 
