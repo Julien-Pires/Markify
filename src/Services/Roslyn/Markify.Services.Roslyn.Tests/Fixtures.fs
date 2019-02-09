@@ -1,7 +1,6 @@
 ﻿namespace Markify.Services.Roslyn.Tests
 
 open Expecto
-open Markify.Domain.Ide
 open Markify.Domain.Compiler
 open Markify.Services.Roslyn
 open Markify.Services.Roslyn.Common

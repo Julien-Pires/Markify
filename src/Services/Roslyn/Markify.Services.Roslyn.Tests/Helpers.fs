@@ -100,6 +100,11 @@ module TypeHelper =
         | Delegate x -> x
         | _ -> raise (System.InvalidCastException("Found type is not a delegate"))
 
+    let findEnum assemblies name : EnumDefinition = 
+        match findType assemblies name with
+        | Enum x -> x
+        | _ -> raise (System.InvalidCastException("Found type is not an enum"))
+
     let getProperties = function
         | Class c | Struct c | Interface c -> c.Properties
         | _ -> Seq.empty
