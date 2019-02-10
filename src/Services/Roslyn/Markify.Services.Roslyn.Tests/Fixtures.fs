@@ -41,9 +41,9 @@ module Fixtures =
 
     let testRepeat repeater name test =
         repeater test
-        |> Seq.map (fun c -> Tests.testCase name c)
+        |> Seq.mapi (fun index c -> testCase (sprintf "%s #%i" name index) c)
 
     let testRepeatParameterized name setup test =
         setup
         |> Seq.collect (fun (repeater, parameters) ->
-            repeater test |> Seq.map (fun c -> Tests.testCase name (c parameters)))
+            repeater test |> Seq.mapi (fun index c -> testCase (sprintf "%s (%A) #%i" name parameters index) (c parameters)))
