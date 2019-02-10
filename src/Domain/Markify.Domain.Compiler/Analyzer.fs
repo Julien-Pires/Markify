@@ -1,9 +1,9 @@
 ﻿namespace Markify.Domain.Compiler
 
 type ProjectLanguage =
-    | Unknown
-    | CSharp
-    | VisualBasic
+    | Unknown = 0
+    | CSharp = 1
+    | VisualBasic = 2
 
 type IProjectContent =
     abstract member Content : string with get

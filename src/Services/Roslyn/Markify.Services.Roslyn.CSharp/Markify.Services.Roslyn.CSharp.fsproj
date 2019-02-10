@@ -160,11 +160,6 @@
       <Project>{a4959db4-7b61-4e7e-918f-59647879a50d}</Project>
       <Private>True</Private>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Domain\Markify.Domain.Ide\Markify.Domain.Ide.fsproj">
-      <Name>Markify.Domain.Ide</Name>
-      <Project>{a55c060a-c3bf-4eb6-8439-cd5dc3614cfd}</Project>
-      <Private>True</Private>
-    </ProjectReference>
     <ProjectReference Include="..\Markify.Services.Roslyn.Common\Markify.Services.Roslyn.Common.fsproj">
       <Name>Markify.Services.Roslyn.Common</Name>
       <Project>{40df054b-d8bf-4561-8501-5ad5f4e7874a}</Project>
