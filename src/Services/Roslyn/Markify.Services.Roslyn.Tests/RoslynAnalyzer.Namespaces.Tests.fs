@@ -1,29 +1,62 @@
 ﻿namespace Markify.Services.Roslyn.Tests
 
-module RoslynAnalyzerNamespacesTests =
-    open Markify.Services.Roslyn
-    open Markify.Domain.Compiler
-    open Xunit
-    open Swensen.Unquote
+open Markify.Services.Roslyn
+open Markify.Domain.Compiler
+open Expecto
+open Swensen.Unquote
+open Fixtures
 
-    [<Theory>]
-    [<ProjectData("Empty")>]
-    let ``Analyze should return no namespace when project has none`` (sut : RoslynAnalyzer, project) =
-        let actual = (sut :> IProjectAnalyzer).Analyze project
+module RoslynAnalyzer_Namespaces_Tests =
+    [<Tests>]
+    let noNamespacesTests =
+        let contents = [
+            (ProjectLanguage.CSharp, [""])
+            (ProjectLanguage.VisualBasic, [""])
+        ]
+        testList "Analyze/Namespace" [
+            yield! testRepeat (withProjects contents)
+                "should return no namespace when project has none"
+                (fun sut project () -> 
+                    let result = sut.Analyze project
 
-        test <@ actual.Namespaces |> Seq.isEmpty @>
+                    test <@ result.Namespaces |> Seq.isEmpty @>)
+        ]
 
-    [<Theory>]
-    [<ProjectData("Organization")>]
-    let ``Analyze should return namespaces when type has some`` (sut : RoslynAnalyzer, project) =
-        let actual = (sut :> IProjectAnalyzer).Analyze project
+    [<Tests>]
+    let withNamespacesTests =
+        let contents = [
+            (ProjectLanguage.CSharp, ["
+                namespace Namespace.A 
+                {
+                    namespace Namespace.A.Nested { }
+                }
 
-        test <@ actual.Namespaces |> (Seq.isEmpty >> not) @>
+                namespace Namespace.B { }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Namespace Namespace.A 
+                    Namespace Namespace.A.Nested           
+                    End Namespace
+                End Namespace
 
-    [<Theory>]
-    [<ProjectData("Organization", "Class")>]
-    let ``Analyze should return namespace name`` (expected, sut : RoslynAnalyzer, project) =
-        let actual = (sut :> IProjectAnalyzer).Analyze project
+                Namespace Namespace.B
+                End Namespace
+            "])
+        ]
+        testList "Analyze/Namespace" [
+            yield! testRepeat (withProjects contents)
+                "should return namespaces when project has some"
+                (fun sut project () -> 
+                    let result = sut.Analyze project
 
-        test <@ actual.Namespaces |> Seq.tryFind (fun c -> c.Name = expected)
-                                  |> Option.isSome @>
+                    test <@ result.Namespaces |> Seq.length = 3 @>)
+
+            yield! testRepeatParameterized
+                "should return namespace with correct name when project has some"[
+                (withProjects contents, ("Namespace.A"))
+                (withProjects contents, ("Namespace.A.Nested"))]
+                (fun sut project name () -> 
+                    let result = sut.Analyze project
+
+                    test <@ result.Namespaces |> Seq.exists (fun c -> c.Name = name) @>)
+        ]
