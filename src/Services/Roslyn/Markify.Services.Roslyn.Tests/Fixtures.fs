@@ -47,23 +47,3 @@ module Fixtures =
         setup
         |> Seq.collect (fun (repeater, parameters) ->
             repeater test |> Seq.map (fun c -> Tests.testCase name (c parameters)))
-
-    ////////////////////////////////////////////
-
-    let CSharp = ProjectLanguage.CSharp
-    let VisualBasic = ProjectLanguage.VisualBasic
-    let allLanguages = [CSharp; VisualBasic]
-
-    let testRepeatOld setup values tests =
-        tests
-        |> Seq.map (fun (name, c) ->
-            values 
-            |> Seq.map (fun value -> Tests.testCase (sprintf "%s - %A" name value) (setup value c)))
-        |> Seq.collect id
-
-    let testTheory name values test = 
-        values 
-        |> Seq.map (fun c -> (sprintf "%s / %A" name c, test c))
-
-    let withProjectOld name language f () = 
-        f <|| (ProjectBuilder.create name language, (RoslynAnalyzer(modules) :> IProjectAnalyzer))

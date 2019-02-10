@@ -5,7 +5,7 @@ open Fixtures
 open Swensen.Unquote
 open Markify.Domain.Compiler
 
-module RoslynAnalyzerClassTests =
+module RoslynAnalyzer_Class_Tests =
     [<Tests>]
     let projectContentTests =
         let contents = [
@@ -35,7 +35,7 @@ module RoslynAnalyzerClassTests =
                 "]
             )
         ]
-        testList "Analyze" [
+        testList "Analyze/Class" [
             yield! testRepeat (withProjects contents)
                 "should returns class when project has some"
                 (fun sut project () ->
@@ -43,7 +43,8 @@ module RoslynAnalyzerClassTests =
 
                     test <@ result.Types |> Seq.isEmpty |> not @>)
 
-            yield! testRepeatParameterized "should return class with valid name" [
+            yield! testRepeatParameterized 
+                "should return class with valid name" [
                 (withProjects contents, "FooType")
                 (withProjects contents, "NestedType")
                 (withProjects contents, "DeeperNestedType")]
@@ -53,7 +54,8 @@ module RoslynAnalyzerClassTests =
                             
                     test <@ result |> Seq.length > 0 @>)
             
-            yield! testRepeatParameterized "should return class with valid fullname" [
+            yield! testRepeatParameterized 
+                "should return class with valid fullname" [
                 (withProjects contents, "FooType")
                 (withProjects contents, "ParentType.NestedType")
                 (withProjects contents, "ParentType.AnotherNestedType.DeeperNestedType")]

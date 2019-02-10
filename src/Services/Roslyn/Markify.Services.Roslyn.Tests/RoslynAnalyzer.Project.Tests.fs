@@ -5,10 +5,10 @@ open Fixtures
 open Swensen.Unquote
 open Markify.Domain.Compiler
 
-module RoslynAnalyzerTypesTests =
+module RoslynAnalyzer_Projects_Tests =
     [<Tests>]
     let emptyProjectTests =
-        testList "Analyze" [
+        testList "Analyze/Project" [
             yield! testFixture withSut [
                 "should returns no type when project is empty",
                 fun sut ->
@@ -41,7 +41,7 @@ module RoslynAnalyzerTypesTests =
                 "]
             )
         ]
-        testList "Analyze" [
+        testList "Analyze/Project" [
             yield! testRepeat (withProjects duplicates)
                 "should returns no duplicate types"
                 (fun sut project () ->

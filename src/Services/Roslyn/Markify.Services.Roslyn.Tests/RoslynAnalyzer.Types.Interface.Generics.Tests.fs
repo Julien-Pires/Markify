@@ -6,7 +6,7 @@ open Expecto
 open Swensen.Unquote
 open Fixtures
 
-module RoslynAnalyzerTypesInterfaceGenericsTests =
+module RoslynAnalyzer_InterfaceGenerics_Tests =
     [<Tests>]
     let noGenericInterfaceTests =
         let noGeneric = [
@@ -24,9 +24,10 @@ module RoslynAnalyzerTypesInterfaceGenericsTests =
                 "]
             )
         ]
-        testList "Analyze" [
-            yield! testRepeatParameterized "should return no generic parameters when interface has none"
-                [(withProjects noGeneric, "NoGenericInterface")]
+        testList "Analyze/Interface" [
+            yield! testRepeatParameterized 
+                "should return no generic parameters when interface has none" [
+                (withProjects noGeneric, "NoGenericInterface")]
                 (fun sut project name () ->
                     let assemblies = sut.Analyze project
                     let result = findInterface assemblies name
@@ -56,8 +57,9 @@ module RoslynAnalyzerTypesInterfaceGenericsTests =
                 "]
             )
         ]
-        testList "Analyze" [
-            yield! testRepeatParameterized "should return generic parameters when interface has some" [
+        testList "Analyze/Interface" [
+            yield! testRepeatParameterized 
+                "should return generic parameters when interface has some" [
                 (withProjects generic, ("SingleGenericInterface`1", 1))
                 (withProjects generic, ("MultipleGenericInterface`2", 2))]
                 (fun sut project (name, expected) () ->
@@ -66,7 +68,8 @@ module RoslynAnalyzerTypesInterfaceGenericsTests =
                         
                     test <@ result.Identity.Parameters |> Seq.length = expected @>)
 
-            yield! testRepeatParameterized "should return valid generic parameter name when struct has some" [
+            yield! testRepeatParameterized 
+                "should return valid generic parameter name when struct has some" [
                 (withProjects generic, ("SingleGenericInterface`1", "T"))
                 (withProjects generic, ("MultipleGenericInterface`2", "T"))
                 (withProjects generic, ("MultipleGenericInterface`2", "Y"))]
@@ -104,9 +107,10 @@ module RoslynAnalyzerTypesInterfaceGenericsTests =
                 "]
             )
         ]
-        testList "Analyze" [
-            yield! testRepeatParameterized "should return no modifiers when interface generic parameter has none"
-                [withProjects genericModifiers, ("SingleGenericInterface`1", "T")]
+        testList "Analyze/Interface" [
+            yield! testRepeatParameterized 
+                "should return no modifiers when interface generic parameter has none" [
+                (withProjects genericModifiers, ("SingleGenericInterface`1", "T"))]
                 (fun sut project (name, parameter) () ->
                     let assemblies = sut.Analyze project
                     let result = findInterface assemblies name
@@ -114,7 +118,8 @@ module RoslynAnalyzerTypesInterfaceGenericsTests =
                     test <@ result.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
                                                        |> fun c -> c.Modifier.IsNone @>)
 
-            yield! testRepeatParameterized "should return modifier when interface generic parameter has one"  [
+            yield! testRepeatParameterized 
+                "should return modifier when interface generic parameter has one"  [
                 (withProjects genericModifiers, ("CovariantGenericInterface`1", "T", "in"))
                 (withProjects genericModifiers, ("ContravariantGenericInterface`1", "T", "out"))]
                 (fun sut project (name, parameter, modifier) () ->
@@ -150,9 +155,10 @@ module RoslynAnalyzerTypesInterfaceGenericsTests =
                 "]
             )
         ]
-        testList "Analyze" [
-            yield! testRepeatParameterized "should return no constraints when interface generic parameter has none"
-                [withProjects genericConstraints, ("SingleGenericInterface`1", "T")]
+        testList "Analyze/Interface" [
+            yield! testRepeatParameterized 
+                "should return no constraints when interface generic parameter has none" [
+                (withProjects genericConstraints, ("SingleGenericInterface`1", "T"))]
                 (fun sut project (name, parameter) () ->
                     let assemblies = sut.Analyze project
                     let result = findInterface assemblies name
@@ -161,7 +167,8 @@ module RoslynAnalyzerTypesInterfaceGenericsTests =
                                                        |> fun c -> c.Constraints
                                                        |> Seq.isEmpty @>)
 
-            yield! testRepeatParameterized "should return constraints when interface generic parameter has some" [
+            yield! testRepeatParameterized 
+                "should return constraints when interface generic parameter has some" [
                 (withProjects genericConstraints, ("GenericConstrainedInterface`2", "T", ["struct"]))
                 (withProjects genericConstraints, ("GenericConstrainedInterface`2", "Y", ["IEnumerable"; "class"; "new()"]))]
                 (fun sut project (name, parameter, constraints) () ->
@@ -170,6 +177,5 @@ module RoslynAnalyzerTypesInterfaceGenericsTests =
                     let result = findInterface assemblies name
 
                     test <@ result.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
-                                                       |> fun c -> c.Constraints |> Seq.toList
-                                                       |> ((=) expected) @>)
+                                                       |> fun c -> c.Constraints |> Seq.toList = expected @>)
         ]

@@ -6,7 +6,7 @@ open Expecto
 open Swensen.Unquote
 open Fixtures
 
-module RoslynAnalyzerTypesDelegateGenericsTests =
+module RoslynAnalyzer_DelegateGenerics_Tests =
     [<Tests>]
     let noGenericDelegateTests =
         let noGeneric = [
@@ -23,9 +23,10 @@ module RoslynAnalyzerTypesDelegateGenericsTests =
                 "]
             )
         ]
-        testList "Analyze" [
-            yield! testRepeatParameterized "should return no generic parameters when delegate has none"
-                [(withProjects noGeneric, "NoGenericDelegate")]
+        testList "Analyze/Delegate" [
+            yield! testRepeatParameterized 
+                "should return no generic parameters when delegate has none" [
+                (withProjects noGeneric, "NoGenericDelegate")]
                 (fun sut project name () ->
                     let assemblies = sut.Analyze project
                     let result = findDelegate assemblies name
@@ -53,8 +54,9 @@ module RoslynAnalyzerTypesDelegateGenericsTests =
                 "]
             )
         ]
-        testList "Analyze" [
-            yield! testRepeatParameterized "should return generic parameters when delegate has some" [
+        testList "Analyze/Delegate" [
+            yield! testRepeatParameterized 
+                "should return generic parameters when delegate has some" [
                 (withProjects generic, ("SingleGenericDelegate`1", 1))
                 (withProjects generic, ("MultipleGenericDelegate`2", 2))]
                 (fun sut project (name, expected) () ->
@@ -63,7 +65,8 @@ module RoslynAnalyzerTypesDelegateGenericsTests =
                         
                     test <@ result.Identity.Parameters |> Seq.length = expected @>)
 
-            yield! testRepeatParameterized "should return valid generic parameter name when delegate has some" [
+            yield! testRepeatParameterized 
+                "should return valid generic parameter name when delegate has some" [
                 (withProjects generic, ("SingleGenericDelegate`1", "T"))
                 (withProjects generic, ("MultipleGenericDelegate`2", "T"))
                 (withProjects generic, ("MultipleGenericDelegate`2", "Y"))]
@@ -98,9 +101,10 @@ module RoslynAnalyzerTypesDelegateGenericsTests =
                 "]
             )
         ]
-        testList "Analyze" [
-            yield! testRepeatParameterized "should return no modifiers when delegate generic parameter has none"
-                [withProjects genericModifiers, ("SingleGenericDelegate`1", "T")]
+        testList "Analyze/Delegate" [
+            yield! testRepeatParameterized 
+                "should return no modifiers when delegate generic parameter has none" [
+                (withProjects genericModifiers, ("SingleGenericDelegate`1", "T"))]
                 (fun sut project (name, parameter) () ->
                     let assemblies = sut.Analyze project
                     let result = findDelegate assemblies name
@@ -108,7 +112,8 @@ module RoslynAnalyzerTypesDelegateGenericsTests =
                     test <@ result.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
                                                        |> fun c -> c.Modifier.IsNone @>)
 
-            yield! testRepeatParameterized "should return modifier when delegate generic parameter has one"  [
+            yield! testRepeatParameterized 
+                "should return modifier when delegate generic parameter has one"  [
                 (withProjects genericModifiers, ("CovariantGenericDelegate`1", "T", "in"))
                 (withProjects genericModifiers, ("ContravariantGenericDelegate`1", "T", "out"))]
                 (fun sut project (name, parameter, modifier) () ->
@@ -142,9 +147,10 @@ module RoslynAnalyzerTypesDelegateGenericsTests =
                 "]
             )
         ]
-        testList "Analyze" [
-            yield! testRepeatParameterized "should return no constraints when interface generic parameter has none"
-                [withProjects genericConstraints, ("SingleGenericDelegate`1", "T")]
+        testList "Analyze/Delegate" [
+            yield! testRepeatParameterized 
+                "should return no constraints when delegate generic parameter has none" [
+                (withProjects genericConstraints, ("SingleGenericDelegate`1", "T"))]
                 (fun sut project (name, parameter) () ->
                     let assemblies = sut.Analyze project
                     let result = findDelegate assemblies name
@@ -153,7 +159,8 @@ module RoslynAnalyzerTypesDelegateGenericsTests =
                                                        |> fun c -> c.Constraints
                                                        |> Seq.isEmpty @>)
 
-            yield! testRepeatParameterized "should return constraints when interface generic parameter has some" [
+            yield! testRepeatParameterized 
+                "should return constraints when delegate generic parameter has some" [
                 (withProjects genericConstraints, ("GenericConstrainedDelegate`2", "T", ["struct"]))
                 (withProjects genericConstraints, ("GenericConstrainedDelegate`2", "Y", ["IEnumerable"; "class"; "new()"]))]
                 (fun sut project (name, parameter, constraints) () ->
@@ -162,6 +169,5 @@ module RoslynAnalyzerTypesDelegateGenericsTests =
                     let result = findDelegate assemblies name
 
                     test <@ result.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
-                                                       |> fun c -> c.Constraints |> Seq.toList
-                                                       |> ((=) expected) @>)
+                                                       |> fun c -> c.Constraints |> Seq.toList = expected @>)
         ]

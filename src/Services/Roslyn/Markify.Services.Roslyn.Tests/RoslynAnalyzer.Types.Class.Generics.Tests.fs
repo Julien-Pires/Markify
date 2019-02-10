@@ -6,7 +6,7 @@ open Expecto
 open Swensen.Unquote
 open Fixtures
 
-module RoslynAnalyzerTypesClassGenericsTests =
+module RoslynAnalyzer_ClassGenerics_Tests =
     [<Tests>]
     let noGenericClassTests =
         let noGeneric = [
@@ -24,9 +24,10 @@ module RoslynAnalyzerTypesClassGenericsTests =
                 "]
             )
         ]
-        testList "Analyze" [
-            yield! testRepeatParameterized "should return no generic parameters when class has none"
-                [(withProjects noGeneric, "NoGenericClass")]
+        testList "Analyze/Class" [
+            yield! testRepeatParameterized 
+                "should return no generic parameters when class has none" [
+                (withProjects noGeneric, "NoGenericClass")]
                 (fun sut project name () ->
                     let assemblies = sut.Analyze project
                     let result = findClass assemblies name
@@ -56,8 +57,9 @@ module RoslynAnalyzerTypesClassGenericsTests =
                 "]
             )
         ]
-        testList "Analyze" [
-            yield! testRepeatParameterized "should return generic parameters when class has some" [
+        testList "Analyze/Class" [
+            yield! testRepeatParameterized 
+                "should return generic parameters when class has some" [
                 (withProjects generic, ("SingleGenericClass`1", 1))
                 (withProjects generic, ("MultipleGenericClass`2", 2))]
                 (fun sut project (name, expected) () ->
@@ -66,7 +68,8 @@ module RoslynAnalyzerTypesClassGenericsTests =
                         
                     test <@ result.Identity.Parameters |> Seq.length = expected @>)
 
-            yield! testRepeatParameterized "should return valid generic parameter name when class has some" [
+            yield! testRepeatParameterized 
+                "should return valid generic parameter name when class has some" [
                 (withProjects generic, ("SingleGenericClass`1", "T"))
                 (withProjects generic, ("MultipleGenericClass`2", "T"))
                 (withProjects generic, ("MultipleGenericClass`2", "Y"))]
@@ -94,16 +97,16 @@ module RoslynAnalyzerTypesClassGenericsTests =
                 "]
             )
         ]
-        testList "Analyze" [
-            yield! testRepeatParameterized "should return no modifiers when class generic parameter has none"
-                [withProjects genericModifiers, ("SingleGenericClass`1", "T")]
+        testList "Analyze/Class" [
+            yield! testRepeatParameterized 
+                "should return no modifiers when class generic parameter has none" [
+                (withProjects genericModifiers, ("SingleGenericClass`1", "T"))]
                 (fun sut project (name, parameter) () ->
                     let assemblies = sut.Analyze project
                     let result = findClass assemblies name
 
                     test <@ result.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
-                                                       |> fun c -> c.Modifier
-                                                       |> Option.isNone @>)
+                                                       |> fun c -> c.Modifier.IsNone @>)
         ]
 
     [<Tests>]
@@ -130,9 +133,10 @@ module RoslynAnalyzerTypesClassGenericsTests =
                 "]
             )
         ]
-        testList "Analyze" [
-            yield! testRepeatParameterized "should return no constraints when class generic parameter has none"
-                [withProjects genericConstraints, ("SingleGenericClass`1", "T")]
+        testList "Analyze/Class" [
+            yield! testRepeatParameterized 
+                "should return no constraints when class generic parameter has none" [
+                (withProjects genericConstraints, ("SingleGenericClass`1", "T"))]
                 (fun sut project (name, parameter) () ->
                     let assemblies = sut.Analyze project
                     let result = findClass assemblies name
@@ -141,7 +145,8 @@ module RoslynAnalyzerTypesClassGenericsTests =
                                                        |> fun c -> c.Constraints
                                                        |> Seq.isEmpty @>)
 
-            yield! testRepeatParameterized "should return constraints when class generic parameter has some" [
+            yield! testRepeatParameterized 
+                "should return constraints when class generic parameter has some" [
                 (withProjects genericConstraints, ("GenericConstrainedClass`2", "T", ["struct"]))
                 (withProjects genericConstraints, ("GenericConstrainedClass`2", "Y", ["IEnumerable"; "class"; "new()"]))]
                 (fun sut project (name, parameter, constraints) () ->
@@ -150,6 +155,5 @@ module RoslynAnalyzerTypesClassGenericsTests =
                     let result = findClass assemblies name
 
                     test <@ result.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
-                                                       |> fun c -> c.Constraints |> Seq.toList
-                                                       |> ((=) expected) @>)
+                                                       |> fun c -> c.Constraints |> Seq.toList = expected @>)
         ]

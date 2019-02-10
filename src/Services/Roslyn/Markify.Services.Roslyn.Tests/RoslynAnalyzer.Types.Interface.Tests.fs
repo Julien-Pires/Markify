@@ -5,7 +5,7 @@ open Fixtures
 open Swensen.Unquote
 open Markify.Domain.Compiler
 
-module RoslynAnalyzerInterfaceTests =
+module RoslynAnalyzer_Interface_Tests =
     [<Tests>]
     let projectContentTests =
         let contents = [
@@ -33,7 +33,7 @@ module RoslynAnalyzerInterfaceTests =
                 "]
             )
         ]
-        testList "Analyze" [
+        testList "Analyze/Interface" [
             yield! testRepeat (withProjects contents)
                 "should returns interface when project has some"
                 (fun sut project () ->
@@ -41,7 +41,8 @@ module RoslynAnalyzerInterfaceTests =
 
                     test <@ result.Types |> Seq.isEmpty |> not @>)
 
-            yield! testRepeatParameterized "should return interface with valid name" [
+            yield! testRepeatParameterized 
+                "should return interface with valid name" [
                 (withProjects contents, "FooType")
                 (withProjects contents, "NestedType")
                 (withProjects contents, "DeeperNestedType")]
@@ -51,7 +52,8 @@ module RoslynAnalyzerInterfaceTests =
                             
                     test <@ result |> Seq.length > 0 @>)
             
-            yield! testRepeatParameterized "should return interface with valid fullname" [
+            yield! testRepeatParameterized 
+                "should return interface with valid fullname" [
                 (withProjects contents, "FooType")
                 (withProjects contents, "ParentType.NestedType")
                 (withProjects contents, "ParentType.AnotherNestedType.DeeperNestedType")]

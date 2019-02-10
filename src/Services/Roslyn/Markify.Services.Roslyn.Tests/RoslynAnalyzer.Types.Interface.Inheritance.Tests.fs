@@ -6,7 +6,7 @@ open Expecto
 open Swensen.Unquote
 open Fixtures
 
-module RoslynAnalyzerTypesInheritanceTests =
+module RoslynAnalyzer_InterfaceInheritance_Tests =
     [<Tests>]
     let inheritanceTests =
         let contents = [
@@ -14,6 +14,8 @@ module RoslynAnalyzerTypesInheritanceTests =
                 ProjectLanguage.CSharp,
                 ["
                     public interface ImplementInterfaceType : IDisposable { }
+
+                    public interface ImplementMultipleInterfaceType : IDisposable, IEnumerable { }
                 "]
             )
             (
@@ -22,15 +24,21 @@ module RoslynAnalyzerTypesInheritanceTests =
                     Public Interface ImplementInterfaceType
                         Implements IDisposable
                     End Interface
+
+                    Public Interface ImplementMultipleInterfaceType
+                        Implements IDisposable, IEnumerable
+                    End Interface
                 "]
             )
         ]
-        testList "Analyze" [
-            yield! testRepeat (withProjects contents)
-                "should return base types when interface inherits an interface"
-                (fun sut project () ->
+        testList "Analyze/Interface" [
+            yield! testRepeatParameterized
+                "should return base types when struct implements interfaces" [
+                (withProjects contents, ("ImplementInterfaceType", Set ["IDisposable"]))
+                (withProjects contents, ("ImplementMultipleInterfaceType", Set ["IDisposable"; "IEnumerable"]))]
+                (fun sut project (name, expected) () ->
                     let assemblies = sut.Analyze project
-                    let result = findInterface assemblies "ImplementInterfaceType"
+                    let result = findInterface assemblies name
                         
-                    test <@ Set result.Identity.BaseTypes |> Set.isSubset (Set ["IDisposable"]) @>)
+                    test <@ Set result.Identity.BaseTypes |> Set.isSubset expected @>)
         ]

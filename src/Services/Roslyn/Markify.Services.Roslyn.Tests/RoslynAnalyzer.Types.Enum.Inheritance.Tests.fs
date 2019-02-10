@@ -6,7 +6,7 @@ open Expecto
 open Swensen.Unquote
 open Fixtures
 
-module RoslynAnalyzerTypesInheritanceTests =
+module RoslynAnalyzer_EnumInheritance_Tests =
     [<Tests>]
     let inheritanceTests =
         let contents = [
@@ -24,12 +24,12 @@ module RoslynAnalyzerTypesInheritanceTests =
                 "]
             )
         ]
-        testList "Analyze" [
+        testList "Analyze/Enum" [
             yield! testRepeat (withProjects contents)
                 "should return base type when enum inherits from a primitive primitive"
                 (fun sut project () ->
                     let assemblies = sut.Analyze project
                     let result = findEnum assemblies "InheritPrimitiveType"
                         
-                    test <@ Set result.Identity.BaseTypes |> Set.isSubset (Set ["Int32"]) @>)
+                    test <@ result.Identity.BaseTypes |> Seq.contains "Int32" @>)
         ]

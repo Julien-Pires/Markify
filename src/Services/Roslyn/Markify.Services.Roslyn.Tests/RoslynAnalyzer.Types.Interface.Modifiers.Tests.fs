@@ -6,7 +6,7 @@ open Expecto
 open Swensen.Unquote
 open Fixtures
 
-module RoslynAnalyzerTypesModifiersTests =
+module RoslynAnalyzer_InterfaceModifiers_Tests =
     [<Tests>]
     let noAccessModifierTests =
         let contents = [
@@ -24,7 +24,7 @@ module RoslynAnalyzerTypesModifiersTests =
                 "]
             )
         ]
-        testList "Analyze" [
+        testList "Analyze/Interface" [
             yield! testRepeat (withProjects contents)
                 "should return interface with no access modifier when type has none"
                 (fun sut project () ->
@@ -81,7 +81,7 @@ module RoslynAnalyzerTypesModifiersTests =
                 "]
             )
         ]
-        testList "Analyze" [
+        testList "Analyze/Interface" [
             yield! testRepeatParameterized
                 "should returns interface with access modifiers when type has some" [
                 (withProjects contents, ("PublicType", ["public"]))
@@ -91,11 +91,11 @@ module RoslynAnalyzerTypesModifiersTests =
                 (withProjects contents, ("ParentType.ProtectedInternalType", ["protected"; "internal"]))
                 (withProjects contents, ("ParentType.InternalProtectedType", ["protected"; "internal"]))]
                 (fun sut project (name, modifiers) () ->
-                    let expected = modifiers |> List.map normalizeSyntax
+                    let expected = modifiers |> List.map normalizeSyntax |> Set
                     let assemblies = sut.Analyze project
                     let result = findInterface assemblies name
                         
-                    test <@ Set result.Identity.AccessModifiers |> Set.isSubset (Set expected) @>)
+                    test <@ Set result.Identity.AccessModifiers |> Set.isSubset expected @>)
         ]
 
     [<Tests>]
@@ -115,7 +115,7 @@ module RoslynAnalyzerTypesModifiersTests =
                 "]
             )
         ]
-        testList "Analyze" [
+        testList "Analyze/Interface" [
             yield! testRepeat (withProjects contents)
                 "should return interface with no modifier when type has none"
                 (fun sut project () ->
@@ -142,14 +142,14 @@ module RoslynAnalyzerTypesModifiersTests =
                 "]
             )
         ]
-        testList "Analyze" [
+        testList "Analyze/Interface" [
             yield! testRepeatParameterized
                 "should returns class with modifiers when type has some" [
                 (withProjects contents, ("PartialType", ["partial"]))]
                 (fun sut project (name, modifiers) () ->
-                    let expected = modifiers |> List.map normalizeSyntax
+                    let expected = modifiers |> List.map normalizeSyntax |> Set
                     let assemblies = sut.Analyze project
                     let result = findInterface assemblies name
                         
-                    test <@ Set result.Identity.Modifiers |> Set.isSubset (Set expected) @>)
+                    test <@ Set result.Identity.Modifiers |> Set.isSubset expected @>)
         ]

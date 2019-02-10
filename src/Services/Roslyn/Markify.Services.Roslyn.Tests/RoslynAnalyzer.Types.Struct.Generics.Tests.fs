@@ -6,7 +6,7 @@ open Expecto
 open Swensen.Unquote
 open Fixtures
 
-module RoslynAnalyzerTypesStructGenericsTests =
+module RoslynAnalyzer_StructGenerics_Tests =
     [<Tests>]
     let noGenericStructTests =
         let noGeneric = [
@@ -24,8 +24,9 @@ module RoslynAnalyzerTypesStructGenericsTests =
                 "]
             )
         ]
-        testList "Analyze" [
-            yield! testRepeatParameterized "should return no generic parameters when struct has none"
+        testList "Analyze/Struct" [
+            yield! testRepeatParameterized 
+                "should return no generic parameters when struct has none"
                 [(withProjects noGeneric, "NoGenericStruct")]
                 (fun sut project name () ->
                     let assemblies = sut.Analyze project
@@ -56,8 +57,9 @@ module RoslynAnalyzerTypesStructGenericsTests =
                 "]
             )
         ]
-        testList "Analyze" [
-            yield! testRepeatParameterized "should return generic parameters when struct has some" [
+        testList "Analyze/Struct" [
+            yield! testRepeatParameterized 
+                "should return generic parameters when struct has some" [
                 (withProjects generic, ("SingleGenericStruct`1", 1))
                 (withProjects generic, ("MultipleGenericStruct`2", 2))]
                 (fun sut project (name, expected) () ->
@@ -66,7 +68,8 @@ module RoslynAnalyzerTypesStructGenericsTests =
                         
                     test <@ result.Identity.Parameters |> Seq.length = expected @>)
 
-            yield! testRepeatParameterized "should return valid generic parameter name when struct has some" [
+            yield! testRepeatParameterized 
+                "should return valid generic parameter name when struct has some" [
                 (withProjects generic, ("SingleGenericStruct`1", "T"))
                 (withProjects generic, ("MultipleGenericStruct`2", "T"))
                 (withProjects generic, ("MultipleGenericStruct`2", "Y"))]
@@ -94,16 +97,16 @@ module RoslynAnalyzerTypesStructGenericsTests =
                 "]
             )
         ]
-        testList "Analyze" [
-            yield! testRepeatParameterized "should return no modifiers when struct generic parameter has none"
-                [withProjects genericModifiers, ("SingleGenericStruct`1", "T")]
+        testList "Analyze/Struct" [
+            yield! testRepeatParameterized 
+                "should return no modifiers when struct generic parameter has none" [
+                (withProjects genericModifiers, ("SingleGenericStruct`1", "T"))]
                 (fun sut project (name, parameter) () ->
                     let assemblies = sut.Analyze project
                     let result = findStruct assemblies name
 
                     test <@ result.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
-                                                       |> fun c -> c.Modifier
-                                                       |> Option.isNone @>)
+                                                       |> fun c -> c.Modifier.IsNone @>)
         ]
 
     [<Tests>]
@@ -130,9 +133,10 @@ module RoslynAnalyzerTypesStructGenericsTests =
                 "]
             )
         ]
-        testList "Analyze" [
-            yield! testRepeatParameterized "should return no constraints when struct generic parameter has none"
-                [withProjects genericConstraints, ("SingleGenericStruct`1", "T")]
+        testList "Analyze/Struct" [
+            yield! testRepeatParameterized 
+                "should return no constraints when struct generic parameter has none" [
+                (withProjects genericConstraints, ("SingleGenericStruct`1", "T"))]
                 (fun sut project (name, parameter) () ->
                     let assemblies = sut.Analyze project
                     let result = findStruct assemblies name
@@ -141,7 +145,8 @@ module RoslynAnalyzerTypesStructGenericsTests =
                                                        |> fun c -> c.Constraints
                                                        |> Seq.isEmpty @>)
 
-            yield! testRepeatParameterized "should return constraints when struct generic parameter has some" [
+            yield! testRepeatParameterized 
+                "should return constraints when struct generic parameter has some" [
                 (withProjects genericConstraints, ("GenericConstrainedStruct`2", "T", ["struct"]))
                 (withProjects genericConstraints, ("GenericConstrainedStruct`2", "Y", ["IEnumerable"; "class"; "new()"]))]
                 (fun sut project (name, parameter, constraints) () ->
@@ -150,6 +155,5 @@ module RoslynAnalyzerTypesStructGenericsTests =
                     let result = findStruct assemblies name
 
                     test <@ result.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
-                                                       |> fun c -> c.Constraints |> Seq.toList
-                                                       |> ((=) expected) @>)
+                                                       |> fun c -> c.Constraints |> Seq.toList = expected @>)
         ]
