@@ -10,18 +10,12 @@ module RoslynAnalyzer_DelegateModifiers_Tests =
     [<Tests>]
     let noAccessModifierTests =
         let contents = [
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    delegate void NoAccessModifierType();
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic, 
-                ["
-                    Delegate Sub NoAccessModifierType()
-                "]
-            )
+            (ProjectLanguage.CSharp, ["
+                delegate void NoAccessModifierType();
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Delegate Sub NoAccessModifierType()
+            "])
         ]
         testList "Analyze/Delegate" [
             yield! testRepeat (withProjects contents)
@@ -36,43 +30,27 @@ module RoslynAnalyzer_DelegateModifiers_Tests =
     [<Tests>]
     let withAccessModifiersTests =
         let contents = [
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    public delegate void PublicType();
-
-                    internal delegate void InternalType();
-
-                    public partial class ParentType
-                    {
-                        private delegate void PrivateType();
-
-                        protected delegate void ProtectedType();
-
-                        protected internal delegate void ProtectedInternalType();
-
-                        internal protected delegate void InternalProtectedType();
-                    }
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic, 
-                ["
-                    Public Delegate Sub PublicType()
-
-                    Friend Delegate Sub InternalType()
-
-                    Partial Public Class ParentType
-                        Private Delegate Sub PrivateType()
-
-                        Protected Delegate Sub ProtectedType()
-
-                        Protected Friend Delegate Sub ProtectedInternalType()
-
-                        Protected Friend Delegate Sub InternalProtectedType()
-                    End Class
-                "]
-            )
+            (ProjectLanguage.CSharp, ["
+                public delegate void PublicType();
+                internal delegate void InternalType();
+                public partial class ParentType
+                {
+                    private delegate void PrivateType();
+                    protected delegate void ProtectedType();
+                    protected internal delegate void ProtectedInternalType();
+                    internal protected delegate void InternalProtectedType();
+                }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Delegate Sub PublicType()
+                Friend Delegate Sub InternalType()
+                Partial Public Class ParentType
+                    Private Delegate Sub PrivateType()
+                    Protected Delegate Sub ProtectedType()
+                    Protected Friend Delegate Sub ProtectedInternalType()
+                    Protected Friend Delegate Sub InternalProtectedType()
+                End Class
+            "])
         ]
         testList "Analyze/Delegate" [
             yield! testRepeatParameterized
@@ -94,18 +72,12 @@ module RoslynAnalyzer_DelegateModifiers_Tests =
     [<Tests>]
     let noModifierTests =
         let contents = [
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    public delegate void NoModifierType();
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic, 
-                ["
-                    Public Delegate Sub NoModifierType()
-                "]
-            )
+            (ProjectLanguage.CSharp, ["
+                public delegate void NoModifierType();
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Delegate Sub NoModifierType()
+            "])
         ]
         testList "Analyze/Delegate" [
             yield! testRepeat (withProjects contents)

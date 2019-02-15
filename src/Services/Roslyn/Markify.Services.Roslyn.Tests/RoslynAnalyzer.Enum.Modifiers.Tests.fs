@@ -10,19 +10,13 @@ module RoslynAnalyzer_EnumModifiers_Tests =
     [<Tests>]
     let noAccessModifierTests =
         let contents = [
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    enum NoAccessModifierType { }
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic, 
-                ["
-                    Enum NoAccessModifierType
-                    End Enum
-                "]
-            )
+            (ProjectLanguage.CSharp, ["
+                enum NoAccessModifierType { }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Enum NoAccessModifierType
+                End Enum
+            "])
         ]
         testList "Analyze/Enum" [
             yield! testRepeat (withProjects contents)
@@ -37,49 +31,33 @@ module RoslynAnalyzer_EnumModifiers_Tests =
     [<Tests>]
     let withAccessModifiersTests =
         let contents = [
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    public enum PublicType { }
-
-                    internal enum InternalType { }
-
-                    public partial class ParentType
-                    {
-                        private enum PrivateType { }
-
-                        protected enum ProtectedType { }
-
-                        protected internal enum ProtectedInternalType { }
-
-                        internal protected enum InternalProtectedType { }
-                    }
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic, 
-                ["
-                    Public Enum PublicType
+            (ProjectLanguage.CSharp, ["
+                public enum PublicType { }
+                internal enum InternalType { }
+                public partial class ParentType
+                {
+                    private enum PrivateType { }
+                    protected enum ProtectedType { }
+                    protected internal enum ProtectedInternalType { }
+                    internal protected enum InternalProtectedType { }
+                }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Enum PublicType
+                End Enum
+                Friend Enum InternalType
+                End Enum
+                Partial Public Class ParentType
+                    Private Enum PrivateType
                     End Enum
-
-                    Friend Enum InternalType
+                    Protected Enum ProtectedType
                     End Enum
-
-                    Partial Public Class ParentType
-                        Private Enum PrivateType
-                        End Enum
-
-                        Protected Enum ProtectedType
-                        End Enum
-
-                        Protected Friend Enum ProtectedInternalType
-                        End Enum
-
-                        Protected Friend Enum InternalProtectedType
-                        End Enum
-                    End Class
-                "]
-            )
+                    Protected Friend Enum ProtectedInternalType
+                    End Enum
+                    Protected Friend Enum InternalProtectedType
+                    End Enum
+                End Class
+            "])
         ]
         testList "Analyze/Enum" [
             yield! testRepeatParameterized
@@ -101,19 +79,13 @@ module RoslynAnalyzer_EnumModifiers_Tests =
     [<Tests>]
     let noModifierTests =
         let contents = [
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    public enum NoModifierType { }
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic, 
-                ["
-                    Public enum NoModifierType
-                    End enum
-                "]
-            )
+            (ProjectLanguage.CSharp, ["
+                public enum NoModifierType { }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public enum NoModifierType
+                End enum
+            "])
         ]
         testList "Analyze/Enum" [
             yield! testRepeat (withProjects contents)

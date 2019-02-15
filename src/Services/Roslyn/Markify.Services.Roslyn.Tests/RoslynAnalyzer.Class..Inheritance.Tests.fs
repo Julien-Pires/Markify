@@ -10,39 +10,27 @@ module RoslynAnalyzer_ClassInheritance_Tests =
     [<Tests>]
     let inheritanceTests =
         let contents = [
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    public class InheritType : Exception { }
-
-                    public class ImplementInterfaceType : IDisposable { }
-
-                    public class ImplementMultipleInterfaceType : IDisposable, IEnumerable { }
-
-                    public class MixedInheritanceType : Exception, IDisposable { }
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic, 
-                ["
-                    Public Class InheritType
-                        Inherits Exception
-                    End Class
-
-                    Public Class ImplementInterfaceType
-                        Implements IDisposable
-                    End Class
-
-                    Public Class ImplementMultipleInterfaceType
-                        Implements IDisposable, IEnumerable
-                    End Class
-
-                    Public Class MixedInheritanceType
-                        Inherits Exception
-                        Implements IDisposable
-                    End Class
-                "]
-            )
+            (ProjectLanguage.CSharp, ["
+                public class InheritType : Exception { }
+                public class ImplementInterfaceType : IDisposable { }
+                public class ImplementMultipleInterfaceType : IDisposable, IEnumerable { }
+                public class MixedInheritanceType : Exception, IDisposable { }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Class InheritType
+                    Inherits Exception
+                End Class
+                Public Class ImplementInterfaceType
+                    Implements IDisposable
+                End Class
+                Public Class ImplementMultipleInterfaceType
+                    Implements IDisposable, IEnumerable
+                End Class
+                Public Class MixedInheritanceType
+                    Inherits Exception
+                    Implements IDisposable
+                End Class
+            "])
         ]
         testList "Analyze/Class" [
             yield! testRepeatParameterized

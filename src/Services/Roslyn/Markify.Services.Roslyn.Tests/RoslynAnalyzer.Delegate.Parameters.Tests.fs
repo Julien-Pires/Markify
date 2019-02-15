@@ -9,18 +9,12 @@ module RoslynAnalyzer_DelegateParameters_Tests =
     [<Tests>]
     let noParametersTests =
         let content = [
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    public delegate void WithoutParameters();
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic, 
-                ["
-                    Public Delegate Sub WithoutParameters()
-                "]
-            )
+            (ProjectLanguage.CSharp, ["
+                public delegate void WithoutParameters();
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Delegate Sub WithoutParameters()
+            "])
         ]
         testList "Analyze/Delegate" [
             yield! testRepeat (withProjects content)
@@ -35,22 +29,16 @@ module RoslynAnalyzer_DelegateParameters_Tests =
     [<Tests>]
     let withParametersTests =
         let content = [
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    public delegate void WithOneParameter(Int32 foo);
-                    public delegate void WithMultipleParameters(Int32 foo, Single bar);
-                    public delegate void WithGenericParameters<T>(T foo, T[] bar);
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic, 
-                ["
-                    Public Delegate Sub WithOneParameter(foo As Int32)
-                    Public Delegate Sub WithMultipleParameters(foo As Int32, bar As Single)
-                    Public Delegate Sub WithGenericParameters(Of T)(foo As T, bar As T())
-                "]
-            )
+            (ProjectLanguage.CSharp, ["
+                public delegate void WithOneParameter(Int32 foo);
+                public delegate void WithMultipleParameters(Int32 foo, Single bar);
+                public delegate void WithGenericParameters<T>(T foo, T[] bar);
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Delegate Sub WithOneParameter(foo As Int32)
+                Public Delegate Sub WithMultipleParameters(foo As Int32, bar As Single)
+                Public Delegate Sub WithGenericParameters(Of T)(foo As T, bar As T())
+            "])
         ]
         testList "Analyze/Delegate" [
             yield! testRepeatParameterized
@@ -91,18 +79,12 @@ module RoslynAnalyzer_DelegateParameters_Tests =
     [<Tests>]
     let noParameterModifierTests =
         let content = [
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    public delegate void WithOneParameter(Int32 foo);
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic, 
-                ["
-                    Public Delegate Sub WithOneParameter(foo As Int32)
-                "]
-            )
+            (ProjectLanguage.CSharp, ["
+                public delegate void WithOneParameter(Int32 foo);
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Delegate Sub WithOneParameter(foo As Int32)
+            "])
         ]
         testList "Analyze/Delegate" [
             yield! testRepeat (withProjects content)
@@ -118,18 +100,12 @@ module RoslynAnalyzer_DelegateParameters_Tests =
     [<Tests>]
     let withParameterModifierTests =
         let content = [
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    public delegate void WithParametersModifiers(ref Int32 foo, out Int32 bar);
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic, 
-                ["
-                    Public Delegate Sub WithParametersModifiers(ByRef foo As Int32, ByVal bar As Single)
-                "]
-            )
+            (ProjectLanguage.CSharp, ["
+                public delegate void WithParametersModifiers(ref Int32 foo, out Int32 bar);
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Delegate Sub WithParametersModifiers(ByRef foo As Int32, ByVal bar As Single)
+            "])
         ]
         testList "Analyze/Delegate" [
             yield! testRepeatParameterized
@@ -147,18 +123,12 @@ module RoslynAnalyzer_DelegateParameters_Tests =
     [<Tests>]
     let noParameterDefaultValueTests =
         let content = [
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    public delegate void WithOneParameter(Int32 foo);
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic, 
-                ["
-                    Public Delegate Sub WithOneParameter(foo As Int32)
-                "]
-            )
+            (ProjectLanguage.CSharp, ["
+                public delegate void WithOneParameter(Int32 foo);
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Delegate Sub WithOneParameter(foo As Int32)
+            "])
         ]
         testList "Analyze/Delegate" [
             yield! testRepeat (withProjects content)
@@ -174,18 +144,12 @@ module RoslynAnalyzer_DelegateParameters_Tests =
     [<Tests>]
     let withParameterDefaultValueTests =
         let content = [
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    public delegate void WithDefaultValueParameter(Int32 foo = 1);
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic, 
-                ["
-                    Public Delegate Sub WithDefaultValueParameter(Optional foo As Int32 = 1)
-                "]
-            )
+            (ProjectLanguage.CSharp, ["
+                public delegate void WithDefaultValueParameter(Int32 foo = 1);
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Delegate Sub WithDefaultValueParameter(Optional foo As Int32 = 1)
+            "])
         ]
         testList "Analyze/Delegate" [
             yield! testRepeat (withProjects content)

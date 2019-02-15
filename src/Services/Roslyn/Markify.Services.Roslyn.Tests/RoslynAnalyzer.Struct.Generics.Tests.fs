@@ -10,19 +10,13 @@ module RoslynAnalyzer_StructGenerics_Tests =
     [<Tests>]
     let noGenericStructTests =
         let noGeneric = [
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    public struct NoGenericStruct { }
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic,
-                ["
-                    Public Structure NoGenericStruct
-                    End Structure
-                "]
-            )
+            (ProjectLanguage.CSharp, ["
+                public struct NoGenericStruct { }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Structure NoGenericStruct
+                End Structure
+            "])
         ]
         testList "Analyze/Struct" [
             yield! testRepeatParameterized 
@@ -38,24 +32,16 @@ module RoslynAnalyzer_StructGenerics_Tests =
     [<Tests>]
     let genericStructTests =
         let generic = [
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    public struct SingleGenericStruct<T> { }
-
-                    public struct MultipleGenericStruct<T, Y> { }
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic,
-                ["
-                    Public Structure SingleGenericStruct(Of T)
-                    End Structure
-
-                    Public Structure MultipleGenericStruct(Of T, Y)
-                    End Structure
-                "]
-            )
+            (ProjectLanguage.CSharp, ["
+                public struct SingleGenericStruct<T> { }
+                public struct MultipleGenericStruct<T, Y> { }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Structure SingleGenericStruct(Of T)
+                End Structure
+                Public Structure MultipleGenericStruct(Of T, Y)
+                End Structure
+            "])
         ]
         testList "Analyze/Struct" [
             yield! testRepeatParameterized 
@@ -83,19 +69,13 @@ module RoslynAnalyzer_StructGenerics_Tests =
     [<Tests>]
     let genericModifersTests =
         let genericModifiers = [
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    public struct SingleGenericStruct<T> { }
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic,
-                ["
-                    Public Structure SingleGenericStruct(Of T)
-                    End Structure
-                "]
-            )
+            (ProjectLanguage.CSharp, ["
+                public struct SingleGenericStruct<T> { }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Structure SingleGenericStruct(Of T)
+                End Structure
+            "])
         ]
         testList "Analyze/Struct" [
             yield! testRepeatParameterized 
@@ -112,26 +92,18 @@ module RoslynAnalyzer_StructGenerics_Tests =
     [<Tests>]
     let genericConstraintsTests =
         let genericConstraints =[
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    public struct SingleGenericStruct<T> { }
-
-                    public struct GenericConstrainedStruct<T, Y>
-                        where T : struct
-                        where Y : IEnumerable, class, new() { }
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic,
-                ["
-                    Public Structure SingleGenericStruct(Of T)
-                    End Structure
-
-                    Public Structure GenericConstrainedStruct(Of T As Structure, Y As { IEnumerable, Class, New })
-                    End Structure
-                "]
-            )
+            (ProjectLanguage.CSharp, ["
+                public struct SingleGenericStruct<T> { }
+                public struct GenericConstrainedStruct<T, Y>
+                    where T : struct
+                    where Y : IEnumerable, class, new() { }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Structure SingleGenericStruct(Of T)
+                End Structure
+                Public Structure GenericConstrainedStruct(Of T As Structure, Y As { IEnumerable, Class, New })
+                End Structure
+            "])
         ]
         testList "Analyze/Struct" [
             yield! testRepeatParameterized 

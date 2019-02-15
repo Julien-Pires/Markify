@@ -9,22 +9,16 @@ module RoslynAnalyzer_DelegateReturnType_Tests =
     [<Tests>]
     let returnTypeTests =
         let content = [
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    public delegate void VoidDelegate();
-                    public delegate Int32 IntegerDelegate();
-                    public delegate T GenericDelegate<T>();
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic, 
-                ["
-                    Public Delegate Sub VoidDelegate()
-                    Public Delegate Function IntegerDelegate() As Int32
-                    Public Delegate Function GenericDelegate(Of T)() As T
-                "]
-            )
+            (ProjectLanguage.CSharp, ["
+                public delegate void VoidDelegate();
+                public delegate Int32 IntegerDelegate();
+                public delegate T GenericDelegate<T>();
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Delegate Sub VoidDelegate()
+                Public Delegate Function IntegerDelegate() As Int32
+                Public Delegate Function GenericDelegate(Of T)() As T
+            "])
         ]
         testList "Analyze/Delegate" [
             yield! testRepeatParameterized

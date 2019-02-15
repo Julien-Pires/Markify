@@ -9,31 +9,25 @@ module RoslynAnalyzer_Class_Tests =
     [<Tests>]
     let projectContentTests =
         let contents = [
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    public class FooType
+            (ProjectLanguage.CSharp, ["
+                public class FooType
+                {
+                    public class NestedType
                     {
-                        public class NestedType
+                        public class DeeperNestedType
                         {
-                            public class DeeperNestedType
-                            {
-                            }
                         }
                     }
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic, 
-                ["
-                    Public Class FooType
-                        Public Class NestedType
-                            Public Class DeeperNestedType
-                            End Class
+                }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Class FooType
+                    Public Class NestedType
+                        Public Class DeeperNestedType
                         End Class
                     End Class
-                "]
-            )
+                End Class
+            "])
         ]
         testList "Analyze/Class" [
             yield! testRepeat (withProjects contents)

@@ -10,19 +10,13 @@ module RoslynAnalyzer_InterfaceModifiers_Tests =
     [<Tests>]
     let noAccessModifierTests =
         let contents = [
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    interface NoAccessModifierType { }
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic, 
-                ["
-                    Interface NoAccessModifierType
-                    End Interface
-                "]
-            )
+            (ProjectLanguage.CSharp, ["
+                interface NoAccessModifierType { }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Interface NoAccessModifierType
+                End Interface
+            "])
         ]
         testList "Analyze/Interface" [
             yield! testRepeat (withProjects contents)
@@ -37,49 +31,33 @@ module RoslynAnalyzer_InterfaceModifiers_Tests =
     [<Tests>]
     let withAccessModifiersTests =
         let contents = [
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    public interface PublicType { }
-
-                    internal interface InternalType { }
-
-                    public partial interface ParentType
-                    {
-                        private interface PrivateType { }
-
-                        protected interface ProtectedType { }
-
-                        protected internal interface ProtectedInternalType { }
-
-                        internal protected interface InternalProtectedType { }
-                    }
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic, 
-                ["
-                    Public Interface PublicType
+            (ProjectLanguage.CSharp, ["
+                public interface PublicType { }
+                internal interface InternalType { }
+                public partial interface ParentType
+                {
+                    private interface PrivateType { }
+                    protected interface ProtectedType { }
+                    protected internal interface ProtectedInternalType { }
+                    internal protected interface InternalProtectedType { }
+                }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Interface PublicType
+                End Interface
+                Friend Interface InternalType
+                End Interface
+                Partial Public Interface ParentType
+                    Private Interface PrivateType
                     End Interface
-
-                    Friend Interface InternalType
+                    Protected Interface ProtectedType
                     End Interface
-
-                    Partial Public Interface ParentType
-                        Private Interface PrivateType
-                        End Interface
-
-                        Protected Interface ProtectedType
-                        End Interface
-
-                        Protected Friend Interface ProtectedInternalType
-                        End Interface
-
-                        Protected Friend Interface InternalProtectedType
-                        End Interface
-                    End Class
-                "]
-            )
+                    Protected Friend Interface ProtectedInternalType
+                    End Interface
+                    Protected Friend Interface InternalProtectedType
+                    End Interface
+                End Class
+            "])
         ]
         testList "Analyze/Interface" [
             yield! testRepeatParameterized
@@ -101,19 +79,13 @@ module RoslynAnalyzer_InterfaceModifiers_Tests =
     [<Tests>]
     let noModifierTests =
         let contents = [
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    public interface NoModifierType { }
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic, 
-                ["
-                    Public Interface NoModifierType
-                    End Interface
-                "]
-            )
+            (ProjectLanguage.CSharp, ["
+                public interface NoModifierType { }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Interface NoModifierType
+                End Interface
+            "])
         ]
         testList "Analyze/Interface" [
             yield! testRepeat (withProjects contents)
@@ -128,23 +100,17 @@ module RoslynAnalyzer_InterfaceModifiers_Tests =
     [<Tests>]
     let withModifiersTests =
         let contents = [
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    public partial interface PartialType { }
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic, 
-                ["
-                    Partial Public Interface PartialType
-                    End Interface
-                "]
-            )
+            (ProjectLanguage.CSharp, ["
+                public partial interface PartialType { }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Partial Public Interface PartialType
+                End Interface
+            "])
         ]
         testList "Analyze/Interface" [
             yield! testRepeatParameterized
-                "should returns class with modifiers when type has some" [
+                "should returns interface with modifiers when type has some" [
                 (withProjects contents, ("PartialType", ["partial"]))]
                 (fun sut project (name, modifiers) () ->
                     let expected = modifiers |> List.map normalizeSyntax |> Set

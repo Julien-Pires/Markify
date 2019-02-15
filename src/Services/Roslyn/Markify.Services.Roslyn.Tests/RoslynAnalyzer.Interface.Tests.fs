@@ -9,29 +9,23 @@ module RoslynAnalyzer_Interface_Tests =
     [<Tests>]
     let projectContentTests =
         let contents = [
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    public interface FooType
+            (ProjectLanguage.CSharp, ["
+                public interface FooType
+                {
+                    public interface NestedType
                     {
-                        public interface NestedType
-                        {
-                            public interface DeeperNestedType { }
-                        }
+                        public interface DeeperNestedType { }
                     }
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic, 
-                ["
-                    Public Interface FooType
-                        Public Interface NestedType
-                            Public Interface DeeperNestedType
-                            End Interface
+                }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Interface FooType
+                    Public Interface NestedType
+                        Public Interface DeeperNestedType
                         End Interface
                     End Interface
-                "]
-            )
+                End Interface
+            "])
         ]
         testList "Analyze/Interface" [
             yield! testRepeat (withProjects contents)

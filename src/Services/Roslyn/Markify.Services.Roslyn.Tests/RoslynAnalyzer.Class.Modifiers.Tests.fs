@@ -10,19 +10,13 @@ module RoslynAnalyzer_ClassModifiers_Tests =
     [<Tests>]
     let noAccessModifierTests =
         let contents = [
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    class NoAccessModifierType { }
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic, 
-                ["
-                    Class NoAccessModifierType
-                    End Class
-                "]
-            )
+            (ProjectLanguage.CSharp, ["
+                class NoAccessModifierType { }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Class NoAccessModifierType
+                End Class
+            "])
         ]
         testList "Analyze/Class" [
             yield! testRepeat (withProjects contents)
@@ -37,49 +31,33 @@ module RoslynAnalyzer_ClassModifiers_Tests =
     [<Tests>]
     let withAccessModifiersTests =
         let contents = [
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    public class PublicType { }
-
-                    internal class InternalType { }
-
-                    public partial class ParentType
-                    {
-                        private class PrivateType { }
-
-                        protected class ProtectedType { }
-
-                        protected internal class ProtectedInternalType { }
-
-                        internal protected class InternalProtectedType { }
-                    }
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic, 
-                ["
-                    Public Class PublicType
+            (ProjectLanguage.CSharp, ["
+                public class PublicType { }
+                internal class InternalType { }
+                public partial class ParentType
+                {
+                    private class PrivateType { }
+                    protected class ProtectedType { }
+                    protected internal class ProtectedInternalType { }
+                    internal protected class InternalProtectedType { }
+                }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Class PublicType
+                End Class
+                Friend Class InternalType
+                End Class
+                Partial Public Class ParentType
+                    Private Class PrivateType
                     End Class
-
-                    Friend Class InternalType
+                    Protected Class ProtectedType
                     End Class
-
-                    Partial Public Class ParentType
-                        Private Class PrivateType
-                        End Class
-
-                        Protected Class ProtectedType
-                        End Class
-
-                        Protected Friend Class ProtectedInternalType
-                        End Class
-
-                        Protected Friend Class InternalProtectedType
-                        End Class
+                    Protected Friend Class ProtectedInternalType
                     End Class
-                "]
-            )
+                    Protected Friend Class InternalProtectedType
+                    End Class
+                End Class
+            "])
         ]
         testList "Analyze/Class" [
             yield! testRepeatParameterized
@@ -101,19 +79,13 @@ module RoslynAnalyzer_ClassModifiers_Tests =
     [<Tests>]
     let noModifierTests =
         let contents = [
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    public class NoModifierType { }
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic, 
-                ["
-                    Public Class NoModifierType
-                    End Class
-                "]
-            )
+            (ProjectLanguage.CSharp, ["
+                public class NoModifierType { }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Class NoModifierType
+                End Class
+            "])
         ]
         testList "Analyze/Class" [
             yield! testRepeat (withProjects contents)
@@ -128,44 +100,28 @@ module RoslynAnalyzer_ClassModifiers_Tests =
     [<Tests>]
     let withModifiersTests =
         let contents = [
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    public abstract class AbstractType { }
-
-                    public partial class PartialType { }
-
-                    public sealed class SealedType { }
-
-                    public static class StaticType { }
-
-                    public abstract partial class AbstractPartialType { }
-
-                    public sealed partial class SealedPartialType { }
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic, 
-                ["
-                    Public MustInherit Class AbstractType
-                    End Class
-
-                    Partial Public Class PartialType
-                    End Class
-
-                    Public NotInheritable Class SealedType
-                    End Class
-
-                    Public Static Class StaticType
-                    End Class
-
-                    Partial Public MustInherit Class AbstractPartialType
-                    End Class
-
-                    Partial Public NotInheritable Class SealedPartialType
-                    End Class
-                "]
-            )
+            (ProjectLanguage.CSharp, ["
+                public abstract class AbstractType { }
+                public partial class PartialType { }
+                public sealed class SealedType { }
+                public static class StaticType { }
+                public abstract partial class AbstractPartialType { }
+                public sealed partial class SealedPartialType { }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public MustInherit Class AbstractType
+                End Class
+                Partial Public Class PartialType
+                End Class
+                Public NotInheritable Class SealedType
+                End Class
+                Public Static Class StaticType
+                End Class
+                Partial Public MustInherit Class AbstractPartialType
+                End Class
+                Partial Public NotInheritable Class SealedPartialType
+                End Class
+            "])
         ]
         testList "Analyze/Class" [
             yield! testRepeatParameterized

@@ -10,19 +10,13 @@ module RoslynAnalyzer_EnumInheritance_Tests =
     [<Tests>]
     let inheritanceTests =
         let contents = [
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    public enum InheritPrimitiveType : Int32 { }
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic, 
-                ["
-                    Public Enum InheritPrimitiveType As Int32
-                    End Enum
-                "]
-            )
+            (ProjectLanguage.CSharp, ["
+                public enum InheritPrimitiveType : Int32 { }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Enum InheritPrimitiveType As Int32
+                End Enum
+            "])
         ]
         testList "Analyze/Enum" [
             yield! testRepeat (withProjects contents)

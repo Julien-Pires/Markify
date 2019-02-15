@@ -9,29 +9,23 @@ module RoslynAnalyzer_Struct_Tests =
     [<Tests>]
     let projectContentTests =
         let contents = [
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    public struct FooType
+            (ProjectLanguage.CSharp, ["
+                public struct FooType
+                {
+                    public struct NestedType
                     {
-                        public struct NestedType
-                        {
-                            public struct DeeperNestedType { }
-                        }
+                        public struct DeeperNestedType { }
                     }
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic, 
-                ["
-                    Public Structure FooType
-                        Public Structure NestedType
-                            Public Structure DeeperNestedType
-                            End Structure
+                }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Structure FooType
+                    Public Structure NestedType
+                        Public Structure DeeperNestedType
                         End Structure
                     End Structure
-                "]
-            )
+                End Structure
+            "])
         ]
         testList "Analyze/Struct" [
             yield! testRepeat (withProjects contents)

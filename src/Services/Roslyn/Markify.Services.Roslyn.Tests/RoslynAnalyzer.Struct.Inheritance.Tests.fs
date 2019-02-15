@@ -10,26 +10,18 @@ module RoslynAnalyzer_StructInheritance_Tests =
     [<Tests>]
     let inheritanceTests =
         let contents = [
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    public struct ImplementInterfaceType : IDisposable { }
-
-                    public struct ImplementMultipleInterfaceType : IDisposable, IEnumerable { }
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic, 
-                ["
-                    Public Structure ImplementInterfaceType
-                        Implements IDisposable
-                    End Structure
-
-                    Public Structure ImplementMultipleInterfaceType
-                        Implements IDisposable, IEnumerable
-                    End Structure
-                "]
-            )
+            (ProjectLanguage.CSharp, ["
+                public struct ImplementInterfaceType : IDisposable { }
+                public struct ImplementMultipleInterfaceType : IDisposable, IEnumerable { }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Structure ImplementInterfaceType
+                    Implements IDisposable
+                End Structure
+                Public Structure ImplementMultipleInterfaceType
+                    Implements IDisposable, IEnumerable
+                End Structure
+            "])
         ]
         testList "Analyze/Struct" [
             yield! testRepeatParameterized

@@ -9,39 +9,29 @@ module RoslynAnalyzer_Enum_Tests =
     [<Tests>]
     let projectContentTests =
         let contents = [
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    public enum FooType { }
-
-                    public class ParentType
+            (ProjectLanguage.CSharp, ["
+                public enum FooType { }
+                public class ParentType
+                {
+                    public enum NestedType { }
+                    public class AnotherNestedType
                     {
-                        public enum NestedType { }
-
-                        public class AnotherNestedType
-                        {
-                            public enum DeeperNestedType { }
-                        }
+                        public enum DeeperNestedType { }
                     }
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic, 
-                ["
-                    Public Enum FooType
+                }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Enum FooType
+                End Enum
+                Public Class ParentType
+                    Public Enum NestedType
                     End Enum
-
-                    Public Class ParentType
-                        Public Enum NestedType
+                    Public Class AnotherNestedType
+                        Public Enum DeeperNestedType
                         End Enum
-
-                        Public Class AnotherNestedType
-                            Public Enum DeeperNestedType
-                            End Enum
-                        End Class
                     End Class
-                "]
-            )
+                End Class
+            "])
         ]
         testList "Analyze/Enum" [
             yield! testRepeat (withProjects contents)

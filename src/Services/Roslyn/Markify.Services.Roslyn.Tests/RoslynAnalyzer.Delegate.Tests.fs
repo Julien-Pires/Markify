@@ -9,36 +9,26 @@ module RoslynAnalyzer_Delegate_Tests =
     [<Tests>]
     let projectContentTests =
         let contents = [
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    public delegate void FooType();
-
-                    public class ParentType
+            (ProjectLanguage.CSharp, ["
+                public delegate void FooType();
+                public class ParentType
+                {
+                    public delegate void NestedType();
+                    public class AnotherNestedType
                     {
-                        public delegate void NestedType();
-
-                        public class AnotherNestedType
-                        {
-                            public delegate void DeeperNestedType();
-                        }
+                        public delegate void DeeperNestedType();
                     }
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic, 
-                ["
-                    Public Delegate Sub FooType()
-
-                    Public Class ParentType
-                        Public Delegate Sub NestedType()
-
-                        Public Class AnotherNestedType
-                            Public Delegate Sub DeeperNestedType()
-                        End Class
+                }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Delegate Sub FooType()
+                Public Class ParentType
+                    Public Delegate Sub NestedType()
+                    Public Class AnotherNestedType
+                        Public Delegate Sub DeeperNestedType()
                     End Class
-                "]
-            )
+                End Class
+            "])
         ]
         testList "Analyze/Delegate" [
             yield! testRepeat (withProjects contents)

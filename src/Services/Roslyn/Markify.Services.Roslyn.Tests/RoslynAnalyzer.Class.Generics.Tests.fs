@@ -10,19 +10,13 @@ module RoslynAnalyzer_ClassGenerics_Tests =
     [<Tests>]
     let noGenericClassTests =
         let noGeneric = [
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    public class NoGenericClass { }
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic,
-                ["
-                    Public Class NoGenericClass
-                    End Class
-                "]
-            )
+            (ProjectLanguage.CSharp, ["
+                public class NoGenericClass { }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Class NoGenericClass
+                End Class
+            "])
         ]
         testList "Analyze/Class" [
             yield! testRepeatParameterized 
@@ -38,24 +32,17 @@ module RoslynAnalyzer_ClassGenerics_Tests =
     [<Tests>]
     let genericClassTests =
         let generic = [
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    public class SingleGenericClass<T> { }
+            (ProjectLanguage.CSharp, ["
+                public class SingleGenericClass<T> { }
+                public class MultipleGenericClass<T, Y> { }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Class SingleGenericClass(Of T)
+                End Class
 
-                    public class MultipleGenericClass<T, Y> { }
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic,
-                ["
-                    Public Class SingleGenericClass(Of T)
-                    End Class
-
-                    Public Class MultipleGenericClass(Of T, Y)
-                    End Class
-                "]
-            )
+                Public Class MultipleGenericClass(Of T, Y)
+                End Class
+            "])
         ]
         testList "Analyze/Class" [
             yield! testRepeatParameterized 
@@ -83,19 +70,13 @@ module RoslynAnalyzer_ClassGenerics_Tests =
     [<Tests>]
     let genericModifersTests =
         let genericModifiers = [
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    public class SingleGenericClass<T> { }
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic,
-                ["
-                    Public Class SingleGenericClass(Of T)
-                    End Class
-                "]
-            )
+            (ProjectLanguage.CSharp, ["
+                public class SingleGenericClass<T> { }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Class SingleGenericClass(Of T)
+                End Class
+            "])
         ]
         testList "Analyze/Class" [
             yield! testRepeatParameterized 
@@ -112,26 +93,18 @@ module RoslynAnalyzer_ClassGenerics_Tests =
     [<Tests>]
     let genericConstraintsTests =
         let genericConstraints =[
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    public class SingleGenericClass<T> { }
-
-                    public class GenericConstrainedClass<T, Y>
-                        where T : struct
-                        where Y : IEnumerable, class, new() { }
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic,
-                ["
-                    Public Class SingleGenericClass(Of T)
-                    End Class
-
-                    Public Class GenericConstrainedClass(Of T As Structure, Y As { IEnumerable, Class, New })
-                    End Class
-                "]
-            )
+            (ProjectLanguage.CSharp, ["
+                public class SingleGenericClass<T> { }
+                public class GenericConstrainedClass<T, Y>
+                    where T : struct
+                    where Y : IEnumerable, class, new() { }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Class SingleGenericClass(Of T)
+                End Class
+                Public Class GenericConstrainedClass(Of T As Structure, Y As { IEnumerable, Class, New })
+                End Class
+            "])
         ]
         testList "Analyze/Class" [
             yield! testRepeatParameterized 

@@ -10,19 +10,13 @@ module RoslynAnalyzer_StructModifiers_Tests =
     [<Tests>]
     let noAccessModifierTests =
         let contents = [
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    struct NoAccessModifierType { }
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic, 
-                ["
-                    Structure NoAccessModifierType
-                    End Structure
-                "]
-            )
+            (ProjectLanguage.CSharp, ["
+                struct NoAccessModifierType { }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Structure NoAccessModifierType
+                End Structure
+            "])
         ]
         testList "Analyze/Struct" [
             yield! testRepeat (withProjects contents)
@@ -37,49 +31,33 @@ module RoslynAnalyzer_StructModifiers_Tests =
     [<Tests>]
     let withAccessModifiersTests =
         let contents = [
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    public struct PublicType { }
-
-                    internal struct InternalType { }
-
-                    public partial struct ParentType
-                    {
-                        private struct PrivateType { }
-
-                        protected struct ProtectedType { }
-
-                        protected internal struct ProtectedInternalType { }
-
-                        internal protected struct InternalProtectedType { }
-                    }
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic, 
-                ["
-                    Public Structure PublicType
+            (ProjectLanguage.CSharp, ["
+                public struct PublicType { }
+                internal struct InternalType { }
+                public partial struct ParentType
+                {
+                    private struct PrivateType { }
+                    protected struct ProtectedType { }
+                    protected internal struct ProtectedInternalType { }
+                    internal protected struct InternalProtectedType { }
+                }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Structure PublicType
+                End Structure
+                Friend Structure InternalType
+                End Structure
+                Partial Public Structure ParentType
+                    Private Structure PrivateType
                     End Structure
-
-                    Friend Structure InternalType
+                    Protected Structure ProtectedType
                     End Structure
-
-                    Partial Public Structure ParentType
-                        Private Structure PrivateType
-                        End Structure
-
-                        Protected Structure ProtectedType
-                        End Structure
-
-                        Protected Friend Structure ProtectedInternalType
-                        End Structure
-
-                        Protected Friend Structure InternalProtectedType
-                        End Structure
+                    Protected Friend Structure ProtectedInternalType
                     End Structure
-                "]
-            )
+                    Protected Friend Structure InternalProtectedType
+                    End Structure
+                End Structure
+            "])
         ]
         testList "Analyze/Struct" [
             yield! testRepeatParameterized
@@ -101,19 +79,13 @@ module RoslynAnalyzer_StructModifiers_Tests =
     [<Tests>]
     let noModifierTests =
         let contents = [
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    public struct NoModifierType { }
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic, 
-                ["
-                    Public Structure NoModifierType
-                    End Structure
-                "]
-            )
+            (ProjectLanguage.CSharp, ["
+                public struct NoModifierType { }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Structure NoModifierType
+                End Structure
+            "])
         ]
         testList "Analyze/Struct" [
             yield! testRepeat (withProjects contents)
@@ -128,44 +100,28 @@ module RoslynAnalyzer_StructModifiers_Tests =
     [<Tests>]
     let withModifiersTests =
         let contents = [
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    public abstract struct AbstractType { }
-
-                    public partial struct PartialType { }
-
-                    public sealed struct SealedType { }
-
-                    public static struct StaticType { }
-
-                    public abstract partial struct AbstractPartialType { }
-
-                    public sealed partial struct SealedPartialType { }
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic, 
-                ["
-                    Public MustInherit Structure AbstractType
-                    End Structure
-
-                    Partial Public Structure PartialType
-                    End Structure
-
-                    Public NotInheritable Structure SealedType
-                    End Structure
-
-                    Public Static Structure StaticType
-                    End Structure
-
-                    Partial Public MustInherit Structure AbstractPartialType
-                    End Structure
-
-                    Partial Public NotInheritable Structure SealedPartialType
-                    End Structure
-                "]
-            )
+            (ProjectLanguage.CSharp, ["
+                public abstract struct AbstractType { }
+                public partial struct PartialType { }
+                public sealed struct SealedType { }
+                public static struct StaticType { }
+                public abstract partial struct AbstractPartialType { }
+                public sealed partial struct SealedPartialType { }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public MustInherit Structure AbstractType
+                End Structure
+                Partial Public Structure PartialType
+                End Structure
+                Public NotInheritable Structure SealedType
+                End Structure
+                Public Static Structure StaticType
+                End Structure
+                Partial Public MustInherit Structure AbstractPartialType
+                End Structure
+                Partial Public NotInheritable Structure SealedPartialType
+                End Structure
+            "])
         ]
         testList "Analyze/Struct" [
             yield! testRepeatParameterized

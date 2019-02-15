@@ -24,22 +24,16 @@ module RoslynAnalyzer_Projects_Tests =
     [<Tests>]
     let duplicateContentTests =
         let duplicates = [
-            (
-                ProjectLanguage.CSharp,
-                ["
+            (ProjectLanguage.CSharp, ["
                     public class FooType { }
                     public class FooType { }
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic, 
-                ["
+            "])
+            (ProjectLanguage.VisualBasic, ["
                     Public Class FooType
                     End Class
                     Public Class FooType
                     End Class
-                "]
-            )
+            "])
         ]
         testList "Analyze/Project" [
             yield! testRepeat (withProjects duplicates)

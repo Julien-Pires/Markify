@@ -10,18 +10,12 @@ module RoslynAnalyzer_DelegateGenerics_Tests =
     [<Tests>]
     let noGenericDelegateTests =
         let noGeneric = [
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    public delegate void NoGenericDelegate();
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic,
-                ["
-                    Public Delegate Sub NoGenericDelegate()
-                "]
-            )
+            (ProjectLanguage.CSharp, ["
+                public delegate void NoGenericDelegate();
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Delegate Sub NoGenericDelegate()
+            "])
         ]
         testList "Analyze/Delegate" [
             yield! testRepeatParameterized 
@@ -37,22 +31,14 @@ module RoslynAnalyzer_DelegateGenerics_Tests =
     [<Tests>]
     let genericDelegateTests =
         let generic = [
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    public delegate void SingleGenericDelegate<T>();
-
-                    public delegate void MultipleGenericDelegate<T, Y>();
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic,
-                ["
-                    Public Delegate Sub SingleGenericDelegate(Of T)()
-
-                    Public Delegate Sub MultipleGenericDelegate(Of T, Y)()
-                "]
-            )
+            (ProjectLanguage.CSharp, ["
+                public delegate void SingleGenericDelegate<T>();
+                public delegate void MultipleGenericDelegate<T, Y>();
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Delegate Sub SingleGenericDelegate(Of T)()
+                Public Delegate Sub MultipleGenericDelegate(Of T, Y)()
+            "])
         ]
         testList "Analyze/Delegate" [
             yield! testRepeatParameterized 
@@ -80,26 +66,16 @@ module RoslynAnalyzer_DelegateGenerics_Tests =
     [<Tests>]
     let genericModifersTests =
         let genericModifiers = [
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    public delegate void SingleGenericDelegate<T>();
-
-                    public delegate void CovariantGenericDelegate<in T>();
-
-                    public delegate void ContravariantGenericDelegate<out T>();
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic,
-                ["
-                    Public Delegate Sub SingleGenericDelegate(Of T)()
-
-                    Public Delegate Sub CovariantGenericDelegate(Of In T)()
-
-                    Public Delegate Sub ContravariantGenericDelegate(Of Out T)()
-                "]
-            )
+            (ProjectLanguage.CSharp, ["
+                public delegate void SingleGenericDelegate<T>();
+                public delegate void CovariantGenericDelegate<in T>();
+                public delegate void ContravariantGenericDelegate<out T>();
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Delegate Sub SingleGenericDelegate(Of T)()
+                Public Delegate Sub CovariantGenericDelegate(Of In T)()
+                Public Delegate Sub ContravariantGenericDelegate(Of Out T)()
+            "])
         ]
         testList "Analyze/Delegate" [
             yield! testRepeatParameterized 
@@ -128,24 +104,16 @@ module RoslynAnalyzer_DelegateGenerics_Tests =
     [<Tests>]
     let genericConstraintsTests =
         let genericConstraints =[
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    public delegate void SingleGenericDelegate<T>();
-
-                    public delegate void GenericConstrainedDelegate<T, Y>()
-                        where T : struct
-                        where Y : IEnumerable, class, new();
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic,
-                ["
-                    Public Delegate Sub SingleGenericDelegate(Of T)()
-
-                    Public Delegate Sub GenericConstrainedDelegate(Of T As Structure, Y As { IEnumerable, Class, New })()
-                "]
-            )
+            (ProjectLanguage.CSharp, ["
+                public delegate void SingleGenericDelegate<T>();
+                public delegate void GenericConstrainedDelegate<T, Y>()
+                    where T : struct
+                    where Y : IEnumerable, class, new();
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Delegate Sub SingleGenericDelegate(Of T)()
+                Public Delegate Sub GenericConstrainedDelegate(Of T As Structure, Y As { IEnumerable, Class, New })()
+            "])
         ]
         testList "Analyze/Delegate" [
             yield! testRepeatParameterized 

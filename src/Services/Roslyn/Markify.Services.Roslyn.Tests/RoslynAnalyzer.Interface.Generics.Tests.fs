@@ -10,19 +10,13 @@ module RoslynAnalyzer_InterfaceGenerics_Tests =
     [<Tests>]
     let noGenericInterfaceTests =
         let noGeneric = [
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    public interface NoGenericInterface { }
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic,
-                ["
-                    Public Interface NoGenericInterface
-                    End Interface
-                "]
-            )
+            (ProjectLanguage.CSharp, ["
+                public interface NoGenericInterface { }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Interface NoGenericInterface
+                End Interface
+            "])
         ]
         testList "Analyze/Interface" [
             yield! testRepeatParameterized 
@@ -38,24 +32,16 @@ module RoslynAnalyzer_InterfaceGenerics_Tests =
     [<Tests>]
     let genericInterfaceTests =
         let generic = [
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    public interface SingleGenericInterface<T> { }
-
-                    public interface MultipleGenericInterface<T, Y> { }
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic,
-                ["
-                    Public Interface SingleGenericInterface(Of T)
-                    End Interface
-
-                    Public Interface MultipleGenericInterface(Of T, Y)
-                    End Interface
-                "]
-            )
+            (ProjectLanguage.CSharp, ["
+                public interface SingleGenericInterface<T> { }
+                public interface MultipleGenericInterface<T, Y> { }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Interface SingleGenericInterface(Of T)
+                End Interface
+                Public Interface MultipleGenericInterface(Of T, Y)
+                End Interface
+            "])
         ]
         testList "Analyze/Interface" [
             yield! testRepeatParameterized 
@@ -69,7 +55,7 @@ module RoslynAnalyzer_InterfaceGenerics_Tests =
                     test <@ result.Identity.Parameters |> Seq.length = expected @>)
 
             yield! testRepeatParameterized 
-                "should return valid generic parameter name when struct has some" [
+                "should return valid generic parameter name when interface has some" [
                 (withProjects generic, ("SingleGenericInterface`1", "T"))
                 (withProjects generic, ("MultipleGenericInterface`2", "T"))
                 (withProjects generic, ("MultipleGenericInterface`2", "Y"))]
@@ -83,29 +69,19 @@ module RoslynAnalyzer_InterfaceGenerics_Tests =
     [<Tests>]
     let genericModifersTests =
         let genericModifiers = [
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    public interface SingleGenericInterface<T> { }
-
-                    public interface CovariantGenericInterface<in T> { }
-
-                    public interface ContravariantGenericInterface<out T> { }
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic,
-                ["
-                    Public Interface SingleGenericInterface(Of T)
-                    End Interface
-
-                    Public Interface CovariantGenericInterface(Of In T)
-                    End Interface
-
-                    Public Interface ContravariantGenericInterface(Of Out T)
-                    End Interface
-                "]
-            )
+            (ProjectLanguage.CSharp, ["
+                public interface SingleGenericInterface<T> { }
+                public interface CovariantGenericInterface<in T> { }
+                public interface ContravariantGenericInterface<out T> { }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Interface SingleGenericInterface(Of T)
+                End Interface
+                Public Interface CovariantGenericInterface(Of In T)
+                End Interface
+                Public Interface ContravariantGenericInterface(Of Out T)
+                End Interface
+            "])
         ]
         testList "Analyze/Interface" [
             yield! testRepeatParameterized 
@@ -134,26 +110,18 @@ module RoslynAnalyzer_InterfaceGenerics_Tests =
     [<Tests>]
     let genericConstraintsTests =
         let genericConstraints =[
-            (
-                ProjectLanguage.CSharp,
-                ["
-                    public interface SingleGenericInterface<T> { }
-
-                    public interface GenericConstrainedInterface<T, Y>
-                        where T : struct
-                        where Y : IEnumerable, class, new() { }
-                "]
-            )
-            (
-                ProjectLanguage.VisualBasic,
-                ["
-                    Public Interface SingleGenericInterface(Of T)
-                    End Interface
-
-                    Public Interface GenericConstrainedInterface(Of T As Structure, Y As { IEnumerable, Class, New })
-                    End Interface
-                "]
-            )
+            (ProjectLanguage.CSharp, ["
+                public interface SingleGenericInterface<T> { }
+                public interface GenericConstrainedInterface<T, Y>
+                    where T : struct
+                    where Y : IEnumerable, class, new() { }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Interface SingleGenericInterface(Of T)
+                End Interface
+                Public Interface GenericConstrainedInterface(Of T As Structure, Y As { IEnumerable, Class, New })
+                End Interface
+            "])
         ]
         testList "Analyze/Interface" [
             yield! testRepeatParameterized 
