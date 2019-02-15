@@ -78,6 +78,7 @@
     <Compile Include="RoslynAnalyzer.Delegate.Generics.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Delegate.Modifiers.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Delegate.ReturnType.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Delegate.Parameters.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Enum.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Enum.Modifiers.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Enum.Inheritance.Tests.fs" />
@@ -97,7 +98,6 @@
     <Compile Include="RoslynAnalyzer.Comments.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Comments.Content.Tests.fs" />
     <Compile Include="RoslynAnalyzer.CommentsParameters.Tests.fs" />
-    <Compile Include="RoslynAnalyzer.Delegate.Parameters.Tests.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Argu">
