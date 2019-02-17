@@ -69,6 +69,7 @@
     <Compile Include="RoslynAnalyzer.Class.Properties.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Class.Methods.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Class.Events.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Class.Fields.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Struct.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Struct.Generics.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Struct.Modifiers.Tests.fs" />
@@ -76,6 +77,7 @@
     <Compile Include="RoslynAnalyzer.Struct.Properties.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Struct.Methods.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Struct.Events.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Struct.Fields.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Interface.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Interface.Generics.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Interface.Modifiers.Tests.fs" />
@@ -99,7 +101,6 @@
     <Compile Include="LanguageModuleArgs.fs" />
     <Compile Include="ProjectCustomizationOld.fs" />
     <Compile Include="TypeAttribute.fs" />
-    <Compile Include="RoslynAnalyzer.Types.Fields.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Types.PartialMerging.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Comments.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Comments.Content.Tests.fs" />
