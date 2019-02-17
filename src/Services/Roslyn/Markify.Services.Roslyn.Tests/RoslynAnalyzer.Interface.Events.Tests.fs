@@ -1,0 +1,144 @@
+﻿namespace Markify.Services.Roslyn.Tests
+
+open Markify.Domain.Compiler
+open Markify.Services.Roslyn
+open Expecto
+open Swensen.Unquote
+open Fixtures
+
+module RoslynAnalyzer_InterfaceEvents_Tests =
+    [<Tests>]
+    let noEventsTests =
+        let content = [
+            (ProjectLanguage.CSharp, ["
+                public interface WithoutEvents {}
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Interface WithoutEvents
+                End Interface
+            "])
+        ]
+        testList "Analyze/Interface" [
+            yield! testRepeat (withProjects content)
+                "should return no events when interface has none"
+                (fun sut project () ->
+                    let assemblies = sut.Analyze project
+                    let result = findInterface assemblies "WithoutEvents"
+
+                    test <@ result.Events |> Seq.isEmpty @>)
+        ]
+
+    [<Tests>]
+    let withEventsTests =
+        let content = [
+            (ProjectLanguage.CSharp, ["
+                public interface SingleEvent 
+                {
+                    event EventHandler FirstEvent;
+                }
+                public interface MultipleEvents
+                {
+                    event EventHandler FirstEvent;
+                    event AnotherEventHandler SecondEvent;
+                }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Interface SingleEvent
+                    Event FirstEvent As EventHandler
+                End Interface
+                Public Interface MultipleEvents
+                    Event FirstEvent As EventHandler
+                    Event SecondEvent As AnotherEventHandler
+                End Interface
+            "])
+        ]
+        testList "Analyze/Interface" [
+            yield! testRepeatParameterized
+                "should return events when interface has some" [
+                (withProjects content, ("SingleEvent", 1))
+                (withProjects content, ("MultipleEvents", 2))]
+                (fun sut project (name, expected) () ->
+                    let assemblies = sut.Analyze project
+                    let result = findInterface assemblies name
+
+                    test <@ result.Events |> Seq.length = expected @>)
+
+            yield! testRepeatParameterized
+                "should return correct event name when interface has some" [
+                (withProjects content, ("SingleEvent", "FirstEvent"))
+                (withProjects content, ("MultipleEvents", "SecondEvent"))]
+                (fun sut project (name, expected) () ->
+                    let assemblies = sut.Analyze project
+                    let result = findInterface assemblies name
+
+                    test <@ result.Events |> Seq.exists (fun c -> c.Name = expected) @>)
+
+            yield! testRepeatParameterized
+                "should return correct event type when interface has some" [
+                (withProjects content, ("SingleEvent", "FirstEvent", "EventHandler"))
+                (withProjects content, ("MultipleEvents", "SecondEvent", "AnotherEventHandler"))]
+                (fun sut project (name, event, expected) () ->
+                    let assemblies = sut.Analyze project
+                    let result = findInterface assemblies name
+
+                    test <@ result.Events |> Seq.find (fun c -> c.Name = event)
+                                          |> fun c -> c.Type = expected @>)
+        ]
+
+    [<Tests>]
+    let accessModifierTests =
+        let content = [
+            (ProjectLanguage.CSharp, ["
+                public interface AccessModifier 
+                {
+                    event EventHandler WithoutAccessModifier;
+                    public event EventHandler PublicEvent;
+                }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Interface AccessModifier
+                    Event WithoutAccessModifier As EventHandler
+                    Public Event PublicEvent As EventHandler
+                End Interface
+            "])
+        ]
+        testList "Analyze/Interface" [
+            yield! testRepeatParameterized
+                "should return correct interface event access modifier" [
+                (withProjects content, ("WithoutAccessModifier", Set ["public"]))
+                (withProjects content, ("PublicEvent", Set ["public"]))]
+                (fun sut project (event, expected) () -> 
+                    let assemblies = sut.Analyze project
+                    let object = findInterface assemblies "AccessModifier"
+                    let result = object.Events |> Seq.find (fun c -> c.Name = event)
+
+                    test <@ result.AccessModifiers |> Seq.map normalizeSyntax 
+                                                   |> Set
+                                                   |> Set.isSubset expected @>)
+        ]
+
+    [<Tests>]
+    let modifiersTests =
+        let content = [
+            (ProjectLanguage.CSharp, ["
+                public interface Modifiers 
+                {
+                    event EventHandler WithoutModifier;
+                }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Interface Modifiers
+                    Event WithoutModifier As EventHandler
+                End Interface
+            "])
+        ]
+        testList "Analyze/Interface" [
+            yield! testRepeat (withProjects content)
+                "should return no modifier when interface event has none"
+                (fun sut project () -> 
+                    let assemblies = sut.Analyze project
+                    let object = findInterface assemblies "Modifiers"
+                    let result = object.Events |> Seq.find (fun c -> c.Name = "WithoutModifier")
+
+                    test <@ result.AccessModifiers |> Seq.isEmpty @>)
+        ]

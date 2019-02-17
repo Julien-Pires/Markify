@@ -1,0 +1,161 @@
+﻿namespace Markify.Services.Roslyn.Tests
+
+open Markify.Domain.Compiler
+open Markify.Services.Roslyn
+open Expecto
+open Swensen.Unquote
+open Fixtures
+
+module RoslynAnalyzer_StructEvents_Tests =
+    [<Tests>]
+    let noEventsTests =
+        let content = [
+            (ProjectLanguage.CSharp, ["
+                public struct WithoutEvents {}
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Structure WithoutEvents
+                End Structure
+            "])
+        ]
+        testList "Analyze/Struct" [
+            yield! testRepeat (withProjects content)
+                "should return no events when struct has none"
+                (fun sut project () ->
+                    let assemblies = sut.Analyze project
+                    let result = findStruct assemblies "WithoutEvents"
+
+                    test <@ result.Events |> Seq.isEmpty @>)
+        ]
+
+    [<Tests>]
+    let withEventsTests =
+        let content = [
+            (ProjectLanguage.CSharp, ["
+                public struct SingleEvent 
+                {
+                    event EventHandler FirstEvent;
+                }
+                public struct MultipleEvents
+                {
+                    event EventHandler FirstEvent;
+                    event AnotherEventHandler SecondEvent;
+                }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Structure SingleEvent
+                    Event FirstEvent As EventHandler
+                End Structure
+                Public Structure MultipleEvents
+                    Event FirstEvent As EventHandler
+                    Event SecondEvent As AnotherEventHandler
+                End Structure
+            "])
+        ]
+        testList "Analyze/Struct" [
+            yield! testRepeatParameterized
+                "should return events when struct has some" [
+                (withProjects content, ("SingleEvent", 1))
+                (withProjects content, ("MultipleEvents", 2))]
+                (fun sut project (name, expected) () ->
+                    let assemblies = sut.Analyze project
+                    let result = findStruct assemblies name
+
+                    test <@ result.Events |> Seq.length = expected @>)
+
+            yield! testRepeatParameterized
+                "should return correct event name when struct has some" [
+                (withProjects content, ("SingleEvent", "FirstEvent"))
+                (withProjects content, ("MultipleEvents", "SecondEvent"))]
+                (fun sut project (name, expected) () ->
+                    let assemblies = sut.Analyze project
+                    let result = findStruct assemblies name
+
+                    test <@ result.Events |> Seq.exists (fun c -> c.Name = expected) @>)
+
+            yield! testRepeatParameterized
+                "should return correct event type when struct has some" [
+                (withProjects content, ("SingleEvent", "FirstEvent", "EventHandler"))
+                (withProjects content, ("MultipleEvents", "SecondEvent", "AnotherEventHandler"))]
+                (fun sut project (name, event, expected) () ->
+                    let assemblies = sut.Analyze project
+                    let result = findStruct assemblies name
+
+                    test <@ result.Events |> Seq.find (fun c -> c.Name = event)
+                                          |> fun c -> c.Type = expected @>)
+        ]
+
+    [<Tests>]
+    let accessModifierTests =
+        let content = [
+            (ProjectLanguage.CSharp, ["
+                public struct AccessModifier 
+                {
+                    event EventHandler WithoutAccessModifier;
+                    public event EventHandler PublicEvent;
+                    internal event EventHandler InternalEvent;
+                }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Structure AccessModifier
+                    Event WithoutAccessModifier As EventHandler
+                    Public Event PublicEvent As EventHandler
+                    Friend Event InternalEvent As EventHandler
+                End Structure
+            "])
+        ]
+        testList "Analyze/Struct" [
+            yield! testRepeatParameterized
+                "should return correct struct event access modifier" [
+                (withProjects content, ("WithoutAccessModifier", Set ["private"]))
+                (withProjects content, ("PublicEvent", Set ["public"]))
+                (withProjects content, ("InternalEvent", Set ["internal"]))]
+                (fun sut project (event, expected) () -> 
+                    let assemblies = sut.Analyze project
+                    let object = findStruct assemblies "AccessModifier"
+                    let result = object.Events |> Seq.find (fun c -> c.Name = event)
+
+                    test <@ result.AccessModifiers |> Seq.map normalizeSyntax 
+                                                   |> Set
+                                                   |> Set.isSubset expected @>)
+        ]
+
+    [<Tests>]
+    let modifiersTests =
+        let content = [
+            (ProjectLanguage.CSharp, ["
+                public struct Modifiers 
+                {
+                    event EventHandler WithoutModifier;
+                    static event EventHandler StaticEvent;
+                }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Structure Modifiers
+                    Event WithoutModifier As EventHandler
+                    Shared Event StaticEvent As EventHandler
+                End Structure
+            "])
+        ]
+        testList "Analyze/Struct" [
+            yield! testRepeat (withProjects content)
+                "should return no modifier when struct event has none"
+                (fun sut project () -> 
+                    let assemblies = sut.Analyze project
+                    let object = findStruct assemblies "Modifiers"
+                    let result = object.Events |> Seq.find (fun c -> c.Name = "WithoutModifier")
+
+                    test <@ result.AccessModifiers |> Seq.isEmpty @>)
+
+            yield! testRepeatParameterized
+                "should return modifier when struct event has one" [
+                (withProjects content, ("StaticEvent", Set ["static"]))]
+                (fun sut project (event, expected) () -> 
+                    let assemblies = sut.Analyze project
+                    let object = findStruct assemblies "Modifiers"
+                    let result = object.Events |> Seq.find (fun c -> c.Name = event)
+
+                    test <@ result.AccessModifiers |> Seq.map normalizeSyntax 
+                                                   |> Set
+                                                   |> Set.isSubset expected @>)
+        ]
