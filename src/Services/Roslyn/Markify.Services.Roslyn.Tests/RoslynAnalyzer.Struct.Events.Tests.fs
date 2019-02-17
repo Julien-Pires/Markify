@@ -94,6 +94,7 @@ module RoslynAnalyzer_StructEvents_Tests =
                     event EventHandler WithoutAccessModifier;
                     public event EventHandler PublicEvent;
                     internal event EventHandler InternalEvent;
+                    private event EventHandler PrivateEvent;
                 }
             "])
             (ProjectLanguage.VisualBasic, ["
@@ -101,6 +102,7 @@ module RoslynAnalyzer_StructEvents_Tests =
                     Event WithoutAccessModifier As EventHandler
                     Public Event PublicEvent As EventHandler
                     Friend Event InternalEvent As EventHandler
+                    Private Event PrivateEvent As EventHandler
                 End Structure
             "])
         ]
@@ -109,7 +111,8 @@ module RoslynAnalyzer_StructEvents_Tests =
                 "should return correct struct event access modifier" [
                 (withProjects content, ("WithoutAccessModifier", Set ["private"]))
                 (withProjects content, ("PublicEvent", Set ["public"]))
-                (withProjects content, ("InternalEvent", Set ["internal"]))]
+                (withProjects content, ("InternalEvent", Set ["internal"]))
+                (withProjects content, ("PrivateEvent", Set ["private"]))]
                 (fun sut project (event, expected) () -> 
                     let assemblies = sut.Analyze project
                     let object = findStruct assemblies "AccessModifier"
