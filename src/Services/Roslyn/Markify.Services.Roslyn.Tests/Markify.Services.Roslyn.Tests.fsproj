@@ -67,14 +67,19 @@
     <Compile Include="RoslynAnalyzer.Class.Modifiers.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Class..Inheritance.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Class.Properties.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Class.Methods.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Struct.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Struct.Generics.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Struct.Modifiers.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Struct.Inheritance.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Struct.Properties.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Struct.Methods.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Interface.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Interface.Generics.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Interface.Modifiers.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Interface.Inheritance.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Interface.Properties.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Interface.Methods.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Delegate.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Delegate.Generics.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Delegate.Modifiers.Tests.fs" />
@@ -83,6 +88,7 @@
     <Compile Include="RoslynAnalyzer.Enum.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Enum.Modifiers.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Enum.Inheritance.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Enum.Values.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Namespaces.Tests.fs" />
     <Compile Include="ProjectCustomization.fs" />
     <Compile Include="DefinitionsHelper.fs" />
@@ -92,8 +98,6 @@
     <Compile Include="TypeAttribute.fs" />
     <Compile Include="RoslynAnalyzer.Types.Fields.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Types.Events.Tests.fs" />
-    <Compile Include="RoslynAnalyzer.Types.Methods.Tests.fs" />
-    <Compile Include="RoslynAnalyzer.Types.EnumValues.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Types.PartialMerging.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Comments.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Comments.Content.Tests.fs" />
