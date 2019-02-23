@@ -70,6 +70,7 @@
     <Compile Include="RoslynAnalyzer.Class.Methods.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Class.Events.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Class.Fields.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Class.Partial.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Struct.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Struct.Generics.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Struct.Modifiers.Tests.fs" />
@@ -78,6 +79,7 @@
     <Compile Include="RoslynAnalyzer.Struct.Methods.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Struct.Events.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Struct.Fields.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Struct.Partial.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Interface.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Interface.Generics.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Interface.Modifiers.Tests.fs" />
@@ -85,6 +87,7 @@
     <Compile Include="RoslynAnalyzer.Interface.Properties.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Interface.Methods.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Interface.Events.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Interface.Partial.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Delegate.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Delegate.Generics.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Delegate.Modifiers.Tests.fs" />
@@ -95,13 +98,6 @@
     <Compile Include="RoslynAnalyzer.Enum.Inheritance.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Enum.Values.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Namespaces.Tests.fs" />
-    <Compile Include="ProjectCustomization.fs" />
-    <Compile Include="DefinitionsHelper.fs" />
-    <Compile Include="TestHelper.fs" />
-    <Compile Include="LanguageModuleArgs.fs" />
-    <Compile Include="ProjectCustomizationOld.fs" />
-    <Compile Include="TypeAttribute.fs" />
-    <Compile Include="RoslynAnalyzer.Types.PartialMerging.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Comments.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Comments.Content.Tests.fs" />
     <Compile Include="RoslynAnalyzer.CommentsParameters.Tests.fs" />
@@ -323,11 +319,6 @@
     <ProjectReference Include="..\Markify.Services.Roslyn.CSharp\Markify.Services.Roslyn.CSharp.fsproj">
       <Name>Markify.Services.Roslyn.CSharp</Name>
       <Project>{40b61bec-6d13-4ed1-bc73-17104c77e932}</Project>
-      <Private>True</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\Markify.Services.Roslyn.Fixtures\Markify.Services.Roslyn.Fixtures.csproj">
-      <Name>Markify.Services.Roslyn.Fixtures</Name>
-      <Project>{1435b850-0ffc-4e4b-b74c-c72eb6723a61}</Project>
       <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\Markify.Services.Roslyn.VisualBasic\Markify.Services.Roslyn.VisualBasic.fsproj">
