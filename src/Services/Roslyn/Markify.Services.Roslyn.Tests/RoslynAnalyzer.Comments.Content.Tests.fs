@@ -1,85 +1,64 @@
 ﻿namespace Markify.Services.Roslyn.Tests
 
-module RoslynAnalyzerCommentsContentTests =
-    open Markify.Domain.Compiler
-    open Markify.Services.Roslyn
-    open Xunit
-    open Swensen.Unquote
-       
-    [<Theory>]
-    [<ProjectData("Comments", "EnumWithSimpleComments")>]
-    [<ProjectData("Comments", "ClassWithSimpleComments`2")>]
-    [<ProjectData("Comments", "StructWithSimpleComments`2")>]
-    [<ProjectData("Comments", "InterfaceWithSimpleComments`2")>]
-    [<ProjectData("Comments", "DelegateWithSimpleComments`2")>]
-    let ``Analyze should return a single content when comment has only one type of content`` (name, sut : RoslynAnalyzer, project) =
-        let library = (sut :> IProjectAnalyzer).Analyze project
-        let actual = 
-            TestHelper.getDefinition name library 
-            |> DefinitionsHelper.getComment "summary"
+open Markify.Domain.Compiler
+open Markify.Services.Roslyn
+open Expecto
+open Swensen.Unquote
+open Fixtures
 
-        test <@ actual.Value.Content |> Seq.length = 1 @>
-    
-    [<Theory>]
-    [<ProjectData("Comments", "EnumWithComplexComments")>]
-    [<ProjectData("Comments", "ClassWithComplexComments`2")>]
-    [<ProjectData("Comments", "StructWithComplexComments`2")>]
-    [<ProjectData("Comments", "InterfaceWithComplexComments`2")>]
-    [<ProjectData("Comments", "DelegateWithComplexComments`2")>]
-    let ``Analyze should return multiple content when comment has a mixed type of content`` (name, sut : RoslynAnalyzer, project) =
-        let library = (sut :> IProjectAnalyzer).Analyze project
-        let actual = 
-            TestHelper.getDefinition name library 
-            |> DefinitionsHelper.getComment "summary"
+module RoslynAnalyzer_CommentsContent_Tests =
+    [<Tests>]
+    let commentContentTests =
+        let content = [
+            (ProjectLanguage.CSharp, ["
+                /// <summary>foo</summary>
+                /// <example><code>foo</code></example>
+                /// <remarks>
+                /// foo
+                /// <code>foo</code>
+                /// </remarks>
+                public class Comments { }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                ''' <summary>foo</summary>
+                ''' <example><code>foo</code></example>
+                ''' <remarks>
+                ''' foo
+                ''' <code>foo</code>
+                ''' </remarks>
+                Public Class Comments
+                End Class
+            "])
+        ]
+        testList "Analyze/Comments" [
+            yield! testRepeat (withProjects content)
+                "should return text content when comment has some"
+                (fun sut project () ->
+                    let assemblies = sut.Analyze project
+                    let object = findClass assemblies "Comments"
+                    let result = object.Comments.Comments |> Seq.find (fun c -> c.Name = "summary") 
+                            
+                    test <@ result.Content |> Seq.choose (function | Text c -> Some c | _ -> None) 
+                                           |> Seq.head
+                                           |> fun c -> c = "foo" @>)
 
-        test <@ actual.Value.Content |> Seq.length > 1 @>
+            yield! testRepeat (withProjects content)
+                "should return block content when comment has some"
+                (fun sut project () ->
+                    let assemblies = sut.Analyze project
+                    let object = findClass assemblies "Comments"
+                    let result = object.Comments.Comments |> Seq.find (fun c -> c.Name = "example") 
+                            
+                    test <@ result.Content |> Seq.choose (function | Block c -> Some c | _ -> None) 
+                                           |> Seq.head
+                                           |> fun c -> c.Name = "code" @>)
 
-    [<Theory>]
-    [<ProjectData("Comments", "EnumWithSimpleComments")>]
-    [<ProjectData("Comments", "ClassWithSimpleComments`2")>]
-    [<ProjectData("Comments", "StructWithSimpleComments`2")>]
-    [<ProjectData("Comments", "InterfaceWithSimpleComments`2")>]
-    [<ProjectData("Comments", "DelegateWithSimpleComments`2")>]
-    let ``Analyze should return comment with text contents when comment has texts`` (name, sut : RoslynAnalyzer, project) =
-        let library = (sut :> IProjectAnalyzer).Analyze project
-        let actual = 
-            TestHelper.getDefinition name library 
-            |> DefinitionsHelper.getComment "summary"
-        
-        test <@ actual.Value.Content |> Seq.filter (function | Text x -> true | _ -> false)
-                                     |> (Seq.isEmpty >> not) @> 
-
-    [<Theory>]
-    [<ProjectData("Comments", "EnumWithComplexComments")>]
-    [<ProjectData("Comments", "ClassWithComplexComments`2")>]
-    [<ProjectData("Comments", "StructWithComplexComments`2")>]
-    [<ProjectData("Comments", "InterfaceWithComplexComments`2")>]
-    [<ProjectData("Comments", "DelegateWithComplexComments`2")>]
-    let ``Analyze should return comment with block contents when comment has nested tag`` (name, sut : RoslynAnalyzer, project) =
-        let library = (sut :> IProjectAnalyzer).Analyze project
-        let actual = 
-            TestHelper.getDefinition name library 
-            |> DefinitionsHelper.getComment "summary"
-
-        test <@ actual.Value.Content |> Seq.filter (function | Block x -> true | _ -> false)
-                                     |> (Seq.isEmpty >> not) @> 
-    
-    [<Theory>]
-    [<ProjectData("Comments", "EnumWithComplexComments")>]
-    [<ProjectData("Comments", "ClassWithComplexComments`2")>]
-    [<ProjectData("Comments", "StructWithComplexComments`2")>]
-    [<ProjectData("Comments", "InterfaceWithComplexComments`2")>]
-    [<ProjectData("Comments", "DelegateWithComplexComments`2")>]
-    let ``Analyze should return all nested tag when comment has multi level tag`` (name, sut : RoslynAnalyzer, project) =
-        let library = (sut :> IProjectAnalyzer).Analyze project
-        let comment = 
-            TestHelper.getDefinition name library 
-            |> DefinitionsHelper.getComment "remarks"
-        let actual =
-            comment.Value.Content
-            |> Seq.choose (function | Block x -> Some x | _ -> None)
-            |> Seq.head
-            |> fun c -> c.Content
-            |> Seq.choose (function | Block x -> Some x | _ -> None)
-
-        test <@ actual |> (Seq.isEmpty >> not) @>
+            yield! testRepeat (withProjects content)
+                "should return correct contents when comment has multiple type of contents"
+                (fun sut project () ->
+                    let assemblies = sut.Analyze project
+                    let object = findClass assemblies "Comments"
+                    let result = object.Comments.Comments |> Seq.find (fun c -> c.Name = "remarks") 
+                            
+                    test <@ result.Content |> Seq.length = 2 @>)
+        ]
