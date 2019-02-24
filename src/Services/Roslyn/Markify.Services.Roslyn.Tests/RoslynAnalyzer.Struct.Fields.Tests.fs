@@ -1,7 +1,6 @@
 ﻿namespace Markify.Services.Roslyn.Tests
 
 open Markify.Domain.Compiler
-open Markify.Services.Roslyn
 open Expecto
 open Swensen.Unquote
 open Fixtures
@@ -138,7 +137,7 @@ module RoslynAnalyzer_StructFields_Tests =
             "])
             (ProjectLanguage.VisualBasic, ["
                 Public Structure Modifier
-                    Dim WithoutModifier As Int32
+                    Private WithoutModifier As Int32
                     Shared StaticField As Int32
                     ReadOnly ReadonlyField As Int32
                     Shared ReadOnly StaticReadonlyField As Int32
@@ -179,14 +178,14 @@ module RoslynAnalyzer_StructFields_Tests =
             (ProjectLanguage.CSharp, ["
                 public struct DefaultValue 
                 {
-                    Int32 Without;
-                    Int32 With = 1;
+                    Int32 None;
+                    Int32 Some = 1;
                 }
             "])
             (ProjectLanguage.VisualBasic, ["
                 Public Structure DefaultValue
-                    Dim Without As Int32
-                    Dim With As Int32 = 1
+                    Dim None As Int32
+                    Dim Some As Int32 = 1
                 End Structure
             "])
         ]
@@ -197,7 +196,7 @@ module RoslynAnalyzer_StructFields_Tests =
                     let assemblies = sut.Analyze project
                     let result = findStruct assemblies "DefaultValue"
 
-                    test <@ result.Fields |> Seq.find (fun c -> c.Name = "Without")
+                    test <@ result.Fields |> Seq.find (fun c -> c.Name = "None")
                                           |> fun c -> c.DefaultValue.IsNone @>)
 
             yield! testRepeat (withProjects content)
@@ -206,6 +205,6 @@ module RoslynAnalyzer_StructFields_Tests =
                     let assemblies = sut.Analyze project
                     let result = findStruct assemblies "DefaultValue"
 
-                    test <@ result.Fields |> Seq.find (fun c -> c.Name = "With")
+                    test <@ result.Fields |> Seq.find (fun c -> c.Name = "Some")
                                           |> fun c -> c.DefaultValue = Some "1" @>)
         ]

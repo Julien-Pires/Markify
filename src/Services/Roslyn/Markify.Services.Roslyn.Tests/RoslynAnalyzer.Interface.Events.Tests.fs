@@ -1,7 +1,6 @@
 ﻿namespace Markify.Services.Roslyn.Tests
 
 open Markify.Domain.Compiler
-open Markify.Services.Roslyn
 open Expecto
 open Swensen.Unquote
 open Fixtures

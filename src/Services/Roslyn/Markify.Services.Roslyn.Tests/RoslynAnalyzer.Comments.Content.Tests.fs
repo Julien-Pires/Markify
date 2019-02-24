@@ -1,7 +1,6 @@
 ﻿namespace Markify.Services.Roslyn.Tests
 
 open Markify.Domain.Compiler
-open Markify.Services.Roslyn
 open Expecto
 open Swensen.Unquote
 open Fixtures
@@ -13,19 +12,13 @@ module RoslynAnalyzer_CommentsContent_Tests =
             (ProjectLanguage.CSharp, ["
                 /// <summary>foo</summary>
                 /// <example><code>foo</code></example>
-                /// <remarks>
-                /// foo
-                /// <code>foo</code>
-                /// </remarks>
+                /// <remarks>foo<code>foo</code></remarks>
                 public class Comments { }
             "])
             (ProjectLanguage.VisualBasic, ["
                 ''' <summary>foo</summary>
                 ''' <example><code>foo</code></example>
-                ''' <remarks>
-                ''' foo
-                ''' <code>foo</code>
-                ''' </remarks>
+                ''' <remarks>foo<code>foo</code></remarks>
                 Public Class Comments
                 End Class
             "])

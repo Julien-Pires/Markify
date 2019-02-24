@@ -117,7 +117,7 @@ module RoslynAnalyzer_DelegateParameters_Tests =
                     let result = findDelegate assemblies name
 
                     test <@ result.Parameters |> Seq.find (fun c -> c.Name = parameter)
-                                              |> fun c -> c.Modifier = Some expected @>)
+                                              |> fun c -> normalizeSyntax c.Modifier.Value = expected @>)
         ]
     
     [<Tests>]
@@ -145,7 +145,7 @@ module RoslynAnalyzer_DelegateParameters_Tests =
     let withParameterDefaultValueTests =
         let content = [
             (ProjectLanguage.CSharp, ["
-                public delegate void WithDefaultValueParameter(Int32 a = 1);
+                public delegate void WithDefaultValueParameter(Int32 A = 1);
             "])
             (ProjectLanguage.VisualBasic, ["
                 Public Delegate Sub WithDefaultValueParameter(Optional A As Int32 = 1)

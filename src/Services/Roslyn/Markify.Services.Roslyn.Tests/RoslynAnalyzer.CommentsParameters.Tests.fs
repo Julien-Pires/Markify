@@ -1,7 +1,6 @@
 ﻿namespace Markify.Services.Roslyn.Tests
 
 open Markify.Domain.Compiler
-open Markify.Services.Roslyn
 open Expecto
 open Swensen.Unquote
 open Fixtures
@@ -36,7 +35,7 @@ module RoslynAnalyzer_CommentsParameters_Tests =
         let contents = [
             (ProjectLanguage.CSharp, ["
                 /// <summary name=''></summary>
-                /// <remarks name='' value=''></remarks>
+                /// <remarks name='' value='' data></remarks>
                 public class WithParameters { }
             "])
             (ProjectLanguage.VisualBasic, ["

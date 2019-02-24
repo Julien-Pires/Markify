@@ -1,6 +1,5 @@
 ﻿namespace Markify.Services.Roslyn.Tests
 
-open Markify.Services.Roslyn
 open Markify.Domain.Compiler
 open Expecto
 open Swensen.Unquote
@@ -20,10 +19,10 @@ module RoslynAnalyzer_InterfacePartial_Tests =
             "])
             (ProjectLanguage.VisualBasic, ["
                 Partial Public Interface PartialType
-                    Implements IEnumerable
+                    Inherits IEnumerable
                 End Interface
                 Partial Public Interface PartialType
-                    Implements IDisposable
+                    Inherits IDisposable
                 End Interface
             "])
         ]

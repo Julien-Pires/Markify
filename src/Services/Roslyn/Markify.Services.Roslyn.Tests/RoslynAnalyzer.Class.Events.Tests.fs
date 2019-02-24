@@ -1,7 +1,6 @@
 ﻿namespace Markify.Services.Roslyn.Tests
 
 open Markify.Domain.Compiler
-open Markify.Services.Roslyn
 open Expecto
 open Swensen.Unquote
 open Fixtures
@@ -95,7 +94,7 @@ module RoslynAnalyzer_ClassEvents_Tests =
                     public event EventHandler PublicEvent;
                     internal event EventHandler InternalEvent;
                     protected event EventHandler ProtectedEvent;
-                    proected internal event EventHandler ProtectedInternalEvent;
+                    protected internal event EventHandler ProtectedInternalEvent;
                     private event EventHandler PrivateEvent;
                 }
             "])

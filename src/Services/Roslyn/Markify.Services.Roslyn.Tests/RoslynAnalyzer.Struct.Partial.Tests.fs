@@ -1,6 +1,5 @@
 ﻿namespace Markify.Services.Roslyn.Tests
 
-open Markify.Services.Roslyn
 open Markify.Domain.Compiler
 open Expecto
 open Swensen.Unquote
@@ -68,14 +67,14 @@ module RoslynAnalyzer_StructPartial_Tests =
             "])
             (ProjectLanguage.VisualBasic, ["
                 Partial Public Structure PartialType
-                    FieldOne As Integer
+                    Dim FieldOne As Integer
                     Property PropertyOne As Integer
                     Sub MethodOne()
                     End Sub
                     Event EventOne As EventHandler
                 End Structure
                 Partial Public Structure PartialType
-                    FieldTwo As Integer
+                    Dim FieldTwo As Integer
                     Property PropertyTwo As Integer
                     Sub MethodTwo()
                     End Sub

@@ -1,6 +1,5 @@
 ﻿namespace Markify.Services.Roslyn.Tests
 
-open Markify.Services.Roslyn
 open Markify.Domain.Compiler
 open Expecto
 open Swensen.Unquote
@@ -16,10 +15,10 @@ module RoslynAnalyzer_InterfaceInheritance_Tests =
             "])
             (ProjectLanguage.VisualBasic, ["
                 Public Interface ImplementInterfaceType
-                    Implements IDisposable
+                    Inherits IDisposable
                 End Interface
                 Public Interface ImplementMultipleInterfaceType
-                    Implements IDisposable, IEnumerable
+                    Inherits IDisposable, IEnumerable
                 End Interface
             "])
         ]
