@@ -140,5 +140,5 @@ module RoslynAnalyzer_InterfaceEvents_Tests =
                     let object = findInterface assemblies "Modifiers"
                     let result = object.Events |> Seq.find (fun c -> c.Name = "WithoutModifier")
 
-                    test <@ result.AccessModifiers |> Seq.isEmpty @>)
+                    test <@ result.Modifiers |> Seq.isEmpty @>)
         ]

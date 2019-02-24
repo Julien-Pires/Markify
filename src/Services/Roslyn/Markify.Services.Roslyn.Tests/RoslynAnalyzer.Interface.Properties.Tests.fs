@@ -230,6 +230,7 @@ module RoslynAnalyzer_InterfaceProperties_Tests =
                 public interface WithReadAccessor
                 {
                     Int32 Auto { get; set; }
+                    public Int32 Read { get; set; }
                     public Int32 ReadOnly { get; }
                 }
             "])
@@ -242,6 +243,7 @@ module RoslynAnalyzer_InterfaceProperties_Tests =
                 End Interface
                 Public Interface WithReadAccessor
                     Property Auto() As Int32
+                    Public Property Read() As Int32
                     Public ReadOnly Property ReadOnly() As Int32
                 End Interface
             "])
@@ -268,14 +270,14 @@ module RoslynAnalyzer_InterfaceProperties_Tests =
                                               |> fun c -> c.IsRead.IsSome @>)
 
             yield! testRepeatParameterized
-                "should return correct write accessor access modifier when interface property has some"[
+                "should return correct read accessor access modifier when interface property has some"[
                 (withProjects content, ("WithReadAccessor", "Auto", Set ["public"]))
-                (withProjects content, ("WithReadAccessor", "Write", Set ["public"]))]
+                (withProjects content, ("WithReadAccessor", "Read", Set ["public"]))]
                 (fun sut project (name, property, expected) () ->
                     let assemblies = sut.Analyze project
                     let object = findInterface assemblies name
                     let result = object.Properties |> Seq.find (fun c -> c.Name = property)
                     
-                    test <@ result.IsWrite.Value.AccessModifiers |> Seq.map normalizeSyntax
-                                                                 |> fun c -> Set c |> Set.isSubset expected @>)
+                    test <@ result.IsRead.Value.AccessModifiers |> Seq.map normalizeSyntax
+                                                                |> fun c -> Set c |> Set.isSubset expected @>)
         ]

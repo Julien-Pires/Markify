@@ -89,22 +89,21 @@ module RoslynAnalyzer_InterfaceGenerics_Tests =
                 (withProjects genericModifiers, ("SingleGenericInterface`1", "T"))]
                 (fun sut project (name, parameter) () ->
                     let assemblies = sut.Analyze project
-                    let result = findInterface assemblies name
+                    let object = findInterface assemblies name
+                    let result = object.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
 
-                    test <@ result.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
-                                                       |> fun c -> c.Modifier.IsNone @>)
+                    test <@ result.Modifier.IsNone @>)
 
             yield! testRepeatParameterized 
                 "should return modifier when interface generic parameter has one"  [
                 (withProjects genericModifiers, ("CovariantGenericInterface`1", "T", "in"))
                 (withProjects genericModifiers, ("ContravariantGenericInterface`1", "T", "out"))]
-                (fun sut project (name, parameter, modifier) () ->
-                    let expected = normalizeSyntax modifier
+                (fun sut project (name, parameter, expected) () ->
                     let assemblies = sut.Analyze project
-                    let result = findInterface assemblies name
+                    let object = findInterface assemblies name
+                    let result = object.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
                         
-                    test <@ result.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
-                                                       |> fun c -> c.Modifier = Some expected @>)
+                    test <@ result.Modifier.Value |> normalizeSyntax = expected @>)
         ]
 
     [<Tests>]
@@ -129,21 +128,21 @@ module RoslynAnalyzer_InterfaceGenerics_Tests =
                 (withProjects genericConstraints, ("SingleGenericInterface`1", "T"))]
                 (fun sut project (name, parameter) () ->
                     let assemblies = sut.Analyze project
-                    let result = findInterface assemblies name
+                    let object = findInterface assemblies name
+                    let result = object.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
 
-                    test <@ result.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
-                                                       |> fun c -> c.Constraints
-                                                       |> Seq.isEmpty @>)
+                    test <@ result.Constraints |> Seq.isEmpty @>)
 
             yield! testRepeatParameterized 
                 "should return constraints when interface generic parameter has some" [
-                (withProjects genericConstraints, ("GenericConstrainedInterface`2", "T", ["struct"]))
-                (withProjects genericConstraints, ("GenericConstrainedInterface`2", "Y", ["IEnumerable"; "class"; "new()"]))]
-                (fun sut project (name, parameter, constraints) () ->
-                    let expected = constraints |> List.map normalizeSyntax
+                (withProjects genericConstraints, ("GenericConstrainedInterface`2", "T", Set ["struct"]))
+                (withProjects genericConstraints, ("GenericConstrainedInterface`2", "Y", Set ["IEnumerable"; "class"; "new()"]))]
+                (fun sut project (name, parameter, expected) () ->
                     let assemblies = sut.Analyze project
-                    let result = findInterface assemblies name
+                    let object = findInterface assemblies name
+                    let result = object.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
 
-                    test <@ result.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
-                                                       |> fun c -> c.Constraints |> Seq.toList = expected @>)
+                    test <@ result.Constraints |> Seq.map normalizeSyntax
+                                               |> Set
+                                               |> Set.isSubset expected @>)
         ]

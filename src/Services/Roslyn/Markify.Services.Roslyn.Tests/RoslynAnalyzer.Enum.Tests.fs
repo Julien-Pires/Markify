@@ -10,27 +10,32 @@ module RoslynAnalyzer_Enum_Tests =
     let projectContentTests =
         let contents = [
             (ProjectLanguage.CSharp, ["
-                public enum FooType { }
-                public class ParentType
+                namespace RootNamespace 
                 {
-                    public enum NestedType { }
-                    public class AnotherNestedType
+                    public enum RootType { }
+                    public class ParentType
                     {
-                        public enum DeeperNestedType { }
+                        public enum NestedType { }
+                        public class AnotherNestedType
+                        {
+                            public enum DeeperNestedType { }
+                        }
                     }
                 }
             "])
             (ProjectLanguage.VisualBasic, ["
-                Public Enum FooType
-                End Enum
-                Public Class ParentType
-                    Public Enum NestedType
+                Namespace RootNamespace
+                    Public Enum RootType
                     End Enum
-                    Public Class AnotherNestedType
-                        Public Enum DeeperNestedType
+                    Public Class ParentType
+                        Public Enum NestedType
                         End Enum
+                        Public Class AnotherNestedType
+                            Public Enum DeeperNestedType
+                            End Enum
+                        End Class
                     End Class
-                End Class
+                End Namespace
             "])
         ]
         testList "Analyze/Enum" [
@@ -43,7 +48,7 @@ module RoslynAnalyzer_Enum_Tests =
 
             yield! testRepeatParameterized 
                 "should return enum with valid name" [
-                (withProjects contents, "FooType")
+                (withProjects contents, "RootType")
                 (withProjects contents, "NestedType")
                 (withProjects contents, "DeeperNestedType")]
                 (fun sut project name () ->
@@ -54,9 +59,9 @@ module RoslynAnalyzer_Enum_Tests =
             
             yield! testRepeatParameterized 
                 "should return enum with valid fullname" [
-                (withProjects contents, "FooType")
-                (withProjects contents, "ParentType.NestedType")
-                (withProjects contents, "ParentType.AnotherNestedType.DeeperNestedType")]
+                (withProjects contents, "RootNamespace.RootType")
+                (withProjects contents, "RootNamespace.ParentType.NestedType")
+                (withProjects contents, "RootNamespace.ParentType.AnotherNestedType.DeeperNestedType")]
                 (fun sut project fullname () ->
                     let assemblies = sut.Analyze project
                     let result = filterTypes assemblies fullname

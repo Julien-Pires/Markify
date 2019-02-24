@@ -10,21 +10,26 @@ module RoslynAnalyzer_Struct_Tests =
     let projectContentTests =
         let contents = [
             (ProjectLanguage.CSharp, ["
-                public struct FooType
+                namespace RootNamespace 
                 {
-                    public struct NestedType
+                    public struct RootType
                     {
-                        public struct DeeperNestedType { }
+                        public struct NestedType
+                        {
+                            public struct DeeperNestedType { }
+                        }
                     }
                 }
             "])
             (ProjectLanguage.VisualBasic, ["
-                Public Structure FooType
-                    Public Structure NestedType
-                        Public Structure DeeperNestedType
+                Namespace RootNamespace
+                    Public Structure RootType
+                        Public Structure NestedType
+                            Public Structure DeeperNestedType
+                            End Structure
                         End Structure
                     End Structure
-                End Structure
+                End Namespace
             "])
         ]
         testList "Analyze/Struct" [
@@ -37,7 +42,7 @@ module RoslynAnalyzer_Struct_Tests =
 
             yield! testRepeatParameterized 
                 "should return struct with valid name" [
-                (withProjects contents, "FooType")
+                (withProjects contents, "RootType")
                 (withProjects contents, "NestedType")
                 (withProjects contents, "DeeperNestedType")]
                 (fun sut project name () ->
@@ -48,9 +53,9 @@ module RoslynAnalyzer_Struct_Tests =
             
             yield! testRepeatParameterized 
                 "should return struct with valid fullname" [
-                (withProjects contents, "FooType")
-                (withProjects contents, "ParentType.NestedType")
-                (withProjects contents, "ParentType.AnotherNestedType.DeeperNestedType")]
+                (withProjects contents, "RootNamespace.RootType")
+                (withProjects contents, "RootNamespace.RootType.NestedType")
+                (withProjects contents, "RootNamespace.RootType.NestedType.DeeperNestedType")]
                 (fun sut project fullname () ->
                     let assemblies = sut.Analyze project
                     let result = filterTypes assemblies fullname

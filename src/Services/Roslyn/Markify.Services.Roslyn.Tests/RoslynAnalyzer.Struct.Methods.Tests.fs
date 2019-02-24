@@ -338,7 +338,7 @@ module RoslynAnalyzer_StructMethods_Tests =
                     let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = "MultipleParameters")
 
                     test <@ result.Parameters |> Seq.find (fun c -> c.Name = parameter)
-                                              |> fun c -> c.Modifier = Some expected @>)
+                                              |> fun c -> normalizeSyntax c.Modifier.Value = expected @>)
 
             yield! testRepeat (withProjects content)
                 "should return no default value when struct method parameter has none"
@@ -396,5 +396,5 @@ module RoslynAnalyzer_StructMethods_Tests =
                     let object = findStruct assemblies "ReturnType"
                     let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = method)
 
-                    test <@ result.ReturnType = expected @>)
+                    test <@ result.ReturnType |> normalizeSyntax = expected @>)
         ]

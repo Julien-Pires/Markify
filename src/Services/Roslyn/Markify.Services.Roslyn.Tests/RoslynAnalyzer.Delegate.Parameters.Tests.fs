@@ -30,14 +30,14 @@ module RoslynAnalyzer_DelegateParameters_Tests =
     let withParametersTests =
         let content = [
             (ProjectLanguage.CSharp, ["
-                public delegate void WithOneParameter(Int32 foo);
-                public delegate void WithMultipleParameters(Int32 foo, Single bar);
-                public delegate void WithGenericParameters<T>(T foo, T[] bar);
+                public delegate void WithOneParameter(Int32 A);
+                public delegate void WithMultipleParameters(Int32 A, Single B);
+                public delegate void WithGenericParameters<T>(T A, T[] B);
             "])
             (ProjectLanguage.VisualBasic, ["
-                Public Delegate Sub WithOneParameter(foo As Int32)
-                Public Delegate Sub WithMultipleParameters(foo As Int32, bar As Single)
-                Public Delegate Sub WithGenericParameters(Of T)(foo As T, bar As T())
+                Public Delegate Sub WithOneParameter(A As Int32)
+                Public Delegate Sub WithMultipleParameters(A As Int32, B As Single)
+                Public Delegate Sub WithGenericParameters(Of T)(A As T, B As T())
             "])
         ]
         testList "Analyze/Delegate" [
@@ -53,9 +53,9 @@ module RoslynAnalyzer_DelegateParameters_Tests =
 
             yield! testRepeatParameterized
                 "should return correct parameters name when delegate has some"[
-                ((withProjects content), ("WithOneParameter", "foo"))
-                ((withProjects content), ("WithMultipleParameters", "foo"))
-                ((withProjects content), ("WithMultipleParameters", "bar"))]
+                ((withProjects content), ("WithOneParameter", "A"))
+                ((withProjects content), ("WithMultipleParameters", "A"))
+                ((withProjects content), ("WithMultipleParameters", "B"))]
                 (fun sut project (name, expected) () ->
                     let assemblies = sut.Analyze project
                     let result = findDelegate assemblies name
@@ -64,10 +64,10 @@ module RoslynAnalyzer_DelegateParameters_Tests =
 
             yield! testRepeatParameterized
                 "should return correct parameters return type when delegate has some"[
-                ((withProjects content), ("WithOneParameter", "foo", "Int32"))
-                ((withProjects content), ("WithMultipleParameters", "foo", "Int32"))
-                ((withProjects content), ("WithMultipleParameters", "bar", "Single"))
-                ((withProjects content), ("WithGenericParameters`1", "foo", "T"))]
+                ((withProjects content), ("WithOneParameter", "A", "Int32"))
+                ((withProjects content), ("WithMultipleParameters", "A", "Int32"))
+                ((withProjects content), ("WithMultipleParameters", "B", "Single"))
+                ((withProjects content), ("WithGenericParameters`1", "A", "T"))]
                 (fun sut project (name, parameter, expected) () ->
                     let assemblies = sut.Analyze project
                     let result = findDelegate assemblies name
@@ -80,10 +80,10 @@ module RoslynAnalyzer_DelegateParameters_Tests =
     let noParameterModifierTests =
         let content = [
             (ProjectLanguage.CSharp, ["
-                public delegate void WithOneParameter(Int32 foo);
+                public delegate void WithOneParameter(Int32 A);
             "])
             (ProjectLanguage.VisualBasic, ["
-                Public Delegate Sub WithOneParameter(foo As Int32)
+                Public Delegate Sub WithOneParameter(A As Int32)
             "])
         ]
         testList "Analyze/Delegate" [
@@ -93,7 +93,7 @@ module RoslynAnalyzer_DelegateParameters_Tests =
                     let assemblies = sut.Analyze project
                     let result = findDelegate assemblies "WithOneParameter"
 
-                    test <@ result.Parameters |> Seq.find (fun c -> c.Name = "Foo")
+                    test <@ result.Parameters |> Seq.find (fun c -> c.Name = "A")
                                               |> fun c -> c.Modifier.IsNone @>)
         ]
 
@@ -101,17 +101,17 @@ module RoslynAnalyzer_DelegateParameters_Tests =
     let withParameterModifierTests =
         let content = [
             (ProjectLanguage.CSharp, ["
-                public delegate void WithParametersModifiers(ref Int32 foo, out Int32 bar);
+                public delegate void WithParametersModifiers(ref Int32 A, out Int32 B);
             "])
             (ProjectLanguage.VisualBasic, ["
-                Public Delegate Sub WithParametersModifiers(ByRef foo As Int32, ByVal bar As Single)
+                Public Delegate Sub WithParametersModifiers(ByRef A As Int32, ByVal B As Single)
             "])
         ]
         testList "Analyze/Delegate" [
             yield! testRepeatParameterized
                 "should return modifier when delegate parameter has one" [
-                ((withProjects content), ("WithParametersModifiers", "foo", "ref"))
-                ((withProjects content), ("WithParametersModifiers", "bar", "out"))]
+                ((withProjects content), ("WithParametersModifiers", "A", "ref"))
+                ((withProjects content), ("WithParametersModifiers", "B", "out"))]
                 (fun sut project (name, parameter, expected) () ->
                     let assemblies = sut.Analyze project
                     let result = findDelegate assemblies name
@@ -124,10 +124,10 @@ module RoslynAnalyzer_DelegateParameters_Tests =
     let noParameterDefaultValueTests =
         let content = [
             (ProjectLanguage.CSharp, ["
-                public delegate void WithOneParameter(Int32 foo);
+                public delegate void WithOneParameter(Int32 A);
             "])
             (ProjectLanguage.VisualBasic, ["
-                Public Delegate Sub WithOneParameter(foo As Int32)
+                Public Delegate Sub WithOneParameter(A As Int32)
             "])
         ]
         testList "Analyze/Delegate" [
@@ -137,7 +137,7 @@ module RoslynAnalyzer_DelegateParameters_Tests =
                     let assemblies = sut.Analyze project
                     let result = findDelegate assemblies "WithOneParameter"
 
-                    test <@ result.Parameters |> Seq.find (fun c -> c.Name = "Foo")
+                    test <@ result.Parameters |> Seq.find (fun c -> c.Name = "A")
                                               |> fun c -> c.DefaultValue.IsNone @>)
         ]
 
@@ -145,10 +145,10 @@ module RoslynAnalyzer_DelegateParameters_Tests =
     let withParameterDefaultValueTests =
         let content = [
             (ProjectLanguage.CSharp, ["
-                public delegate void WithDefaultValueParameter(Int32 foo = 1);
+                public delegate void WithDefaultValueParameter(Int32 a = 1);
             "])
             (ProjectLanguage.VisualBasic, ["
-                Public Delegate Sub WithDefaultValueParameter(Optional foo As Int32 = 1)
+                Public Delegate Sub WithDefaultValueParameter(Optional A As Int32 = 1)
             "])
         ]
         testList "Analyze/Delegate" [
@@ -158,6 +158,6 @@ module RoslynAnalyzer_DelegateParameters_Tests =
                     let assemblies = sut.Analyze project
                     let result = findDelegate assemblies "WithDefaultValueParameter"
 
-                    test <@ result.Parameters |> Seq.find (fun c -> c.Name = "Foo")
+                    test <@ result.Parameters |> Seq.find (fun c -> c.Name = "A")
                                               |> fun c -> c.DefaultValue = Some "1" @>)
         ]

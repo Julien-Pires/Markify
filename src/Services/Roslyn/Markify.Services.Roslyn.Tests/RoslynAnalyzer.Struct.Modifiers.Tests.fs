@@ -62,18 +62,19 @@ module RoslynAnalyzer_StructModifiers_Tests =
         testList "Analyze/Struct" [
             yield! testRepeatParameterized
                 "should returns struct with access modifiers when type has some" [
-                (withProjects contents, ("PublicType", ["public"]))
-                (withProjects contents, ("InternalType", ["internal"]))
-                (withProjects contents, ("ParentType.ProtectedType", ["protected"]))
-                (withProjects contents, ("ParentType.PrivateType", ["private"]))
-                (withProjects contents, ("ParentType.ProtectedInternalType", ["protected"; "internal"]))
-                (withProjects contents, ("ParentType.InternalProtectedType", ["protected"; "internal"]))]
-                (fun sut project (name, modifiers) () ->
-                    let expected = modifiers |> List.map normalizeSyntax |> Set
+                (withProjects contents, ("PublicType", Set ["public"]))
+                (withProjects contents, ("InternalType", Set ["internal"]))
+                (withProjects contents, ("ParentType.ProtectedType", Set ["protected"]))
+                (withProjects contents, ("ParentType.PrivateType", Set ["private"]))
+                (withProjects contents, ("ParentType.ProtectedInternalType", Set ["protected"; "internal"]))
+                (withProjects contents, ("ParentType.InternalProtectedType", Set ["protected"; "internal"]))]
+                (fun sut project (name, expected) () ->
                     let assemblies = sut.Analyze project
                     let result = findStruct assemblies name
                         
-                    test <@ Set result.Identity.AccessModifiers |> Set.isSubset expected @>)
+                    test <@ result.Identity.AccessModifiers |> Seq.map normalizeSyntax
+                                                            |> Set
+                                                            |> Set.isSubset expected @>)
         ]
 
     [<Tests>]
@@ -126,16 +127,17 @@ module RoslynAnalyzer_StructModifiers_Tests =
         testList "Analyze/Struct" [
             yield! testRepeatParameterized
                 "should returns struct with modifiers when type has some" [
-                (withProjects contents, ("PartialType", ["partial"]))
-                (withProjects contents, ("SealedType", ["sealed"]))
-                (withProjects contents, ("AbstractType", ["abstract"]))
-                (withProjects contents, ("StaticType", ["static"]))
-                (withProjects contents, ("AbstractPartialType", ["abstract"; "partial"]))
-                (withProjects contents, ("SealedPartialType", ["sealed"; "partial"]))]
-                (fun sut project (name, modifiers) () ->
-                    let expected = modifiers |> List.map normalizeSyntax |> Set
+                (withProjects contents, ("PartialType", Set ["partial"]))
+                (withProjects contents, ("SealedType", Set ["sealed"]))
+                (withProjects contents, ("AbstractType", Set ["abstract"]))
+                (withProjects contents, ("StaticType", Set ["static"]))
+                (withProjects contents, ("AbstractPartialType", Set ["abstract"; "partial"]))
+                (withProjects contents, ("SealedPartialType", Set ["sealed"; "partial"]))]
+                (fun sut project (name, expected) () ->
                     let assemblies = sut.Analyze project
                     let result = findStruct assemblies name
                         
-                    test <@ Set result.Identity.Modifiers |> Set.isSubset expected @>)
+                    test <@ result.Identity.Modifiers |> Seq.map normalizeSyntax
+                                                      |> Set
+                                                      |> Set.isSubset expected @>)
         ]

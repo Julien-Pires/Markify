@@ -148,7 +148,7 @@ module RoslynAnalyzer_StructEvents_Tests =
                     let object = findStruct assemblies "Modifiers"
                     let result = object.Events |> Seq.find (fun c -> c.Name = "WithoutModifier")
 
-                    test <@ result.AccessModifiers |> Seq.isEmpty @>)
+                    test <@ result.Modifiers |> Seq.isEmpty @>)
 
             yield! testRepeatParameterized
                 "should return modifier when struct event has one" [
@@ -158,7 +158,7 @@ module RoslynAnalyzer_StructEvents_Tests =
                     let object = findStruct assemblies "Modifiers"
                     let result = object.Events |> Seq.find (fun c -> c.Name = event)
 
-                    test <@ result.AccessModifiers |> Seq.map normalizeSyntax 
-                                                   |> Set
-                                                   |> Set.isSubset expected @>)
+                    test <@ result.Modifiers |> Seq.map normalizeSyntax 
+                                             |> Set
+                                             |> Set.isSubset expected @>)
         ]

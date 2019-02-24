@@ -55,18 +55,19 @@ module RoslynAnalyzer_DelegateModifiers_Tests =
         testList "Analyze/Delegate" [
             yield! testRepeatParameterized
                 "should returns delegate with access modifiers when type has some" [
-                (withProjects contents, ("PublicType", ["public"]))
-                (withProjects contents, ("InternalType", ["internal"]))
-                (withProjects contents, ("ParentType.ProtectedType", ["protected"]))
-                (withProjects contents, ("ParentType.PrivateType", ["private"]))
-                (withProjects contents, ("ParentType.ProtectedInternalType", ["protected"; "internal"]))
-                (withProjects contents, ("ParentType.InternalProtectedType", ["protected"; "internal"]))]
-                (fun sut project (name, modifiers) () ->
-                    let expected = modifiers |> List.map normalizeSyntax |> Set
+                (withProjects contents, ("PublicType", Set ["public"]))
+                (withProjects contents, ("InternalType", Set ["internal"]))
+                (withProjects contents, ("ParentType.ProtectedType", Set ["protected"]))
+                (withProjects contents, ("ParentType.PrivateType", Set ["private"]))
+                (withProjects contents, ("ParentType.ProtectedInternalType", Set ["protected"; "internal"]))
+                (withProjects contents, ("ParentType.InternalProtectedType", Set ["protected"; "internal"]))]
+                (fun sut project (name, expected) () ->
                     let assemblies = sut.Analyze project
                     let result = findDelegate assemblies name
                         
-                    test <@ Set result.Identity.AccessModifiers |> Set.isSubset expected @>)
+                    test <@ result.Identity.AccessModifiers |> Seq.map normalizeSyntax
+                                                            |> Set
+                                                            |> Set.isSubset expected @>)
         ]
 
     [<Tests>]

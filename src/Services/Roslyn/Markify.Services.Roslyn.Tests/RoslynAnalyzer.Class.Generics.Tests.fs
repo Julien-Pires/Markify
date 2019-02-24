@@ -1,6 +1,5 @@
 ﻿namespace Markify.Services.Roslyn.Tests
 
-open Markify.Services.Roslyn
 open Markify.Domain.Compiler
 open Expecto
 open Swensen.Unquote
@@ -84,10 +83,10 @@ module RoslynAnalyzer_ClassGenerics_Tests =
                 (withProjects genericModifiers, ("SingleGenericClass`1", "T"))]
                 (fun sut project (name, parameter) () ->
                     let assemblies = sut.Analyze project
-                    let result = findClass assemblies name
+                    let object = findClass assemblies name
+                    let result = object.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
 
-                    test <@ result.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
-                                                       |> fun c -> c.Modifier.IsNone @>)
+                    test <@ result.Modifier.IsNone @>)
         ]
 
     [<Tests>]
@@ -112,21 +111,21 @@ module RoslynAnalyzer_ClassGenerics_Tests =
                 (withProjects genericConstraints, ("SingleGenericClass`1", "T"))]
                 (fun sut project (name, parameter) () ->
                     let assemblies = sut.Analyze project
-                    let result = findClass assemblies name
+                    let object = findClass assemblies name
+                    let result = object.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
 
-                    test <@ result.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
-                                                       |> fun c -> c.Constraints
-                                                       |> Seq.isEmpty @>)
+                    test <@ result.Constraints |> Seq.isEmpty @>)
 
             yield! testRepeatParameterized 
                 "should return constraints when class generic parameter has some" [
-                (withProjects genericConstraints, ("GenericConstrainedClass`2", "T", ["struct"]))
-                (withProjects genericConstraints, ("GenericConstrainedClass`2", "Y", ["IEnumerable"; "class"; "new()"]))]
-                (fun sut project (name, parameter, constraints) () ->
-                    let expected = constraints |> List.map normalizeSyntax
+                (withProjects genericConstraints, ("GenericConstrainedClass`2", "T", Set ["struct"]))
+                (withProjects genericConstraints, ("GenericConstrainedClass`2", "Y", Set ["IEnumerable"; "class"; "new()"]))]
+                (fun sut project (name, parameter, expected) () ->
                     let assemblies = sut.Analyze project
-                    let result = findClass assemblies name
+                    let object = findClass assemblies name
+                    let result = object.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
 
-                    test <@ result.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
-                                                       |> fun c -> c.Constraints |> Seq.toList = expected @>)
+                    test <@ result.Constraints |> Seq.map normalizeSyntax
+                                               |> Set
+                                               |> Set.isSubset expected @>)
         ]

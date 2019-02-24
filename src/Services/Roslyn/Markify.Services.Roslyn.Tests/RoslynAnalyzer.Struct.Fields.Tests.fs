@@ -115,11 +115,12 @@ module RoslynAnalyzer_StructFields_Tests =
                 (withProjects content, ("PrivateField", Set ["private"]))]
                 (fun sut project (field, expected) () ->
                     let assemblies = sut.Analyze project
-                    let result = findStruct assemblies "AccessModifier"
+                    let object = findStruct assemblies "AccessModifier"
+                    let result = object.Fields |> Seq.find (fun c -> c.Name = field)
 
-                    test <@ result.Fields |> Seq.find (fun c -> c.Name = field)
-                                          |> fun c -> Set c.AccessModifiers
-                                          |> Set.isSubset expected @>)
+                    test <@ result.AccessModifiers |> Seq.map normalizeSyntax
+                                                   |> Set
+                                                   |> Set.isSubset expected @>)
         ]
 
     [<Tests>]
@@ -164,11 +165,12 @@ module RoslynAnalyzer_StructFields_Tests =
                 (withProjects content, ("ConstField", Set ["const"]))]
                 (fun sut project (field, expected) () ->
                     let assemblies = sut.Analyze project
-                    let result = findStruct assemblies "Modifier"
+                    let object = findStruct assemblies "Modifier"
+                    let result = object.Fields |> Seq.find (fun c -> c.Name = field)
 
-                    test <@ result.Fields |> Seq.find (fun c -> c.Name = field)
-                                          |> fun c -> Set c.Modifiers
-                                          |> Set.isSubset expected @>)
+                    test <@ result.Modifiers |> Seq.map normalizeSyntax
+                                             |> Set
+                                             |> Set.isSubset expected @>)
         ]
 
     [<Tests>]

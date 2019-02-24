@@ -62,18 +62,19 @@ module RoslynAnalyzer_InterfaceModifiers_Tests =
         testList "Analyze/Interface" [
             yield! testRepeatParameterized
                 "should returns interface with access modifiers when type has some" [
-                (withProjects contents, ("PublicType", ["public"]))
-                (withProjects contents, ("InternalType", ["internal"]))
-                (withProjects contents, ("ParentType.ProtectedType", ["protected"]))
-                (withProjects contents, ("ParentType.PrivateType", ["private"]))
-                (withProjects contents, ("ParentType.ProtectedInternalType", ["protected"; "internal"]))
-                (withProjects contents, ("ParentType.InternalProtectedType", ["protected"; "internal"]))]
-                (fun sut project (name, modifiers) () ->
-                    let expected = modifiers |> List.map normalizeSyntax |> Set
+                (withProjects contents, ("PublicType", Set ["public"]))
+                (withProjects contents, ("InternalType", Set ["internal"]))
+                (withProjects contents, ("ParentType.ProtectedType", Set ["protected"]))
+                (withProjects contents, ("ParentType.PrivateType", Set ["private"]))
+                (withProjects contents, ("ParentType.ProtectedInternalType", Set ["protected"; "internal"]))
+                (withProjects contents, ("ParentType.InternalProtectedType", Set ["protected"; "internal"]))]
+                (fun sut project (name, expected) () ->
                     let assemblies = sut.Analyze project
                     let result = findInterface assemblies name
                         
-                    test <@ Set result.Identity.AccessModifiers |> Set.isSubset expected @>)
+                    test <@ result.Identity.AccessModifiers |> Seq.map normalizeSyntax
+                                                            |> Set
+                                                            |> Set.isSubset expected @>)
         ]
 
     [<Tests>]
@@ -111,11 +112,12 @@ module RoslynAnalyzer_InterfaceModifiers_Tests =
         testList "Analyze/Interface" [
             yield! testRepeatParameterized
                 "should returns interface with modifiers when type has some" [
-                (withProjects contents, ("PartialType", ["partial"]))]
-                (fun sut project (name, modifiers) () ->
-                    let expected = modifiers |> List.map normalizeSyntax |> Set
+                (withProjects contents, ("PartialType", Set ["partial"]))]
+                (fun sut project (name, expected) () ->
                     let assemblies = sut.Analyze project
                     let result = findInterface assemblies name
                         
-                    test <@ Set result.Identity.Modifiers |> Set.isSubset expected @>)
+                    test <@ result.Identity.Modifiers |> Seq.map normalizeSyntax
+                                                      |> Set
+                                                      |> Set.isSubset expected @>)
         ]

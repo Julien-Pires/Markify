@@ -140,7 +140,7 @@ module RoslynAnalyzer_ClassEvents_Tests =
                     virtual event EventHandler VirtualEvent;
                     sealed event EventHandler SealedEvent;
                     override event EventHandler OverrideEvent;
-                    Abstract event EventHandler OverrideEvent;
+                    abstract event EventHandler AbstractEvent;
                 }
             "])
             (ProjectLanguage.VisualBasic, ["
@@ -162,7 +162,7 @@ module RoslynAnalyzer_ClassEvents_Tests =
                     let object = findClass assemblies "Modifiers"
                     let result = object.Events |> Seq.find (fun c -> c.Name = "WithoutModifier")
 
-                    test <@ result.AccessModifiers |> Seq.isEmpty @>)
+                    test <@ result.Modifiers |> Seq.isEmpty @>)
 
             yield! testRepeatParameterized
                 "should return modifier when class event has one" [
@@ -176,7 +176,7 @@ module RoslynAnalyzer_ClassEvents_Tests =
                     let object = findClass assemblies "Modifiers"
                     let result = object.Events |> Seq.find (fun c -> c.Name = event)
 
-                    test <@ result.AccessModifiers |> Seq.map normalizeSyntax 
-                                                   |> Set
-                                                   |> Set.isSubset expected @>)
+                    test <@ result.Modifiers |> Seq.map normalizeSyntax 
+                                             |> Set
+                                             |> Set.isSubset expected @>)
         ]

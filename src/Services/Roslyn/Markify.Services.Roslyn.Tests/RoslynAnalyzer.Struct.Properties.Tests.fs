@@ -321,6 +321,7 @@ module RoslynAnalyzer_StructProperties_Tests =
                 public struct WithReadAccessor
                 {
                     Int32 Auto { get; set; }
+                    public Int32 Read { get; set; }
                     public Int32 ReadOnly { get; }
                     public Int32 ReadOnlyWithDefaultValue { get; } = 1;
                     private Int32 PrivateProperty { get; set; }
@@ -338,6 +339,7 @@ module RoslynAnalyzer_StructProperties_Tests =
                 End Structure
                 Public Structure WithReadAccessor
                     Property Auto() As Int32
+                    Public Property Read() As Int32
                     Public ReadOnly Property ReadOnly() As Int32
                     Public ReadOnly Property ReadOnlyWithDefaultValue() As Int32 = 1
                     Private Property PrivateProperty() As Int32
@@ -385,9 +387,9 @@ module RoslynAnalyzer_StructProperties_Tests =
                                               |> fun c -> c.IsRead.IsSome @>)
 
             yield! testRepeatParameterized
-                "should return correct write accessor access modifier when struct property has some"[
+                "should return correct read accessor access modifier when struct property has some"[
                 (withProjects content, ("WithReadAccessor", "Auto", Set ["private"]))
-                (withProjects content, ("WithReadAccessor", "Write", Set ["public"]))
+                (withProjects content, ("WithReadAccessor", "Read", Set ["public"]))
                 (withProjects content, ("WithReadAccessor", "PrivateProperty", Set ["private"]))
                 (withProjects content, ("WithReadAccessor", "PrivateReadOnly", Set ["private"]))
                 (withProjects content, ("WithReadAccessor", "InternalProperty", Set ["internal"]))
@@ -397,6 +399,6 @@ module RoslynAnalyzer_StructProperties_Tests =
                     let object = findStruct assemblies name
                     let result = object.Properties |> Seq.find (fun c -> c.Name = property)
                     
-                    test <@ result.IsWrite.Value.AccessModifiers |> Seq.map normalizeSyntax
-                                                                 |> fun c -> Set c |> Set.isSubset expected @>)
+                    test <@ result.IsRead.Value.AccessModifiers |> Seq.map normalizeSyntax
+                                                                |> fun c -> Set c |> Set.isSubset expected @>)
         ]

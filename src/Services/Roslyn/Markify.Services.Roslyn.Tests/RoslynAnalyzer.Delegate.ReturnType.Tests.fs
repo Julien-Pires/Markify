@@ -30,5 +30,5 @@ module RoslynAnalyzer_DelegateReturnType_Tests =
                     let assemblies = sut.Analyze project
                     let result = findDelegate assemblies name
                         
-                    test <@ result.ReturnType = expected @>)
+                    test <@ result.ReturnType |> normalizeSyntax = expected @>)
         ]

@@ -85,13 +85,16 @@ module DefinitionFactoryHelper =
         | x -> Some <| x.Value.ToString()
 
     let getDelegateParameters (parametersList : ParameterListSyntax) =
-        parametersList.Parameters
-        |> Seq.map (fun c -> 
-            {   ParameterDefinition.Name = c.Identifier.Identifier.Text 
-                Type = getTypeFromAsClause c.AsClause
-                Modifier = (getAdditionalModifiers c.Modifiers) |> List.tryHead 
-                DefaultValue = getMemberDefaultValue c.Default })
-        |> Seq.toList
+        match parametersList with
+        | null -> []
+        | x ->
+            x.Parameters
+            |> Seq.map (fun c -> 
+                {   ParameterDefinition.Name = c.Identifier.Identifier.Text 
+                    Type = getTypeFromAsClause c.AsClause
+                    Modifier = (getAdditionalModifiers c.Modifiers) |> List.tryHead 
+                    DefaultValue = getMemberDefaultValue c.Default })
+            |> Seq.toList
 
     let getTypeComments node = {
         Comments = CommentBuilder.getComments node }

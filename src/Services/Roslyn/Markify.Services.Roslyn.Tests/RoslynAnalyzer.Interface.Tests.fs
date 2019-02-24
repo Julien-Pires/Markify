@@ -10,21 +10,26 @@ module RoslynAnalyzer_Interface_Tests =
     let projectContentTests =
         let contents = [
             (ProjectLanguage.CSharp, ["
-                public interface FooType
+                namespace RootNamespace 
                 {
-                    public interface NestedType
+                    public interface RootType
                     {
-                        public interface DeeperNestedType { }
+                        public interface NestedType
+                        {
+                            public interface DeeperNestedType { }
+                        }
                     }
                 }
             "])
             (ProjectLanguage.VisualBasic, ["
-                Public Interface FooType
-                    Public Interface NestedType
-                        Public Interface DeeperNestedType
+                Namespace RootNamespace
+                    Public Interface RootType
+                        Public Interface NestedType
+                            Public Interface DeeperNestedType
+                            End Interface
                         End Interface
                     End Interface
-                End Interface
+                End Namespace
             "])
         ]
         testList "Analyze/Interface" [
@@ -37,7 +42,7 @@ module RoslynAnalyzer_Interface_Tests =
 
             yield! testRepeatParameterized 
                 "should return interface with valid name" [
-                (withProjects contents, "FooType")
+                (withProjects contents, "RootType")
                 (withProjects contents, "NestedType")
                 (withProjects contents, "DeeperNestedType")]
                 (fun sut project name () ->
@@ -48,9 +53,9 @@ module RoslynAnalyzer_Interface_Tests =
             
             yield! testRepeatParameterized 
                 "should return interface with valid fullname" [
-                (withProjects contents, "FooType")
-                (withProjects contents, "ParentType.NestedType")
-                (withProjects contents, "ParentType.AnotherNestedType.DeeperNestedType")]
+                (withProjects contents, "RootNamespace.RootType")
+                (withProjects contents, "RootNamespace.RootType.NestedType")
+                (withProjects contents, "RootNamespace.RootType.NestedType.DeeperNestedType")]
                 (fun sut project fullname () ->
                     let assemblies = sut.Analyze project
                     let result = filterTypes assemblies fullname

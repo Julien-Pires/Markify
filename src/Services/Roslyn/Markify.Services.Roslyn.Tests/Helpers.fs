@@ -7,35 +7,29 @@ open Markify.Domain.Compiler
 module LanguageHelper =
     let private visualBasicModifiers =
         Map.empty.
-            Add("public", "Public").
-            Add("private", "Private").
-            Add("protected", "Protected").
-            Add("internal", "Friend").
-            Add("partial", "Partial").
-            Add("sealed", "NotInheritable").
-            Add("abstract", "MustInherit").
-            Add("static", "Static").
-            Add("virtual", "Overridable").
-            Add("override", "Overrides").
-            Add("in", "In").
-            Add("out", "Out").
-            Add("class", "Class").
-            Add("struct", "Structure").
+            Add("Public", "public").
+            Add("Private", "private").
+            Add("Protected", "protected").
+            Add("Friend", "internal").
+            Add("Partial", "partial").
+            Add("NotInheritable", "sealed").
+            Add("MustInherit", "abstract").
+            Add("Static", "static").
+            Add("Overridable", "virtual").
+            Add("Overrides", "override").
+            Add("In", "in").
+            Add("Out", "out").
+            Add("Class", "class").
+            Add("Structure", "struct").
             Add("Dim", "Dim").
-            Add("const", "Const").
-            Add("readonly", "ReadOnly").
-            Add("ref", "ByRef").
-            Add("new()", "New")
-    
-    let private visualBasicMemberModifiers =
-        Map.empty.
-            Add("sealed", "NotOverridable").
-            Add("static", "Shared").
-            Add("out", "ByVal")
-
-    let private visualBasicTypes =
-        Map.empty.
-            Add("void", "Void")
+            Add("Const", "const").
+            Add("ReadOnly", "readonly").
+            Add("ByRef", "ref").
+            Add("New", "new()").
+            Add("NotOverridable", "sealed").
+            Add("Shared", "static").
+            Add("ByVal", "out").
+            Add("Void", "void")
 
     let private findModifier modifier (map : Map<'a, 'a>) = 
         match map.TryFind modifier with
@@ -43,10 +37,6 @@ module LanguageHelper =
         | None -> modifier
 
     let normalizeSyntax modifier = findModifier modifier visualBasicModifiers
-
-    let getMemberModifiers language modifier = findModifier modifier visualBasicMemberModifiers
-
-    let getType typename = findModifier typename visualBasicTypes
 
 [<AutoOpen>]
 module TypeHelper =

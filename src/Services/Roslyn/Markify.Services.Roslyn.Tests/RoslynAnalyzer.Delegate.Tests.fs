@@ -10,24 +10,29 @@ module RoslynAnalyzer_Delegate_Tests =
     let projectContentTests =
         let contents = [
             (ProjectLanguage.CSharp, ["
-                public delegate void FooType();
-                public class ParentType
+                namespace RootNamespace 
                 {
-                    public delegate void NestedType();
-                    public class AnotherNestedType
+                    public delegate void RootType();
+                    public class ParentType
                     {
-                        public delegate void DeeperNestedType();
+                        public delegate void NestedType();
+                        public class AnotherNestedType
+                        {
+                            public delegate void DeeperNestedType();
+                        }
                     }
                 }
             "])
             (ProjectLanguage.VisualBasic, ["
-                Public Delegate Sub FooType()
-                Public Class ParentType
-                    Public Delegate Sub NestedType()
-                    Public Class AnotherNestedType
-                        Public Delegate Sub DeeperNestedType()
+                Namespace RootNamespace
+                    Public Delegate Sub RootType()
+                    Public Class ParentType
+                        Public Delegate Sub NestedType()
+                        Public Class AnotherNestedType
+                            Public Delegate Sub DeeperNestedType()
+                        End Class
                     End Class
-                End Class
+                End Namespace
             "])
         ]
         testList "Analyze/Delegate" [
@@ -40,7 +45,7 @@ module RoslynAnalyzer_Delegate_Tests =
 
             yield! testRepeatParameterized 
                 "should return delegate with valid name" [
-                (withProjects contents, "FooType")
+                (withProjects contents, "RootType")
                 (withProjects contents, "NestedType")
                 (withProjects contents, "DeeperNestedType")]
                 (fun sut project name () ->
@@ -51,9 +56,9 @@ module RoslynAnalyzer_Delegate_Tests =
             
             yield! testRepeatParameterized 
                 "should return delegate with valid fullname" [
-                (withProjects contents, "FooType")
-                (withProjects contents, "ParentType.NestedType")
-                (withProjects contents, "ParentType.AnotherNestedType.DeeperNestedType")]
+                (withProjects contents, "RootNamespace.RootType")
+                (withProjects contents, "RootNamespace.ParentType.NestedType")
+                (withProjects contents, "RootNamespace.ParentType.AnotherNestedType.DeeperNestedType")]
                 (fun sut project fullname () ->
                     let assemblies = sut.Analyze project
                     let result = filterTypes assemblies fullname
