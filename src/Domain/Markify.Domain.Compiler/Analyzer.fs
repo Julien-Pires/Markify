@@ -11,7 +11,7 @@ type IProjectContent =
 
 type Project = {
     Name : string 
-    Content : IProjectContent list }
+    Content : IProjectContent seq }
 
 type IProjectAnalyzer =
     abstract member Analyze: Project -> AssemblyDefinition

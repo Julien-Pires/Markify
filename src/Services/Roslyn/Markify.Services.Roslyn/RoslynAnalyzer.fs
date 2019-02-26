@@ -26,7 +26,7 @@ type RoslynAnalyzer (languages : ILanguageModule seq) =
         yield! types
     }
 
-    let analyzeSources (content : IProjectContent list) =
+    let analyzeSources (content : IProjectContent seq) =
         let types, namespaces =            
             Seq.fold (fun acc (c : IProjectContent) ->              
                 let languageModule = languageModules.TryFind c.Language
