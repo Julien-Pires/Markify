@@ -21,8 +21,7 @@ module RoslynAnalyzer_StructEvents_Tests =
             yield! testRepeat (withProjects content)
                 "should return no events when struct has none"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let result = findStruct assemblies "WithoutEvents"
+                    let result = sut.Analyze project |> findStruct "WithoutEvents"
 
                     test <@ result.Events |> Seq.isEmpty @>)
         ]
@@ -57,8 +56,7 @@ module RoslynAnalyzer_StructEvents_Tests =
                 (withProjects content, ("SingleEvent", 1))
                 (withProjects content, ("MultipleEvents", 2))]
                 (fun sut project (name, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let result = findStruct assemblies name
+                    let result = sut.Analyze project |> findStruct name
 
                     test <@ result.Events |> Seq.length = expected @>)
 
@@ -67,8 +65,7 @@ module RoslynAnalyzer_StructEvents_Tests =
                 (withProjects content, ("SingleEvent", "FirstEvent"))
                 (withProjects content, ("MultipleEvents", "SecondEvent"))]
                 (fun sut project (name, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let result = findStruct assemblies name
+                    let result = sut.Analyze project |> findStruct name
 
                     test <@ result.Events |> Seq.exists (fun c -> c.Name = expected) @>)
 
@@ -77,8 +74,7 @@ module RoslynAnalyzer_StructEvents_Tests =
                 (withProjects content, ("SingleEvent", "FirstEvent", "EventHandler"))
                 (withProjects content, ("MultipleEvents", "SecondEvent", "AnotherEventHandler"))]
                 (fun sut project (name, event, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let result = findStruct assemblies name
+                    let result = sut.Analyze project |> findStruct name
 
                     test <@ result.Events |> Seq.find (fun c -> c.Name = event)
                                           |> fun c -> c.Type = expected @>)
@@ -113,8 +109,7 @@ module RoslynAnalyzer_StructEvents_Tests =
                 (withProjects content, ("InternalEvent", Set ["internal"]))
                 (withProjects content, ("PrivateEvent", Set ["private"]))]
                 (fun sut project (event, expected) () -> 
-                    let assemblies = sut.Analyze project
-                    let object = findStruct assemblies "AccessModifier"
+                    let object = sut.Analyze project |> findStruct "AccessModifier"
                     let result = object.Events |> Seq.find (fun c -> c.Name = event)
 
                     test <@ result.AccessModifiers |> Seq.map normalizeSyntax 
@@ -143,8 +138,7 @@ module RoslynAnalyzer_StructEvents_Tests =
             yield! testRepeat (withProjects content)
                 "should return no modifier when struct event has none"
                 (fun sut project () -> 
-                    let assemblies = sut.Analyze project
-                    let object = findStruct assemblies "Modifiers"
+                    let object = sut.Analyze project |> findStruct "Modifiers"
                     let result = object.Events |> Seq.find (fun c -> c.Name = "WithoutModifier")
 
                     test <@ result.Modifiers |> Seq.isEmpty @>)
@@ -153,8 +147,7 @@ module RoslynAnalyzer_StructEvents_Tests =
                 "should return modifier when struct event has one" [
                 (withProjects content, ("StaticEvent", Set ["static"]))]
                 (fun sut project (event, expected) () -> 
-                    let assemblies = sut.Analyze project
-                    let object = findStruct assemblies "Modifiers"
+                    let object = sut.Analyze project |> findStruct "Modifiers"
                     let result = object.Events |> Seq.find (fun c -> c.Name = event)
 
                     test <@ result.Modifiers |> Seq.map normalizeSyntax 

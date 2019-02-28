@@ -21,8 +21,7 @@ module RoslynAnalyzer_ClassFields_Tests =
             yield! testRepeat (withProjects content)
                 "should return no fields when class has none"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let result = findClass assemblies "WithoutFields"
+                    let result = sut.Analyze project |> findClass "WithoutFields"
 
                     test <@ result.Fields |> Seq.isEmpty @>)
         ]
@@ -57,8 +56,7 @@ module RoslynAnalyzer_ClassFields_Tests =
                 (withProjects content, ("SingleField", 1))
                 (withProjects content, ("MultipleField", 2))]
                 (fun sut project (name, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let result = findClass assemblies name
+                    let result = sut.Analyze project |> findClass name
 
                     test <@ result.Fields |> Seq.length = expected @>)
 
@@ -67,8 +65,7 @@ module RoslynAnalyzer_ClassFields_Tests =
                 (withProjects content, ("SingleField", "FirstField"))
                 (withProjects content, ("MultipleField", "SecondField"))]
                 (fun sut project (name, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let result = findClass assemblies name
+                    let result = sut.Analyze project |> findClass name
 
                     test <@ result.Fields |> Seq.exists (fun c -> c.Name = expected) @>)
 
@@ -77,8 +74,7 @@ module RoslynAnalyzer_ClassFields_Tests =
                 (withProjects content, ("SingleField", "FirstField", "Int32"))
                 (withProjects content, ("MultipleField", "SecondField", "Single"))]
                 (fun sut project (name, field, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let result = findClass assemblies name
+                    let result = sut.Analyze project |> findClass name
 
                     test <@ result.Fields |> Seq.find (fun c -> c.Name = field)
                                           |> fun c -> c.Type = expected @>)
@@ -119,8 +115,7 @@ module RoslynAnalyzer_ClassFields_Tests =
                 (withProjects content, ("ProtectedInternalField", Set ["protected"; "internal"]))
                 (withProjects content, ("PrivateField", Set ["private"]))]
                 (fun sut project (field, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let object = findClass assemblies "AccessModifier"
+                    let object = sut.Analyze project |> findClass "AccessModifier"
                     let result = object.Fields |> Seq.find (fun c -> c.Name = field)
 
                     test <@ result.AccessModifiers |> Seq.map normalizeSyntax
@@ -155,8 +150,7 @@ module RoslynAnalyzer_ClassFields_Tests =
             yield! testRepeat (withProjects content)
                 "should return no modifier when class field has none"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let result = findClass assemblies "Modifier"
+                    let result = sut.Analyze project |> findClass "Modifier"
 
                     test <@ result.Fields |> Seq.find (fun c -> c.Name = "WithoutModifier")
                                           |> fun c -> c.Modifiers
@@ -169,8 +163,7 @@ module RoslynAnalyzer_ClassFields_Tests =
                 (withProjects content, ("StaticReadonlyField", Set ["static"; "readonly"]))
                 (withProjects content, ("ConstField", Set ["const"]))]
                 (fun sut project (field, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let object = findClass assemblies "Modifier"
+                    let object = sut.Analyze project |> findClass "Modifier"
                     let result = object.Fields |> Seq.find (fun c -> c.Name = field)
 
                     test <@ result.Modifiers |> Seq.map normalizeSyntax
@@ -199,8 +192,7 @@ module RoslynAnalyzer_ClassFields_Tests =
             yield! testRepeat (withProjects content)
                 "should return no default value when class field has none"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let result = findClass assemblies "DefaultValue"
+                    let result = sut.Analyze project |> findClass "DefaultValue"
 
                     test <@ result.Fields |> Seq.find (fun c -> c.Name = "None")
                                           |> fun c -> c.DefaultValue.IsNone @>)
@@ -208,8 +200,7 @@ module RoslynAnalyzer_ClassFields_Tests =
             yield! testRepeat (withProjects content)
                 "should return default value when class field has one"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let result = findClass assemblies "DefaultValue"
+                    let result = sut.Analyze project |> findClass "DefaultValue"
 
                     test <@ result.Fields |> Seq.find (fun c -> c.Name = "Some")
                                           |> fun c -> c.DefaultValue = Some "1" @>)

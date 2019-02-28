@@ -20,8 +20,7 @@ module RoslynAnalyzer_DelegateModifiers_Tests =
             yield! testRepeat (withProjects contents)
                 "should return delegate with no access modifier when type has none"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let result = findDelegate assemblies "NoAccessModifierType"
+                    let result = sut.Analyze project |> findDelegate "NoAccessModifierType"
                         
                     test <@ result.Identity.AccessModifiers |> Seq.isEmpty @>)
         ]
@@ -61,8 +60,7 @@ module RoslynAnalyzer_DelegateModifiers_Tests =
                 (withProjects contents, ("ParentType.ProtectedInternalType", Set ["protected"; "internal"]))
                 (withProjects contents, ("ParentType.InternalProtectedType", Set ["protected"; "internal"]))]
                 (fun sut project (name, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let result = findDelegate assemblies name
+                    let result = sut.Analyze project |> findDelegate name
                         
                     test <@ result.Identity.AccessModifiers |> Seq.map normalizeSyntax
                                                             |> Set
@@ -83,8 +81,7 @@ module RoslynAnalyzer_DelegateModifiers_Tests =
             yield! testRepeat (withProjects contents)
                 "should return delegate with no modifier when type has none"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let result = findDelegate assemblies "NoModifierType"
+                    let result = sut.Analyze project |> findDelegate "NoModifierType"
                         
                     test <@ result.Identity.Modifiers |> Seq.isEmpty @>)
         ]

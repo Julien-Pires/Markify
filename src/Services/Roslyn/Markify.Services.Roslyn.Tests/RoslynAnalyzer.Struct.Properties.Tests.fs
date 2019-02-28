@@ -21,8 +21,7 @@ module RoslynAnalyzer_StructProperties_Tests =
             yield! testRepeat (withProjects content)
                 "should return no properties when struct has none"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let result = findStruct assemblies "WithoutProperties"
+                    let result = sut.Analyze project |> findStruct "WithoutProperties"
 
                     test <@ result.Properties |> Seq.isEmpty @>)
         ]
@@ -59,8 +58,7 @@ module RoslynAnalyzer_StructProperties_Tests =
                 (withProjects content, ("SingleProperty", 1))
                 (withProjects content, ("MultipleProperties", 2))]
                 (fun sut project (name, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let result = findStruct assemblies name
+                    let result = sut.Analyze project |> findStruct name
 
                     test <@ result.Properties |> Seq.length = expected @>)
 
@@ -69,16 +67,14 @@ module RoslynAnalyzer_StructProperties_Tests =
                 (withProjects content, ("SingleProperty", "Property"))
                 (withProjects content, ("MultipleProperties", "SecondProperty"))]
                 (fun sut project (name, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let result = findStruct assemblies name
+                    let result = sut.Analyze project |> findStruct name
                     
                     test <@ result.Properties |> Seq.exists (fun c -> c.Name = expected) @>)
 
             yield! testRepeat (withProjects content)
                 "should return correct struct property type"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let object = findStruct assemblies "SingleProperty"
+                    let object = sut.Analyze project |> findStruct "SingleProperty"
                     let result = object.Properties |> Seq.find (fun c -> c.Name = "Property")
                     
                     test <@ result.Type = "Int32"  @>)
@@ -114,8 +110,7 @@ module RoslynAnalyzer_StructProperties_Tests =
             yield! testRepeat (withProjects content)
                 "should return private access modifier when struct property has no specified access modifier"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let object = findStruct assemblies "WithoutAccessModifier"
+                    let object = sut.Analyze project |> findStruct "WithoutAccessModifier"
                     let result = object.Properties |> Seq.find (fun c -> c.Name = "PrivateProperty")
 
                     test <@ result.AccessModifiers |> Seq.exists (fun c -> normalizeSyntax c = "private") @>)
@@ -126,8 +121,7 @@ module RoslynAnalyzer_StructProperties_Tests =
                 (withProjects content, ("WithAccessModifiers", "InternalProperty", Set ["internal"]))
                 (withProjects content, ("WithAccessModifiers", "PrivateProperty", Set ["private"]))]
                 (fun sut project (name, property, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let object = findStruct assemblies name
+                    let object = sut.Analyze project |> findStruct name
                     let result = object.Properties |> Seq.find (fun c -> c.Name = property)
                         
                     test <@ result.AccessModifiers |> Seq.map normalizeSyntax 
@@ -160,8 +154,7 @@ module RoslynAnalyzer_StructProperties_Tests =
             yield! testRepeat (withProjects content)
                 "should return property with no modifiers when struct property has none"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let object = findStruct assemblies "WithoutModifiers"
+                    let object = sut.Analyze project |> findStruct "WithoutModifiers"
                     let result = object.Properties |> Seq.find (fun c -> c.Name = "Property")
 
                     test <@ result.Modifiers |> Seq.isEmpty @>)
@@ -170,8 +163,7 @@ module RoslynAnalyzer_StructProperties_Tests =
                 "should return correct modifier when struct property has some" [
                 (withProjects content, ("WithModifiers", "StaticProperty", Set ["static"]))]
                 (fun sut project (name, property, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let object = findStruct assemblies name
+                    let object = sut.Analyze project |> findStruct name
                     let result = object.Properties |> Seq.find (fun c -> c.Name = property)
                         
                     test <@ result.Modifiers |> Seq.map normalizeSyntax
@@ -199,8 +191,7 @@ module RoslynAnalyzer_StructProperties_Tests =
             yield! testRepeat (withProjects content)
                 "should return property with no default value when struct property has none"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let result = findStruct assemblies "DefaultValue"
+                    let result = sut.Analyze project |> findStruct "DefaultValue"
                     
                     test <@ result.Properties |> Seq.find (fun c -> c.Name = "Without") 
                                               |> fun c -> c.DefaultValue.IsNone @>)
@@ -208,8 +199,7 @@ module RoslynAnalyzer_StructProperties_Tests =
             yield! testRepeat (withProjects content)
                 "should return property with default value when struct property has one"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let result = findStruct assemblies "DefaultValue"
+                    let result = sut.Analyze project |> findStruct "DefaultValue"
                     
                     test <@ result.Properties |> Seq.find (fun c -> c.Name = "With") 
                                               |> fun c -> c.DefaultValue = Some "1" @>)
@@ -275,8 +265,7 @@ module RoslynAnalyzer_StructProperties_Tests =
                 (withProjects content, ("WithoutWriteAccessor", "ReadOnlyWithDefaultValue"))
                 (withProjects cSharpContent, ("WithoutWriteAccessor", "ReadOnlyWithExpressionBody"))]
                 (fun sut project (name, property) () ->
-                    let assemblies = sut.Analyze project
-                    let result = findStruct assemblies name
+                    let result = sut.Analyze project |> findStruct name
                     
                     test <@ result.Properties |> Seq.find (fun c -> c.Name = property)
                                               |> fun c -> c.IsWrite.IsNone @>)
@@ -286,8 +275,7 @@ module RoslynAnalyzer_StructProperties_Tests =
                 (withProjects content, ("WithWriteAccessor", "Write"))
                 (withProjects content, ("WithWriteAccessor", "WriteOnly"))]
                 (fun sut project (name, property) () ->
-                    let assemblies = sut.Analyze project
-                    let result = findStruct assemblies name
+                    let result = sut.Analyze project |> findStruct name
                     
                     test <@ result.Properties |> Seq.find (fun c -> c.Name = property)
                                               |> fun c -> c.IsWrite.IsSome @>)
@@ -301,8 +289,7 @@ module RoslynAnalyzer_StructProperties_Tests =
                 (withProjects content, ("WithWriteAccessor", "InternalProperty", Set ["internal"]))
                 (withProjects content, ("WithWriteAccessor", "InternalWriteOnly", Set ["internal"]))]
                 (fun sut project (name, property, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let object = findStruct assemblies name
+                    let object = sut.Analyze project |> findStruct name
                     let result = object.Properties |> Seq.find (fun c -> c.Name = property)
                     
                     test <@ result.IsWrite.Value.AccessModifiers |> Seq.map normalizeSyntax
@@ -366,8 +353,7 @@ module RoslynAnalyzer_StructProperties_Tests =
             yield! testRepeat (withProjects content)
                 "should return no read accessor when struct property is write-only"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let result = findStruct assemblies "WithoutReadAccessor"
+                    let result = sut.Analyze project |> findStruct "WithoutReadAccessor"
                     
                     test <@ result.Properties |> Seq.find (fun c -> c.Name = "WriteOnly")
                                               |> fun c -> c.IsRead.IsNone @>)
@@ -379,8 +365,7 @@ module RoslynAnalyzer_StructProperties_Tests =
                 (withProjects content, ("WithReadAccessor", "ReadOnlyWithDefaultValue"))
                 (withProjects cSharpContent, ("WithReadAccessor", "ReadOnlyWithExpressionBody"))]
                 (fun sut project (name, property) () ->
-                    let assemblies = sut.Analyze project
-                    let result = findStruct assemblies name
+                    let result = sut.Analyze project |> findStruct name
                     
                     test <@ result.Properties |> Seq.find (fun c -> c.Name = property)
                                               |> fun c -> c.IsRead.IsSome @>)
@@ -394,8 +379,7 @@ module RoslynAnalyzer_StructProperties_Tests =
                 (withProjects content, ("WithReadAccessor", "InternalProperty", Set ["internal"]))
                 (withProjects content, ("WithReadAccessor", "InternalReadOnly", Set ["internal"]))]
                 (fun sut project (name, property, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let object = findStruct assemblies name
+                    let object = sut.Analyze project |> findStruct name
                     let result = object.Properties |> Seq.find (fun c -> c.Name = property)
                     
                     test <@ result.IsRead.Value.AccessModifiers |> Seq.map normalizeSyntax

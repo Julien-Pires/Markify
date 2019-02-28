@@ -21,8 +21,7 @@ module RoslynAnalyzer_InterfaceEvents_Tests =
             yield! testRepeat (withProjects content)
                 "should return no events when interface has none"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let result = findInterface assemblies "WithoutEvents"
+                    let result = sut.Analyze project |> findInterface "WithoutEvents"
 
                     test <@ result.Events |> Seq.isEmpty @>)
         ]
@@ -57,8 +56,7 @@ module RoslynAnalyzer_InterfaceEvents_Tests =
                 (withProjects content, ("SingleEvent", 1))
                 (withProjects content, ("MultipleEvents", 2))]
                 (fun sut project (name, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let result = findInterface assemblies name
+                    let result = sut.Analyze project |> findInterface name
 
                     test <@ result.Events |> Seq.length = expected @>)
 
@@ -67,8 +65,7 @@ module RoslynAnalyzer_InterfaceEvents_Tests =
                 (withProjects content, ("SingleEvent", "FirstEvent"))
                 (withProjects content, ("MultipleEvents", "SecondEvent"))]
                 (fun sut project (name, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let result = findInterface assemblies name
+                    let result = sut.Analyze project |> findInterface name
 
                     test <@ result.Events |> Seq.exists (fun c -> c.Name = expected) @>)
 
@@ -77,8 +74,7 @@ module RoslynAnalyzer_InterfaceEvents_Tests =
                 (withProjects content, ("SingleEvent", "FirstEvent", "EventHandler"))
                 (withProjects content, ("MultipleEvents", "SecondEvent", "AnotherEventHandler"))]
                 (fun sut project (name, event, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let result = findInterface assemblies name
+                    let result = sut.Analyze project |> findInterface name
 
                     test <@ result.Events |> Seq.find (fun c -> c.Name = event)
                                           |> fun c -> c.Type = expected @>)
@@ -107,8 +103,7 @@ module RoslynAnalyzer_InterfaceEvents_Tests =
                 (withProjects content, ("WithoutAccessModifier", Set ["public"]))
                 (withProjects content, ("PublicEvent", Set ["public"]))]
                 (fun sut project (event, expected) () -> 
-                    let assemblies = sut.Analyze project
-                    let object = findInterface assemblies "AccessModifier"
+                    let object = sut.Analyze project |> findInterface "AccessModifier"
                     let result = object.Events |> Seq.find (fun c -> c.Name = event)
 
                     test <@ result.AccessModifiers |> Seq.map normalizeSyntax 
@@ -135,8 +130,7 @@ module RoslynAnalyzer_InterfaceEvents_Tests =
             yield! testRepeat (withProjects content)
                 "should return no modifier when interface event has none"
                 (fun sut project () -> 
-                    let assemblies = sut.Analyze project
-                    let object = findInterface assemblies "Modifiers"
+                    let object = sut.Analyze project |> findInterface "Modifiers"
                     let result = object.Events |> Seq.find (fun c -> c.Name = "WithoutModifier")
 
                     test <@ result.Modifiers |> Seq.isEmpty @>)

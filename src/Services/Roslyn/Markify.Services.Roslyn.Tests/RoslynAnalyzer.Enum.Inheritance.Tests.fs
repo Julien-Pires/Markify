@@ -21,8 +21,7 @@ module RoslynAnalyzer_EnumInheritance_Tests =
             yield! testRepeat (withProjects contents)
                 "should return base type when enum inherits from a primitive primitive"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let result = findEnum assemblies "InheritPrimitiveType"
+                    let result = sut.Analyze project |> findEnum "InheritPrimitiveType"
                         
                     test <@ result.Identity.BaseTypes |> Seq.contains "Int32" @>)
         ]

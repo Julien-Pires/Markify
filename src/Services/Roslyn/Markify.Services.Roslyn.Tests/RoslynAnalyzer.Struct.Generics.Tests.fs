@@ -22,8 +22,7 @@ module RoslynAnalyzer_StructGenerics_Tests =
                 "should return no generic parameters when struct has none"
                 [(withProjects noGeneric, "NoGenericStruct")]
                 (fun sut project name () ->
-                    let assemblies = sut.Analyze project
-                    let result = findStruct assemblies name
+                    let result = sut.Analyze project |> findStruct name
 
                     test <@ result.Identity.Parameters |> Seq.isEmpty @>)
         ]
@@ -48,8 +47,7 @@ module RoslynAnalyzer_StructGenerics_Tests =
                 (withProjects generic, ("SingleGenericStruct`1", 1))
                 (withProjects generic, ("MultipleGenericStruct`2", 2))]
                 (fun sut project (name, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let result = findStruct assemblies name 
+                    let result = sut.Analyze project |> findStruct name 
                         
                     test <@ result.Identity.Parameters |> Seq.length = expected @>)
 
@@ -59,8 +57,7 @@ module RoslynAnalyzer_StructGenerics_Tests =
                 (withProjects generic, ("MultipleGenericStruct`2", "T"))
                 (withProjects generic, ("MultipleGenericStruct`2", "Y"))]
                 (fun sut project (name, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let result = findStruct assemblies name
+                    let result = sut.Analyze project |> findStruct name
                         
                     test <@ result.Identity.Parameters |> Seq.exists (fun c -> c.Name = expected) @>)
         ]
@@ -81,8 +78,7 @@ module RoslynAnalyzer_StructGenerics_Tests =
                 "should return no modifiers when struct generic parameter has none" [
                 (withProjects genericModifiers, ("SingleGenericStruct`1", "T"))]
                 (fun sut project (name, parameter) () ->
-                    let assemblies = sut.Analyze project
-                    let object = findStruct assemblies name
+                    let object = sut.Analyze project |> findStruct name
                     let result = object.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
 
                     test <@ result.Modifier.IsNone @>)
@@ -109,8 +105,7 @@ module RoslynAnalyzer_StructGenerics_Tests =
                 "should return no constraints when struct generic parameter has none" [
                 (withProjects genericConstraints, ("SingleGenericStruct`1", "T"))]
                 (fun sut project (name, parameter) () ->
-                    let assemblies = sut.Analyze project
-                    let object = findStruct assemblies name
+                    let object = sut.Analyze project |> findStruct name
                     let result = object.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
 
                     test <@ result.Constraints |> Seq.isEmpty @>)
@@ -120,8 +115,7 @@ module RoslynAnalyzer_StructGenerics_Tests =
                 (withProjects genericConstraints, ("GenericConstrainedStruct`2", "T", Set ["struct"]))
                 (withProjects genericConstraints, ("GenericConstrainedStruct`2", "Y", Set ["IEnumerable"; "class"; "new()"]))]
                 (fun sut project (name, parameter, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let object = findStruct assemblies name
+                    let object = sut.Analyze project |> findStruct name
                     let result = object.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
 
                     test <@ result.Constraints |> Seq.map normalizeSyntax

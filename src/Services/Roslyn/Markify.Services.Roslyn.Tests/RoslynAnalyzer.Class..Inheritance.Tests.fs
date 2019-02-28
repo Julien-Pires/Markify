@@ -39,8 +39,7 @@ module RoslynAnalyzer_ClassInheritance_Tests =
                 (withProjects contents, ("ImplementMultipleInterfaceType", Set ["IDisposable"; "IEnumerable"]))
                 (withProjects contents, ("MixedInheritanceType", Set ["Exception"; "IDisposable"]))]
                 (fun sut project (name, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let result = findClass assemblies name
+                    let result = sut.Analyze project |> findClass name
                         
-                    test <@ Set result.Identity.BaseTypes |> Set.isSubset expected @>)
+                    test <@ result.Identity.BaseTypes |> Set |> Set.isSubset expected @>)
         ]

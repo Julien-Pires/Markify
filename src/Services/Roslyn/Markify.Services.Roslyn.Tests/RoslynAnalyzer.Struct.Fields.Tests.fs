@@ -21,8 +21,7 @@ module RoslynAnalyzer_StructFields_Tests =
             yield! testRepeat (withProjects content)
                 "should return no fields when struct has none"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let result = findStruct assemblies "WithoutFields"
+                    let result = sut.Analyze project |> findStruct "WithoutFields"
 
                     test <@ result.Fields |> Seq.isEmpty @>)
         ]
@@ -57,8 +56,7 @@ module RoslynAnalyzer_StructFields_Tests =
                 (withProjects content, ("SingleField", 1))
                 (withProjects content, ("MultipleField", 2))]
                 (fun sut project (name, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let result = findStruct assemblies name
+                    let result = sut.Analyze project |> findStruct name
 
                     test <@ result.Fields |> Seq.length = expected @>)
 
@@ -67,8 +65,7 @@ module RoslynAnalyzer_StructFields_Tests =
                 (withProjects content, ("SingleField", "FirstField"))
                 (withProjects content, ("MultipleField", "SecondField"))]
                 (fun sut project (name, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let result = findStruct assemblies name
+                    let result = sut.Analyze project |> findStruct name
 
                     test <@ result.Fields |> Seq.exists (fun c -> c.Name = expected) @>)
 
@@ -77,8 +74,7 @@ module RoslynAnalyzer_StructFields_Tests =
                 (withProjects content, ("SingleField", "FirstField", "Int32"))
                 (withProjects content, ("MultipleField", "SecondField", "Single"))]
                 (fun sut project (name, field, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let result = findStruct assemblies name
+                    let result = sut.Analyze project |> findStruct name
 
                     test <@ result.Fields |> Seq.find (fun c -> c.Name = field)
                                           |> fun c -> c.Type = expected @>)
@@ -113,8 +109,7 @@ module RoslynAnalyzer_StructFields_Tests =
                 (withProjects content, ("InternalField", Set ["internal"]))
                 (withProjects content, ("PrivateField", Set ["private"]))]
                 (fun sut project (field, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let object = findStruct assemblies "AccessModifier"
+                    let object = sut.Analyze project |> findStruct "AccessModifier"
                     let result = object.Fields |> Seq.find (fun c -> c.Name = field)
 
                     test <@ result.AccessModifiers |> Seq.map normalizeSyntax
@@ -149,8 +144,7 @@ module RoslynAnalyzer_StructFields_Tests =
             yield! testRepeat (withProjects content)
                 "should return no modifier when struct field has none"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let result = findStruct assemblies "Modifier"
+                    let result = sut.Analyze project |> findStruct "Modifier"
 
                     test <@ result.Fields |> Seq.find (fun c -> c.Name = "WithoutModifier")
                                           |> fun c -> c.Modifiers
@@ -163,8 +157,7 @@ module RoslynAnalyzer_StructFields_Tests =
                 (withProjects content, ("StaticReadonlyField", Set ["static"; "readonly"]))
                 (withProjects content, ("ConstField", Set ["const"]))]
                 (fun sut project (field, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let object = findStruct assemblies "Modifier"
+                    let object = sut.Analyze project |> findStruct "Modifier"
                     let result = object.Fields |> Seq.find (fun c -> c.Name = field)
 
                     test <@ result.Modifiers |> Seq.map normalizeSyntax
@@ -193,8 +186,7 @@ module RoslynAnalyzer_StructFields_Tests =
             yield! testRepeat (withProjects content)
                 "should return no default value when struct field has none"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let result = findStruct assemblies "DefaultValue"
+                    let result = sut.Analyze project |> findStruct "DefaultValue"
 
                     test <@ result.Fields |> Seq.find (fun c -> c.Name = "None")
                                           |> fun c -> c.DefaultValue.IsNone @>)
@@ -202,8 +194,7 @@ module RoslynAnalyzer_StructFields_Tests =
             yield! testRepeat (withProjects content)
                 "should return default value when struct field has one"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let result = findStruct assemblies "DefaultValue"
+                    let result = sut.Analyze project |> findStruct "DefaultValue"
 
                     test <@ result.Fields |> Seq.find (fun c -> c.Name = "Some")
                                           |> fun c -> c.DefaultValue = Some "1" @>)

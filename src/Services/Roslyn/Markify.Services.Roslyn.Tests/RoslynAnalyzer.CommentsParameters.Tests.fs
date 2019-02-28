@@ -23,8 +23,7 @@ module RoslynAnalyzer_CommentsParameters_Tests =
             yield! testRepeat (withProjects contents)
                 "should return no parameter when comment has none"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let object = findClass assemblies "NoParameter"
+                    let object = sut.Analyze project |> findClass "NoParameter"
                     let result = object.Comments.Comments |> Seq.find (fun c -> c.Name = "summary")
                     
                     test <@ result.Parameter |> Seq.isEmpty @>)
@@ -51,8 +50,7 @@ module RoslynAnalyzer_CommentsParameters_Tests =
                 (withProjects contents, ("summary", 1))
                 (withProjects contents, ("remarks", 3))]
                 (fun sut project (comment, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let object = findClass assemblies "WithParameters"
+                    let object = sut.Analyze project |> findClass "WithParameters"
                     let result = object.Comments.Comments |> Seq.find (fun c -> c.Name = comment)
                     
                     test <@ result.Parameter |> Seq.length = expected @>)
@@ -62,8 +60,7 @@ module RoslynAnalyzer_CommentsParameters_Tests =
                 (withProjects contents, ("summary", Set ["name"]))
                 (withProjects contents, ("remarks", Set ["name"; "value"; "data"]))]
                 (fun sut project (comment, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let object = findClass assemblies "WithParameters"
+                    let object = sut.Analyze project |> findClass "WithParameters"
                     let result = object.Comments.Comments |> Seq.find (fun c -> c.Name = comment)
                     
                     test <@ result.Parameter |> Seq.map (fun c -> c.Name)
@@ -88,8 +85,7 @@ module RoslynAnalyzer_CommentsParameters_Tests =
             yield! testRepeat (withProjects contents)
                 "should return no value when comment parameter has none"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let object = findClass assemblies "NoValue"
+                    let object = sut.Analyze project |> findClass "NoValue"
                     let result = object.Comments.Comments |> Seq.find (fun c -> c.Name = "summary")
                     
                     test <@ result.Parameter |> Seq.find (fun c -> c.Name = "name")
@@ -113,8 +109,7 @@ module RoslynAnalyzer_CommentsParameters_Tests =
             yield! testRepeat (withProjects contents)
                 "should return value when comment parameter has one"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let object = findClass assemblies "WithValue"
+                    let object = sut.Analyze project |> findClass "WithValue"
                     let result = object.Comments.Comments |> Seq.find (fun c -> c.Name = "summary")
                     
                     test <@ result.Parameter |> Seq.find (fun c -> c.Name = "name")

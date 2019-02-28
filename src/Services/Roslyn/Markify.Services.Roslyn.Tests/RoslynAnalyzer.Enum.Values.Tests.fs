@@ -21,8 +21,7 @@ module RoslynAnalyzer_EnumValues_Tests =
             yield! testRepeat (withProjects content)
                 "should return no values when enum has none"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let result = findEnum assemblies "Empty"
+                    let result = sut.Analyze project |> findEnum "Empty"
                     
                     test <@ result.Values |> Seq.isEmpty @>)
         ]
@@ -57,8 +56,7 @@ module RoslynAnalyzer_EnumValues_Tests =
                 (withProjects content, ("SingleValue", 1))
                 (withProjects content, ("MultipleValues", 2))]
                 (fun sut project (name, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let result = findEnum assemblies name
+                    let result = sut.Analyze project |> findEnum name
                     
                     test <@ result.Values |> Seq.length = expected @>)
 
@@ -67,8 +65,7 @@ module RoslynAnalyzer_EnumValues_Tests =
                 (withProjects content, ("SingleValue", "A"))
                 (withProjects content, ("MultipleValues", "B"))]
                 (fun sut project (name, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let result = findEnum assemblies name
+                    let result = sut.Analyze project |> findEnum name
                     
                     test <@ result.Values |> Seq.exists (fun c -> c.Name = expected) @>)
         ]
@@ -105,8 +102,7 @@ module RoslynAnalyzer_EnumValues_Tests =
                 (withProjects content, ("WithoutUnderlyingValues", "A"))
                 (withProjects content, ("WithoutUnderlyingValues", "B"))]
                 (fun sut project (name, value) () ->
-                    let assemblies = sut.Analyze project
-                    let result = findEnum assemblies name
+                    let result = sut.Analyze project |> findEnum name
                     
                     test <@ result.Values |> Seq.find (fun c -> c.Name = value)
                                           |> fun c -> c.Value.IsNone @>)
@@ -116,8 +112,7 @@ module RoslynAnalyzer_EnumValues_Tests =
                 (withProjects content, ("WithUnderlyingValues", "A", "0"))
                 (withProjects content, ("WithUnderlyingValues", "B", "1"))]
                 (fun sut project (name, value, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let result = findEnum assemblies name
+                    let result = sut.Analyze project |> findEnum name
                     
                     test <@ result.Values |> Seq.find (fun c -> c.Name = value)
                                           |> fun c -> c.Value = Some expected @>)

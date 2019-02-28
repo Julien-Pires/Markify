@@ -21,8 +21,7 @@ module RoslynAnalyzer_ClassModifiers_Tests =
             yield! testRepeat (withProjects contents)
                 "should return class with no access modifier when type has none"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let result = findClass assemblies "NoAccessModifierType"
+                    let result = sut.Analyze project |> findClass "NoAccessModifierType"
                         
                     test <@ result.Identity.AccessModifiers |> Seq.isEmpty @>)
         ]
@@ -68,8 +67,7 @@ module RoslynAnalyzer_ClassModifiers_Tests =
                 (withProjects contents, ("ParentType.ProtectedInternalType", Set ["protected"; "internal"]))
                 (withProjects contents, ("ParentType.InternalProtectedType", Set ["protected"; "internal"]))]
                 (fun sut project (name, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let result = findClass assemblies name
+                    let result = sut.Analyze project |> findClass name
                         
                     test <@ result.Identity.AccessModifiers |> Seq.map normalizeSyntax
                                                             |> Set
@@ -91,8 +89,7 @@ module RoslynAnalyzer_ClassModifiers_Tests =
             yield! testRepeat (withProjects contents)
                 "should return class with no modifier when type has none"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let result = findClass assemblies "NoModifierType"
+                    let result = sut.Analyze project |> findClass "NoModifierType"
                         
                     test <@ result.Identity.Modifiers |> Seq.isEmpty @>)
         ]
@@ -133,8 +130,7 @@ module RoslynAnalyzer_ClassModifiers_Tests =
                 (withProjects contents, ("AbstractPartialType", Set ["abstract"; "partial"]))
                 (withProjects contents, ("SealedPartialType", Set ["sealed"; "partial"]))]
                 (fun sut project (name, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let result = findClass assemblies name
+                    let result = sut.Analyze project |> findClass name
                         
                     test <@ result.Identity.Modifiers |> Seq.map normalizeSyntax
                                                       |> Set

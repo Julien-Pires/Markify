@@ -30,16 +30,14 @@ module RoslynAnalyzer_StructPartial_Tests =
             yield! testRepeat (withProjects content)
                 "should merge inherited types when identical partial structs exist"
                 (fun sut project () -> 
-                    let assemblies = sut.Analyze project
-                    let result = findStruct assemblies "PartialType"
+                    let result = sut.Analyze project |> findStruct "PartialType"
 
                     test <@ result.Identity.BaseTypes |> Set = Set ["IEnumerable"; "IDisposable"] @>)
 
             yield! testRepeat (withProjects content)
                 "should merge modifiers when identical partial structs exist"
                 (fun sut project () -> 
-                    let assemblies = sut.Analyze project
-                    let result = findStruct assemblies "PartialType"
+                    let result = sut.Analyze project |> findStruct "PartialType"
 
                     test <@ result.Identity.Modifiers |> Seq.map normalizeSyntax
                                                       |> Set
@@ -86,8 +84,7 @@ module RoslynAnalyzer_StructPartial_Tests =
             yield! testRepeat (withProjects content)
                 "should merge fields when identical partial structs exist"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let result = findStruct assemblies "PartialType"
+                    let result = sut.Analyze project |> findStruct "PartialType"
                     
                     test <@ result.Fields |> Seq.map (fun c -> c.Name)
                                           |> Set
@@ -96,8 +93,7 @@ module RoslynAnalyzer_StructPartial_Tests =
             yield! testRepeat (withProjects content)
                 "should merge properties when identical partial structs exist"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let result = findStruct assemblies "PartialType"
+                    let result = sut.Analyze project |> findStruct "PartialType"
                     
                     test <@ result.Properties |> Seq.map (fun c -> c.Name)
                                               |> Set
@@ -106,8 +102,7 @@ module RoslynAnalyzer_StructPartial_Tests =
             yield! testRepeat (withProjects content)
                 "should merge methods when identical partial structs exist"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let result = findStruct assemblies "PartialType"
+                    let result = sut.Analyze project |> findStruct "PartialType"
                     
                     test <@ result.Methods |> Seq.map (fun c -> c.Identity.Name)
                                            |> Set
@@ -116,8 +111,7 @@ module RoslynAnalyzer_StructPartial_Tests =
             yield! testRepeat (withProjects content)
                 "should merge events when identical partial structs exist"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let result = findStruct assemblies "PartialType"
+                    let result = sut.Analyze project |> findStruct "PartialType"
                     
                     test <@ result.Events |> Seq.map (fun c -> c.Name)
                                           |> Set

@@ -27,8 +27,7 @@ module RoslynAnalyzer_DelegateReturnType_Tests =
                 ((withProjects content, ("IntegerDelegate", "Int32")))
                 ((withProjects content, ("GenericDelegate`1", "T")))]
                 (fun sut project (name, expected) () -> 
-                    let assemblies = sut.Analyze project
-                    let result = findDelegate assemblies name
+                    let result = sut.Analyze project |> findDelegate name
                         
                     test <@ result.ReturnType |> normalizeSyntax = expected @>)
         ]

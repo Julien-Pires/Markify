@@ -20,8 +20,7 @@ module RoslynAnalyzer_DelegateParameters_Tests =
             yield! testRepeat (withProjects content)
                 "should return no parameters when delegate has none"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let result = findDelegate assemblies "WithoutParameters"
+                    let result = sut.Analyze project |> findDelegate "WithoutParameters"
 
                     test <@ result.Parameters |> Seq.isEmpty @>)
         ]
@@ -46,8 +45,7 @@ module RoslynAnalyzer_DelegateParameters_Tests =
                 ((withProjects content), ("WithOneParameter", 1))
                 ((withProjects content), ("WithMultipleParameters", 2))]
                 (fun sut project (name, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let result = findDelegate assemblies name
+                    let result = sut.Analyze project |> findDelegate name
 
                     test <@ result.Parameters |> Seq.length = expected @>)
 
@@ -57,8 +55,7 @@ module RoslynAnalyzer_DelegateParameters_Tests =
                 ((withProjects content), ("WithMultipleParameters", "A"))
                 ((withProjects content), ("WithMultipleParameters", "B"))]
                 (fun sut project (name, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let result = findDelegate assemblies name
+                    let result = sut.Analyze project |> findDelegate name
 
                     test <@ result.Parameters |> Seq.exists (fun c -> c.Name = expected) @>)
 
@@ -69,8 +66,7 @@ module RoslynAnalyzer_DelegateParameters_Tests =
                 ((withProjects content), ("WithMultipleParameters", "B", "Single"))
                 ((withProjects content), ("WithGenericParameters`1", "A", "T"))]
                 (fun sut project (name, parameter, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let result = findDelegate assemblies name
+                    let result = sut.Analyze project |> findDelegate name
 
                     test <@ result.Parameters |> Seq.find (fun c -> c.Name = parameter)
                                               |> fun c -> c.Type = expected @>)
@@ -90,8 +86,7 @@ module RoslynAnalyzer_DelegateParameters_Tests =
             yield! testRepeat (withProjects content)
                 "should return no modifier when delegate parameter has none"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let result = findDelegate assemblies "WithOneParameter"
+                    let result = sut.Analyze project |> findDelegate "WithOneParameter"
 
                     test <@ result.Parameters |> Seq.find (fun c -> c.Name = "A")
                                               |> fun c -> c.Modifier.IsNone @>)
@@ -113,8 +108,7 @@ module RoslynAnalyzer_DelegateParameters_Tests =
                 ((withProjects content), ("WithParametersModifiers", "A", "ref"))
                 ((withProjects content), ("WithParametersModifiers", "B", "out"))]
                 (fun sut project (name, parameter, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let result = findDelegate assemblies name
+                    let result = sut.Analyze project |> findDelegate name
 
                     test <@ result.Parameters |> Seq.find (fun c -> c.Name = parameter)
                                               |> fun c -> normalizeSyntax c.Modifier.Value = expected @>)
@@ -134,8 +128,7 @@ module RoslynAnalyzer_DelegateParameters_Tests =
             yield! testRepeat (withProjects content)
                 "should return no default value when delegate parameter has none"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let result = findDelegate assemblies "WithOneParameter"
+                    let result = sut.Analyze project |> findDelegate "WithOneParameter"
 
                     test <@ result.Parameters |> Seq.find (fun c -> c.Name = "A")
                                               |> fun c -> c.DefaultValue.IsNone @>)
@@ -155,8 +148,7 @@ module RoslynAnalyzer_DelegateParameters_Tests =
             yield! testRepeat (withProjects content)
                 "should return default value when delegate parameter has one"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let result = findDelegate assemblies "WithDefaultValueParameter"
+                    let result = sut.Analyze project |> findDelegate "WithDefaultValueParameter"
 
                     test <@ result.Parameters |> Seq.find (fun c -> c.Name = "A")
                                               |> fun c -> c.DefaultValue = Some "1" @>)

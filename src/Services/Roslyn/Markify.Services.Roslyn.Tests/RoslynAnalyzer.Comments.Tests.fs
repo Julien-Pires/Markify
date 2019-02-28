@@ -21,8 +21,7 @@ module RoslynAnalyzer_Comments_Tests =
             yield! testRepeat (withProjects content)
                 "should return no comment when type has none"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let result = findClass assemblies "NoCommentType"
+                    let result = sut.Analyze project |> findClass "NoCommentType"
                     
                     test <@ result.Comments.Comments |> Seq.isEmpty @>)
         ]
@@ -59,8 +58,7 @@ module RoslynAnalyzer_Comments_Tests =
                 (withProjects content, ("MultipleComment", Set ["summary"; "remarks"]))
                 (withProjects content, ("SelfClosingComment", Set ["inheritdoc"]))]
                 (fun sut project (name, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let result = findClass assemblies name
+                    let result = sut.Analyze project |> findClass name
                     
                     test <@ result.Comments.Comments |> Seq.map (fun c -> c.Name)
                                                      |> Set
@@ -95,8 +93,7 @@ module RoslynAnalyzer_Comments_Tests =
                 (withProjects content, ("SingleComment", 1))
                 (withProjects content, ("MultipleComment", 3))]
                 (fun sut project (name, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let result = findClass assemblies name
+                    let result = sut.Analyze project |> findClass name
                     
                     test <@ result.Comments.Comments |> Seq.length = expected @>)
         ]

@@ -21,8 +21,7 @@ module RoslynAnalyzer_ClassEvents_Tests =
             yield! testRepeat (withProjects content)
                 "should return no events when class has none"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let result = findClass assemblies "WithoutEvents"
+                    let result = sut.Analyze project |> findClass "WithoutEvents"
 
                     test <@ result.Events |> Seq.isEmpty @>)
         ]
@@ -57,8 +56,7 @@ module RoslynAnalyzer_ClassEvents_Tests =
                 (withProjects content, ("SingleEvent", 1))
                 (withProjects content, ("MultipleEvents", 2))]
                 (fun sut project (name, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let result = findClass assemblies name
+                    let result = sut.Analyze project |> findClass name
 
                     test <@ result.Events |> Seq.length = expected @>)
 
@@ -67,8 +65,7 @@ module RoslynAnalyzer_ClassEvents_Tests =
                 (withProjects content, ("SingleEvent", "FirstEvent"))
                 (withProjects content, ("MultipleEvents", "SecondEvent"))]
                 (fun sut project (name, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let result = findClass assemblies name
+                    let result = sut.Analyze project |> findClass name
 
                     test <@ result.Events |> Seq.exists (fun c -> c.Name = expected) @>)
 
@@ -77,8 +74,7 @@ module RoslynAnalyzer_ClassEvents_Tests =
                 (withProjects content, ("SingleEvent", "FirstEvent", "EventHandler"))
                 (withProjects content, ("MultipleEvents", "SecondEvent", "AnotherEventHandler"))]
                 (fun sut project (name, event, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let result = findClass assemblies name
+                    let result = sut.Analyze project |> findClass name
 
                     test <@ result.Events |> Seq.find (fun c -> c.Name = event)
                                           |> fun c -> c.Type = expected @>)
@@ -119,8 +115,7 @@ module RoslynAnalyzer_ClassEvents_Tests =
                 (withProjects content, ("ProtectedInternalEvent", Set ["protected"; "internal"]))
                 (withProjects content, ("PrivateEvent", Set ["private"]))]
                 (fun sut project (event, expected) () -> 
-                    let assemblies = sut.Analyze project
-                    let object = findClass assemblies "AccessModifier"
+                    let object = sut.Analyze project |> findClass "AccessModifier"
                     let result = object.Events |> Seq.find (fun c -> c.Name = event)
 
                     test <@ result.AccessModifiers |> Seq.map normalizeSyntax 
@@ -157,8 +152,7 @@ module RoslynAnalyzer_ClassEvents_Tests =
             yield! testRepeat (withProjects content)
                 "should return no modifier when class event has none"
                 (fun sut project () -> 
-                    let assemblies = sut.Analyze project
-                    let object = findClass assemblies "Modifiers"
+                    let object = sut.Analyze project |> findClass "Modifiers"
                     let result = object.Events |> Seq.find (fun c -> c.Name = "WithoutModifier")
 
                     test <@ result.Modifiers |> Seq.isEmpty @>)
@@ -171,8 +165,7 @@ module RoslynAnalyzer_ClassEvents_Tests =
                 (withProjects content, ("OverrideEvent", Set ["override"]))
                 (withProjects content, ("AbstractEvent", Set ["abstract"]))]
                 (fun sut project (event, expected) () -> 
-                    let assemblies = sut.Analyze project
-                    let object = findClass assemblies "Modifiers"
+                    let object = sut.Analyze project |> findClass "Modifiers"
                     let result = object.Events |> Seq.find (fun c -> c.Name = event)
 
                     test <@ result.Modifiers |> Seq.map normalizeSyntax 

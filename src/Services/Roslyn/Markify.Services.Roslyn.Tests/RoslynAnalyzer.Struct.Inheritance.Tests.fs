@@ -28,8 +28,7 @@ module RoslynAnalyzer_StructInheritance_Tests =
                 (withProjects contents, ("ImplementInterfaceType", Set ["IDisposable"]))
                 (withProjects contents, ("ImplementMultipleInterfaceType", Set ["IDisposable"; "IEnumerable"]))]
                 (fun sut project (name, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let result = findStruct assemblies name
+                    let result = sut.Analyze project |> findStruct name
                         
                     test <@ Set result.Identity.BaseTypes |> Set.isSubset expected @>)
         ]

@@ -28,8 +28,7 @@ module RoslynAnalyzer_InterfaceInheritance_Tests =
                 (withProjects contents, ("ImplementInterfaceType", Set ["IDisposable"]))
                 (withProjects contents, ("ImplementMultipleInterfaceType", Set ["IDisposable"; "IEnumerable"]))]
                 (fun sut project (name, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let result = findInterface assemblies name
+                    let result = sut.Analyze project |> findInterface name
                         
                     test <@ Set result.Identity.BaseTypes |> Set.isSubset expected @>)
         ]

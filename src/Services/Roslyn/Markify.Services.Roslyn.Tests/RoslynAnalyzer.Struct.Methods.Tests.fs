@@ -21,8 +21,7 @@ module RoslynAnalyzer_StructMethods_Tests =
             yield! testRepeat (withProjects content)
                 "should return no method when struct has none"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let result = findStruct assemblies "WithoutMethods"
+                    let result = sut.Analyze project |> findStruct "WithoutMethods"
 
                     test <@ result.Methods |> Seq.isEmpty @>)
         ]
@@ -60,8 +59,7 @@ module RoslynAnalyzer_StructMethods_Tests =
                 (withProjects content, ("SingleMethods", 1))
                 (withProjects content, ("MultipleMethods", 2))]
                 (fun sut project (name, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let result = findStruct assemblies name
+                    let result = sut.Analyze project |> findStruct name
 
                     test <@ result.Methods |> Seq.length = expected @>)
 
@@ -70,8 +68,7 @@ module RoslynAnalyzer_StructMethods_Tests =
                 (withProjects content, ("SingleMethods", "FirstMethod"))
                 (withProjects content, ("MultipleMethods", "SecondMethod"))]
                 (fun sut project (name, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let result = findStruct assemblies name
+                    let result = sut.Analyze project |> findStruct name
 
                     test <@ result.Methods |> Seq.exists (fun c -> c.Identity.Name = expected) @>)
         ]
@@ -109,8 +106,7 @@ module RoslynAnalyzer_StructMethods_Tests =
                 (withProjects content, ("InternalMethod", Set ["internal"]))
                 (withProjects content, ("PrivateMethod", Set ["private"]))]
                 (fun sut project (method, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let object = findStruct assemblies "AccessModifiers"
+                    let object = sut.Analyze project |> findStruct "AccessModifiers"
                     let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = method)
 
                     test <@ result.Identity.AccessModifiers |> Seq.map normalizeSyntax 
@@ -144,8 +140,7 @@ module RoslynAnalyzer_StructMethods_Tests =
             yield! testRepeat (withProjects content)
                 "should return no modifiers when struct method has none"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let object = findStruct assemblies "Modifiers"
+                    let object = sut.Analyze project |> findStruct "Modifiers"
                     let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = "WithoutModifier")
 
                     test <@ result.Identity.Modifiers |> Seq.isEmpty @>)
@@ -155,8 +150,7 @@ module RoslynAnalyzer_StructMethods_Tests =
                 (withProjects content, ("StaticMethod", Set ["static"]))
                 (withProjects content, ("PartialMethod", Set ["partial"]))]
                 (fun sut project (method, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let object = findStruct assemblies "Modifiers"
+                    let object = sut.Analyze project |> findStruct "Modifiers"
                     let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = method)
 
                     test <@ result.Identity.Modifiers |> Seq.map normalizeSyntax 
@@ -193,8 +187,7 @@ module RoslynAnalyzer_StructMethods_Tests =
             yield! testRepeat (withProjects content)
                 "should return no generic parameters when struct method has none"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let object = findStruct assemblies "Generics"
+                    let object = sut.Analyze project |> findStruct "Generics"
                     let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = "WithoutGenerics")
 
                     test <@ result.Identity.Parameters |> Seq.isEmpty @>)
@@ -204,8 +197,7 @@ module RoslynAnalyzer_StructMethods_Tests =
                 (withProjects content, ("SingleGeneric", 1))
                 (withProjects content, ("MultipleGeneric", 2))]
                 (fun sut project (method, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let object = findStruct assemblies "Generics"
+                    let object = sut.Analyze project |> findStruct "Generics"
                     let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = method)
 
                     test <@ result.Identity.Parameters |> Seq.length = expected @>)
@@ -213,8 +205,7 @@ module RoslynAnalyzer_StructMethods_Tests =
             yield! testRepeat (withProjects content)
                 "should return no generic constraint when struct method generic parameter has none"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let object = findStruct assemblies "Generics"
+                    let object = sut.Analyze project |> findStruct "Generics"
                     let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = "SingleGeneric")
 
                     test <@ result.Identity.Parameters |> Seq.map (fun c -> c.Constraints)
@@ -225,8 +216,7 @@ module RoslynAnalyzer_StructMethods_Tests =
                 (withProjects content, ("MultipleGeneric", "T", 1))
                 (withProjects content, ("MultipleGeneric", "Y", 2))]
                 (fun sut project (method, parameter, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let object = findStruct assemblies "Generics"
+                    let object = sut.Analyze project |> findStruct "Generics"
                     let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = method)
 
                     test <@ result.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
@@ -237,8 +227,7 @@ module RoslynAnalyzer_StructMethods_Tests =
                 (withProjects content, ("MultipleGeneric", "T", "Int32"))
                 (withProjects content, ("MultipleGeneric", "Y", "class"))]
                 (fun sut project (method, parameter, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let object = findStruct assemblies "Generics"
+                    let object = sut.Analyze project |> findStruct "Generics"
                     let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = method)
 
                     test <@ result.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
@@ -276,8 +265,7 @@ module RoslynAnalyzer_StructMethods_Tests =
             yield! testRepeat (withProjects content)
                 "should return no parameters when struct method has none"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let object = findStruct assemblies "Parameters"
+                    let object = sut.Analyze project |> findStruct "Parameters"
                     let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = "WithoutParameters")
 
                     test <@ result.Parameters |> Seq.isEmpty @>)
@@ -287,8 +275,7 @@ module RoslynAnalyzer_StructMethods_Tests =
                 (withProjects content, ("SingleParameters", 1))
                 (withProjects content, ("MultipleParameters", 2))]
                 (fun sut project (method, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let object = findStruct assemblies "Parameters"
+                    let object = sut.Analyze project |> findStruct "Parameters"
                     let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = method)
 
                     test <@ result.Parameters |> Seq.length = expected @>)
@@ -298,8 +285,7 @@ module RoslynAnalyzer_StructMethods_Tests =
                 (withProjects content, ("SingleParameters", "A"))
                 (withProjects content, ("MultipleParameters", "B"))]
                 (fun sut project (method, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let object = findStruct assemblies "Parameters"
+                    let object = sut.Analyze project |> findStruct "Parameters"
                     let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = method)
 
                     test <@ result.Parameters |> Seq.exists (fun c -> c.Name = expected) @>)
@@ -310,8 +296,7 @@ module RoslynAnalyzer_StructMethods_Tests =
                 (withProjects content, ("MultipleParameters", "B", "Single"))
                 (withProjects content, ("GenericParameters", "A", "T"))]
                 (fun sut project (method, parameter, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let object = findStruct assemblies "Parameters"
+                    let object = sut.Analyze project |> findStruct "Parameters"
                     let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = method)
 
                     test <@ result.Parameters |> Seq.find (fun c -> c.Name = parameter)
@@ -320,8 +305,7 @@ module RoslynAnalyzer_StructMethods_Tests =
             yield! testRepeat (withProjects content)
                 "should return no modifier when struct method parameter has none"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let object = findStruct assemblies "Parameters"
+                    let object = sut.Analyze project |> findStruct "Parameters"
                     let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = "SingleParameters")
 
                     test <@ result.Parameters |> Seq.find (fun c -> c.Name = "A")
@@ -332,8 +316,7 @@ module RoslynAnalyzer_StructMethods_Tests =
                 (withProjects content, ("A", "ref"))
                 (withProjects content, ("B", "out"))]
                 (fun sut project (parameter, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let object = findStruct assemblies "Parameters"
+                    let object = sut.Analyze project |> findStruct "Parameters"
                     let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = "MultipleParameters")
 
                     test <@ result.Parameters |> Seq.find (fun c -> c.Name = parameter)
@@ -342,8 +325,7 @@ module RoslynAnalyzer_StructMethods_Tests =
             yield! testRepeat (withProjects content)
                 "should return no default value when struct method parameter has none"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let object = findStruct assemblies "Parameters"
+                    let object = sut.Analyze project |> findStruct "Parameters"
                     let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = "SingleParameters")
 
                     test <@ result.Parameters |> Seq.find (fun c -> c.Name = "A")
@@ -354,8 +336,7 @@ module RoslynAnalyzer_StructMethods_Tests =
                 (withProjects content, ("A", "32"))
                 (withProjects content, ("B", "16"))]
                 (fun sut project (parameter, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let object = findStruct assemblies "Parameters"
+                    let object = sut.Analyze project |> findStruct "Parameters"
                     let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = "MultipleParameters")
 
                     test <@ result.Parameters |> Seq.find (fun c -> c.Name = parameter)
@@ -391,8 +372,7 @@ module RoslynAnalyzer_StructMethods_Tests =
                 (withProjects content, ("Function", "Int32"))
                 (withProjects content, ("GenericFunction", "T"))]
                 (fun sut project (method, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let object = findStruct assemblies "ReturnType"
+                    let object = sut.Analyze project |> findStruct "ReturnType"
                     let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = method)
 
                     test <@ result.ReturnType |> normalizeSyntax = expected @>)

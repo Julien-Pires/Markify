@@ -50,9 +50,8 @@ module RoslynAnalyzer_Delegate_Tests =
                 (withProjects contents, "DeeperNestedType")]
                 (fun sut project name () ->
                     let assemblies = sut.Analyze project
-                    let result = filterTypes assemblies name
                             
-                    test <@ result |> Seq.length > 0 @>)
+                    test <@ assemblies.Types |> Seq.exists (fun c -> c.Identity.Name = name) @>)
             
             yield! testRepeatParameterized 
                 "should return delegate with valid fullname" [
@@ -61,7 +60,6 @@ module RoslynAnalyzer_Delegate_Tests =
                 (withProjects contents, "RootNamespace.ParentType.AnotherNestedType.DeeperNestedType")]
                 (fun sut project fullname () ->
                     let assemblies = sut.Analyze project
-                    let result = filterTypes assemblies fullname
 
-                    test <@ result |> Seq.length > 0 @>)
+                    test <@ assemblies.Types |> Seq.exists (doesNameMatch fullname) @>)
         ]

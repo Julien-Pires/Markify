@@ -31,12 +31,10 @@ module LanguageHelper =
             Add("ByVal", "out").
             Add("Void", "void")
 
-    let private findModifier modifier (map : Map<'a, 'a>) = 
-        match map.TryFind modifier with
+    let normalizeSyntax modifier = 
+        match visualBasicModifiers.TryFind modifier with
         | Some x -> x
         | None -> modifier
-
-    let normalizeSyntax modifier = findModifier modifier visualBasicModifiers
 
 [<AutoOpen>]
 module TypeHelper =
@@ -72,27 +70,27 @@ module TypeHelper =
     let findType assemblies name =
         assemblies.Types |> Seq.find (doesNameMatch name)
 
-    let findClass assemblies name : ClassDefinition = 
+    let findClass name assemblies : ClassDefinition = 
         match findType assemblies name with
         | Class x -> x
         | _ -> raise (System.InvalidCastException("Found type is not a class"))
 
-    let findStruct assemblies name : ClassDefinition = 
+    let findStruct name assemblies : ClassDefinition = 
         match findType assemblies name with
         | Struct x -> x
         | _ -> raise (System.InvalidCastException("Found type is not a struct"))
 
-    let findInterface assemblies name : ClassDefinition = 
+    let findInterface name assemblies : ClassDefinition = 
         match findType assemblies name with
         | Interface x -> x
         | _ -> raise (System.InvalidCastException("Found type is not an interface"))
 
-    let findDelegate assemblies name : DelegateDefinition = 
+    let findDelegate name assemblies : DelegateDefinition = 
         match findType assemblies name with
         | Delegate x -> x
         | _ -> raise (System.InvalidCastException("Found type is not a delegate"))
 
-    let findEnum assemblies name : EnumDefinition = 
+    let findEnum name assemblies : EnumDefinition = 
         match findType assemblies name with
         | Enum x -> x
         | _ -> raise (System.InvalidCastException("Found type is not an enum"))

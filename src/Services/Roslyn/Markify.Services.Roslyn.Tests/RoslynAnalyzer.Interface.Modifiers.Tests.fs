@@ -21,8 +21,7 @@ module RoslynAnalyzer_InterfaceModifiers_Tests =
             yield! testRepeat (withProjects contents)
                 "should return interface with no access modifier when type has none"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let result = findInterface assemblies "NoAccessModifierType"
+                    let result = sut.Analyze project |> findInterface "NoAccessModifierType"
                         
                     test <@ result.Identity.AccessModifiers |> Seq.isEmpty @>)
         ]
@@ -68,8 +67,7 @@ module RoslynAnalyzer_InterfaceModifiers_Tests =
                 (withProjects contents, ("ParentType.ProtectedInternalType", Set ["protected"; "internal"]))
                 (withProjects contents, ("ParentType.InternalProtectedType", Set ["protected"; "internal"]))]
                 (fun sut project (name, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let result = findInterface assemblies name
+                    let result = sut.Analyze project |> findInterface name
                         
                     test <@ result.Identity.AccessModifiers |> Seq.map normalizeSyntax
                                                             |> Set
@@ -91,8 +89,7 @@ module RoslynAnalyzer_InterfaceModifiers_Tests =
             yield! testRepeat (withProjects contents)
                 "should return interface with no modifier when type has none"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let result = findInterface assemblies "NoModifierType"
+                    let result = sut.Analyze project |> findInterface "NoModifierType"
                         
                     test <@ result.Identity.Modifiers |> Seq.isEmpty @>)
         ]
@@ -111,10 +108,9 @@ module RoslynAnalyzer_InterfaceModifiers_Tests =
         testList "Analyze/Interface" [
             yield! testRepeatParameterized
                 "should returns interface with modifiers when type has some" [
-                (withProjects contents, ("PartialType", Set ["partial"]))]
-                (fun sut project (name, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let result = findInterface assemblies name
+                (withProjects contents, Set ["partial"])]
+                (fun sut project expected () ->
+                    let result = sut.Analyze project |> findInterface "PartialType"
                         
                     test <@ result.Identity.Modifiers |> Seq.map normalizeSyntax
                                                       |> Set

@@ -21,8 +21,7 @@ module RoslynAnalyzer_InterfaceMethods_Tests =
             yield! testRepeat (withProjects content)
                 "should return no method when interface has none"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let result = findInterface assemblies "WithoutMethods"
+                    let result = sut.Analyze project |> findInterface "WithoutMethods"
 
                     test <@ result.Methods |> Seq.isEmpty @>)
         ]
@@ -57,8 +56,7 @@ module RoslynAnalyzer_InterfaceMethods_Tests =
                 (withProjects content, ("SingleMethods", 1))
                 (withProjects content, ("MultipleMethods", 2))]
                 (fun sut project (name, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let result = findInterface assemblies name
+                    let result = sut.Analyze project |> findInterface name
 
                     test <@ result.Methods |> Seq.length = expected @>)
 
@@ -67,8 +65,7 @@ module RoslynAnalyzer_InterfaceMethods_Tests =
                 (withProjects content, ("SingleMethods", "FirstMethod"))
                 (withProjects content, ("MultipleMethods", "SecondMethod"))]
                 (fun sut project (name, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let result = findInterface assemblies name
+                    let result = sut.Analyze project |> findInterface name
 
                     test <@ result.Methods |> Seq.exists (fun c -> c.Identity.Name = expected) @>)
         ]
@@ -96,8 +93,7 @@ module RoslynAnalyzer_InterfaceMethods_Tests =
                 (withProjects content, ("WithoutAccessModifier", Set ["public"]))
                 (withProjects content, ("PublicMethod", Set ["public"]))]
                 (fun sut project (method, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let object = findInterface assemblies "AccessModifiers"
+                    let object = sut.Analyze project |> findInterface "AccessModifiers"
                     let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = method)
 
                     test <@ result.Identity.AccessModifiers |> Seq.map normalizeSyntax 
@@ -124,8 +120,7 @@ module RoslynAnalyzer_InterfaceMethods_Tests =
             yield! testRepeat (withProjects content)
                 "should return no modifiers when interface method has none"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let object = findInterface assemblies "Modifiers"
+                    let object = sut.Analyze project |> findInterface "Modifiers"
                     let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = "WithoutModifier")
 
                     test <@ result.Identity.Modifiers |> Seq.isEmpty @>)
@@ -157,8 +152,7 @@ module RoslynAnalyzer_InterfaceMethods_Tests =
             yield! testRepeat (withProjects content)
                 "should return no generic parameters when interface method has none"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let object = findInterface assemblies "Generics"
+                    let object = sut.Analyze project |> findInterface "Generics"
                     let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = "WithoutGenerics")
 
                     test <@ result.Identity.Parameters |> Seq.isEmpty @>)
@@ -168,8 +162,7 @@ module RoslynAnalyzer_InterfaceMethods_Tests =
                 (withProjects content, ("SingleGeneric", 1))
                 (withProjects content, ("MultipleGeneric", 2))]
                 (fun sut project (method, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let object = findInterface assemblies "Generics"
+                    let object = sut.Analyze project |> findInterface "Generics"
                     let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = method)
 
                     test <@ result.Identity.Parameters |> Seq.length = expected @>)
@@ -177,8 +170,7 @@ module RoslynAnalyzer_InterfaceMethods_Tests =
             yield! testRepeat (withProjects content)
                 "should return no generic constraint when interface method generic parameter has none"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let object = findInterface assemblies "Generics"
+                    let object = sut.Analyze project |> findInterface "Generics"
                     let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = "SingleGeneric")
 
                     test <@ result.Identity.Parameters |> Seq.map (fun c -> c.Constraints)
@@ -189,8 +181,7 @@ module RoslynAnalyzer_InterfaceMethods_Tests =
                 (withProjects content, ("MultipleGeneric", "T", 1))
                 (withProjects content, ("MultipleGeneric", "Y", 2))]
                 (fun sut project (method, parameter, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let object = findInterface assemblies "Generics"
+                    let object = sut.Analyze project |> findInterface "Generics"
                     let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = method)
 
                     test <@ result.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
@@ -201,8 +192,7 @@ module RoslynAnalyzer_InterfaceMethods_Tests =
                 (withProjects content, ("MultipleGeneric", "T", "Int32"))
                 (withProjects content, ("MultipleGeneric", "Y", "class"))]
                 (fun sut project (method, parameter, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let object = findInterface assemblies "Generics"
+                    let object = sut.Analyze project |> findInterface "Generics"
                     let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = method)
 
                     test <@ result.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
@@ -236,8 +226,7 @@ module RoslynAnalyzer_InterfaceMethods_Tests =
             yield! testRepeat (withProjects content)
                 "should return no parameters when interface method has none"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let object = findInterface assemblies "Parameters"
+                    let object = sut.Analyze project |> findInterface "Parameters"
                     let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = "WithoutParameters")
 
                     test <@ result.Parameters |> Seq.isEmpty @>)
@@ -247,8 +236,7 @@ module RoslynAnalyzer_InterfaceMethods_Tests =
                 (withProjects content, ("SingleParameters", 1))
                 (withProjects content, ("MultipleParameters", 2))]
                 (fun sut project (method, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let object = findInterface assemblies "Parameters"
+                    let object = sut.Analyze project |> findInterface "Parameters"
                     let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = method)
 
                     test <@ result.Parameters |> Seq.length = expected @>)
@@ -258,8 +246,7 @@ module RoslynAnalyzer_InterfaceMethods_Tests =
                 (withProjects content, ("SingleParameters", "A"))
                 (withProjects content, ("MultipleParameters", "B"))]
                 (fun sut project (method, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let object = findInterface assemblies "Parameters"
+                    let object = sut.Analyze project |>  findInterface "Parameters"
                     let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = method)
 
                     test <@ result.Parameters |> Seq.exists (fun c -> c.Name = expected) @>)
@@ -270,8 +257,7 @@ module RoslynAnalyzer_InterfaceMethods_Tests =
                 (withProjects content, ("MultipleParameters", "B", "Single"))
                 (withProjects content, ("GenericParameters", "A", "T"))]
                 (fun sut project (method, parameter, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let object = findInterface assemblies "Parameters"
+                    let object = sut.Analyze project |> findInterface "Parameters"
                     let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = method)
 
                     test <@ result.Parameters |> Seq.find (fun c -> c.Name = parameter)
@@ -280,8 +266,7 @@ module RoslynAnalyzer_InterfaceMethods_Tests =
             yield! testRepeat (withProjects content)
                 "should return no modifier when interface method parameter has none"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let object = findInterface assemblies "Parameters"
+                    let object = sut.Analyze project |> findInterface "Parameters"
                     let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = "SingleParameters")
 
                     test <@ result.Parameters |> Seq.find (fun c -> c.Name = "A")
@@ -292,8 +277,7 @@ module RoslynAnalyzer_InterfaceMethods_Tests =
                 (withProjects content, ("A", "ref"))
                 (withProjects content, ("B", "out"))]
                 (fun sut project (parameter, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let object = findInterface assemblies "Parameters"
+                    let object = sut.Analyze project |> findInterface "Parameters"
                     let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = "MultipleParameters")
 
                     test <@ result.Parameters |> Seq.find (fun c -> c.Name = parameter)
@@ -302,8 +286,7 @@ module RoslynAnalyzer_InterfaceMethods_Tests =
             yield! testRepeat (withProjects content)
                 "should return no default value when interface method parameter has none"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let object = findInterface assemblies "Parameters"
+                    let object = sut.Analyze project |> findInterface "Parameters"
                     let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = "SingleParameters")
 
                     test <@ result.Parameters |> Seq.find (fun c -> c.Name = "A")
@@ -314,8 +297,7 @@ module RoslynAnalyzer_InterfaceMethods_Tests =
                 (withProjects content, ("A", "32"))
                 (withProjects content, ("B", "16"))]
                 (fun sut project (parameter, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let object = findInterface assemblies "Parameters"
+                    let object = sut.Analyze project |> findInterface "Parameters"
                     let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = "MultipleParameters")
 
                     test <@ result.Parameters |> Seq.find (fun c -> c.Name = parameter)
@@ -348,8 +330,7 @@ module RoslynAnalyzer_InterfaceMethods_Tests =
                 (withProjects content, ("Function", "Int32"))
                 (withProjects content, ("GenericFunction", "T"))]
                 (fun sut project (method, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let object = findInterface assemblies "ReturnType"
+                    let object = sut.Analyze project |> findInterface "ReturnType"
                     let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = method)
 
                     test <@ result.ReturnType |> normalizeSyntax = expected @>)

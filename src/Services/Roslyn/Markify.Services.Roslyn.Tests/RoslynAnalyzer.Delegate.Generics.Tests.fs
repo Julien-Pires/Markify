@@ -21,8 +21,7 @@ module RoslynAnalyzer_DelegateGenerics_Tests =
                 "should return no generic parameters when delegate has none" [
                 (withProjects noGeneric, "NoGenericDelegate")]
                 (fun sut project name () ->
-                    let assemblies = sut.Analyze project
-                    let result = findDelegate assemblies name
+                    let result = sut.Analyze project |> findDelegate name
 
                     test <@ result.Identity.Parameters |> Seq.isEmpty @>)
         ]
@@ -45,8 +44,7 @@ module RoslynAnalyzer_DelegateGenerics_Tests =
                 (withProjects generic, ("SingleGenericDelegate`1", 1))
                 (withProjects generic, ("MultipleGenericDelegate`2", 2))]
                 (fun sut project (name, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let result = findDelegate assemblies name 
+                    let result = sut.Analyze project |> findDelegate name
                         
                     test <@ result.Identity.Parameters |> Seq.length = expected @>)
 
@@ -56,8 +54,7 @@ module RoslynAnalyzer_DelegateGenerics_Tests =
                 (withProjects generic, ("MultipleGenericDelegate`2", "T"))
                 (withProjects generic, ("MultipleGenericDelegate`2", "Y"))]
                 (fun sut project (name, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let result = findDelegate assemblies name
+                    let result = sut.Analyze project |> findDelegate name
                         
                     test <@ result.Identity.Parameters |> Seq.exists (fun c -> c.Name = expected) @>)
         ]
@@ -81,8 +78,7 @@ module RoslynAnalyzer_DelegateGenerics_Tests =
                 "should return no modifiers when delegate generic parameter has none" [
                 (withProjects genericModifiers, ("SingleGenericDelegate`1", "T"))]
                 (fun sut project (name, parameter) () ->
-                    let assemblies = sut.Analyze project
-                    let object = findDelegate assemblies name
+                    let object = sut.Analyze project |> findDelegate name
                     let result = object.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
 
                     test <@ result.Modifier.IsNone @>)
@@ -92,8 +88,7 @@ module RoslynAnalyzer_DelegateGenerics_Tests =
                 (withProjects genericModifiers, ("CovariantGenericDelegate`1", "T", "in"))
                 (withProjects genericModifiers, ("ContravariantGenericDelegate`1", "T", "out"))]
                 (fun sut project (name, parameter, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let object = findDelegate assemblies name
+                    let object = sut.Analyze project |> findDelegate name
                     let result = object.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
                         
                     test <@ result.Modifier.Value |> normalizeSyntax = expected @>)
@@ -118,8 +113,7 @@ module RoslynAnalyzer_DelegateGenerics_Tests =
                 "should return no constraints when delegate generic parameter has none" [
                 (withProjects genericConstraints, ("SingleGenericDelegate`1", "T"))]
                 (fun sut project (name, parameter) () ->
-                    let assemblies = sut.Analyze project
-                    let object = findDelegate assemblies name
+                    let object = sut.Analyze project |> findDelegate name
                     let result = object.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
 
                     test <@ result.Constraints |> Seq.isEmpty @>)
@@ -129,8 +123,7 @@ module RoslynAnalyzer_DelegateGenerics_Tests =
                 (withProjects genericConstraints, ("GenericConstrainedDelegate`2", "T", Set ["struct"]))
                 (withProjects genericConstraints, ("GenericConstrainedDelegate`2", "Y", Set ["IEnumerable"; "class"; "new()"]))]
                 (fun sut project (name, parameter, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let object = findDelegate assemblies name
+                    let object = sut.Analyze project |> findDelegate name
                     let result = object.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
 
                     test <@ result.Constraints |> Seq.map normalizeSyntax

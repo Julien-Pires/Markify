@@ -21,8 +21,7 @@ module RoslynAnalyzer_EnumModifiers_Tests =
             yield! testRepeat (withProjects contents)
                 "should return enum with no access modifier when type has none"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let result = findEnum assemblies "NoAccessModifierType"
+                    let result = sut.Analyze project |> findEnum "NoAccessModifierType"
                         
                     test <@ result.Identity.AccessModifiers |> Seq.isEmpty @>)
         ]
@@ -68,8 +67,7 @@ module RoslynAnalyzer_EnumModifiers_Tests =
                 (withProjects contents, ("ParentType.ProtectedInternalType", Set ["protected"; "internal"]))
                 (withProjects contents, ("ParentType.InternalProtectedType", Set ["protected"; "internal"]))]
                 (fun sut project (name, expected) () ->
-                    let assemblies = sut.Analyze project
-                    let result = findEnum assemblies name
+                    let result = sut.Analyze project |> findEnum name
                         
                     test <@ result.Identity.AccessModifiers |> Seq.map normalizeSyntax
                                                             |> Set
@@ -91,8 +89,7 @@ module RoslynAnalyzer_EnumModifiers_Tests =
             yield! testRepeat (withProjects contents)
                 "should return enum with no modifier when type has none"
                 (fun sut project () ->
-                    let assemblies = sut.Analyze project
-                    let result = findEnum assemblies "NoModifierType"
+                    let result = sut.Analyze project |> findEnum "NoModifierType"
                         
                     test <@ result.Identity.Modifiers |> Seq.isEmpty @>)
         ]

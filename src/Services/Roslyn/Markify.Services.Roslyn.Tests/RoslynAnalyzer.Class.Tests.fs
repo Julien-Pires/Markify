@@ -49,18 +49,16 @@ module RoslynAnalyzer_Class_Tests =
                 (withProjects contents, "DeeperNestedType")]
                 (fun sut project name () ->
                     let assemblies = sut.Analyze project
-                    let result = filterTypes assemblies name
                             
-                    test <@ result |> Seq.length > 0 @>)
+                    test <@ assemblies.Types |> Seq.exists (fun c -> c.Identity.Name = name) @>)
             
-            yield! testRepeatParameterized 
+            yield! testRepeatParameterized
                 "should return class with valid fullname" [
                 (withProjects contents, "RootNamespace.RootType")
                 (withProjects contents, "RootNamespace.RootType.NestedType")
                 (withProjects contents, "RootNamespace.RootType.NestedType.DeeperNestedType")]
                 (fun sut project fullname () ->
                     let assemblies = sut.Analyze project
-                    let result = filterTypes assemblies fullname
 
-                    test <@ result |> Seq.length > 0 @>)
+                    test <@ assemblies.Types |> Seq.exists (doesNameMatch fullname) @>)
         ]
