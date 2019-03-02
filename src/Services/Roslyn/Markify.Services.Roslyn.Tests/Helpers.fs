@@ -59,14 +59,6 @@ module TypeHelper =
             | false -> definition.Identity.Name
         typeName.EndsWith(name)
 
-    let inline findByName name (items : ^a seq) =
-        items |> Seq.filter(fun c -> (^a: (member Name : string) c) = name)
-
-    let filterTypes assemblies name =
-        assemblies.Types
-        |> Seq.filter (doesNameMatch name)
-        |> Seq.toList
-
     let findType assemblies name =
         assemblies.Types |> Seq.find (doesNameMatch name)
 
@@ -94,19 +86,3 @@ module TypeHelper =
         match findType assemblies name with
         | Enum x -> x
         | _ -> raise (System.InvalidCastException("Found type is not an enum"))
-
-    let getProperties = function
-        | Class c | Struct c | Interface c -> c.Properties
-        | _ -> Seq.empty
-
-    let getProperty name definitions =
-        definitions
-        |> Seq.map getProperties
-        |> Seq.collect id
-        |> findByName name
-
-    let getGenericParameter name (definitions : TypeDefinition seq) =
-        definitions
-        |> Seq.map (fun c -> c.Identity.Parameters)
-        |> Seq.collect id
-        |> findByName name
