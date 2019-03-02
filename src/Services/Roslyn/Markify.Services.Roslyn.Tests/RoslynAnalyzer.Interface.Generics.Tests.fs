@@ -119,7 +119,7 @@ module RoslynAnalyzer_InterfaceGenerics_Tests =
                 "should return no constraints when interface generic parameter has none"
                 (fun sut project () ->
                     let object = sut.Analyze project |> findInterface "SingleGenericInterface`1" 
-                    let result = object.Identity.Parameters |> Seq.find (fun c -> c.Name = para"T"meter)
+                    let result = object.Identity.Parameters |> Seq.find (fun c -> c.Name = "T")
 
                     test <@ result.Constraints |> Seq.isEmpty @>)
 
