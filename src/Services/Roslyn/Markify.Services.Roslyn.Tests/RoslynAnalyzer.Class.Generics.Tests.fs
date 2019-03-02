@@ -110,10 +110,10 @@ module RoslynAnalyzer_ClassGenerics_Tests =
 
             yield! testRepeatParameterized 
                 "should return constraints when class generic parameter has some" [
-                (withProjects genericConstraints, ("GenericConstrainedClass`2", "T", Set ["struct"]))
-                (withProjects genericConstraints, ("GenericConstrainedClass`2", "Y", Set ["IEnumerable"; "class"; "new()"]))]
-                (fun sut project (name, parameter, expected) () ->
-                    let object = sut.Analyze project |> findClass name
+                (withProjects genericConstraints, ("T", Set ["struct"]))
+                (withProjects genericConstraints, ("Y", Set ["IEnumerable"; "class"; "new()"]))]
+                (fun sut project (parameter, expected) () ->
+                    let object = sut.Analyze project |> findClass "GenericConstrainedClass`2"
                     let result = object.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
 
                     test <@ result.Constraints |> Seq.map normalizeSyntax

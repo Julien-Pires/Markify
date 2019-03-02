@@ -128,10 +128,10 @@ module RoslynAnalyzer_InterfaceGenerics_Tests =
 
             yield! testRepeatParameterized 
                 "should return constraints when interface generic parameter has some" [
-                (withProjects genericConstraints, ("GenericConstrainedInterface`2", "T", Set ["struct"]))
-                (withProjects genericConstraints, ("GenericConstrainedInterface`2", "Y", Set ["IEnumerable"; "class"; "new()"]))]
-                (fun sut project (name, parameter, expected) () ->
-                    let object = sut.Analyze project |> findInterface name 
+                (withProjects genericConstraints, ("T", Set ["struct"]))
+                (withProjects genericConstraints, ("Y", Set ["IEnumerable"; "class"; "new()"]))]
+                (fun sut project (parameter, expected) () ->
+                    let object = sut.Analyze project |> findInterface "GenericConstrainedInterface`2" 
                     let result = object.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
 
                     test <@ result.Constraints |> Seq.map normalizeSyntax

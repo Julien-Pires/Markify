@@ -18,11 +18,10 @@ module RoslynAnalyzer_StructGenerics_Tests =
             "])
         ]
         testList "Analyze/Struct" [
-            yield! testRepeatParameterized 
+            yield! testRepeat (withProjects noGeneric)
                 "should return no generic parameters when struct has none"
-                [(withProjects noGeneric, "NoGenericStruct")]
-                (fun sut project name () ->
-                    let result = sut.Analyze project |> findStruct name
+                (fun sut project () ->
+                    let result = sut.Analyze project |> findStruct "NoGenericStruct"
 
                     test <@ result.Identity.Parameters |> Seq.isEmpty @>)
         ]
@@ -74,12 +73,11 @@ module RoslynAnalyzer_StructGenerics_Tests =
             "])
         ]
         testList "Analyze/Struct" [
-            yield! testRepeatParameterized 
-                "should return no modifiers when struct generic parameter has none" [
-                (withProjects genericModifiers, ("SingleGenericStruct`1", "T"))]
-                (fun sut project (name, parameter) () ->
-                    let object = sut.Analyze project |> findStruct name
-                    let result = object.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
+            yield! testRepeat (withProjects genericModifiers) 
+                "should return no modifiers when struct generic parameter has none"
+                (fun sut project () ->
+                    let object = sut.Analyze project |> findStruct "SingleGenericStruct`1"
+                    let result = object.Identity.Parameters |> Seq.find (fun c -> c.Name = "T")
 
                     test <@ result.Modifier.IsNone @>)
         ]
@@ -103,19 +101,19 @@ module RoslynAnalyzer_StructGenerics_Tests =
         testList "Analyze/Struct" [
             yield! testRepeatParameterized 
                 "should return no constraints when struct generic parameter has none" [
-                (withProjects genericConstraints, ("SingleGenericStruct`1", "T"))]
-                (fun sut project (name, parameter) () ->
-                    let object = sut.Analyze project |> findStruct name
+                (withProjects genericConstraints, "T")]
+                (fun sut project parameter () ->
+                    let object = sut.Analyze project |> findStruct "SingleGenericStruct`1"
                     let result = object.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
 
                     test <@ result.Constraints |> Seq.isEmpty @>)
 
             yield! testRepeatParameterized 
                 "should return constraints when struct generic parameter has some" [
-                (withProjects genericConstraints, ("GenericConstrainedStruct`2", "T", Set ["struct"]))
-                (withProjects genericConstraints, ("GenericConstrainedStruct`2", "Y", Set ["IEnumerable"; "class"; "new()"]))]
-                (fun sut project (name, parameter, expected) () ->
-                    let object = sut.Analyze project |> findStruct name
+                (withProjects genericConstraints, ("T", Set ["struct"]))
+                (withProjects genericConstraints, ("Y", Set ["IEnumerable"; "class"; "new()"]))]
+                (fun sut project (parameter, expected) () ->
+                    let object = sut.Analyze project |> findStruct "GenericConstrainedStruct`2"
                     let result = object.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
 
                     test <@ result.Constraints |> Seq.map normalizeSyntax

@@ -113,9 +113,9 @@ module RoslynAnalyzer_InterfaceProperties_Tests =
 
             yield! testRepeatParameterized
                 "should return correct access modifier when interface property has some" [
-                (withProjects content, ("WithAccessModifiers", "PublicProperty", Set ["public"]))]
-                (fun sut project (name, property, expected) () ->
-                    let object = sut.Analyze project |> findInterface name
+                (withProjects content, ("PublicProperty", Set ["public"]))]
+                (fun sut project (property, expected) () ->
+                    let object = sut.Analyze project |> findInterface "WithAccessModifiers"
                     let result = object.Properties |> Seq.find (fun c -> c.Name = property)
                         
                     test <@ result.AccessModifiers |> Seq.map normalizeSyntax 
@@ -179,29 +179,29 @@ module RoslynAnalyzer_InterfaceProperties_Tests =
         testList "Analyze/Interface" [
             yield! testRepeatParameterized
                 "should return no write accessor when interface property is read-only" [
-                (withProjects content, ("WithoutWriteAccessor", "ReadOnly"))]
-                (fun sut project (name, property) () ->
-                    let result = sut.Analyze project |> findInterface name
+                (withProjects content, "ReadOnly")]
+                (fun sut project property () ->
+                    let result = sut.Analyze project |> findInterface "WithoutWriteAccessor"
                     
                     test <@ result.Properties |> Seq.find (fun c -> c.Name = property)
                                               |> fun c -> c.IsWrite.IsNone @>)
 
             yield! testRepeatParameterized
                 "should return write accessor when interface property has one" [
-                (withProjects content, ("WithWriteAccessor", "Write"))
-                (withProjects content, ("WithWriteAccessor", "WriteOnly"))]
-                (fun sut project (name, property) () ->
-                    let result = sut.Analyze project |> findInterface name
+                (withProjects content, "Write")
+                (withProjects content, "WriteOnly")]
+                (fun sut project property () ->
+                    let result = sut.Analyze project |> findInterface "WithWriteAccessor"
                     
                     test <@ result.Properties |> Seq.find (fun c -> c.Name = property)
                                               |> fun c -> c.IsWrite.IsSome @>)
 
             yield! testRepeatParameterized
                 "should return correct write accessor access modifier when interface property has some"[
-                (withProjects content, ("WithWriteAccessor", "Auto", Set ["public"]))
-                (withProjects content, ("WithWriteAccessor", "Write", Set ["public"]))]
-                (fun sut project (name, property, expected) () ->
-                    let object = sut.Analyze project |> findInterface name
+                (withProjects content, ("Auto", Set ["public"]))
+                (withProjects content, ("Write", Set ["public"]))]
+                (fun sut project (property, expected) () ->
+                    let object = sut.Analyze project |> findInterface "WithWriteAccessor"
                     let result = object.Properties |> Seq.find (fun c -> c.Name = property)
                     
                     test <@ result.IsWrite.Value.AccessModifiers |> Seq.map normalizeSyntax
@@ -248,20 +248,20 @@ module RoslynAnalyzer_InterfaceProperties_Tests =
 
             yield! testRepeatParameterized
                 "should return read accessor when interface property has one" [
-                (withProjects content, ("WithReadAccessor", "Auto"))
-                (withProjects content, ("WithReadAccessor", "ReadOnly"))]
-                (fun sut project (name, property) () ->
-                    let result = sut.Analyze project |> findInterface name
+                (withProjects content, "Auto")
+                (withProjects content, "ReadOnly")]
+                (fun sut project property () ->
+                    let result = sut.Analyze project |> findInterface "WithReadAccessor"
                     
                     test <@ result.Properties |> Seq.find (fun c -> c.Name = property)
                                               |> fun c -> c.IsRead.IsSome @>)
 
             yield! testRepeatParameterized
                 "should return correct read accessor access modifier when interface property has some"[
-                (withProjects content, ("WithReadAccessor", "Auto", Set ["public"]))
-                (withProjects content, ("WithReadAccessor", "Read", Set ["public"]))]
-                (fun sut project (name, property, expected) () ->
-                    let object = sut.Analyze project |> findInterface name
+                (withProjects content, ("Auto", Set ["public"]))
+                (withProjects content, ("Read", Set ["public"]))]
+                (fun sut project (property, expected) () ->
+                    let object = sut.Analyze project |> findInterface "WithReadAccessor"
                     let result = object.Properties |> Seq.find (fun c -> c.Name = property)
                     
                     test <@ result.IsRead.Value.AccessModifiers |> Seq.map normalizeSyntax

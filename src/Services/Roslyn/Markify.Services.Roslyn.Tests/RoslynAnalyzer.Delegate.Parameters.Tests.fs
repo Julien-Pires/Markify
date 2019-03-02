@@ -105,10 +105,10 @@ module RoslynAnalyzer_DelegateParameters_Tests =
         testList "Analyze/Delegate" [
             yield! testRepeatParameterized
                 "should return modifier when delegate parameter has one" [
-                ((withProjects content), ("WithParametersModifiers", "A", "ref"))
-                ((withProjects content), ("WithParametersModifiers", "B", "out"))]
-                (fun sut project (name, parameter, expected) () ->
-                    let result = sut.Analyze project |> findDelegate name
+                ((withProjects content), ("A", "ref"))
+                ((withProjects content), ("B", "out"))]
+                (fun sut project (parameter, expected) () ->
+                    let result = sut.Analyze project |> findDelegate "WithParametersModifiers"
 
                     test <@ result.Parameters |> Seq.find (fun c -> c.Name = parameter)
                                               |> fun c -> normalizeSyntax c.Modifier.Value = expected @>)

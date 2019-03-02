@@ -99,20 +99,20 @@ module RoslynAnalyzer_EnumValues_Tests =
         testList "Analyze/Enum" [
             yield! testRepeatParameterized
                 "should return no underlying value when enum values has none"[
-                (withProjects content, ("WithoutUnderlyingValues", "A"))
-                (withProjects content, ("WithoutUnderlyingValues", "B"))]
-                (fun sut project (name, value) () ->
-                    let result = sut.Analyze project |> findEnum name
+                (withProjects content, "A")
+                (withProjects content, "B")]
+                (fun sut project value () ->
+                    let result = sut.Analyze project |> findEnum "WithoutUnderlyingValues"
                     
                     test <@ result.Values |> Seq.find (fun c -> c.Name = value)
                                           |> fun c -> c.Value.IsNone @>)
 
             yield! testRepeatParameterized
                 "should return underlying value when enum values has one"[
-                (withProjects content, ("WithUnderlyingValues", "A", "0"))
-                (withProjects content, ("WithUnderlyingValues", "B", "1"))]
-                (fun sut project (name, value, expected) () ->
-                    let result = sut.Analyze project |> findEnum name
+                (withProjects content, ("A", "0"))
+                (withProjects content, ("B", "1"))]
+                (fun sut project (value, expected) () ->
+                    let result = sut.Analyze project |> findEnum "WithUnderlyingValues"
                     
                     test <@ result.Values |> Seq.find (fun c -> c.Name = value)
                                           |> fun c -> c.Value = Some expected @>)

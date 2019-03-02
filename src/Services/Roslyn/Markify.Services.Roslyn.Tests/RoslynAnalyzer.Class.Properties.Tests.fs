@@ -121,13 +121,13 @@ module RoslynAnalyzer_ClassProperties_Tests =
 
             yield! testRepeatParameterized
                 "should return correct access modifier when class property has some" [
-                (withProjects content, ("WithAccessModifiers", "AutoProperty", Set ["public"]))
-                (withProjects content, ("WithAccessModifiers", "InternalProperty", Set ["internal"]))
-                (withProjects content, ("WithAccessModifiers", "PrivateProperty", Set ["private"]))
-                (withProjects content, ("WithAccessModifiers", "ProtectedProperty", Set ["protected"]))
-                (withProjects content, ("WithAccessModifiers", "ProtectedInternalProperty", Set ["protected"; "internal"]))]
-                (fun sut project (name, property, expected) () ->
-                    let object = sut.Analyze project |> findClass name
+                (withProjects content, ("AutoProperty", Set ["public"]))
+                (withProjects content, ("InternalProperty", Set ["internal"]))
+                (withProjects content, ("PrivateProperty", Set ["private"]))
+                (withProjects content, ("ProtectedProperty", Set ["protected"]))
+                (withProjects content, ("ProtectedInternalProperty", Set ["protected"; "internal"]))]
+                (fun sut project (property, expected) () ->
+                    let object = sut.Analyze project |> findClass "WithAccessModifiers"
                     let result = object.Properties |> Seq.find (fun c -> c.Name = property)
                         
                     test <@ result.AccessModifiers |> Seq.map normalizeSyntax 
@@ -173,12 +173,12 @@ module RoslynAnalyzer_ClassProperties_Tests =
 
             yield! testRepeatParameterized
                 "should return correct modifier when class property has some" [
-                (withProjects content, ("WithModifiers", "StaticProperty", Set ["static"]))
-                (withProjects content, ("WithModifiers", "VirtualProperty", Set ["virtual"]))
-                (withProjects content, ("WithModifiers", "SealedProperty", Set ["sealed"]))
-                (withProjects content, ("WithModifiers", "SealedOverrideProperty", Set ["sealed"; "override"]))]
-                (fun sut project (name, property, expected) () ->
-                    let object = sut.Analyze project |> findClass name
+                (withProjects content, ("StaticProperty", Set ["static"]))
+                (withProjects content, ("VirtualProperty", Set ["virtual"]))
+                (withProjects content, ("SealedProperty", Set ["sealed"]))
+                (withProjects content, ("SealedOverrideProperty", Set ["sealed"; "override"]))]
+                (fun sut project (property, expected) () ->
+                    let object = sut.Analyze project |> findClass "WithModifiers"
                     let result = object.Properties |> Seq.find (fun c -> c.Name = property)
                         
                     test <@ result.Modifiers |> Seq.map normalizeSyntax 
@@ -290,39 +290,39 @@ module RoslynAnalyzer_ClassProperties_Tests =
         testList "Analyze/Class" [
             yield! testRepeatParameterized
                 "should return no write accessor when class property is read-only" [
-                (withProjects content, ("WithoutWriteAccessor", "ReadOnly"))
-                (withProjects content, ("WithoutWriteAccessor", "ReadOnlyWithDefaultValue"))
-                (withProjects cSharpContent, ("WithoutWriteAccessor", "ReadOnlyWithExpressionBody"))]
-                (fun sut project (name, property) () ->
-                    let result = sut.Analyze project |> findClass name
+                (withProjects content, "ReadOnly")
+                (withProjects content, "ReadOnlyWithDefaultValue")
+                (withProjects cSharpContent, "ReadOnlyWithExpressionBody")]
+                (fun sut project property () ->
+                    let result = sut.Analyze project |> findClass "WithoutWriteAccessor"
                     
                     test <@ result.Properties |> Seq.find (fun c -> c.Name = property)
                                               |> fun c -> c.IsWrite.IsNone @>)
 
             yield! testRepeatParameterized
                 "should return write accessor when class property has one" [
-                (withProjects content, ("WithWriteAccessor", "Write"))
-                (withProjects content, ("WithWriteAccessor", "WriteOnly"))]
-                (fun sut project (name, property) () ->
-                    let result = sut.Analyze project |> findClass name
+                (withProjects content, "Write")
+                (withProjects content, "WriteOnly")]
+                (fun sut project property () ->
+                    let result = sut.Analyze project |> findClass "WithWriteAccessor"
                     
                     test <@ result.Properties |> Seq.find (fun c -> c.Name = property)
                                               |> fun c -> c.IsWrite.IsSome @>)
 
             yield! testRepeatParameterized
                 "should return correct write accessor access modifier when class property has some"[
-                (withProjects content, ("WithWriteAccessor", "Auto", Set ["private"]))
-                (withProjects content, ("WithWriteAccessor", "Write", Set ["public"]))
-                (withProjects content, ("WithWriteAccessor", "PrivateProperty", Set ["private"]))
-                (withProjects content, ("WithWriteAccessor", "PrivateWriteOnly", Set ["private"]))
-                (withProjects content, ("WithWriteAccessor", "InternalProperty", Set ["internal"]))
-                (withProjects content, ("WithWriteAccessor", "InternalWriteOnly", Set ["internal"]))
-                (withProjects content, ("WithWriteAccessor", "ProtectedProperty", Set ["protected"]))
-                (withProjects content, ("WithWriteAccessor", "ProtectedWriteOnly", Set ["protected"]))
-                (withProjects content, ("WithWriteAccessor", "ProtectedInternalProperty", Set ["protected"; "internal"]))
-                (withProjects content, ("WithWriteAccessor", "ProtectedInternalWriteOnly", Set ["protected"; "internal"]))]
-                (fun sut project (name, property, expected) () ->
-                    let object = sut.Analyze project |> findClass name
+                (withProjects content, ("Auto", Set ["private"]))
+                (withProjects content, ("Write", Set ["public"]))
+                (withProjects content, ("PrivateProperty", Set ["private"]))
+                (withProjects content, ("PrivateWriteOnly", Set ["private"]))
+                (withProjects content, ("InternalProperty", Set ["internal"]))
+                (withProjects content, ("InternalWriteOnly", Set ["internal"]))
+                (withProjects content, ("ProtectedProperty", Set ["protected"]))
+                (withProjects content, ("ProtectedWriteOnly", Set ["protected"]))
+                (withProjects content, ("ProtectedInternalProperty", Set ["protected"; "internal"]))
+                (withProjects content, ("ProtectedInternalWriteOnly", Set ["protected"; "internal"]))]
+                (fun sut project (property, expected) () ->
+                    let object = sut.Analyze project |> findClass "WithWriteAccessor"
                     let result = object.Properties |> Seq.find (fun c -> c.Name = property)
                     
                     test <@ result.IsWrite.Value.AccessModifiers |> Seq.map normalizeSyntax
@@ -407,30 +407,30 @@ module RoslynAnalyzer_ClassProperties_Tests =
 
             yield! testRepeatParameterized
                 "should return read accessor when class property has one" [
-                (withProjects content, ("WithReadAccessor", "Auto"))
-                (withProjects content, ("WithReadAccessor", "ReadOnly"))
-                (withProjects content, ("WithReadAccessor", "ReadOnlyWithDefaultValue"))
-                (withProjects cSharpContent, ("WithReadAccessor", "ReadOnlyWithExpressionBody"))]
-                (fun sut project (name, property) () ->
-                    let result = sut.Analyze project |> findClass name
+                (withProjects content, "Auto")
+                (withProjects content, "ReadOnly")
+                (withProjects content, "ReadOnlyWithDefaultValue")
+                (withProjects cSharpContent, "ReadOnlyWithExpressionBody")]
+                (fun sut project property () ->
+                    let result = sut.Analyze project |> findClass "WithReadAccessor"
                     
                     test <@ result.Properties |> Seq.find (fun c -> c.Name = property)
                                               |> fun c -> c.IsRead.IsSome @>)
 
             yield! testRepeatParameterized
                 "should return correct read accessor access modifier when class property has some"[
-                (withProjects content, ("WithReadAccessor", "Auto", Set ["private"]))
-                (withProjects content, ("WithReadAccessor", "Read", Set ["public"]))
-                (withProjects content, ("WithReadAccessor", "PrivateProperty", Set ["private"]))
-                (withProjects content, ("WithReadAccessor", "PrivateReadOnly", Set ["private"]))
-                (withProjects content, ("WithReadAccessor", "InternalProperty", Set ["internal"]))
-                (withProjects content, ("WithReadAccessor", "InternalReadOnly", Set ["internal"]))
-                (withProjects content, ("WithReadAccessor", "ProtectedProperty", Set ["protected"]))
-                (withProjects content, ("WithReadAccessor", "ProtectedReadOnly", Set ["protected"]))
-                (withProjects content, ("WithReadAccessor", "ProtectedInternalProperty", Set ["protected"; "internal"]))
-                (withProjects content, ("WithReadAccessor", "ProtectedInternalReadOnly", Set ["protected"; "internal"]))]
-                (fun sut project (name, property, expected) () ->
-                    let object = sut.Analyze project |> findClass name
+                (withProjects content, ("Auto", Set ["private"]))
+                (withProjects content, ("Read", Set ["public"]))
+                (withProjects content, ("PrivateProperty", Set ["private"]))
+                (withProjects content, ("PrivateReadOnly", Set ["private"]))
+                (withProjects content, ("InternalProperty", Set ["internal"]))
+                (withProjects content, ("InternalReadOnly", Set ["internal"]))
+                (withProjects content, ("ProtectedProperty", Set ["protected"]))
+                (withProjects content, ("ProtectedReadOnly", Set ["protected"]))
+                (withProjects content, ("ProtectedInternalProperty", Set ["protected"; "internal"]))
+                (withProjects content, ("ProtectedInternalReadOnly", Set ["protected"; "internal"]))]
+                (fun sut project (property, expected) () ->
+                    let object = sut.Analyze project |> findClass "WithReadAccessor"
                     let result = object.Properties |> Seq.find (fun c -> c.Name = property)
                     
                     test <@ result.IsRead.Value.AccessModifiers |> Seq.map normalizeSyntax
