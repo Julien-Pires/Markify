@@ -4,6 +4,7 @@ open Expecto
 open Fixtures
 open Swensen.Unquote
 open Markify.Domain.Compiler
+open Markify.Tests.Extension
 
 module RoslynAnalyzer_Interface_Tests =
     [<Tests>]

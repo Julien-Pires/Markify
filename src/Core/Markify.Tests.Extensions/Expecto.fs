@@ -1,7 +1,8 @@
-﻿namespace Markify.Services.Roslyn.Tests
+﻿namespace Markify.Tests.Extension
 
 open Expecto
 
+[<AutoOpen>]
 module Expecto =
     let testRepeat repeater name test =
         repeater test
