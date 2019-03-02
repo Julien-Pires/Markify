@@ -31,5 +31,5 @@ module RoslynAnalyzer_StructInheritance_Tests =
                 (fun sut project (name, expected) () ->
                     let result = sut.Analyze project |> findStruct name
                         
-                    test <@ Set result.Identity.BaseTypes |> Set.isSubset expected @>)
+                    test <@ Set result.Identity.BaseTypes = expected @>)
         ]

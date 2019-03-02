@@ -70,9 +70,9 @@ module RoslynAnalyzer_EnumModifiers_Tests =
                 (fun sut project (name, expected) () ->
                     let result = sut.Analyze project |> findEnum name
                         
-                    test <@ result.Identity.AccessModifiers |> Seq.map normalizeSyntax
-                                                            |> Set
-                                                            |> Set.isSubset expected @>)
+                    test <@ result.Identity.AccessModifiers |> Set
+                                                            |> Set.map normalizeSyntax
+                                                            |> (=) expected @>)
         ]
 
     [<Tests>]

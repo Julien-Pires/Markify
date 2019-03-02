@@ -119,9 +119,9 @@ module RoslynAnalyzer_ClassEvents_Tests =
                     let object = sut.Analyze project |> findClass "AccessModifier"
                     let result = object.Events |> Seq.find (fun c -> c.Name = event)
 
-                    test <@ result.AccessModifiers |> Seq.map normalizeSyntax 
-                                                   |> Set
-                                                   |> Set.isSubset expected @>)
+                    test <@ result.AccessModifiers |> Set
+                                                   |> Set.map normalizeSyntax
+                                                   |> (=) expected @>)
         ]
 
     [<Tests>]
@@ -169,7 +169,7 @@ module RoslynAnalyzer_ClassEvents_Tests =
                     let object = sut.Analyze project |> findClass "Modifiers"
                     let result = object.Events |> Seq.find (fun c -> c.Name = event)
 
-                    test <@ result.Modifiers |> Seq.map normalizeSyntax 
-                                             |> Set
-                                             |> Set.isSubset expected @>)
+                    test <@ result.Modifiers |> Set
+                                             |> Set.map normalizeSyntax 
+                                             |> (=) expected @>)
         ]

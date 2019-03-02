@@ -97,9 +97,9 @@ module RoslynAnalyzer_InterfaceMethods_Tests =
                     let object = sut.Analyze project |> findInterface "AccessModifiers"
                     let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = method)
 
-                    test <@ result.Identity.AccessModifiers |> Seq.map normalizeSyntax 
-                                                            |> Set
-                                                            |> Set.isSubset expected @>)
+                    test <@ result.Identity.AccessModifiers |> Set
+                                                            |> Set.map normalizeSyntax 
+                                                            |> (=) expected @>)
         ]
 
     [<Tests>]

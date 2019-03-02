@@ -118,9 +118,9 @@ module RoslynAnalyzer_InterfaceProperties_Tests =
                     let object = sut.Analyze project |> findInterface "WithAccessModifiers"
                     let result = object.Properties |> Seq.find (fun c -> c.Name = "PublicProperty")
                         
-                    test <@ result.AccessModifiers |> Seq.map normalizeSyntax 
-                                                   |> Set 
-                                                   |> Set.isSubset (Set ["public"]) @>)
+                    test <@ result.AccessModifiers |> Set
+                                                   |> Set.map normalizeSyntax  
+                                                   |> (=) (Set ["public"]) @>)
         ]
 
     [<Tests>]
@@ -204,8 +204,9 @@ module RoslynAnalyzer_InterfaceProperties_Tests =
                     let object = sut.Analyze project |> findInterface "WithWriteAccessor"
                     let result = object.Properties |> Seq.find (fun c -> c.Name = property)
                     
-                    test <@ result.IsWrite.Value.AccessModifiers |> Seq.map normalizeSyntax
-                                                                 |> fun c -> Set c |> Set.isSubset expected @>)
+                    test <@ result.IsWrite.Value.AccessModifiers |> Set
+                                                                 |> Set.map normalizeSyntax 
+                                                                 |> (=) expected @>)
         ]
     
     [<Tests>]
@@ -264,6 +265,7 @@ module RoslynAnalyzer_InterfaceProperties_Tests =
                     let object = sut.Analyze project |> findInterface "WithReadAccessor"
                     let result = object.Properties |> Seq.find (fun c -> c.Name = property)
                     
-                    test <@ result.IsRead.Value.AccessModifiers |> Seq.map normalizeSyntax
-                                                                |> fun c -> Set c |> Set.isSubset expected @>)
+                    test <@ result.IsRead.Value.AccessModifiers |> Set
+                                                                |> Set.map normalizeSyntax 
+                                                                |> (=) expected @>)
         ]

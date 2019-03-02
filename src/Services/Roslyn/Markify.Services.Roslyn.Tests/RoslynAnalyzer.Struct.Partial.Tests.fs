@@ -40,9 +40,9 @@ module RoslynAnalyzer_StructPartial_Tests =
                 (fun sut project () -> 
                     let result = sut.Analyze project |> findStruct "PartialType"
 
-                    test <@ result.Identity.Modifiers |> Seq.map normalizeSyntax
-                                                      |> Set
-                                                      |> Set.isSubset (Set ["partial"]) @>)
+                    test <@ result.Identity.Modifiers |> Set
+                                                      |> Set.map normalizeSyntax
+                                                      |> (=) (Set ["partial"]) @>)
         ]
 
     [<Tests>]

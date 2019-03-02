@@ -116,7 +116,7 @@ module RoslynAnalyzer_StructGenerics_Tests =
                     let object = sut.Analyze project |> findStruct "GenericConstrainedStruct`2"
                     let result = object.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
 
-                    test <@ result.Constraints |> Seq.map normalizeSyntax
-                                               |> Set
-                                               |> Set.isSubset expected @>)
+                    test <@ result.Constraints |> Set
+                                               |> Set.map normalizeSyntax
+                                               |> (=) expected @>)
         ]

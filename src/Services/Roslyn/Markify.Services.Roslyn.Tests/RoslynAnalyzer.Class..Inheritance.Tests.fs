@@ -42,5 +42,6 @@ module RoslynAnalyzer_ClassInheritance_Tests =
                 (fun sut project (name, expected) () ->
                     let result = sut.Analyze project |> findClass name
                         
-                    test <@ result.Identity.BaseTypes |> Set |> Set.isSubset expected @>)
+                    test <@ result.Identity.BaseTypes |> Set 
+                                                      |> (=) expected @>)
         ]

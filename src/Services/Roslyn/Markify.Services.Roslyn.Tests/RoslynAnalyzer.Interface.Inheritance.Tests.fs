@@ -31,5 +31,5 @@ module RoslynAnalyzer_InterfaceInheritance_Tests =
                 (fun sut project (name, expected) () ->
                     let result = sut.Analyze project |> findInterface name
                         
-                    test <@ Set result.Identity.BaseTypes |> Set.isSubset expected @>)
+                    test <@ Set result.Identity.BaseTypes = expected @>)
         ]

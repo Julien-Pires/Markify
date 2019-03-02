@@ -52,12 +52,11 @@ module TypeHelper =
         | _ -> identity.Name
 
     let doesNameMatch name (definition : TypeDefinition) =
-        let isFullName = Regex.Match(name, "\w+(\.\w+)+").Success
         let typeName =
-            match isFullName with
+            match Regex.Match(name, "\w+(\.\w+)+").Success with
             | true -> getFullname definition.Identity
             | false -> definition.Identity.Name
-        typeName.EndsWith(name)
+        typeName = name
 
     let findType assemblies name =
         assemblies.Types |> Seq.find (doesNameMatch name)

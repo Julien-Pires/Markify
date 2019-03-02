@@ -113,9 +113,9 @@ module RoslynAnalyzer_StructEvents_Tests =
                     let object = sut.Analyze project |> findStruct "AccessModifier"
                     let result = object.Events |> Seq.find (fun c -> c.Name = event)
 
-                    test <@ result.AccessModifiers |> Seq.map normalizeSyntax 
-                                                   |> Set
-                                                   |> Set.isSubset expected @>)
+                    test <@ result.AccessModifiers |> Set
+                                                   |> Set.map normalizeSyntax 
+                                                   |> (=) expected @>)
         ]
 
     [<Tests>]
@@ -150,7 +150,7 @@ module RoslynAnalyzer_StructEvents_Tests =
                     let object = sut.Analyze project |> findStruct "Modifiers"
                     let result = object.Events |> Seq.find (fun c -> c.Name = "StaticEvent")
 
-                    test <@ result.Modifiers |> Seq.map normalizeSyntax 
-                                             |> Set
-                                             |> Set.isSubset (Set ["static"]) @>)
+                    test <@ result.Modifiers |> Set
+                                             |> Set.map normalizeSyntax
+                                             |> (=) (Set ["static"]) @>)
         ]

@@ -131,8 +131,9 @@ module RoslynAnalyzer_ClassProperties_Tests =
                     let object = sut.Analyze project |> findClass "WithAccessModifiers"
                     let result = object.Properties |> Seq.find (fun c -> c.Name = property)
                         
-                    test <@ result.AccessModifiers |> Seq.map normalizeSyntax 
-                                                   |> fun c -> Set c |> Set.isSubset expected @>)
+                    test <@ result.AccessModifiers |> Set 
+                                                   |> Set.map normalizeSyntax 
+                                                   |> (=) expected @>)
         ]
 
     [<Tests>]
@@ -182,8 +183,9 @@ module RoslynAnalyzer_ClassProperties_Tests =
                     let object = sut.Analyze project |> findClass "WithModifiers"
                     let result = object.Properties |> Seq.find (fun c -> c.Name = property)
                         
-                    test <@ result.Modifiers |> Seq.map normalizeSyntax 
-                                             |> fun c -> Set c |> Set.isSubset expected @>)
+                    test <@ result.Modifiers |> Set 
+                                             |> Set.map normalizeSyntax 
+                                             |> (=) expected @>)
         ]
 
     [<Tests>]
@@ -326,8 +328,9 @@ module RoslynAnalyzer_ClassProperties_Tests =
                     let object = sut.Analyze project |> findClass "WithWriteAccessor"
                     let result = object.Properties |> Seq.find (fun c -> c.Name = property)
                     
-                    test <@ result.IsWrite.Value.AccessModifiers |> Seq.map normalizeSyntax
-                                                                 |> fun c -> Set c |> Set.isSubset expected @>)
+                    test <@ result.IsWrite.Value.AccessModifiers |> Set
+                                                                 |> Set.map normalizeSyntax 
+                                                                 |> (=) expected @>)
         ]
     
     [<Tests>]
@@ -434,6 +437,7 @@ module RoslynAnalyzer_ClassProperties_Tests =
                     let object = sut.Analyze project |> findClass "WithReadAccessor"
                     let result = object.Properties |> Seq.find (fun c -> c.Name = property)
                     
-                    test <@ result.IsRead.Value.AccessModifiers |> Seq.map normalizeSyntax
-                                                                |> fun c -> Set c |> Set.isSubset expected @>)
+                    test <@ result.IsRead.Value.AccessModifiers |> Set
+                                                                |> Set.map normalizeSyntax
+                                                                |> (=) expected @>)
         ]

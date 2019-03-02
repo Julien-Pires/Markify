@@ -70,9 +70,9 @@ module RoslynAnalyzer_ClassModifiers_Tests =
                 (fun sut project (name, expected) () ->
                     let result = sut.Analyze project |> findClass name
                         
-                    test <@ result.Identity.AccessModifiers |> Seq.map normalizeSyntax
-                                                            |> Set
-                                                            |> Set.isSubset expected @>)
+                    test <@ result.Identity.AccessModifiers |> Set
+                                                            |> Set.map normalizeSyntax
+                                                            |> (=) expected @>)
         ]
 
     [<Tests>]
@@ -133,7 +133,7 @@ module RoslynAnalyzer_ClassModifiers_Tests =
                 (fun sut project (name, expected) () ->
                     let result = sut.Analyze project |> findClass name
                         
-                    test <@ result.Identity.Modifiers |> Seq.map normalizeSyntax
-                                                      |> Set
-                                                      |> Set.isSubset expected @>)
+                    test <@ result.Identity.Modifiers |> Set
+                                                      |> Set.map normalizeSyntax
+                                                      |> (=) expected @>)
         ]

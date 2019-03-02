@@ -117,7 +117,7 @@ module RoslynAnalyzer_ClassGenerics_Tests =
                     let object = sut.Analyze project |> findClass "GenericConstrainedClass`2"
                     let result = object.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
 
-                    test <@ result.Constraints |> Seq.map normalizeSyntax
-                                               |> Set
-                                               |> Set.isSubset expected @>)
+                    test <@ result.Constraints |> Set
+                                               |> Set.map normalizeSyntax
+                                               |> (=) expected @>)
         ]

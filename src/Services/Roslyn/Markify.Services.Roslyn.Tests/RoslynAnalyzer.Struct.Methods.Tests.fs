@@ -110,9 +110,9 @@ module RoslynAnalyzer_StructMethods_Tests =
                     let object = sut.Analyze project |> findStruct "AccessModifiers"
                     let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = method)
 
-                    test <@ result.Identity.AccessModifiers |> Seq.map normalizeSyntax 
-                                                            |> Set
-                                                            |> Set.isSubset expected @>)
+                    test <@ result.Identity.AccessModifiers |> Set
+                                                            |> Set.map normalizeSyntax 
+                                                            |> (=) expected @>)
         ]
 
     [<Tests>]
@@ -154,9 +154,9 @@ module RoslynAnalyzer_StructMethods_Tests =
                     let object = sut.Analyze project |> findStruct "Modifiers"
                     let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = method)
 
-                    test <@ result.Identity.Modifiers |> Seq.map normalizeSyntax 
-                                                      |> Set
-                                                      |> Set.isSubset expected @>)
+                    test <@ result.Identity.Modifiers |> Set
+                                                      |> Set.map normalizeSyntax
+                                                      |> (=) expected @>)
         ]
 
     [<Tests>]

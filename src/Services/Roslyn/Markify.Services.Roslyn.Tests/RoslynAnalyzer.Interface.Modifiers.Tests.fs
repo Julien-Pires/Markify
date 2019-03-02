@@ -70,9 +70,9 @@ module RoslynAnalyzer_InterfaceModifiers_Tests =
                 (fun sut project (name, expected) () ->
                     let result = sut.Analyze project |> findInterface name
                         
-                    test <@ result.Identity.AccessModifiers |> Seq.map normalizeSyntax
-                                                            |> Set
-                                                            |> Set.isSubset expected @>)
+                    test <@ result.Identity.AccessModifiers |> Set
+                                                            |> Set.map normalizeSyntax
+                                                            |> (=) expected @>)
         ]
 
     [<Tests>]
@@ -112,7 +112,7 @@ module RoslynAnalyzer_InterfaceModifiers_Tests =
                 (fun sut project () ->
                     let result = sut.Analyze project |> findInterface "PartialType"
                         
-                    test <@ result.Identity.Modifiers |> Seq.map normalizeSyntax
-                                                      |> Set
-                                                      |> Set.isSubset (Set ["partial"]) @>)
+                    test <@ result.Identity.Modifiers |> Set
+                                                      |> Set.map normalizeSyntax
+                                                      |> (=) (Set ["partial"]) @>)
         ]

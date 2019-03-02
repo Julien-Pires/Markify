@@ -40,9 +40,9 @@ module RoslynAnalyzer_ClassPartial_Tests =
                 (fun sut project () -> 
                     let result = sut.Analyze project |> findClass "PartialType"
 
-                    test <@ result.Identity.Modifiers |> Seq.map normalizeSyntax
-                                                      |> Set
-                                                      |> Set.isSubset (Set ["sealed"; "partial"]) @>)
+                    test <@ result.Identity.Modifiers |> Set
+                                                      |> Set.map normalizeSyntax
+                                                      |> (=) (Set ["sealed"; "partial"]) @>)
         ]
 
     [<Tests>]
