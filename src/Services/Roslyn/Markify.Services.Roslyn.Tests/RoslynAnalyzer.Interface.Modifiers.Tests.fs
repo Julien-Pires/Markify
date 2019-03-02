@@ -106,13 +106,12 @@ module RoslynAnalyzer_InterfaceModifiers_Tests =
             "])
         ]
         testList "Analyze/Interface" [
-            yield! testRepeatParameterized
-                "should returns interface with modifiers when type has some" [
-                (withProjects contents, Set ["partial"])]
-                (fun sut project expected () ->
+            yield! testRepeat (withProjects contents)
+                "should returns interface with modifiers when type has some"
+                (fun sut project () ->
                     let result = sut.Analyze project |> findInterface "PartialType"
                         
                     test <@ result.Identity.Modifiers |> Seq.map normalizeSyntax
                                                       |> Set
-                                                      |> Set.isSubset expected @>)
+                                                      |> Set.isSubset (Set ["partial"]) @>)
         ]

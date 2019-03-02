@@ -159,15 +159,15 @@ module RoslynAnalyzer_StructProperties_Tests =
 
                     test <@ result.Modifiers |> Seq.isEmpty @>)
 
-            yield! testRepeatParameterized
-                "should return correct modifier when struct property has some" [
-                (withProjects content, ("StaticProperty", Set ["static"]))]
-                (fun sut project (property, expected) () ->
+            yield! testRepeat (withProjects content)
+                "should return correct modifier when struct property has some"
+                (fun sut project () ->
                     let object = sut.Analyze project |> findStruct "WithModifiers"
-                    let result = object.Properties |> Seq.find (fun c -> c.Name = property)
+                    let result = object.Properties |> Seq.find (fun c -> c.Name = "StaticProperty")
                         
                     test <@ result.Modifiers |> Seq.map normalizeSyntax
-                                             |> fun c -> Set c |> Set.isSubset expected @>)
+                                             |> Set
+                                             |> Set.isSubset (Set ["static"]) @>)
         ]
 
     [<Tests>]

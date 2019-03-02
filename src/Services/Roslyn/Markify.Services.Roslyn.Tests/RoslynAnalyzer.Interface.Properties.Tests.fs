@@ -111,15 +111,15 @@ module RoslynAnalyzer_InterfaceProperties_Tests =
 
                     test <@ result.AccessModifiers |> Seq.exists (fun c -> normalizeSyntax c = "public") @>)
 
-            yield! testRepeatParameterized
-                "should return correct access modifier when interface property has some" [
-                (withProjects content, ("PublicProperty", Set ["public"]))]
-                (fun sut project (property, expected) () ->
+            yield! testRepeat (withProjects content)
+                "should return correct access modifier when interface property has some"
+                (fun sut project () ->
                     let object = sut.Analyze project |> findInterface "WithAccessModifiers"
-                    let result = object.Properties |> Seq.find (fun c -> c.Name = property)
+                    let result = object.Properties |> Seq.find (fun c -> c.Name = "PublicProperty")
                         
                     test <@ result.AccessModifiers |> Seq.map normalizeSyntax 
-                                                   |> fun c -> Set c |> Set.isSubset expected @>)
+                                                   |> Set 
+                                                   |> Set.isSubset (Set ["public"]) @>)
         ]
 
     [<Tests>]
@@ -177,13 +177,12 @@ module RoslynAnalyzer_InterfaceProperties_Tests =
             "])
         ]
         testList "Analyze/Interface" [
-            yield! testRepeatParameterized
-                "should return no write accessor when interface property is read-only" [
-                (withProjects content, "ReadOnly")]
-                (fun sut project property () ->
+            yield! testRepeat (withProjects content)
+                "should return no write accessor when interface property is read-only"
+                (fun sut project () ->
                     let result = sut.Analyze project |> findInterface "WithoutWriteAccessor"
                     
-                    test <@ result.Properties |> Seq.find (fun c -> c.Name = property)
+                    test <@ result.Properties |> Seq.find (fun c -> c.Name = "ReadOnly")
                                               |> fun c -> c.IsWrite.IsNone @>)
 
             yield! testRepeatParameterized

@@ -143,14 +143,13 @@ module RoslynAnalyzer_StructEvents_Tests =
 
                     test <@ result.Modifiers |> Seq.isEmpty @>)
 
-            yield! testRepeatParameterized
-                "should return modifier when struct event has one" [
-                (withProjects content, ("StaticEvent", Set ["static"]))]
-                (fun sut project (event, expected) () -> 
+            yield! testRepeat (withProjects content)
+                "should return modifier when struct event has one"
+                (fun sut project () -> 
                     let object = sut.Analyze project |> findStruct "Modifiers"
-                    let result = object.Events |> Seq.find (fun c -> c.Name = event)
+                    let result = object.Events |> Seq.find (fun c -> c.Name = "StaticEvent")
 
                     test <@ result.Modifiers |> Seq.map normalizeSyntax 
                                              |> Set
-                                             |> Set.isSubset expected @>)
+                                             |> Set.isSubset (Set ["static"]) @>)
         ]

@@ -18,11 +18,10 @@ module RoslynAnalyzer_InterfaceGenerics_Tests =
             "])
         ]
         testList "Analyze/Interface" [
-            yield! testRepeatParameterized 
-                "should return no generic parameters when interface has none" [
-                (withProjects noGeneric, "NoGenericInterface")]
-                (fun sut project name () ->
-                    let result = sut.Analyze project |> findInterface name
+            yield! testRepeat (withProjects noGeneric) 
+                "should return no generic parameters when interface has none"
+                (fun sut project () ->
+                    let result = sut.Analyze project |> findInterface "NoGenericInterface"
 
                     test <@ result.Identity.Parameters |> Seq.isEmpty @>)
         ]
@@ -80,12 +79,11 @@ module RoslynAnalyzer_InterfaceGenerics_Tests =
             "])
         ]
         testList "Analyze/Interface" [
-            yield! testRepeatParameterized 
-                "should return no modifiers when interface generic parameter has none" [
-                (withProjects genericModifiers, ("SingleGenericInterface`1", "T"))]
-                (fun sut project (name, parameter) () ->
-                    let object = sut.Analyze project |> findInterface name 
-                    let result = object.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
+            yield! testRepeat (withProjects genericModifiers)
+                "should return no modifiers when interface generic parameter has none"
+                (fun sut project () ->
+                    let object = sut.Analyze project |> findInterface "SingleGenericInterface`1" 
+                    let result = object.Identity.Parameters |> Seq.find (fun c -> c.Name = "T")
 
                     test <@ result.Modifier.IsNone @>)
 
@@ -117,12 +115,11 @@ module RoslynAnalyzer_InterfaceGenerics_Tests =
             "])
         ]
         testList "Analyze/Interface" [
-            yield! testRepeatParameterized 
-                "should return no constraints when interface generic parameter has none" [
-                (withProjects genericConstraints, ("SingleGenericInterface`1", "T"))]
-                (fun sut project (name, parameter) () ->
-                    let object = sut.Analyze project |> findInterface name 
-                    let result = object.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
+            yield! testRepeat (withProjects genericConstraints)
+                "should return no constraints when interface generic parameter has none"
+                (fun sut project () ->
+                    let object = sut.Analyze project |> findInterface "SingleGenericInterface`1" 
+                    let result = object.Identity.Parameters |> Seq.find (fun c -> c.Name = para"T"meter)
 
                     test <@ result.Constraints |> Seq.isEmpty @>)
 

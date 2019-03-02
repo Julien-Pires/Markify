@@ -17,11 +17,10 @@ module RoslynAnalyzer_DelegateGenerics_Tests =
             "])
         ]
         testList "Analyze/Delegate" [
-            yield! testRepeatParameterized 
-                "should return no generic parameters when delegate has none" [
-                (withProjects noGeneric, "NoGenericDelegate")]
-                (fun sut project name () ->
-                    let result = sut.Analyze project |> findDelegate name
+            yield! testRepeat (withProjects noGeneric)
+                "should return no generic parameters when delegate has none"
+                (fun sut project () ->
+                    let result = sut.Analyze project |> findDelegate "NoGenericDelegate"
 
                     test <@ result.Identity.Parameters |> Seq.isEmpty @>)
         ]
@@ -74,12 +73,11 @@ module RoslynAnalyzer_DelegateGenerics_Tests =
             "])
         ]
         testList "Analyze/Delegate" [
-            yield! testRepeatParameterized 
-                "should return no modifiers when delegate generic parameter has none" [
-                (withProjects genericModifiers, "T")]
-                (fun sut project parameter () ->
+            yield! testRepeat (withProjects genericModifiers) 
+                "should return no modifiers when delegate generic parameter has none"
+                (fun sut project () ->
                     let object = sut.Analyze project |> findDelegate "SingleGenericDelegate`1"
-                    let result = object.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
+                    let result = object.Identity.Parameters |> Seq.find (fun c -> c.Name = "T")
 
                     test <@ result.Modifier.IsNone @>)
 
@@ -109,12 +107,11 @@ module RoslynAnalyzer_DelegateGenerics_Tests =
             "])
         ]
         testList "Analyze/Delegate" [
-            yield! testRepeatParameterized 
-                "should return no constraints when delegate generic parameter has none" [
-                (withProjects genericConstraints, "T")]
-                (fun sut project parameter () ->
+            yield! testRepeat (withProjects genericConstraints)
+                "should return no constraints when delegate generic parameter has none"
+                (fun sut project () ->
                     let object = sut.Analyze project |> findDelegate "SingleGenericDelegate`1"
-                    let result = object.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
+                    let result = object.Identity.Parameters |> Seq.find (fun c -> c.Name = "T")
 
                     test <@ result.Constraints |> Seq.isEmpty @>)
 
