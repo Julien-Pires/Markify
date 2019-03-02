@@ -1,11 +1,11 @@
 ﻿namespace Markify.Services.Roslyn.VisualBasic
 
-open VisualBasicSyntaxHelper
-open Markify.Domain.Ide
+open Markify.Domain.Compiler
 open Markify.Services.Roslyn.Common
 open Microsoft.CodeAnalysis
 open Microsoft.CodeAnalysis.VisualBasic
 open SyntaxHelper
+open VisualBasicSyntaxHelper
 
 module VisualBasicParser =
     let isDefinitionNode = function

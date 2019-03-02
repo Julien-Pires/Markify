@@ -1,73 +1,118 @@
 ﻿namespace Markify.Services.Roslyn.Tests
 
-module RoslynAnalyzerCommentsParametersTests =
-    open Markify.Domain.Compiler
-    open Markify.Services.Roslyn
-    open Xunit
-    open Swensen.Unquote
+open Markify.Domain.Compiler
+open Markify.Tests.Extension
+open Expecto
+open Swensen.Unquote
+open Fixtures
 
-    [<Theory>]
-    [<ProjectData("Comments", "WithNoParameter")>]
-    let ``Analyze should return no comment parameters when comment has none``(name, sut : RoslynAnalyzer, project) = 
-        let library = (sut :> IProjectAnalyzer).Analyze project
-        let actual = 
-            TestHelper.getDefinition name library 
-            |> DefinitionsHelper.getComment "summary"
-        
-        test <@ actual.Value.Parameter |> Seq.isEmpty @>
-    
-    [<Theory>]
-    [<ProjectData("Comments", "WithOneParameter", 1)>]
-    [<ProjectData("Comments", "WithMultipleParameter", 3)>]
-    let ``Analyze should return comment parameters when comment has some``(name, expected, sut : RoslynAnalyzer, project) =
-        let library = (sut :> IProjectAnalyzer).Analyze project
-        let actual = 
-            TestHelper.getDefinition name library 
-            |> DefinitionsHelper.getComment "summary"
+module RoslynAnalyzer_CommentsParameters_Tests =
+    [<Tests>]
+    let noParameterTests =
+        let contents = [
+            (ProjectLanguage.CSharp, ["
+                /// <summary></summary>
+                public class NoParameter { }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                ''' <summary></summary>
+                Public Class NoParameter
+                End Class
+            "])
+        ]
+        testList "Analyze/Comments" [
+            yield! testRepeat (withProjects contents)
+                "should return no parameter when comment has none"
+                (fun sut project () ->
+                    let object = sut.Analyze project |> findClass "NoParameter"
+                    let result = object.Comments.Comments |> Seq.find (fun c -> c.Name = "summary")
+                    
+                    test <@ result.Parameter |> Seq.isEmpty @>)
+        ]
 
-        test <@ actual.Value.Parameter |> Seq.length = expected @>
+    [<Tests>]
+    let withParameterTests =
+        let contents = [
+            (ProjectLanguage.CSharp, ["
+                /// <summary name=''></summary>
+                /// <remarks name='' value='' data></remarks>
+                public class WithParameters { }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                ''' <summary name=''></summary>
+                ''' <remarks name='' value='' data></remarks>
+                Public Class WithParameters
+                End Class
+            "])
+        ]
+        testList "Analyze/Comments" [
+            yield! testRepeatParameterized
+                "should return parameters when comment has some" [
+                (withProjects contents, ("summary", 1))
+                (withProjects contents, ("remarks", 3))]
+                (fun sut project (comment, expected) () ->
+                    let object = sut.Analyze project |> findClass "WithParameters"
+                    let result = object.Comments.Comments |> Seq.find (fun c -> c.Name = comment)
+                    
+                    test <@ result.Parameter |> Seq.length = expected @>)
 
-    [<Theory>]
-    [<ProjectData("Comments", "WithMultipleParameter", "name")>]
-    [<ProjectData("Comments", "WithMultipleParameter", "value")>]
-    let ``Analyze should return expected comment parameter name when comment has some``(name, expected, sut : RoslynAnalyzer, project) = 
-        let library = (sut :> IProjectAnalyzer).Analyze project
-        let actual =
-            TestHelper.getDefinition name library 
-            |> DefinitionsHelper.getComment "summary"
-            |> fun c -> c.Value.Parameter
-            |> Seq.tryFind (fun c -> c.Name = expected) 
-        
-        test <@ actual.IsSome @>
-    
-    [<Theory>]
-    [<ProjectData("Comments", "WithMultipleParameter", "data")>]
-    let ``Analyze should return no comment parameter value when parameter has none``(name, parameter, sut : RoslynAnalyzer, project) =
-        let library = (sut :> IProjectAnalyzer).Analyze project
-        let actual =
-            TestHelper.getDefinition name library 
-            |> TestHelper.getCommentParameter "summary" parameter
+            yield! testRepeatParameterized
+                "should return correct parameter name when comment has some" [
+                (withProjects contents, ("summary", Set ["name"]))
+                (withProjects contents, ("remarks", Set ["name"; "value"; "data"]))]
+                (fun sut project (comment, expected) () ->
+                    let object = sut.Analyze project |> findClass "WithParameters"
+                    let result = object.Comments.Comments |> Seq.find (fun c -> c.Name = comment)
+                    
+                    test <@ result.Parameter |> Seq.map (fun c -> c.Name)
+                                             |> Set
+                                             |> Set.isSubset expected @>)
+        ]
 
-        test <@ actual.Value = None @>
-    
-    [<Theory>]
-    [<ProjectData("Comments", "WithMultipleParameter", "name")>]
-    [<ProjectData("Comments", "WithMultipleParameter", "value")>]
-    let ``Analyze should return comment parameter value when parameter has some``(name, parameter, sut : RoslynAnalyzer, project) =
-        let library = (sut :> IProjectAnalyzer).Analyze project
-        let actual =
-            TestHelper.getDefinition name library 
-            |> TestHelper.getCommentParameter "summary" parameter
+    [<Tests>]
+    let noParameterValueTests = 
+        let contents = [
+            (ProjectLanguage.CSharp, ["
+                /// <summary name></summary>
+                public class NoValue { }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                ''' <summary name></summary>
+                Public Class NoValue
+                End Class
+            "])
+        ]
+        testList "Analyze/Comments" [
+            yield! testRepeat (withProjects contents)
+                "should return no value when comment parameter has none"
+                (fun sut project () ->
+                    let object = sut.Analyze project |> findClass "NoValue"
+                    let result = object.Comments.Comments |> Seq.find (fun c -> c.Name = "summary")
+                    
+                    test <@ result.Parameter |> Seq.find (fun c -> c.Name = "name")
+                                             |> fun c -> c.Value.IsNone @>)
+        ]
 
-        test <@ actual.Value.IsSome @>
-
-    [<Theory>]
-    [<ProjectData("Comments", "WithMultipleParameter", "name", "foo")>]
-    [<ProjectData("Comments", "WithMultipleParameter", "value", "bar")>]
-    let ``Analyze should return expected comment parameter value when parameter has some``(name, parameter, expected, sut : RoslynAnalyzer, project) =
-        let library = (sut :> IProjectAnalyzer).Analyze project
-        let actual =
-            TestHelper.getDefinition name library 
-            |> TestHelper.getCommentParameter "summary" parameter
-
-        test <@ actual.Value.Value = expected @>
+    [<Tests>]
+    let withParameterValueTests = 
+        let contents = [
+            (ProjectLanguage.CSharp, ["
+                /// <summary name='foo'></summary>
+                public class WithValue { }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                ''' <summary name='foo'></summary>
+                Public Class WithValue
+                End Class
+            "])
+        ]
+        testList "Analyze/Comments" [
+            yield! testRepeat (withProjects contents)
+                "should return value when comment parameter has one"
+                (fun sut project () ->
+                    let object = sut.Analyze project |> findClass "WithValue"
+                    let result = object.Comments.Comments |> Seq.find (fun c -> c.Name = "summary")
+                    
+                    test <@ result.Parameter |> Seq.find (fun c -> c.Name = "name")
+                                             |> fun c -> c.Value = Some "foo" @>)
+        ]

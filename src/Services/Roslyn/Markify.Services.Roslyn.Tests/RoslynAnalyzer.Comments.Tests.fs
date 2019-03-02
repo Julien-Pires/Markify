@@ -1,63 +1,100 @@
 ﻿namespace Markify.Services.Roslyn.Tests
 
-module RoslynAnalyzerCommentsTests =
-    open Markify.Domain.Compiler
-    open Markify.Services.Roslyn
-    open Xunit
-    open Swensen.Unquote
-    
-    [<Theory>]
-    [<ProjectData("Comments", "EnumWithoutComments", "Foo")>]
-    [<ProjectData("Comments", "ClassWithoutComments`2", "Foo")>]
-    [<ProjectData("Comments", "StructWithoutComments`2", "Foo")>]
-    [<ProjectData("Comments", "InterfaceWithoutComments`2", "Foo")>]
-    [<ProjectData("Comments", "DelegateWithoutComments`2", "Foo")>]
-    let ``Analyze should return no comment when comment does not exist on type`` (name, commentName, sut : RoslynAnalyzer, project) =
-        let library = (sut :> IProjectAnalyzer).Analyze project
-        let actual = 
-            TestHelper.getDefinition name library
-            |> DefinitionsHelper.getComment commentName
-        
-        test <@ actual = None @>
-        
-    [<Theory>]
-    [<ProjectData("Comments", "EnumWithSimpleComments", "summary")>]
-    [<ProjectData("Comments", "ClassWithSimpleComments`2", "summary")>]
-    [<ProjectData("Comments", "StructWithSimpleComments`2", "summary")>]
-    [<ProjectData("Comments", "InterfaceWithSimpleComments`2", "summary")>]
-    [<ProjectData("Comments", "DelegateWithSimpleComments`2", "summary")>]
-    let ``Analyze should return comment when paired tag comment exists on type`` (name, commentName, sut : RoslynAnalyzer, project) =
-        let library = (sut :> IProjectAnalyzer).Analyze project
-        let actual = 
-            TestHelper.getDefinition name library 
-            |> DefinitionsHelper.getComment commentName
-        
-        test <@ actual.IsSome @>
+open Markify.Domain.Compiler
+open Markify.Tests.Extension
+open Expecto
+open Swensen.Unquote
+open Fixtures
 
-    [<Theory>]
-    [<ProjectData("Comments", "EnumWithSimpleComments", "inheritdoc")>]
-    [<ProjectData("Comments", "ClassWithSimpleComments`2", "inheritdoc")>]
-    [<ProjectData("Comments", "StructWithSimpleComments`2", "inheritdoc")>]
-    [<ProjectData("Comments", "InterfaceWithSimpleComments`2", "inheritdoc")>]
-    [<ProjectData("Comments", "DelegateWithSimpleComments`2", "inheritdoc")>]
-    let ``Analyze should return comment when unpaired tag comment exists on type``(name, commentName, sut : RoslynAnalyzer, project) =
-        let library = (sut :> IProjectAnalyzer).Analyze project
-        let actual = 
-            TestHelper.getDefinition name library 
-            |> DefinitionsHelper.getComment commentName
+module RoslynAnalyzer_Comments_Tests =
+    [<Tests>]
+    let noCommentTests =
+        let content = [
+            (ProjectLanguage.CSharp, ["
+                public class NoCommentType { }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                Public Class NoCommentType
+                End Class
+            "])
+        ]
+        testList "Analyze/Comments" [
+            yield! testRepeat (withProjects content)
+                "should return no comment when type has none"
+                (fun sut project () ->
+                    let result = sut.Analyze project |> findClass "NoCommentType"
+                    
+                    test <@ result.Comments.Comments |> Seq.isEmpty @>)
+        ]
 
-        test <@ actual.IsSome @>
+    [<Tests>]
+    let withCommentsTests =
+        let content = [
+            (ProjectLanguage.CSharp, ["
+                /// <summary></summary>
+                public class SingleComment { }
+                /// <summary></summary>
+                /// <remarks></remarks>
+                public class MultipleComment { }
+                /// <inheritdoc />
+                public class SelfClosingComment { }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                ''' <summary></summary>
+                Public Class SingleComment
+                End Class
+                ''' <summary></summary>
+                ''' <remarks></remarks>
+                Public Class MultipleComment
+                End Class
+                ''' <inheritdoc />
+                Public Class SelfClosingComment
+                End Class
+            "])
+        ]
+        testList "Analyze/Comments" [
+            yield! testRepeatParameterized
+                "should return comments when type has some" [
+                (withProjects content, ("SingleComment", Set ["summary"]))
+                (withProjects content, ("MultipleComment", Set ["summary"; "remarks"]))
+                (withProjects content, ("SelfClosingComment", Set ["inheritdoc"]))]
+                (fun sut project (name, expected) () ->
+                    let result = sut.Analyze project |> findClass name
+                    
+                    test <@ result.Comments.Comments |> Seq.map (fun c -> c.Name)
+                                                     |> Set
+                                                     |> Set.isSubset expected @>)
+        ]
 
-    [<Theory>]
-    [<ProjectData("Comments", "ClassWithSimpleComments`2", "typeparam")>]
-    [<ProjectData("Comments", "StructWithSimpleComments`2", "typeparam")>]
-    [<ProjectData("Comments", "InterfaceWithSimpleComments`2", "typeparam")>]
-    [<ProjectData("Comments", "DelegateWithSimpleComments`2", "typeparam")>]
-    let ``Analyze should return multiple comments when type has multiple identical comments``(name, commentName, sut : RoslynAnalyzer, project) =
-        let library = (sut :> IProjectAnalyzer).Analyze project
-        let actual = 
-            TestHelper.getDefinition name library
-            |> DefinitionsHelper.getComments
-            |> Seq.filter (fun c -> c.Name = commentName)
-
-        test <@ actual |> Seq.length > 1 @>
+    [<Tests>]
+    let identicalCommentsTests =
+        let content = [
+            (ProjectLanguage.CSharp, ["
+                /// <typeparam></typeparam>
+                public class SingleComment { }
+                /// <typeparam></typeparam>
+                /// <typeparam></typeparam>
+                /// <typeparam></typeparam>
+                public class MultipleComment { }
+            "])
+            (ProjectLanguage.VisualBasic, ["
+                ''' <typeparam></typeparam>
+                Public Class SingleComment
+                End Class
+                ''' <typeparam></typeparam>
+                ''' <typeparam></typeparam>
+                ''' <typeparam></typeparam>
+                Public Class MultipleComment
+                End Class
+            "])
+        ]
+        testList "Analyze/Comments" [
+            yield! testRepeatParameterized
+                "should return all comments when type has identical comments type" [
+                (withProjects content, ("SingleComment", 1))
+                (withProjects content, ("MultipleComment", 3))]
+                (fun sut project (name, expected) () ->
+                    let result = sut.Analyze project |> findClass name
+                    
+                    test <@ result.Comments.Comments |> Seq.length = expected @>)
+        ]

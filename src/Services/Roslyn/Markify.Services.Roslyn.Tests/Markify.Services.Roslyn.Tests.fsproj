@@ -59,31 +59,58 @@
     <Content Include="app.config" />
     <Content Include="packages.config" />
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="LanguageModuleArgs.fs" />
-    <Compile Include="ProjectCustomization.fs" />
-    <Compile Include="TypeAttribute.fs" />
-    <Compile Include="DefinitionsHelper.fs" />
-    <Compile Include="TestHelper.fs" />
-    <Compile Include="RoslynAnalyzer.Types.Tests.fs" />
-    <Compile Include="RoslynAnalyzer.Types.Generics.Tests.fs" />
-    <Compile Include="RoslynAnalyzer.Types.Modifiers.Tests.fs" />
-    <Compile Include="RoslynAnalyzer.Types.Inheritance.Tests.fs" />
-    <Compile Include="RoslynAnalyzer.Types.Properties.Tests.fs" />
-    <Compile Include="RoslynAnalyzer.Types.Fields.Tests.fs" />
-    <Compile Include="RoslynAnalyzer.Types.Events.Tests.fs" />
-    <Compile Include="RoslynAnalyzer.Types.Methods.Tests.fs" />
-    <Compile Include="RoslynAnalyzer.Types.EnumValues.Tests.fs" />
-    <Compile Include="RoslynAnalyzer.Types.PartialMerging.Tests.fs" />
+    <Compile Include="Fixtures.fs" />
+    <Compile Include="Helpers.fs" />
+    <Compile Include="RoslynAnalyzer.Project.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Class.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Class.Generics.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Class.Modifiers.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Class..Inheritance.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Class.Properties.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Class.Methods.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Class.Events.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Class.Fields.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Class.Partial.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Struct.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Struct.Generics.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Struct.Modifiers.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Struct.Inheritance.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Struct.Properties.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Struct.Methods.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Struct.Events.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Struct.Fields.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Struct.Partial.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Interface.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Interface.Generics.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Interface.Modifiers.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Interface.Inheritance.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Interface.Properties.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Interface.Methods.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Interface.Events.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Interface.Partial.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Delegate.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Delegate.Generics.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Delegate.Modifiers.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Delegate.ReturnType.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Delegate.Parameters.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Enum.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Enum.Modifiers.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Enum.Inheritance.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Enum.Values.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Namespaces.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Comments.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Comments.Content.Tests.fs" />
     <Compile Include="RoslynAnalyzer.CommentsParameters.Tests.fs" />
-    <Compile Include="RoslynAnalyzer.Delegate.Parameters.Tests.fs" />
-    <Compile Include="RoslynAnalyzer.Delegate.ReturnType.Tests.fs" />
-    <Compile Include="RoslynAnalyzer.Namespaces.Tests.fs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Argu">
+      <HintPath>..\..\..\packages\Argu.5.2.0\lib\net45\Argu.dll</HintPath>
+    </Reference>
     <Reference Include="Esent.Interop">
       <HintPath>..\..\..\packages\ManagedEsent.1.9.4\lib\net40\Esent.Interop.dll</HintPath>
+    </Reference>
+    <Reference Include="Expecto">
+      <HintPath>..\..\..\packages\Expecto.8.3.0\lib\net461\Expecto.dll</HintPath>
     </Reference>
     <Reference Include="FSharp.Core">
       <HintPath>..\..\..\packages\FSharp.Core.4.5.2\lib\net45\FSharp.Core.dll</HintPath>
@@ -116,13 +143,29 @@
       <HintPath>..\..\..\packages\Microsoft.CodeAnalysis.Workspaces.Common.2.9.0\lib\net46\Microsoft.CodeAnalysis.Workspaces.Desktop.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CodeAnalysis.Workspaces.Desktop" />
-    <Reference Include="mscorlib" />
-    <Reference Include="mscorlib" />
-    <Reference Include="Ploeh.AutoFixture">
-      <HintPath>..\..\..\packages\AutoFixture.3.51.0\lib\net40\Ploeh.AutoFixture.dll</HintPath>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.TestPlatform.CoreUtilities">
+      <HintPath>..\..\..\packages\Microsoft.TestPlatform.ObjectModel.15.0.0\lib\net46\Microsoft.TestPlatform.CoreUtilities.dll</HintPath>
     </Reference>
-    <Reference Include="Ploeh.AutoFixture.Xunit2">
-      <HintPath>..\..\..\packages\AutoFixture.Xunit2.3.51.0\lib\net45\Ploeh.AutoFixture.Xunit2.dll</HintPath>
+    <Reference Include="Microsoft.VisualStudio.TestPlatform.ObjectModel">
+      <HintPath>..\..\..\packages\Microsoft.TestPlatform.ObjectModel.15.0.0\lib\net46\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil">
+      <HintPath>..\..\..\packages\Mono.Cecil.0.10.3\lib\net40\Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Mdb">
+      <HintPath>..\..\..\packages\Mono.Cecil.0.10.3\lib\net40\Mono.Cecil.Mdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Pdb">
+      <HintPath>..\..\..\packages\Mono.Cecil.0.10.3\lib\net40\Mono.Cecil.Pdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Rocks">
+      <HintPath>..\..\..\packages\Mono.Cecil.0.10.3\lib\net40\Mono.Cecil.Rocks.dll</HintPath>
+    </Reference>
+    <Reference Include="mscorlib" />
+    <Reference Include="mscorlib" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="SQLitePCLRaw.batteries_green">
       <HintPath>..\..\..\packages\SQLitePCLRaw.bundle_green.1.1.11\lib\net45\SQLitePCLRaw.batteries_green.dll</HintPath>
@@ -165,6 +208,7 @@
       <HintPath>..\..\..\packages\System.Composition.TypedParts.1.2.0\lib\netstandard2.0\System.Composition.TypedParts.dll</HintPath>
     </Reference>
     <Reference Include="System.Composition.TypedParts" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Console">
       <HintPath>..\..\..\packages\System.Console.4.3.1\lib\net46\System.Console.dll</HintPath>
       <Private>True</Private>
@@ -215,6 +259,11 @@
     <Reference Include="System.Runtime.InteropServices">
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation">
+      <HintPath>..\..\..\packages\System.Runtime.InteropServices.RuntimeInformation.4.0.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security.Cryptography.Algorithms">
       <HintPath>..\..\..\packages\System.Security.Cryptography.Algorithms.4.3.1\lib\net463\System.Security.Cryptography.Algorithms.dll</HintPath>
       <Private>True</Private>
@@ -246,14 +295,14 @@
     <Reference Include="System.ValueTuple" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
+    <ProjectReference Include="..\..\..\Core\Markify.Tests.Extensions\Markify.Tests.Extensions.fsproj">
+      <Name>Markify.Tests.Extensions</Name>
+      <Project>{ff292b05-4d30-4945-ba44-29bcc319cec4}</Project>
+      <Private>True</Private>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Domain\Markify.Domain.Compiler\Markify.Domain.Compiler.fsproj">
       <Name>Markify.Domain.Compiler</Name>
       <Project>{a4959db4-7b61-4e7e-918f-59647879a50d}</Project>
-      <Private>True</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Domain\Markify.Domain.IDE\Markify.Domain.Ide.fsproj">
-      <Name>Markify.Domain.Ide</Name>
-      <Project>{a55c060a-c3bf-4eb6-8439-cd5dc3614cfd}</Project>
       <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\Markify.Services.Roslyn.Common\Markify.Services.Roslyn.Common.fsproj">
@@ -264,11 +313,6 @@
     <ProjectReference Include="..\Markify.Services.Roslyn.CSharp\Markify.Services.Roslyn.CSharp.fsproj">
       <Name>Markify.Services.Roslyn.CSharp</Name>
       <Project>{40b61bec-6d13-4ed1-bc73-17104c77e932}</Project>
-      <Private>True</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\Markify.Services.Roslyn.Fixtures\Markify.Services.Roslyn.Fixtures.csproj">
-      <Name>Markify.Services.Roslyn.Fixtures</Name>
-      <Project>{1435b850-0ffc-4e4b-b74c-c72eb6723a61}</Project>
       <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\Markify.Services.Roslyn.VisualBasic\Markify.Services.Roslyn.VisualBasic.fsproj">
@@ -284,6 +328,7 @@
     <Reference Include="System.Xml.ReaderWriter">
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Xml.Serialization" />
     <Reference Include="System.Xml.XmlDocument">
       <HintPath>..\..\..\packages\System.Xml.XmlDocument.4.3.0\lib\net46\System.Xml.XmlDocument.dll</HintPath>
     </Reference>
@@ -295,18 +340,6 @@
     </Reference>
     <Reference Include="Unquote">
       <HintPath>..\..\..\packages\Unquote.4.0.0\lib\net45\Unquote.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.abstractions">
-      <HintPath>..\..\..\packages\xunit.abstractions.2.0.1\lib\net35\xunit.abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.assert">
-      <HintPath>..\..\..\packages\xunit.assert.2.3.1\lib\netstandard1.1\xunit.assert.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.core">
-      <HintPath>..\..\..\packages\xunit.extensibility.core.2.3.1\lib\netstandard1.1\xunit.core.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.execution.desktop">
-      <HintPath>..\..\..\packages\xunit.extensibility.execution.2.3.1\lib\net452\xunit.execution.desktop.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

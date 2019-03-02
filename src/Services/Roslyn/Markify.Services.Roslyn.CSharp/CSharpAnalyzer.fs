@@ -1,6 +1,6 @@
 ﻿namespace Markify.Services.Roslyn.Csharp
 
-open Markify.Domain.Ide
+open Markify.Domain.Compiler
 open Markify.Services.Roslyn.Common
 open Microsoft.CodeAnalysis
 open Microsoft.CodeAnalysis.CSharp

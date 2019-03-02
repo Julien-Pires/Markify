@@ -1,11 +1,11 @@
 ﻿namespace Markify.Services.Roslyn.Common
 
 open System
-open Markify.Domain.Ide
+open Markify.Domain.Compiler
 
 [<AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)>]
 type LanguageAttribute(language) =
-    member this.Language : ProjectLanguage = language
+    member __.Language : ProjectLanguage = language
 
 type ILanguageAnalyzer =
     abstract member Analyze: string -> SourceContent
