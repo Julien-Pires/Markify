@@ -295,6 +295,11 @@
     <Reference Include="System.ValueTuple" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
+    <ProjectReference Include="..\..\..\Core\Markify.Tests.Extensions\Markify.Tests.Extensions.fsproj">
+      <Name>Markify.Tests.Extensions</Name>
+      <Project>{ff292b05-4d30-4945-ba44-29bcc319cec4}</Project>
+      <Private>True</Private>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Domain\Markify.Domain.Compiler\Markify.Domain.Compiler.fsproj">
       <Name>Markify.Domain.Compiler</Name>
       <Project>{a4959db4-7b61-4e7e-918f-59647879a50d}</Project>
