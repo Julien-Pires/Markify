@@ -30,7 +30,7 @@ namespace Markify.Application.Services
         public override void Load()
         {
             Bind<DTE2>().ToMethod(c => _vsEnvironmentFactory());
-            Bind<IIdeEnvironment>().To<VisualStudioEnvironment>();
+            Bind<IIDEExplorer>().To<VisualStudioExplorer>();
         }
 
         #endregion

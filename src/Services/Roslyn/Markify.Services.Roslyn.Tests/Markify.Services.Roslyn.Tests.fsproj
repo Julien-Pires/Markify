@@ -59,89 +59,161 @@
     <Content Include="app.config" />
     <Content Include="packages.config" />
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="LanguageModuleArgs.fs" />
-    <Compile Include="ProjectCustomization.fs" />
-    <Compile Include="TypeAttribute.fs" />
-    <Compile Include="DefinitionsHelper.fs" />
-    <Compile Include="TestHelper.fs" />
-    <Compile Include="RoslynAnalyzer.Types.Tests.fs" />
-    <Compile Include="RoslynAnalyzer.Types.Generics.Tests.fs" />
-    <Compile Include="RoslynAnalyzer.Types.Modifiers.Tests.fs" />
-    <Compile Include="RoslynAnalyzer.Types.Inheritance.Tests.fs" />
-    <Compile Include="RoslynAnalyzer.Types.Properties.Tests.fs" />
-    <Compile Include="RoslynAnalyzer.Types.Fields.Tests.fs" />
-    <Compile Include="RoslynAnalyzer.Types.Events.Tests.fs" />
-    <Compile Include="RoslynAnalyzer.Types.Methods.Tests.fs" />
-    <Compile Include="RoslynAnalyzer.Types.EnumValues.Tests.fs" />
-    <Compile Include="RoslynAnalyzer.Types.PartialMerging.Tests.fs" />
+    <Compile Include="Fixtures.fs" />
+    <Compile Include="Helpers.fs" />
+    <Compile Include="RoslynAnalyzer.Project.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Class.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Class.Generics.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Class.Modifiers.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Class..Inheritance.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Class.Properties.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Class.Methods.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Class.Events.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Class.Fields.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Class.Partial.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Struct.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Struct.Generics.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Struct.Modifiers.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Struct.Inheritance.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Struct.Properties.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Struct.Methods.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Struct.Events.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Struct.Fields.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Struct.Partial.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Interface.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Interface.Generics.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Interface.Modifiers.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Interface.Inheritance.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Interface.Properties.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Interface.Methods.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Interface.Events.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Interface.Partial.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Delegate.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Delegate.Generics.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Delegate.Modifiers.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Delegate.ReturnType.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Delegate.Parameters.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Enum.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Enum.Modifiers.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Enum.Inheritance.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Enum.Values.Tests.fs" />
+    <Compile Include="RoslynAnalyzer.Namespaces.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Comments.Tests.fs" />
     <Compile Include="RoslynAnalyzer.Comments.Content.Tests.fs" />
     <Compile Include="RoslynAnalyzer.CommentsParameters.Tests.fs" />
-    <Compile Include="RoslynAnalyzer.Delegate.Parameters.Tests.fs" />
-    <Compile Include="RoslynAnalyzer.Delegate.ReturnType.Tests.fs" />
-    <Compile Include="RoslynAnalyzer.Namespaces.Tests.fs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Argu">
+      <HintPath>..\..\..\packages\Argu.5.2.0\lib\net45\Argu.dll</HintPath>
+    </Reference>
     <Reference Include="Esent.Interop">
       <HintPath>..\..\..\packages\ManagedEsent.1.9.4\lib\net40\Esent.Interop.dll</HintPath>
     </Reference>
+    <Reference Include="Expecto">
+      <HintPath>..\..\..\packages\Expecto.8.3.0\lib\net461\Expecto.dll</HintPath>
+    </Reference>
     <Reference Include="FSharp.Core">
-      <HintPath>..\..\..\packages\FSharp.Core.4.2.3\lib\net45\FSharp.Core.dll</HintPath>
+      <HintPath>..\..\..\packages\FSharp.Core.4.5.2\lib\net45\FSharp.Core.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CodeAnalysis">
-      <HintPath>..\..\..\packages\Microsoft.CodeAnalysis.Common.2.6.1\lib\netstandard1.3\Microsoft.CodeAnalysis.dll</HintPath>
+      <HintPath>..\..\..\packages\Microsoft.CodeAnalysis.Common.2.9.0\lib\netstandard1.3\Microsoft.CodeAnalysis.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CodeAnalysis" />
     <Reference Include="Microsoft.CodeAnalysis.CSharp">
-      <HintPath>..\..\..\packages\Microsoft.CodeAnalysis.CSharp.2.6.1\lib\netstandard1.3\Microsoft.CodeAnalysis.CSharp.dll</HintPath>
+      <HintPath>..\..\..\packages\Microsoft.CodeAnalysis.CSharp.2.9.0\lib\netstandard1.3\Microsoft.CodeAnalysis.CSharp.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CodeAnalysis.CSharp" />
     <Reference Include="Microsoft.CodeAnalysis.CSharp.Workspaces">
-      <HintPath>..\..\..\packages\Microsoft.CodeAnalysis.CSharp.Workspaces.2.6.1\lib\netstandard1.3\Microsoft.CodeAnalysis.CSharp.Workspaces.dll</HintPath>
+      <HintPath>..\..\..\packages\Microsoft.CodeAnalysis.CSharp.Workspaces.2.9.0\lib\netstandard1.3\Microsoft.CodeAnalysis.CSharp.Workspaces.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" />
     <Reference Include="Microsoft.CodeAnalysis.VisualBasic">
-      <HintPath>..\..\..\packages\Microsoft.CodeAnalysis.VisualBasic.2.6.1\lib\netstandard1.3\Microsoft.CodeAnalysis.VisualBasic.dll</HintPath>
+      <HintPath>..\..\..\packages\Microsoft.CodeAnalysis.VisualBasic.2.9.0\lib\netstandard1.3\Microsoft.CodeAnalysis.VisualBasic.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CodeAnalysis.VisualBasic" />
     <Reference Include="Microsoft.CodeAnalysis.VisualBasic.Workspaces">
-      <HintPath>..\..\..\packages\Microsoft.CodeAnalysis.VisualBasic.Workspaces.2.6.1\lib\netstandard1.3\Microsoft.CodeAnalysis.VisualBasic.Workspaces.dll</HintPath>
+      <HintPath>..\..\..\packages\Microsoft.CodeAnalysis.VisualBasic.Workspaces.2.9.0\lib\netstandard1.3\Microsoft.CodeAnalysis.VisualBasic.Workspaces.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CodeAnalysis.VisualBasic.Workspaces" />
     <Reference Include="Microsoft.CodeAnalysis.Workspaces">
-      <HintPath>..\..\..\packages\Microsoft.CodeAnalysis.Workspaces.Common.2.6.1\lib\net46\Microsoft.CodeAnalysis.Workspaces.dll</HintPath>
+      <HintPath>..\..\..\packages\Microsoft.CodeAnalysis.Workspaces.Common.2.9.0\lib\net46\Microsoft.CodeAnalysis.Workspaces.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CodeAnalysis.Workspaces" />
     <Reference Include="Microsoft.CodeAnalysis.Workspaces.Desktop">
-      <HintPath>..\..\..\packages\Microsoft.CodeAnalysis.Workspaces.Common.2.6.1\lib\net46\Microsoft.CodeAnalysis.Workspaces.Desktop.dll</HintPath>
+      <HintPath>..\..\..\packages\Microsoft.CodeAnalysis.Workspaces.Common.2.9.0\lib\net46\Microsoft.CodeAnalysis.Workspaces.Desktop.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CodeAnalysis.Workspaces.Desktop" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.TestPlatform.CoreUtilities">
+      <HintPath>..\..\..\packages\Microsoft.TestPlatform.ObjectModel.15.0.0\lib\net46\Microsoft.TestPlatform.CoreUtilities.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.TestPlatform.ObjectModel">
+      <HintPath>..\..\..\packages\Microsoft.TestPlatform.ObjectModel.15.0.0\lib\net46\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil">
+      <HintPath>..\..\..\packages\Mono.Cecil.0.10.3\lib\net40\Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Mdb">
+      <HintPath>..\..\..\packages\Mono.Cecil.0.10.3\lib\net40\Mono.Cecil.Mdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Pdb">
+      <HintPath>..\..\..\packages\Mono.Cecil.0.10.3\lib\net40\Mono.Cecil.Pdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Rocks">
+      <HintPath>..\..\..\packages\Mono.Cecil.0.10.3\lib\net40\Mono.Cecil.Rocks.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib" />
-    <Reference Include="Ploeh.AutoFixture">
-      <HintPath>..\..\..\packages\AutoFixture.3.51.0\lib\net40\Ploeh.AutoFixture.dll</HintPath>
+    <Reference Include="mscorlib" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="Ploeh.AutoFixture.Xunit2">
-      <HintPath>..\..\..\packages\AutoFixture.Xunit2.3.51.0\lib\net45\Ploeh.AutoFixture.Xunit2.dll</HintPath>
+    <Reference Include="SQLitePCLRaw.batteries_green">
+      <HintPath>..\..\..\packages\SQLitePCLRaw.bundle_green.1.1.11\lib\net45\SQLitePCLRaw.batteries_green.dll</HintPath>
+    </Reference>
+    <Reference Include="SQLitePCLRaw.batteries_v2">
+      <HintPath>..\..\..\packages\SQLitePCLRaw.bundle_green.1.1.11\lib\net45\SQLitePCLRaw.batteries_v2.dll</HintPath>
+    </Reference>
+    <Reference Include="SQLitePCLRaw.core">
+      <HintPath>..\..\..\packages\SQLitePCLRaw.core.1.1.11\lib\net45\SQLitePCLRaw.core.dll</HintPath>
+    </Reference>
+    <Reference Include="SQLitePCLRaw.provider.e_sqlite3">
+      <HintPath>..\..\..\packages\SQLitePCLRaw.provider.e_sqlite3.net45.1.1.11\lib\net45\SQLitePCLRaw.provider.e_sqlite3.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.AppContext">
       <HintPath>..\..\..\packages\System.AppContext.4.3.0\lib\net463\System.AppContext.dll</HintPath>
     </Reference>
     <Reference Include="System.Collections.Immutable">
-      <HintPath>..\..\..\packages\System.Collections.Immutable.1.3.1\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
+      <HintPath>..\..\..\packages\System.Collections.Immutable.1.5.0\lib\netstandard2.0\System.Collections.Immutable.dll</HintPath>
     </Reference>
+    <Reference Include="System.Collections.Immutable" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Composition.AttributedModel">
-      <HintPath>..\..\..\packages\System.Composition.AttributedModel.1.1.0\lib\netstandard2.0\System.Composition.AttributedModel.dll</HintPath>
+      <HintPath>..\..\..\packages\System.Composition.AttributedModel.1.2.0\lib\netstandard2.0\System.Composition.AttributedModel.dll</HintPath>
     </Reference>
+    <Reference Include="System.Composition.AttributedModel" />
     <Reference Include="System.Composition.Convention">
-      <HintPath>..\..\..\packages\System.Composition.Convention.1.1.0\lib\netstandard2.0\System.Composition.Convention.dll</HintPath>
+      <HintPath>..\..\..\packages\System.Composition.Convention.1.2.0\lib\netstandard2.0\System.Composition.Convention.dll</HintPath>
     </Reference>
+    <Reference Include="System.Composition.Convention" />
     <Reference Include="System.Composition.Hosting">
-      <HintPath>..\..\..\packages\System.Composition.Hosting.1.1.0\lib\netstandard2.0\System.Composition.Hosting.dll</HintPath>
+      <HintPath>..\..\..\packages\System.Composition.Hosting.1.2.0\lib\netstandard2.0\System.Composition.Hosting.dll</HintPath>
     </Reference>
+    <Reference Include="System.Composition.Hosting" />
     <Reference Include="System.Composition.Runtime">
-      <HintPath>..\..\..\packages\System.Composition.Runtime.1.1.0\lib\netstandard2.0\System.Composition.Runtime.dll</HintPath>
+      <HintPath>..\..\..\packages\System.Composition.Runtime.1.2.0\lib\netstandard2.0\System.Composition.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="System.Composition.Runtime" />
     <Reference Include="System.Composition.TypedParts">
-      <HintPath>..\..\..\packages\System.Composition.TypedParts.1.1.0\lib\netstandard2.0\System.Composition.TypedParts.dll</HintPath>
+      <HintPath>..\..\..\packages\System.Composition.TypedParts.1.2.0\lib\netstandard2.0\System.Composition.TypedParts.dll</HintPath>
     </Reference>
+    <Reference Include="System.Composition.TypedParts" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Console">
-      <HintPath>..\..\..\packages\System.Console.4.3.0\lib\net46\System.Console.dll</HintPath>
+      <HintPath>..\..\..\packages\System.Console.4.3.1\lib\net46\System.Console.dll</HintPath>
+      <Private>True</Private>
     </Reference>
+    <Reference Include="System.Console" />
     <Reference Include="System.Core" />
     <Reference Include="System.Diagnostics.FileVersionInfo">
       <HintPath>..\..\..\packages\System.Diagnostics.FileVersionInfo.4.3.0\lib\net46\System.Diagnostics.FileVersionInfo.dll</HintPath>
@@ -172,10 +244,14 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Reflection.Metadata">
-      <HintPath>..\..\..\packages\System.Reflection.Metadata.1.4.2\lib\portable-net45+win8\System.Reflection.Metadata.dll</HintPath>
+      <HintPath>..\..\..\packages\System.Reflection.Metadata.1.6.0\lib\netstandard2.0\System.Reflection.Metadata.dll</HintPath>
     </Reference>
+    <Reference Include="System.Reflection.Metadata" />
     <Reference Include="System.Runtime">
       <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe">
+      <HintPath>..\..\..\packages\System.Runtime.CompilerServices.Unsafe.4.5.1\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Extensions">
       <Private>True</Private>
@@ -183,6 +259,11 @@
     <Reference Include="System.Runtime.InteropServices">
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation">
+      <HintPath>..\..\..\packages\System.Runtime.InteropServices.RuntimeInformation.4.0.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security.Cryptography.Algorithms">
       <HintPath>..\..\..\packages\System.Security.Cryptography.Algorithms.4.3.1\lib\net463\System.Security.Cryptography.Algorithms.dll</HintPath>
       <Private>True</Private>
@@ -198,24 +279,30 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Text.Encoding.CodePages">
-      <HintPath>..\..\..\packages\System.Text.Encoding.CodePages.4.4.0\lib\net461\System.Text.Encoding.CodePages.dll</HintPath>
+      <HintPath>..\..\..\packages\System.Text.Encoding.CodePages.4.5.0\lib\net461\System.Text.Encoding.CodePages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Encoding.CodePages" />
+    <Reference Include="System.Threading.Tasks.Extensions">
+      <HintPath>..\..\..\packages\System.Threading.Tasks.Extensions.4.5.1\lib\netstandard2.0\System.Threading.Tasks.Extensions.dll</HintPath>
     </Reference>
     <Reference Include="System.Threading.Thread">
       <HintPath>..\..\..\packages\System.Threading.Thread.4.3.0\lib\net46\System.Threading.Thread.dll</HintPath>
     </Reference>
     <Reference Include="System.ValueTuple">
-      <HintPath>..\..\..\packages\System.ValueTuple.4.3.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+      <HintPath>..\..\..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
+      <Private>True</Private>
     </Reference>
+    <Reference Include="System.ValueTuple" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
+    <ProjectReference Include="..\..\..\Core\Markify.Tests.Extensions\Markify.Tests.Extensions.fsproj">
+      <Name>Markify.Tests.Extensions</Name>
+      <Project>{ff292b05-4d30-4945-ba44-29bcc319cec4}</Project>
+      <Private>True</Private>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Domain\Markify.Domain.Compiler\Markify.Domain.Compiler.fsproj">
       <Name>Markify.Domain.Compiler</Name>
       <Project>{a4959db4-7b61-4e7e-918f-59647879a50d}</Project>
-      <Private>True</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Domain\Markify.Domain.IDE\Markify.Domain.Ide.fsproj">
-      <Name>Markify.Domain.Ide</Name>
-      <Project>{a55c060a-c3bf-4eb6-8439-cd5dc3614cfd}</Project>
       <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\Markify.Services.Roslyn.Common\Markify.Services.Roslyn.Common.fsproj">
@@ -226,11 +313,6 @@
     <ProjectReference Include="..\Markify.Services.Roslyn.CSharp\Markify.Services.Roslyn.CSharp.fsproj">
       <Name>Markify.Services.Roslyn.CSharp</Name>
       <Project>{40b61bec-6d13-4ed1-bc73-17104c77e932}</Project>
-      <Private>True</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\Markify.Services.Roslyn.Fixtures\Markify.Services.Roslyn.Fixtures.csproj">
-      <Name>Markify.Services.Roslyn.Fixtures</Name>
-      <Project>{1435b850-0ffc-4e4b-b74c-c72eb6723a61}</Project>
       <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\Markify.Services.Roslyn.VisualBasic\Markify.Services.Roslyn.VisualBasic.fsproj">
@@ -246,6 +328,7 @@
     <Reference Include="System.Xml.ReaderWriter">
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Xml.Serialization" />
     <Reference Include="System.Xml.XmlDocument">
       <HintPath>..\..\..\packages\System.Xml.XmlDocument.4.3.0\lib\net46\System.Xml.XmlDocument.dll</HintPath>
     </Reference>
@@ -258,18 +341,6 @@
     <Reference Include="Unquote">
       <HintPath>..\..\..\packages\Unquote.4.0.0\lib\net45\Unquote.dll</HintPath>
     </Reference>
-    <Reference Include="xunit.abstractions">
-      <HintPath>..\..\..\packages\xunit.abstractions.2.0.1\lib\net35\xunit.abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.assert">
-      <HintPath>..\..\..\packages\xunit.assert.2.3.1\lib\netstandard1.1\xunit.assert.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.core">
-      <HintPath>..\..\..\packages\xunit.extensibility.core.2.3.1\lib\netstandard1.1\xunit.core.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.execution.desktop">
-      <HintPath>..\..\..\packages\xunit.extensibility.execution.2.3.1\lib\net452\xunit.execution.desktop.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -279,8 +350,14 @@
     <Error Condition="!Exists('..\..\..\packages\xunit.core.2.3.1\build\xunit.core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\xunit.core.2.3.1\build\xunit.core.targets'))" />
     <Error Condition="!Exists('..\..\..\packages\xunit.runner.console.2.3.1\build\xunit.runner.console.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\xunit.runner.console.2.3.1\build\xunit.runner.console.props'))" />
     <Error Condition="!Exists('..\..\..\packages\xunit.runner.visualstudio.2.3.1\build\net20\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\xunit.runner.visualstudio.2.3.1\build\net20\xunit.runner.visualstudio.props'))" />
+    <Error Condition="!Exists('..\..\..\packages\SQLitePCLRaw.lib.e_sqlite3.linux.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.linux.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\SQLitePCLRaw.lib.e_sqlite3.linux.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.linux.targets'))" />
+    <Error Condition="!Exists('..\..\..\packages\SQLitePCLRaw.lib.e_sqlite3.osx.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.osx.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\SQLitePCLRaw.lib.e_sqlite3.osx.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.osx.targets'))" />
+    <Error Condition="!Exists('..\..\..\packages\SQLitePCLRaw.lib.e_sqlite3.v110_xp.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.v110_xp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\SQLitePCLRaw.lib.e_sqlite3.v110_xp.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.v110_xp.targets'))" />
   </Target>
   <Import Project="..\..\..\packages\xunit.core.2.3.1\build\xunit.core.targets" Condition="Exists('..\..\..\packages\xunit.core.2.3.1\build\xunit.core.targets')" />
+  <Import Project="..\..\..\packages\SQLitePCLRaw.lib.e_sqlite3.linux.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.linux.targets" Condition="Exists('..\..\..\packages\SQLitePCLRaw.lib.e_sqlite3.linux.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.linux.targets')" />
+  <Import Project="..\..\..\packages\SQLitePCLRaw.lib.e_sqlite3.osx.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.osx.targets" Condition="Exists('..\..\..\packages\SQLitePCLRaw.lib.e_sqlite3.osx.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.osx.targets')" />
+  <Import Project="..\..\..\packages\SQLitePCLRaw.lib.e_sqlite3.v110_xp.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.v110_xp.targets" Condition="Exists('..\..\..\packages\SQLitePCLRaw.lib.e_sqlite3.v110_xp.1.1.11\build\net35\SQLitePCLRaw.lib.e_sqlite3.v110_xp.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
