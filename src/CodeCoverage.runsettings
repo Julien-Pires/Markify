@@ -10,6 +10,7 @@
                 <ModulePath>.*fixtures.*</ModulePath>
                 <ModulePath>.*microsoft.*</ModulePath>
                 <ModulePath>.*moq.*</ModulePath>
+                <ModulePath>.Tests.dll</ModulePath>
               </Exclude>
             </ModulePaths>
             <UseVerifiableInstrumentation>True</UseVerifiableInstrumentation>
