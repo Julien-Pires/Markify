@@ -58,7 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Core">
-      <HintPath>..\..\..\packages\FSharp.Core.4.5.2\lib\net45\FSharp.Core.dll</HintPath>
+      <HintPath>..\..\..\packages\FSharp.Core.4.6.2\lib\net45\FSharp.Core.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="Ninject">
@@ -69,7 +69,7 @@
     <Reference Include="System.Numerics" />
     <ProjectReference Include="..\..\..\Domain\Markify.Domain.Compiler\Markify.Domain.Compiler.fsproj">
       <Name>Markify.Domain.Compiler</Name>
-      <Project>{a4959db4-7b61-4e7e-918f-59647879a50d}</Project>
+      <Project>{a1874eb9-3199-4cf4-97b2-dc5a2a82f275}</Project>
       <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\..\Domain\Markify.Domain.Document\Markify.Domain.Document.fsproj">

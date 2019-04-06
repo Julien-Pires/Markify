@@ -38,8 +38,8 @@
     <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Castle.Core.4.2.1\lib\net45\Castle.Core.dll</HintPath>
     </Reference>
-    <Reference Include="FSharp.Core, Version=4.5.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\FSharp.Core.4.5.2\lib\net45\FSharp.Core.dll</HintPath>
+    <Reference Include="FSharp.Core, Version=4.6.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\FSharp.Core.4.6.2\lib\net45\FSharp.Core.dll</HintPath>
     </Reference>
     <Reference Include="Moq, Version=4.8.0.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Moq.4.8.1\lib\net45\Moq.dll</HintPath>
@@ -144,7 +144,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Domain\Markify.Domain.Compiler\Markify.Domain.Compiler.fsproj">
-      <Project>{a4959db4-7b61-4e7e-918f-59647879a50d}</Project>
+      <Project>{a1874eb9-3199-4cf4-97b2-dc5a2a82f275}</Project>
       <Name>Markify.Domain.Compiler</Name>
     </ProjectReference>
     <ProjectReference Include="..\Markify.Services.Rendering.T4\Markify.Services.Rendering.T4.csproj">

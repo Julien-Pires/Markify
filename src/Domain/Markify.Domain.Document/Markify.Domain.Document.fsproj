@@ -59,21 +59,23 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Core">
-      <HintPath>..\..\packages\FSharp.Core.4.5.2\lib\net45\FSharp.Core.dll</HintPath>
+      <HintPath>..\..\packages\FSharp.Core.4.6.2\lib\net45\FSharp.Core.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
-    <ProjectReference Include="..\Markify.Domain.Compiler\Markify.Domain.Compiler.fsproj">
-      <Name>Markify.Domain.Compiler</Name>
-      <Project>{a4959db4-7b61-4e7e-918f-59647879a50d}</Project>
-      <Private>True</Private>
-    </ProjectReference>
     <Reference Include="System.ValueTuple">
       <HintPath>..\..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
       <Private>True</Private>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Markify.Domain.Compiler\Markify.Domain.Compiler.fsproj">
+      <Name>Markify.Domain.Compiler</Name>
+      <Project>{a1874eb9-3199-4cf4-97b2-dc5a2a82f275}</Project>
+      <Private>True</Private>
+    </ProjectReference>
   </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

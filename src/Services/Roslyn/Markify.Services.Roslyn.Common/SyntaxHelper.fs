@@ -1,6 +1,5 @@
 ﻿namespace Markify.Services.Roslyn.Common
 
-open Markify.Domain.Compiler
 open Microsoft.CodeAnalysis
 
 module SyntaxHelper =

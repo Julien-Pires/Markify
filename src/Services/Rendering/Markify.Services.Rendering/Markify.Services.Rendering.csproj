@@ -31,8 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FSharp.Core, Version=4.5.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\FSharp.Core.4.5.2\lib\net45\FSharp.Core.dll</HintPath>
+    <Reference Include="FSharp.Core, Version=4.6.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\FSharp.Core.4.6.2\lib\net45\FSharp.Core.dll</HintPath>
     </Reference>
     <Reference Include="Optional, Version=3.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Optional.3.2.0\lib\net462\Optional.dll</HintPath>
@@ -53,7 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Domain\Markify.Domain.Compiler\Markify.Domain.Compiler.fsproj">
-      <Project>{a4959db4-7b61-4e7e-918f-59647879a50d}</Project>
+      <Project>{a1874eb9-3199-4cf4-97b2-dc5a2a82f275}</Project>
       <Name>Markify.Domain.Compiler</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\Domain\Markify.Domain.Document\Markify.Domain.Document.fsproj">

@@ -5,6 +5,7 @@ open Markify.Domain.Compiler
 
 [<AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)>]
 type LanguageAttribute(language) =
+    inherit Attribute()
     member __.Language : ProjectLanguage = language
 
 type ILanguageAnalyzer =
