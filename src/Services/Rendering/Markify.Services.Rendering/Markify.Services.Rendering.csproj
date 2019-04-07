@@ -52,6 +52,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\CodeAnalyzer\Markify.CodeAnalyzer\Markify.CodeAnalyzer.fsproj">
+      <Project>{375f55b3-9c64-4701-bd1c-b69d2b672c68}</Project>
+      <Name>Markify.CodeAnalyzer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Domain\Markify.Domain.Document\Markify.Domain.Document.fsproj">
       <Project>{5fd3a38e-d96d-4749-a8d3-d1f8d769d65b}</Project>
       <Name>Markify.Domain.Document</Name>

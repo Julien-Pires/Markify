@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Markify.Domain.Compiler;
-using Markify.Services.Roslyn;
-using Markify.Services.Roslyn.Common;
-using Markify.Services.Roslyn.Csharp;
-using Markify.Services.Roslyn.VisualBasic;
+using Markify.CodeAnalyzer;
+using Markify.CodeAnalyzer.Roslyn;
+using Markify.CodeAnalyzer.Roslyn.Common;
+using Markify.CodeAnalyzer.Roslyn.Csharp;
+using Markify.CodeAnalyzer.Roslyn.VisualBasic;
 using Ninject.Modules;
 
 namespace Markify.Application.Services

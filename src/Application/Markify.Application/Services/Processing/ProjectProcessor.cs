@@ -4,7 +4,7 @@ using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using Markify.Application.Services.Settings;
-using Markify.Domain.Compiler;
+using Markify.CodeAnalyzer;
 using Markify.Domain.Document;
 
 namespace Markify.Application.Services.Processing
@@ -82,7 +82,7 @@ namespace Markify.Application.Services.Processing
                                     return acc2;
                             }
                         });
-                    var project = new Domain.Compiler.Project(c.Name, files);
+                    var project = new CodeAnalyzer.Project(c.Name, files);
 
                     return acc.Add(_analyzer.Analyze(project));
                 });

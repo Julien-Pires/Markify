@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using Markify.Domain.Compiler;
+using Markify.CodeAnalyzer;
 using Ploeh.AutoFixture.Kernel;
 
 namespace Markify.Services.Rendering.T4.Tests.Attributes

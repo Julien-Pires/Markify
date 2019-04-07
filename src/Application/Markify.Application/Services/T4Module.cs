@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using Markify.Domain.Compiler;
+using Markify.CodeAnalyzer;
 using Markify.Services.Rendering;
 using Markify.Services.Rendering.T4;
 using Markify.Services.Rendering.T4.Templates;

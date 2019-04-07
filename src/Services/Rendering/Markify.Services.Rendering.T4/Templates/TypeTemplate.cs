@@ -14,7 +14,7 @@ namespace Markify.Services.Rendering.T4.Templates
     using System.Collections.Generic;
     using static System.Globalization.CultureInfo;
     using Microsoft.VisualStudio.TextTemplating;
-    using Markify.Domain.Compiler;
+    using Markify.CodeAnalyzer;
     using System;
     
     /// <summary>

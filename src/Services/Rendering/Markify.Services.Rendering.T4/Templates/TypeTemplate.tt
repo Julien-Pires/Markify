@@ -5,7 +5,7 @@
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="static System.Globalization.CultureInfo" #>
 <#@ import namespace="Microsoft.VisualStudio.TextTemplating" #>
-<#@ import namespace="Markify.Domain.Compiler" #>
+<#@ import namespace="Markify.CodeAnalyzer" #>
 <# var definition = (TypeDefinition)Session["Content"]; #>
 ### **<#= MarkdownHelper.EscapeString(DefinitionFormatter.GetNameWithParameters(definition.Identity)) #>** : <#= DefinitionFormatter.GetAccessModifiers(definition) #> <#= DefinitionFormatter.GetKind(definition) #>
 <# 

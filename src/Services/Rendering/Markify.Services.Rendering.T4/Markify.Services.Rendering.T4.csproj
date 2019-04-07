@@ -95,6 +95,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\CodeAnalyzer\Markify.CodeAnalyzer\Markify.CodeAnalyzer.fsproj">
+      <Project>{375f55b3-9c64-4701-bd1c-b69d2b672c68}</Project>
+      <Name>Markify.CodeAnalyzer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Markify.Services.Rendering\Markify.Services.Rendering.csproj">
       <Project>{6b9ce3e8-68da-4eb9-8362-58a289b51e76}</Project>
       <Name>Markify.Services.Rendering</Name>

@@ -266,6 +266,30 @@
     <Compile Include="Services\RoslynModule.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\CodeAnalyzer\Markify.CodeAnalyzer\Markify.CodeAnalyzer.fsproj">
+      <Project>{375f55b3-9c64-4701-bd1c-b69d2b672c68}</Project>
+      <Name>Markify.CodeAnalyzer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\CodeAnalyzer\Roslyn\Markify.CodeAnalyzer.Roslyn.Common\Markify.CodeAnalyzer.Roslyn.Common.fsproj">
+      <Project>{cd488698-a966-4b5e-a0f0-e70a0e2f6400}</Project>
+      <Name>Markify.CodeAnalyzer.Roslyn.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\CodeAnalyzer\Roslyn\Markify.CodeAnalyzer.Roslyn.CSharp\Markify.CodeAnalyzer.Roslyn.CSharp.fsproj">
+      <Project>{f9522898-5249-437f-801a-dc45e81313ba}</Project>
+      <Name>Markify.CodeAnalyzer.Roslyn.CSharp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\CodeAnalyzer\Roslyn\Markify.CodeAnalyzer.Roslyn.Tests\Markify.CodeAnalyzer.Roslyn.Tests.fsproj">
+      <Project>{72d26aa4-0a42-4b58-a035-84956ab939b1}</Project>
+      <Name>Markify.CodeAnalyzer.Roslyn.Tests</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\CodeAnalyzer\Roslyn\Markify.CodeAnalyzer.Roslyn.VisualBasic\Markify.CodeAnalyzer.Roslyn.VisualBasic.fsproj">
+      <Project>{f1d6634b-43a2-4be6-a49e-9b55298978d6}</Project>
+      <Name>Markify.CodeAnalyzer.Roslyn.VisualBasic</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\CodeAnalyzer\Roslyn\Markify.CodeAnalyzer.Roslyn\Markify.CodeAnalyzer.Roslyn.fsproj">
+      <Project>{e99886c0-27d9-4429-b549-cda5c9d3bb1a}</Project>
+      <Name>Markify.CodeAnalyzer.Roslyn</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Core\Markify.Core.FSharp\Markify.Core.FSharp.fsproj">
       <Project>{d9a8fb2a-fc1a-4a2b-a5a3-17d72b712a04}</Project>
       <Name>Markify.Core.FSharp</Name>

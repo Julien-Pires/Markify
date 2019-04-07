@@ -4,7 +4,7 @@ module Customization =
     open System
     open System.Collections.Generic
     open Markify.Document
-    open Markify.Domain.Compiler
+    open Markify.CodeAnalyzer
     open Markify.Domain.Document
     open Markify.Services.Document
     open Ploeh.AutoFixture

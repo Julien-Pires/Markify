@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Markify.Domain.Compiler;
+using Markify.CodeAnalyzer;
 using Microsoft.FSharp.Core;
 using Optional;
 

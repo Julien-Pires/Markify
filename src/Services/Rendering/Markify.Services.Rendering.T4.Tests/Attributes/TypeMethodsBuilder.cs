@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Markify.Domain.Compiler;
+using Markify.CodeAnalyzer;
 using Microsoft.FSharp.Core;
 using Ploeh.AutoFixture.Kernel;
 

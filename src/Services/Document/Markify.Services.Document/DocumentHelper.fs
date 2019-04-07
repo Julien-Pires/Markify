@@ -3,7 +3,7 @@
 open System
 open System.IO
 open Markify.Domain.Document
-open Markify.Domain.Compiler
+open Markify.CodeAnalyzer
 
 module DocumentHelper =
     let convertIdentityToPath identity =

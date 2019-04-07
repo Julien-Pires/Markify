@@ -3,7 +3,7 @@
 open System
 open DocumentHelper
 open Markify.Domain.Document
-open Markify.Domain.Compiler
+open Markify.CodeAnalyzer
 
 type SimpleDocumentOrganizer() =
     interface IDocumentOrganizer with

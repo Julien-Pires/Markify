@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="VisualBasicHelper.fs" />
+    <Compile Include="Comments.fs" />
+    <Compile Include="FactoryHelper.fs" />
+    <Compile Include="DefinitionsFactory.fs" />
+    <Compile Include="VisualBasicAnalyzer.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="3.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Markify.CodeAnalyzer\Markify.CodeAnalyzer.fsproj" />
+    <ProjectReference Include="..\Markify.CodeAnalyzer.Roslyn.Common\Markify.CodeAnalyzer.Roslyn.Common.fsproj" />
+  </ItemGroup>
+
+</Project>

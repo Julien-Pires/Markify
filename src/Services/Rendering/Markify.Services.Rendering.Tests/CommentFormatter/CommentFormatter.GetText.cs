@@ -1,5 +1,5 @@
 ﻿using System;
-using Markify.Domain.Compiler;
+using Markify.CodeAnalyzer;
 using NFluent;
 using Xunit;
 

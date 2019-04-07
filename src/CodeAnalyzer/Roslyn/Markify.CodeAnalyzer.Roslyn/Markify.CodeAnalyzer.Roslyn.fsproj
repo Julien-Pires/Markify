@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Core\Markify.Core.FSharp\Markify.Core.FSharp.fsproj" />
+    <ProjectReference Include="..\..\Markify.CodeAnalyzer\Markify.CodeAnalyzer.fsproj" />
+    <ProjectReference Include="..\Markify.CodeAnalyzer.Roslyn.Common\Markify.CodeAnalyzer.Roslyn.Common.fsproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DefinitionHelper.fs" />
+    <Compile Include="Mergers.fs" />
+    <Compile Include="RoslynAnalyzer.fs" />
+  </ItemGroup>
+</Project>

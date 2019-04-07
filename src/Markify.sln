@@ -57,17 +57,19 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Markify.Tests.Extensions", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CodeAnalyzer", "CodeAnalyzer", "{15C0BB84-7846-4AB3-9AE3-E9806FCD1E66}"
 EndProject
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Markify.Services.Roslyn", "CodeAnalyzer\Markify.Services.Roslyn\Markify.Services.Roslyn.fsproj", "{E99886C0-27D9-4429-B549-CDA5C9D3BB1A}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Markify.CodeAnalyzer.Roslyn", "CodeAnalyzer\Roslyn\Markify.CodeAnalyzer.Roslyn\Markify.CodeAnalyzer.Roslyn.fsproj", "{E99886C0-27D9-4429-B549-CDA5C9D3BB1A}"
 EndProject
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Markify.Services.Roslyn.Common", "CodeAnalyzer\Markify.Services.Roslyn.Common\Markify.Services.Roslyn.Common.fsproj", "{CD488698-A966-4B5E-A0F0-E70A0E2F6400}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Markify.CodeAnalyzer.Roslyn.Common", "CodeAnalyzer\Roslyn\Markify.CodeAnalyzer.Roslyn.Common\Markify.CodeAnalyzer.Roslyn.Common.fsproj", "{CD488698-A966-4B5E-A0F0-E70A0E2F6400}"
 EndProject
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Markify.Services.Roslyn.CSharp", "CodeAnalyzer\Markify.Services.Roslyn.CSharp\Markify.Services.Roslyn.CSharp.fsproj", "{F9522898-5249-437F-801A-DC45E81313BA}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Markify.CodeAnalyzer.Roslyn.CSharp", "CodeAnalyzer\Roslyn\Markify.CodeAnalyzer.Roslyn.CSharp\Markify.CodeAnalyzer.Roslyn.CSharp.fsproj", "{F9522898-5249-437F-801A-DC45E81313BA}"
 EndProject
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Markify.Services.Roslyn.VisualBasic", "CodeAnalyzer\Markify.Services.Roslyn.VisualBasic\Markify.Services.Roslyn.VisualBasic.fsproj", "{F1D6634B-43A2-4BE6-A49E-9B55298978D6}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Markify.CodeAnalyzer.Roslyn.VisualBasic", "CodeAnalyzer\Roslyn\Markify.CodeAnalyzer.Roslyn.VisualBasic\Markify.CodeAnalyzer.Roslyn.VisualBasic.fsproj", "{F1D6634B-43A2-4BE6-A49E-9B55298978D6}"
 EndProject
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Markify.Domain.Compiler", "CodeAnalyzer\Markify.Domain.Compiler\Markify.Domain.Compiler.fsproj", "{375F55B3-9C64-4701-BD1C-B69D2B672C68}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Markify.CodeAnalyzer", "CodeAnalyzer\Markify.CodeAnalyzer\Markify.CodeAnalyzer.fsproj", "{375F55B3-9C64-4701-BD1C-B69D2B672C68}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Markify.Services.Roslyn.Tests", "CodeAnalyzer\Markify.Services.Roslyn.Tests\Markify.Services.Roslyn.Tests.fsproj", "{72D26AA4-0A42-4B58-A035-84956AB939B1}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Markify.CodeAnalyzer.Roslyn.Tests", "CodeAnalyzer\Roslyn\Markify.CodeAnalyzer.Roslyn.Tests\Markify.CodeAnalyzer.Roslyn.Tests.fsproj", "{72D26AA4-0A42-4B58-A035-84956AB939B1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Roslyn", "Roslyn", "{51044EFC-2547-49AD-9943-BD34A3C52CA0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -440,12 +442,13 @@ Global
 		{009B5CDE-139D-480A-A77D-C69CDC8A24A6} = {6A85A688-D383-4629-B339-A027870EBFFF}
 		{17004EEA-0459-48B3-9573-F8F91D8000BC} = {6A85A688-D383-4629-B339-A027870EBFFF}
 		{FF292B05-4D30-4945-BA44-29BCC319CEC4} = {9F90CBB9-AA6D-4C33-86D7-93E2F5E51E93}
-		{E99886C0-27D9-4429-B549-CDA5C9D3BB1A} = {15C0BB84-7846-4AB3-9AE3-E9806FCD1E66}
-		{CD488698-A966-4B5E-A0F0-E70A0E2F6400} = {15C0BB84-7846-4AB3-9AE3-E9806FCD1E66}
-		{F9522898-5249-437F-801A-DC45E81313BA} = {15C0BB84-7846-4AB3-9AE3-E9806FCD1E66}
-		{F1D6634B-43A2-4BE6-A49E-9B55298978D6} = {15C0BB84-7846-4AB3-9AE3-E9806FCD1E66}
+		{E99886C0-27D9-4429-B549-CDA5C9D3BB1A} = {51044EFC-2547-49AD-9943-BD34A3C52CA0}
+		{CD488698-A966-4B5E-A0F0-E70A0E2F6400} = {51044EFC-2547-49AD-9943-BD34A3C52CA0}
+		{F9522898-5249-437F-801A-DC45E81313BA} = {51044EFC-2547-49AD-9943-BD34A3C52CA0}
+		{F1D6634B-43A2-4BE6-A49E-9B55298978D6} = {51044EFC-2547-49AD-9943-BD34A3C52CA0}
 		{375F55B3-9C64-4701-BD1C-B69D2B672C68} = {15C0BB84-7846-4AB3-9AE3-E9806FCD1E66}
-		{72D26AA4-0A42-4B58-A035-84956AB939B1} = {15C0BB84-7846-4AB3-9AE3-E9806FCD1E66}
+		{72D26AA4-0A42-4B58-A035-84956AB939B1} = {51044EFC-2547-49AD-9943-BD34A3C52CA0}
+		{51044EFC-2547-49AD-9943-BD34A3C52CA0} = {15C0BB84-7846-4AB3-9AE3-E9806FCD1E66}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9635AA6A-D6B4-4C8A-8817-E462D61B3BF9}

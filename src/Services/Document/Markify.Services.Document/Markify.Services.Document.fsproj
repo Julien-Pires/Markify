@@ -67,6 +67,11 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
+    <ProjectReference Include="..\..\..\CodeAnalyzer\Markify.CodeAnalyzer\Markify.CodeAnalyzer.fsproj">
+      <Name>Markify.CodeAnalyzer</Name>
+      <Project>{375f55b3-9c64-4701-bd1c-b69d2b672c68}</Project>
+      <Private>True</Private>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Domain\Markify.Domain.Document\Markify.Domain.Document.fsproj">
       <Name>Markify.Domain.Document</Name>
       <Project>{5fd3a38e-d96d-4749-a8d3-d1f8d769d65b}</Project>
