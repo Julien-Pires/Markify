@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Domain\Markify.Domain.Compiler\Markify.Domain.Compiler.fsproj" />
+    <ProjectReference Include="..\Markify.Domain.Compiler\Markify.Domain.Compiler.fsproj" />
   </ItemGroup>
 
 </Project>

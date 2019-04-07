@@ -52,10 +52,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Domain\Markify.Domain.Compiler\Markify.Domain.Compiler.fsproj">
-      <Project>{a1874eb9-3199-4cf4-97b2-dc5a2a82f275}</Project>
-      <Name>Markify.Domain.Compiler</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\Domain\Markify.Domain.Document\Markify.Domain.Document.fsproj">
       <Project>{5fd3a38e-d96d-4749-a8d3-d1f8d769d65b}</Project>
       <Name>Markify.Domain.Document</Name>

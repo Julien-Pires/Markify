@@ -95,10 +95,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Domain\Markify.Domain.Compiler\Markify.Domain.Compiler.fsproj">
-      <Project>{a1874eb9-3199-4cf4-97b2-dc5a2a82f275}</Project>
-      <Name>Markify.Domain.Compiler</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Markify.Services.Rendering\Markify.Services.Rendering.csproj">
       <Project>{6b9ce3e8-68da-4eb9-8362-58a289b51e76}</Project>
       <Name>Markify.Services.Rendering</Name>

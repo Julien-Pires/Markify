@@ -5,19 +5,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Syntax.fs" />
+    <Compile Include="VisualBasicHelper.fs" />
     <Compile Include="Comments.fs" />
     <Compile Include="FactoryHelper.fs" />
     <Compile Include="DefinitionsFactory.fs" />
-    <Compile Include="CSharpAnalyzer.fs" />
+    <Compile Include="VisualBasicAnalyzer.fs" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.0.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="3.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Domain\Markify.Domain.Compiler\Markify.Domain.Compiler.fsproj" />
+    <ProjectReference Include="..\Markify.Domain.Compiler\Markify.Domain.Compiler.fsproj" />
     <ProjectReference Include="..\Markify.Services.Roslyn.Common\Markify.Services.Roslyn.Common.fsproj" />
   </ItemGroup>
 

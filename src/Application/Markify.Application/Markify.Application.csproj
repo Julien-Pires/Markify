@@ -270,10 +270,6 @@
       <Project>{d9a8fb2a-fc1a-4a2b-a5a3-17d72b712a04}</Project>
       <Name>Markify.Core.FSharp</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Domain\Markify.Domain.Compiler\Markify.Domain.Compiler.fsproj">
-      <Project>{a1874eb9-3199-4cf4-97b2-dc5a2a82f275}</Project>
-      <Name>Markify.Domain.Compiler</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Domain\Markify.Domain.Document\Markify.Domain.Document.fsproj">
       <Project>{5FD3A38E-D96D-4749-A8D3-D1F8D769D65B}</Project>
       <Name>Markify.Domain.Document</Name>
@@ -297,22 +293,6 @@
     <ProjectReference Include="..\..\Services\Rendering\Markify.Services.Rendering\Markify.Services.Rendering.csproj">
       <Project>{6B9CE3E8-68DA-4EB9-8362-58A289B51E76}</Project>
       <Name>Markify.Services.Rendering</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Services\Roslyn\Markify.Services.Roslyn.Common\Markify.Services.Roslyn.Common.fsproj">
-      <Project>{5c7c0398-6810-4cab-822b-741f7e06377d}</Project>
-      <Name>Markify.Services.Roslyn.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Services\Roslyn\Markify.Services.Roslyn.CSharp\Markify.Services.Roslyn.CSharp.fsproj">
-      <Project>{0a59e10e-e983-4a1f-91c3-8320b6c1cdf8}</Project>
-      <Name>Markify.Services.Roslyn.CSharp</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Services\Roslyn\Markify.Services.Roslyn.VisualBasic\Markify.Services.Roslyn.VisualBasic.fsproj">
-      <Project>{b8f3d72e-58e2-4353-95eb-a71d8fa51784}</Project>
-      <Name>Markify.Services.Roslyn.VisualBasic</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Services\Roslyn\Markify.Services.Roslyn\Markify.Services.Roslyn.fsproj">
-      <Project>{5277f977-f85e-44ec-a0a7-8c0b35551d6a}</Project>
-      <Name>Markify.Services.Roslyn</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Services\VisualStudio\Markify.Services.VisualStudio\Markify.Services.VisualStudio.fsproj">
       <Project>{17004eea-0459-48b3-9573-f8f91d8000bc}</Project>
