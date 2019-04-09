@@ -8,6 +8,7 @@
     <ProjectReference Include="..\Markify.CodeAnalyzer.Roslyn.Common\Markify.CodeAnalyzer.Roslyn.Common.fsproj" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Analyzer.fs" />
     <Compile Include="DefinitionHelper.fs" />
     <Compile Include="Mergers.fs" />
     <Compile Include="RoslynAnalyzer.fs" />

@@ -88,7 +88,7 @@ module StructureDefinitionFactory =
         fieldSyntax.Declaration.Variables
         |> Seq.fold (fun acc c ->
             let field = {
-                FieldDefinition.Name = c.Identifier.Text
+                FieldInfo.Name = c.Identifier.Text
                 Type = fieldSyntax.Declaration.Type.ToString()
                 AccessModifiers = getMemberAccessModifiers fieldSyntax.Modifiers defaultAccessModifier
                 Modifiers = getAdditionalModifiers fieldSyntax.Modifiers
@@ -134,7 +134,7 @@ module StructureDefinitionFactory =
     let getEvents (eventSyntax : MemberDeclarationSyntax) defaultAccessModifier =
         match eventSyntax with
         | IsEventDeclaration x ->
-            [{  EventDefinition.Name = x.Identifier.Text 
+            [{  EventInfo.Name = x.Identifier.Text 
                 Type = x.Type.ToString()
                 AccessModifiers = getMemberAccessModifiers x.Modifiers defaultAccessModifier
                 Modifiers = getAdditionalModifiers x.Modifiers }]
@@ -143,7 +143,7 @@ module StructureDefinitionFactory =
             declaration.Variables
             |> Seq.fold (fun acc d -> 
                 let event = { 
-                    EventDefinition.Name = d.Identifier.Text 
+                    EventInfo.Name = d.Identifier.Text 
                     Type = declaration.Type.ToString()
                     AccessModifiers = getMemberAccessModifiers x.Modifiers defaultAccessModifier
                     Modifiers = getAdditionalModifiers x.Modifiers }
@@ -220,4 +220,4 @@ module StructureDefinitionFactory =
 
 module NamespaceDefinitionFactory =
     let create (namespaceSyntax : NamespaceDeclarationSyntax) =
-        { NamespaceDefinition.Name = namespaceSyntax.Name.ToString() }
+        { NamespaceInfo.Name = namespaceSyntax.Name.ToString() }

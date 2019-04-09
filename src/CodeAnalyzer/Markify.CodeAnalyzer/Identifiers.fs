@@ -1,6 +1,6 @@
 ﻿namespace Markify.CodeAnalyzer
 
-type DefinitionName = string
+type Name = string
 
 type Modifier = string
 

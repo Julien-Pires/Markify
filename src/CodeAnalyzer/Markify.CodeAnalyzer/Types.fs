@@ -1,56 +1,53 @@
-﻿namespace Markify.CodeAnalyzer
+﻿namespace rec Markify.CodeAnalyzer
 
 type Constraint = string
-type GenericParameterDefinition = {
-    Name : DefinitionName
+type GenericDefinition = {
+    Name : Name
     Modifier : Modifier option
     Constraints : Constraint seq }
 
 type BaseType = string
-type TypeIdentity = {
-    Name : DefinitionName
-    Parents : DefinitionName option
-    Namespace : DefinitionName option
+type Identity = {
+    Name : Name 
     AccessModifiers : Modifier seq
-    Modifiers : Modifier seq
-    BaseTypes : BaseType seq
-    Parameters : GenericParameterDefinition seq }
+    Modifiers : Modifier seq 
+    Generics : GenericDefinition seq
+    BaseType : BaseType seq }
 
-type EnumDefinition = {
-    Identity : TypeIdentity
-    Comments : TypeComments
-    Values : EnumValue seq }
+type Hierarchy = {
+    Namespace : Name option 
+    Parent : Name option }
 
 type ParameterDefinition = {
-    Name : DefinitionName
+    Name : Name
     Type : TypeName 
     Modifier : Modifier option
     DefaultValue : Value option }
 
-type DelegateDefinition = {
-    Identity : TypeIdentity 
-    Comments : TypeComments
+type DelegateInfo = {
     Parameters : ParameterDefinition seq 
-    ReturnType : TypeName }
+    ReturnType : TypeName 
+    Comments : Comments }
 
-type ClassDefinition = {
-    Identity : TypeIdentity
-    Comments : TypeComments
-    Fields : FieldDefinition seq
-    Properties : PropertyDefinition seq
-    Events : EventDefinition seq 
-    Methods : DelegateDefinition seq }
+type EnumInfo = {
+    Values : EnumValue seq
+    Comments : Comments }
 
-type TypeDefinition =
-    | Class of ClassDefinition
-    | Struct of ClassDefinition
-    | Interface of ClassDefinition
-    | Enum of EnumDefinition
-    | Delegate of DelegateDefinition
-    member this.Identity =
-        match this with
-        | Class x -> x.Identity
-        | Struct x -> x.Identity
-        | Interface x -> x.Identity
-        | Enum x -> x.Identity
-        | Delegate x -> x.Identity
+type StructureInfo = {
+    Fields : FieldInfo seq
+    Properties : PropertyInfo seq
+    Events : EventInfo seq 
+    Methods : Definition seq
+    Comments : Comments }
+
+type TypeInfo =
+    | Class of StructureInfo
+    | Struct of StructureInfo
+    | Interface of StructureInfo
+    | Delegate of DelegateInfo
+    | Enum of EnumInfo
+
+type Definition = {
+    Identity : Identity
+    Hierarchy : Hierarchy
+    Info : TypeInfo }

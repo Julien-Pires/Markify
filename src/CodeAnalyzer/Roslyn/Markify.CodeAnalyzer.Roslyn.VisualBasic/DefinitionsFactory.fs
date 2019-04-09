@@ -107,7 +107,7 @@ module StructureDefinitionFactory =
             c.Names
             |> Seq.fold (fun acc2 d ->
                 let field = {
-                    FieldDefinition.Name = d.Identifier.Text
+                    FieldInfo.Name = d.Identifier.Text
                     Type = getTypeFromAsClause c.AsClause
                     AccessModifiers = getMemberAccessModifiers fieldSyntax.Modifiers defaultAccessModifier
                     Modifiers = getAdditionalModifiers fieldSyntax.Modifiers
@@ -134,7 +134,7 @@ module StructureDefinitionFactory =
         | true -> None
 
     let getPropertyDefinition (propertyStatement : PropertyStatementSyntax) defaultAccessModifier = {
-            PropertyDefinition.Name = propertyStatement.Identifier.Text 
+            PropertyInfo.Name = propertyStatement.Identifier.Text 
             AccessModifiers = getMemberAccessModifiers propertyStatement.Modifiers defaultAccessModifier
             Modifiers = getAdditionalModifiers propertyStatement.Modifiers
             Type = getTypeFromAsClause propertyStatement.AsClause
@@ -157,7 +157,7 @@ module StructureDefinitionFactory =
                 IsRead = getAccessorFromStatement propertyStatement SyntaxKind.WriteOnlyKeyword accessModifiers }
 
     let getEvent (eventSyntax : EventStatementSyntax) defaultAccessModifier = {
-        EventDefinition.Name = eventSyntax.Identifier.Text 
+        EventInfo.Name = eventSyntax.Identifier.Text 
         Type = getTypeFromAsClause eventSyntax.AsClause
         AccessModifiers = getMemberAccessModifiers eventSyntax.Modifiers defaultAccessModifier
         Modifiers = getAdditionalModifiers eventSyntax.Modifiers }
@@ -250,4 +250,4 @@ module StructureDefinitionFactory =
 
 module NamespaceDefinitionFactory =
     let create (namespaceSyntax : NamespaceBlockSyntax) =
-        { NamespaceDefinition.Name = namespaceSyntax.NamespaceStatement.Name.ToString() }
+        { NamespaceInfo.Name = namespaceSyntax.NamespaceStatement.Name.ToString() }

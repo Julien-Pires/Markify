@@ -4,12 +4,12 @@ open Markify.CodeAnalyzer
 
 [<Struct>]
 type StructureMembers = {
-    Fields : FieldDefinition list
-    Properties : PropertyDefinition list
+    Fields : FieldInfo list
+    Properties : PropertyInfo list
     Methods : DelegateDefinition list
-    Events : EventDefinition list }
+    Events : EventInfo list }
 
 [<Struct>]
 type SourceContent = {
-    Namespaces : NamespaceDefinition list
+    Namespaces : NamespaceInfo list
     Types : TypeDefinition list }

@@ -1,10 +1,9 @@
 ﻿namespace Markify.CodeAnalyzer
 
-type NamespaceDefinition = {
-    Name : DefinitionName }
+type NamespaceInfo = {
+    Name : Name }
 
-type ProjectName = string
 type AssemblyDefinition = {
-    Project : ProjectName
-    Namespaces : NamespaceDefinition seq
-    Types : TypeDefinition seq }
+    Project : Name
+    Namespaces : NamespaceInfo seq
+    Types : Definition seq }
