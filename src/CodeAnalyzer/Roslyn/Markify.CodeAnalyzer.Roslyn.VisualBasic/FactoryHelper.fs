@@ -90,7 +90,7 @@ module DefinitionFactoryHelper =
         | x ->
             x.Parameters
             |> Seq.map (fun c -> 
-                {   ParameterDefinition.Name = c.Identifier.Identifier.Text 
+                {   ParameterInfo.Name = c.Identifier.Identifier.Text 
                     Type = getTypeFromAsClause c.AsClause
                     Modifier = (getAdditionalModifiers c.Modifiers) |> List.tryHead 
                     DefaultValue = getMemberDefaultValue c.Default })

@@ -1,44 +1,30 @@
-﻿namespace rec Markify.CodeAnalyzer
-
-type Constraint = string
-type GenericDefinition = {
-    Name : Name
-    Modifier : Modifier option
-    Constraints : Constraint seq }
+﻿namespace Markify.CodeAnalyzer
 
 type BaseType = string
+
 type Identity = {
     Name : Name 
     AccessModifiers : Modifier seq
-    Modifiers : Modifier seq 
-    Generics : GenericDefinition seq
-    BaseType : BaseType seq }
+    Modifiers : Modifier seq
+    Generics : GenericInfo seq
+    BaseType : BaseType }
 
 type Hierarchy = {
     Namespace : Name option 
     Parent : Name option }
 
-type ParameterDefinition = {
-    Name : Name
-    Type : TypeName 
-    Modifier : Modifier option
-    DefaultValue : Value option }
-
 type DelegateInfo = {
-    Parameters : ParameterDefinition seq 
-    ReturnType : TypeName 
-    Comments : Comments }
+    Parameters : ParameterInfo seq 
+    ReturnType : TypeName }
 
 type EnumInfo = {
-    Values : EnumValue seq
-    Comments : Comments }
+    Values : EnumValue seq }
 
 type StructureInfo = {
     Fields : FieldInfo seq
     Properties : PropertyInfo seq
     Events : EventInfo seq 
-    Methods : Definition seq
-    Comments : Comments }
+    Methods : MethodInfo seq }
 
 type TypeInfo =
     | Class of StructureInfo
@@ -50,4 +36,5 @@ type TypeInfo =
 type Definition = {
     Identity : Identity
     Hierarchy : Hierarchy
-    Info : TypeInfo }
+    Info : TypeInfo
+    Comments : Comments }

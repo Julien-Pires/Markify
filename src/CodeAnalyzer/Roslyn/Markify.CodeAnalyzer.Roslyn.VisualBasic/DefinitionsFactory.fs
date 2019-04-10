@@ -126,11 +126,11 @@ module StructureDefinitionFactory =
         | None -> None
         | Some x ->
             let accessModifiers = getMemberAccessModifiers x.AccessorStatement.Modifiers defaultAccessModifier
-            Some { AccessorDefinition.AccessModifiers = accessModifiers }
+            Some { AccessorInfo.AccessModifiers = accessModifiers }
 
     let getAccessorFromStatement (propertyStatement : PropertyStatementSyntax) oppositeAccessorType accessModifiers =
         match containsModifiers <|| (propertyStatement.Modifiers, oppositeAccessorType) with
-        | false -> Some { AccessorDefinition.AccessModifiers = accessModifiers }
+        | false -> Some { AccessorInfo.AccessModifiers = accessModifiers }
         | true -> None
 
     let getPropertyDefinition (propertyStatement : PropertyStatementSyntax) defaultAccessModifier = {

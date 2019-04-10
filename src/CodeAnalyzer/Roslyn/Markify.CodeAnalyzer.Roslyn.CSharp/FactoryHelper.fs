@@ -98,7 +98,7 @@ module DefinitionFactoryHelper =
                  match c.Type with
                  | null -> c.Identifier.Text
                  | _ -> c.Type.ToString()
-            {   ParameterDefinition.Name = c.Identifier.Text 
+            {   ParameterInfo.Name = c.Identifier.Text 
                 Type = parameterType
                 Modifier = (getAdditionalModifiers c.Modifiers) |> List.tryHead 
                 DefaultValue = getMemberDefaultValue c.Default })

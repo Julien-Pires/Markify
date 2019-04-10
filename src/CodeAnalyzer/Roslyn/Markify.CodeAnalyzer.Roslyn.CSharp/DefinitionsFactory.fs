@@ -103,9 +103,9 @@ module StructureDefinitionFactory =
                 | None -> None
                 | Some y ->
                     let accessModifiers = getMemberAccessModifiers y.Modifiers defaultAccessModifier
-                    Some { AccessorDefinition.AccessModifiers = accessModifiers }
+                    Some { AccessorInfo.AccessModifiers = accessModifiers }
         match propertySyntax.AccessorList with
-        | null -> (Some { AccessorDefinition.AccessModifiers = defaultAccessModifier }, None)
+        | null -> (Some { AccessorInfo.AccessModifiers = defaultAccessModifier }, None)
         | x -> (getSingleAccessor x.Accessors SyntaxKind.GetKeyword, getSingleAccessor x.Accessors SyntaxKind.SetKeyword)
 
     let getProperty (propertySyntax : PropertyDeclarationSyntax) defaultAccessModifier =

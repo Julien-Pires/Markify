@@ -1,17 +1,16 @@
 ﻿namespace Markify.CodeAnalyzer
 
-type Value = string
-
-type AccessorDefinition = {
+type AccessorInfo = {
     AccessModifiers : Modifier seq }
+
 type PropertyInfo = {
     Name : Name
     Type : TypeName
     AccessModifiers : Modifier seq
     Modifiers : Modifier seq
     DefaultValue : Value option
-    IsWrite : AccessorDefinition option
-    IsRead : AccessorDefinition option }
+    IsWrite : AccessorInfo option
+    IsRead : AccessorInfo option }
 
 type FieldInfo = {
     Name : Name
@@ -19,6 +18,14 @@ type FieldInfo = {
     AccessModifiers : Modifier seq
     Modifiers : Modifier seq
     DefaultValue : Value option }
+
+type MethodInfo = {
+    Name : Name 
+    AccessModifiers : Modifier seq
+    Modifiers : Modifier seq
+    Generics : GenericInfo seq
+    Parameters : ParameterInfo seq 
+    ReturnType : TypeName }
 
 type EventInfo = {
     Name : Name

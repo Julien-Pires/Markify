@@ -1,7 +1,5 @@
 ﻿namespace rec Markify.CodeAnalyzer
 
-open System
-
 type CommentName = string
 type CommentText = string
 type CommentParameterName = string
