@@ -41,7 +41,7 @@ type RoslynAnalyzer (languages : ILanguageModule seq) =
             namespaces |> List.distinct )    
 
     interface IProjectAnalyzer with
-        member __.Analyze (project : Project) : AssemblyDefinition =
+        member __.Analyze (project : Project) : Assemblyinfo =
             let types, namespaces = analyzeSources project.Content
             {   Project = project.Name
                 Namespaces = namespaces

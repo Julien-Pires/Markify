@@ -3,4 +3,4 @@
 open Markify.CodeAnalyzer
 
 type IDocumentOrganizer =
-    abstract member Organize: AssemblyDefinition seq -> Folder -> DocumentSetting -> TableOfContent
+    abstract member Organize: Assemblyinfo seq -> Folder -> DocumentSetting -> TableOfContent

@@ -14,4 +14,4 @@ type Project = {
     Content : IProjectContent seq }
 
 type IProjectAnalyzer =
-    abstract member Analyze: Project -> AssemblyDefinition
+    abstract member Analyze: Project -> Assemblyinfo

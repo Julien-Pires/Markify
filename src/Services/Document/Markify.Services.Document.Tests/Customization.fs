@@ -21,7 +21,7 @@ module Customization =
                     let setting = {
                         PageExtension = extension }
                     setting)
-                fixture.Register<IEnumerable<AssemblyDefinition>> (fun c ->
+                fixture.Register<IEnumerable<Assemblyinfo>> (fun c ->
                     match projectCount with
                     | 0 -> Seq.empty
                     | _ ->

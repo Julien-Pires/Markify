@@ -1,18 +1,5 @@
 ﻿namespace Markify.CodeAnalyzer
 
-type BaseType = string
-
-type Identity = {
-    Name : Name 
-    AccessModifiers : Modifier seq
-    Modifiers : Modifier seq
-    Generics : GenericInfo seq
-    BaseType : BaseType }
-
-type Hierarchy = {
-    Namespace : Name option 
-    Parent : Name option }
-
 type DelegateInfo = {
     Parameters : ParameterInfo seq 
     ReturnType : TypeName }
@@ -32,9 +19,3 @@ type TypeInfo =
     | Interface of StructureInfo
     | Delegate of DelegateInfo
     | Enum of EnumInfo
-
-type Definition = {
-    Identity : Identity
-    Hierarchy : Hierarchy
-    Info : TypeInfo
-    Comments : Comments }

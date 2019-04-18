@@ -1,7 +1,5 @@
 ﻿namespace Markify.CodeAnalyzer.Roslyn
 
-open Markify.CodeAnalyzer
-
 type TypeInfo = {
     Definition : TypeDefinition
     IsPartial : bool }
