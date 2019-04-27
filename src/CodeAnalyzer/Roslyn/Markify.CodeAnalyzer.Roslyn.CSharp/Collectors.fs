@@ -31,6 +31,9 @@ type CSharpSyntaxWalker<'a>(value : 'a) =
     abstract member VisitNamespaceDeclaration : NamespaceDeclarationSyntax * 'a -> 'a
     default __.VisitNamespaceDeclaration(_, result) = result
 
+    abstract member VisitIdentifierName : IdentifierNameSyntax * 'a -> 'a
+    default __.VisitIdentifierName(_, result) = result
+
     override this.VisitClassDeclaration node =
         result <- this.VisitClassDeclaration(node, result)
         base.VisitClassDeclaration(node)
@@ -54,6 +57,10 @@ type CSharpSyntaxWalker<'a>(value : 'a) =
     override this.VisitNamespaceDeclaration node =
         result <- this.VisitNamespaceDeclaration(node, result)
         base.VisitNamespaceDeclaration(node)
+
+    override this.VisitIdentifierName node =
+        result <- this.VisitIdentifierName(node, result)
+        base.VisitIdentifierName(node)
 
 type NamespaceSyntaxCollector() =
     inherit CSharpSyntaxWalker<NamespaceDeclarationSyntax list>([])

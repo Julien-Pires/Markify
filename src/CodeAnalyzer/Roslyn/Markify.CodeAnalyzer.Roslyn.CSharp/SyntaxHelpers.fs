@@ -74,12 +74,36 @@ module CSharpSyntaxHelper =
         | IsEventField x -> Some (x :> MemberDeclarationSyntax)
         | _ -> None
 
-[<AutoOpen>]
-module CSharpKeywordHelper =
-    let publicModifier = [SyntaxFactory.Token(SyntaxKind.PublicKeyword).Text]
-    let privateModifier = [SyntaxFactory.Token(SyntaxKind.PrivateKeyword).Text]
-    let accessModifiersList =
-        Set [   SyntaxKind.PublicKeyword
-                SyntaxKind.InternalKeyword 
-                SyntaxKind.PrivateKeyword
-                SyntaxKind.ProtectedKeyword ]
+module SyntaxHelper =
+    let getName (node : SyntaxNode)  =
+        match node with
+        | :? BaseTypeDeclarationSyntax as x -> Some x.Identifier
+        | :? DelegateDeclarationSyntax as x -> Some x.Identifier
+        | _ -> None
+
+module TypeSyntaxHelper =
+    let getModifiers (node : SyntaxNode) =
+        match node with
+        | :? BaseTypeDeclarationSyntax as x -> x.Modifiers
+        | :? DelegateDeclarationSyntax as x -> x.Modifiers
+        | _ -> SyntaxTokenList()
+    
+    let getBaseTypes (node : SyntaxNode) =
+        match node with
+        | :? BaseTypeDeclarationSyntax as x ->
+            match x.BaseList with
+            | null -> SeparatedSyntaxList()
+            | x -> x.Types
+        | _ -> SeparatedSyntaxList()
+
+    let getGenericParameters (node : SyntaxNode) =
+        match node with
+        | :? TypeDeclarationSyntax as x -> x.TypeParameterList
+        | :? DelegateDeclarationSyntax as x -> x.TypeParameterList
+        | _ -> SyntaxFactory.TypeParameterList()
+
+    let getGenericConstraints (node : SyntaxNode) =
+        match node with
+        | :? TypeDeclarationSyntax as x -> x.ConstraintClauses
+        | :? DelegateDeclarationSyntax as x -> x.ConstraintClauses
+        | _ -> SyntaxList()

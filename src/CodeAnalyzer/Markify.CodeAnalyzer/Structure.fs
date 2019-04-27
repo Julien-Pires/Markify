@@ -7,7 +7,7 @@ type Identity = {
     AccessModifiers : Modifier seq
     Modifiers : Modifier seq
     Generics : GenericInfo seq
-    BaseType : BaseType }
+    BaseType : BaseType seq }
 
 type Hierarchy = {
     Name : Name 
