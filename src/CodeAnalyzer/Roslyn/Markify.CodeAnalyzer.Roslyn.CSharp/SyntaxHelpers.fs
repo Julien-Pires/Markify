@@ -100,10 +100,12 @@ module TypeSyntaxHelper =
         match node with
         | :? TypeDeclarationSyntax as x -> x.TypeParameterList
         | :? DelegateDeclarationSyntax as x -> x.TypeParameterList
+        | :? MethodDeclarationSyntax as x -> x.TypeParameterList
         | _ -> SyntaxFactory.TypeParameterList()
 
     let getGenericConstraints (node : SyntaxNode) =
         match node with
         | :? TypeDeclarationSyntax as x -> x.ConstraintClauses
         | :? DelegateDeclarationSyntax as x -> x.ConstraintClauses
+        | :? MethodDeclarationSyntax as x -> x.ConstraintClauses
         | _ -> SyntaxList()
