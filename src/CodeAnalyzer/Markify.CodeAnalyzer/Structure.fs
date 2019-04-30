@@ -2,13 +2,6 @@
 
 type BaseType = string
 
-type Identity = {
-    Name : Name 
-    AccessModifiers : Modifier seq
-    Modifiers : Modifier seq
-    Generics : GenericInfo seq
-    BaseType : BaseType seq }
-
 type Hierarchy = {
     Name : Name 
     Parent : Hierarchy option }
@@ -18,7 +11,11 @@ type NamespaceInfo = {
     Hierarchy : Hierarchy }
 
 type Definition = {
-    Identity : Identity
+    Name : Name 
+    AccessModifiers : Modifier seq
+    Modifiers : Modifier seq
+    Generics : GenericInfo seq
+    BaseType : BaseType seq
     Hierarchy : Hierarchy
     Info : TypeInfo
     Comments : Comments }

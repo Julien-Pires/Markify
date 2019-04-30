@@ -25,6 +25,13 @@ type TypeMembers =
     | Enum of EnumMembers
     | Delegate of DelegateMembers
 
+type Identity = {
+    Name : Name 
+    AccessModifiers : Modifier seq
+    Modifiers : Modifier seq
+    Generics : GenericInfo seq
+    BaseType : BaseType seq }
+
 type TypeAnalysis = {
     Source : SyntaxNode 
     Identity : Identity
