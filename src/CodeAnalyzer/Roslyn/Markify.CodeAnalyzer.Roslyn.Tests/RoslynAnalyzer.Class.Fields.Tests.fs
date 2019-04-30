@@ -116,8 +116,8 @@ module RoslynAnalyzer_ClassFields_Tests =
                 (withProjects content, ("ProtectedInternalField", Set ["protected"; "internal"]))
                 (withProjects content, ("PrivateField", Set ["private"]))]
                 (fun sut project (field, expected) () ->
-                    let object = sut.Analyze project |> findClass "AccessModifier"
-                    let result = object.Fields |> Seq.find (fun c -> c.Name = field)
+                    let info = sut.Analyze project |> findClass "AccessModifier"
+                    let result = info.Fields |> Seq.find (fun c -> c.Name = field)
 
                     test <@ result.AccessModifiers |> Set
                                                    |> Set.map normalizeSyntax
@@ -164,8 +164,8 @@ module RoslynAnalyzer_ClassFields_Tests =
                 (withProjects content, ("StaticReadonlyField", Set ["static"; "readonly"]))
                 (withProjects content, ("ConstField", Set ["const"]))]
                 (fun sut project (field, expected) () ->
-                    let object = sut.Analyze project |> findClass "Modifier"
-                    let result = object.Fields |> Seq.find (fun c -> c.Name = field)
+                    let info = sut.Analyze project |> findClass "Modifier"
+                    let result = info.Fields |> Seq.find (fun c -> c.Name = field)
 
                     test <@ result.Modifiers |> Set
                                              |> Set.map normalizeSyntax

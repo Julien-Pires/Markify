@@ -22,9 +22,9 @@ module RoslynAnalyzer_InterfaceModifiers_Tests =
             yield! testRepeat (withProjects contents)
                 "should return interface with no access modifier when type has none"
                 (fun sut project () ->
-                    let result = sut.Analyze project |> findInterface "NoAccessModifierType"
+                    let result = sut.Analyze project |> findType "NoAccessModifierType"
                         
-                    test <@ result.Identity.AccessModifiers |> Seq.isEmpty @>)
+                    test <@ result.AccessModifiers |> Seq.isEmpty @>)
         ]
 
     [<Tests>]
@@ -68,11 +68,11 @@ module RoslynAnalyzer_InterfaceModifiers_Tests =
                 (withProjects contents, ("ParentType.ProtectedInternalType", Set ["protected"; "internal"]))
                 (withProjects contents, ("ParentType.InternalProtectedType", Set ["protected"; "internal"]))]
                 (fun sut project (name, expected) () ->
-                    let result = sut.Analyze project |> findInterface name
+                    let result = sut.Analyze project |> findType name
                         
-                    test <@ result.Identity.AccessModifiers |> Set
-                                                            |> Set.map normalizeSyntax
-                                                            |> (=) expected @>)
+                    test <@ result.AccessModifiers |> Set
+                                                   |> Set.map normalizeSyntax
+                                                   |> (=) expected @>)
         ]
 
     [<Tests>]
@@ -90,9 +90,9 @@ module RoslynAnalyzer_InterfaceModifiers_Tests =
             yield! testRepeat (withProjects contents)
                 "should return interface with no modifier when type has none"
                 (fun sut project () ->
-                    let result = sut.Analyze project |> findInterface "NoModifierType"
+                    let result = sut.Analyze project |> findType "NoModifierType"
                         
-                    test <@ result.Identity.Modifiers |> Seq.isEmpty @>)
+                    test <@ result.Modifiers |> Seq.isEmpty @>)
         ]
 
     [<Tests>]
@@ -110,9 +110,9 @@ module RoslynAnalyzer_InterfaceModifiers_Tests =
             yield! testRepeat (withProjects contents)
                 "should returns interface with modifiers when type has some"
                 (fun sut project () ->
-                    let result = sut.Analyze project |> findInterface "PartialType"
+                    let result = sut.Analyze project |> findType "PartialType"
                         
-                    test <@ result.Identity.Modifiers |> Set
-                                                      |> Set.map normalizeSyntax
-                                                      |> (=) (Set ["partial"]) @>)
+                    test <@ result.Modifiers |> Set
+                                             |> Set.map normalizeSyntax
+                                             |> (=) (Set ["partial"]) @>)
         ]

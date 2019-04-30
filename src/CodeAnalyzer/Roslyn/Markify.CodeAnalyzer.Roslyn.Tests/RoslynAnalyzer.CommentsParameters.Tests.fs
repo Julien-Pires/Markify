@@ -24,8 +24,8 @@ module RoslynAnalyzer_CommentsParameters_Tests =
             yield! testRepeat (withProjects contents)
                 "should return no parameter when comment has none"
                 (fun sut project () ->
-                    let object = sut.Analyze project |> findClass "NoParameter"
-                    let result = object.Comments.Comments |> Seq.find (fun c -> c.Name = "summary")
+                    let definition = sut.Analyze project |> findType "NoParameter"
+                    let result = definition.Comments |> Seq.find (fun c -> c.Name = "summary")
                     
                     test <@ result.Parameter |> Seq.isEmpty @>)
         ]
@@ -51,8 +51,8 @@ module RoslynAnalyzer_CommentsParameters_Tests =
                 (withProjects contents, ("summary", 1))
                 (withProjects contents, ("remarks", 3))]
                 (fun sut project (comment, expected) () ->
-                    let object = sut.Analyze project |> findClass "WithParameters"
-                    let result = object.Comments.Comments |> Seq.find (fun c -> c.Name = comment)
+                    let definition = sut.Analyze project |> findType "WithParameters"
+                    let result = definition.Comments |> Seq.find (fun c -> c.Name = comment)
                     
                     test <@ result.Parameter |> Seq.length = expected @>)
 
@@ -61,8 +61,8 @@ module RoslynAnalyzer_CommentsParameters_Tests =
                 (withProjects contents, ("summary", Set ["name"]))
                 (withProjects contents, ("remarks", Set ["name"; "value"; "data"]))]
                 (fun sut project (comment, expected) () ->
-                    let object = sut.Analyze project |> findClass "WithParameters"
-                    let result = object.Comments.Comments |> Seq.find (fun c -> c.Name = comment)
+                    let definition = sut.Analyze project |> findType "WithParameters"
+                    let result = definition.Comments |> Seq.find (fun c -> c.Name = comment)
                     
                     test <@ result.Parameter |> Seq.map (fun c -> c.Name)
                                              |> Set
@@ -86,8 +86,8 @@ module RoslynAnalyzer_CommentsParameters_Tests =
             yield! testRepeat (withProjects contents)
                 "should return no value when comment parameter has none"
                 (fun sut project () ->
-                    let object = sut.Analyze project |> findClass "NoValue"
-                    let result = object.Comments.Comments |> Seq.find (fun c -> c.Name = "summary")
+                    let definition = sut.Analyze project |> findType "NoValue"
+                    let result = definition.Comments |> Seq.find (fun c -> c.Name = "summary")
                     
                     test <@ result.Parameter |> Seq.find (fun c -> c.Name = "name")
                                              |> fun c -> c.Value.IsNone @>)
@@ -110,8 +110,8 @@ module RoslynAnalyzer_CommentsParameters_Tests =
             yield! testRepeat (withProjects contents)
                 "should return value when comment parameter has one"
                 (fun sut project () ->
-                    let object = sut.Analyze project |> findClass "WithValue"
-                    let result = object.Comments.Comments |> Seq.find (fun c -> c.Name = "summary")
+                    let definition = sut.Analyze project |> findType "WithValue"
+                    let result = definition.Comments |> Seq.find (fun c -> c.Name = "summary")
                     
                     test <@ result.Parameter |> Seq.find (fun c -> c.Name = "name")
                                              |> fun c -> c.Value = Some "foo" @>)

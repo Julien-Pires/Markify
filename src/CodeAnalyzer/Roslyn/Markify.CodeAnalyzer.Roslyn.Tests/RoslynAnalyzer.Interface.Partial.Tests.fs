@@ -31,18 +31,18 @@ module RoslynAnalyzer_InterfacePartial_Tests =
             yield! testRepeat (withProjects content)
                 "should merge inherited types when identical partial interfaces exist"
                 (fun sut project () -> 
-                    let result = sut.Analyze project |> findInterface "PartialType"
+                    let result = sut.Analyze project |> findType "PartialType"
 
-                    test <@ Set result.Identity.BaseTypes = Set ["IEnumerable"; "IDisposable"] @>)
+                    test <@ Set result.BaseType = Set ["IEnumerable"; "IDisposable"] @>)
 
             yield! testRepeat (withProjects content)
                 "should merge modifiers when identical partial interfaces exist"
                 (fun sut project () -> 
-                    let result = sut.Analyze project |> findInterface "PartialType"
+                    let result = sut.Analyze project |> findType "PartialType"
 
-                    test <@ result.Identity.Modifiers |> Set
-                                                      |> Set.map normalizeSyntax
-                                                      |> (=) (Set ["partial"]) @>)
+                    test <@ result.Modifiers |> Set
+                                             |> Set.map normalizeSyntax
+                                             |> (=) (Set ["partial"]) @>)
         ]
 
     [<Tests>]
@@ -90,7 +90,7 @@ module RoslynAnalyzer_InterfacePartial_Tests =
                 (fun sut project () ->
                     let result = sut.Analyze project |> findInterface "PartialType"
                     
-                    test <@ result.Methods |> Seq.map (fun c -> c.Identity.Name)
+                    test <@ result.Methods |> Seq.map (fun c -> c.Name)
                                            |> Set
                                            |> Set.isSubset (Set ["MethodOne"; "MethodTwo"]) @>)
 

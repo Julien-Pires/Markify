@@ -28,8 +28,8 @@ module RoslynAnalyzer_CommentsContent_Tests =
             yield! testRepeat (withProjects content)
                 "should return text content when comment has some"
                 (fun sut project () ->
-                    let object = sut.Analyze project |> findClass "Comments"
-                    let result = object.Comments.Comments |> Seq.find (fun c -> c.Name = "summary") 
+                    let definition = sut.Analyze project |> findType "Comments"
+                    let result = definition.Comments |> Seq.find (fun c -> c.Name = "summary") 
                             
                     test <@ result.Content |> Seq.choose (function | Text c -> Some c | _ -> None) 
                                            |> Seq.head
@@ -38,8 +38,8 @@ module RoslynAnalyzer_CommentsContent_Tests =
             yield! testRepeat (withProjects content)
                 "should return block content when comment has some"
                 (fun sut project () ->
-                    let object = sut.Analyze project |> findClass "Comments"
-                    let result = object.Comments.Comments |> Seq.find (fun c -> c.Name = "example") 
+                    let definition = sut.Analyze project |> findType "Comments"
+                    let result = definition.Comments |> Seq.find (fun c -> c.Name = "example") 
                             
                     test <@ result.Content |> Seq.choose (function | Block c -> Some c | _ -> None) 
                                            |> Seq.head
@@ -48,8 +48,8 @@ module RoslynAnalyzer_CommentsContent_Tests =
             yield! testRepeat (withProjects content)
                 "should return correct contents when comment has multiple type of contents"
                 (fun sut project () ->
-                    let object = sut.Analyze project |> findClass "Comments"
-                    let result = object.Comments.Comments |> Seq.find (fun c -> c.Name = "remarks") 
+                    let definition = sut.Analyze project |> findType "Comments"
+                    let result = definition.Comments |> Seq.find (fun c -> c.Name = "remarks") 
                             
                     test <@ result.Content |> Seq.length = 2 @>)
         ]

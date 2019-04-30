@@ -22,9 +22,9 @@ module RoslynAnalyzer_EnumModifiers_Tests =
             yield! testRepeat (withProjects contents)
                 "should return enum with no access modifier when type has none"
                 (fun sut project () ->
-                    let result = sut.Analyze project |> findEnum "NoAccessModifierType"
+                    let result = sut.Analyze project |> findType "NoAccessModifierType"
                         
-                    test <@ result.Identity.AccessModifiers |> Seq.isEmpty @>)
+                    test <@ result.AccessModifiers |> Seq.isEmpty @>)
         ]
 
     [<Tests>]
@@ -68,11 +68,11 @@ module RoslynAnalyzer_EnumModifiers_Tests =
                 (withProjects contents, ("ParentType.ProtectedInternalType", Set ["protected"; "internal"]))
                 (withProjects contents, ("ParentType.InternalProtectedType", Set ["protected"; "internal"]))]
                 (fun sut project (name, expected) () ->
-                    let result = sut.Analyze project |> findEnum name
+                    let result = sut.Analyze project |> findType name
                         
-                    test <@ result.Identity.AccessModifiers |> Set
-                                                            |> Set.map normalizeSyntax
-                                                            |> (=) expected @>)
+                    test <@ result.AccessModifiers |> Set
+                                                   |> Set.map normalizeSyntax
+                                                   |> (=) expected @>)
         ]
 
     [<Tests>]
@@ -90,7 +90,7 @@ module RoslynAnalyzer_EnumModifiers_Tests =
             yield! testRepeat (withProjects contents)
                 "should return enum with no modifier when type has none"
                 (fun sut project () ->
-                    let result = sut.Analyze project |> findEnum "NoModifierType"
+                    let result = sut.Analyze project |> findType "NoModifierType"
                         
-                    test <@ result.Identity.Modifiers |> Seq.isEmpty @>)
+                    test <@ result.Modifiers |> Seq.isEmpty @>)
         ]

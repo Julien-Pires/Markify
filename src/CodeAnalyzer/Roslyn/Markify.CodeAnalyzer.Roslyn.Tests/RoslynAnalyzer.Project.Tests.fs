@@ -41,7 +41,7 @@ module RoslynAnalyzer_Projects_Tests =
                 "should returns no duplicate types"
                 (fun sut project () ->
                     let assemblies = sut.Analyze project
-                    let result = assemblies.Types |> Seq.groupBy (fun c -> getFullname c.Identity)
+                    let result = assemblies.Types |> Seq.groupBy (fun c -> getFullname c)
 
                     test <@ (result |> Seq.length) = (assemblies.Types |> Seq.length) @>)
         ]

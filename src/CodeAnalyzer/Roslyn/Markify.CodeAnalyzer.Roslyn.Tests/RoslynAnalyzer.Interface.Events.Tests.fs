@@ -104,8 +104,8 @@ module RoslynAnalyzer_InterfaceEvents_Tests =
                 (withProjects content, ("WithoutAccessModifier", Set ["public"]))
                 (withProjects content, ("PublicEvent", Set ["public"]))]
                 (fun sut project (event, expected) () -> 
-                    let object = sut.Analyze project |> findInterface "AccessModifier"
-                    let result = object.Events |> Seq.find (fun c -> c.Name = event)
+                    let info = sut.Analyze project |> findInterface "AccessModifier"
+                    let result = info.Events |> Seq.find (fun c -> c.Name = event)
 
                     test <@ result.AccessModifiers |> Set
                                                    |> Set.map normalizeSyntax 
@@ -131,8 +131,8 @@ module RoslynAnalyzer_InterfaceEvents_Tests =
             yield! testRepeat (withProjects content)
                 "should return no modifier when interface event has none"
                 (fun sut project () -> 
-                    let object = sut.Analyze project |> findInterface "Modifiers"
-                    let result = object.Events |> Seq.find (fun c -> c.Name = "WithoutModifier")
+                    let info = sut.Analyze project |> findInterface "Modifiers"
+                    let result = info.Events |> Seq.find (fun c -> c.Name = "WithoutModifier")
 
                     test <@ result.Modifiers |> Seq.isEmpty @>)
         ]

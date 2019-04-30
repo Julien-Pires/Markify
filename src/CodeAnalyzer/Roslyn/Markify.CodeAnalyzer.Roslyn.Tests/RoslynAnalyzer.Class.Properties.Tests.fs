@@ -75,8 +75,8 @@ module RoslynAnalyzer_ClassProperties_Tests =
             yield! testRepeat (withProjects content)
                 "should return correct class property type"
                 (fun sut project () ->
-                    let object = sut.Analyze project |> findClass "SingleProperty"
-                    let result = object.Properties |> Seq.find (fun c -> c.Name = "Property")
+                    let info = sut.Analyze project |> findClass "SingleProperty"
+                    let result = info.Properties |> Seq.find (fun c -> c.Name = "Property")
                     
                     test <@ result.Type = "Int32"  @>)
         ]
@@ -115,8 +115,8 @@ module RoslynAnalyzer_ClassProperties_Tests =
             yield! testRepeat (withProjects content)
                 "should return private access modifier when class property has no specified access modifier"
                 (fun sut project () ->
-                    let object = sut.Analyze project |> findClass "WithoutAccessModifier"
-                    let result = object.Properties |> Seq.find (fun c -> c.Name = "PrivateProperty")
+                    let info = sut.Analyze project |> findClass "WithoutAccessModifier"
+                    let result = info.Properties |> Seq.find (fun c -> c.Name = "PrivateProperty")
 
                     test <@ result.AccessModifiers |> Seq.exists (fun c -> normalizeSyntax c = "private") @>)
 
@@ -128,8 +128,8 @@ module RoslynAnalyzer_ClassProperties_Tests =
                 (withProjects content, ("ProtectedProperty", Set ["protected"]))
                 (withProjects content, ("ProtectedInternalProperty", Set ["protected"; "internal"]))]
                 (fun sut project (property, expected) () ->
-                    let object = sut.Analyze project |> findClass "WithAccessModifiers"
-                    let result = object.Properties |> Seq.find (fun c -> c.Name = property)
+                    let info = sut.Analyze project |> findClass "WithAccessModifiers"
+                    let result = info.Properties |> Seq.find (fun c -> c.Name = property)
                         
                     test <@ result.AccessModifiers |> Set 
                                                    |> Set.map normalizeSyntax 
@@ -168,8 +168,8 @@ module RoslynAnalyzer_ClassProperties_Tests =
             yield! testRepeat (withProjects content)
                 "should return property with no modifiers when class property has none"
                 (fun sut project () ->
-                    let object = sut.Analyze project |> findClass "WithoutModifiers"
-                    let result = object.Properties |> Seq.find (fun c -> c.Name = "Property")
+                    let info = sut.Analyze project |> findClass "WithoutModifiers"
+                    let result = info.Properties |> Seq.find (fun c -> c.Name = "Property")
 
                     test <@ result.Modifiers |> Seq.isEmpty @>)
 
@@ -180,8 +180,8 @@ module RoslynAnalyzer_ClassProperties_Tests =
                 (withProjects content, ("SealedProperty", Set ["sealed"]))
                 (withProjects content, ("SealedOverrideProperty", Set ["sealed"; "override"]))]
                 (fun sut project (property, expected) () ->
-                    let object = sut.Analyze project |> findClass "WithModifiers"
-                    let result = object.Properties |> Seq.find (fun c -> c.Name = property)
+                    let info = sut.Analyze project |> findClass "WithModifiers"
+                    let result = info.Properties |> Seq.find (fun c -> c.Name = property)
                         
                     test <@ result.Modifiers |> Set 
                                              |> Set.map normalizeSyntax 
@@ -325,8 +325,8 @@ module RoslynAnalyzer_ClassProperties_Tests =
                 (withProjects content, ("ProtectedInternalProperty", Set ["protected"; "internal"]))
                 (withProjects content, ("ProtectedInternalWriteOnly", Set ["protected"; "internal"]))]
                 (fun sut project (property, expected) () ->
-                    let object = sut.Analyze project |> findClass "WithWriteAccessor"
-                    let result = object.Properties |> Seq.find (fun c -> c.Name = property)
+                    let info = sut.Analyze project |> findClass "WithWriteAccessor"
+                    let result = info.Properties |> Seq.find (fun c -> c.Name = property)
                     
                     test <@ result.IsWrite.Value.AccessModifiers |> Set
                                                                  |> Set.map normalizeSyntax 
@@ -434,8 +434,8 @@ module RoslynAnalyzer_ClassProperties_Tests =
                 (withProjects content, ("ProtectedInternalProperty", Set ["protected"; "internal"]))
                 (withProjects content, ("ProtectedInternalReadOnly", Set ["protected"; "internal"]))]
                 (fun sut project (property, expected) () ->
-                    let object = sut.Analyze project |> findClass "WithReadAccessor"
-                    let result = object.Properties |> Seq.find (fun c -> c.Name = property)
+                    let info = sut.Analyze project |> findClass "WithReadAccessor"
+                    let result = info.Properties |> Seq.find (fun c -> c.Name = property)
                     
                     test <@ result.IsRead.Value.AccessModifiers |> Set
                                                                 |> Set.map normalizeSyntax

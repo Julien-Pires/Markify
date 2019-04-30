@@ -31,18 +31,18 @@ module RoslynAnalyzer_StructPartial_Tests =
             yield! testRepeat (withProjects content)
                 "should merge inherited types when identical partial structs exist"
                 (fun sut project () -> 
-                    let result = sut.Analyze project |> findStruct "PartialType"
+                    let result = sut.Analyze project |> findType "PartialType"
 
-                    test <@ result.Identity.BaseTypes |> Set = Set ["IEnumerable"; "IDisposable"] @>)
+                    test <@ result.BaseType |> Set = Set ["IEnumerable"; "IDisposable"] @>)
 
             yield! testRepeat (withProjects content)
                 "should merge modifiers when identical partial structs exist"
                 (fun sut project () -> 
-                    let result = sut.Analyze project |> findStruct "PartialType"
+                    let result = sut.Analyze project |> findType "PartialType"
 
-                    test <@ result.Identity.Modifiers |> Set
-                                                      |> Set.map normalizeSyntax
-                                                      |> (=) (Set ["partial"]) @>)
+                    test <@ result.Modifiers |> Set
+                                             |> Set.map normalizeSyntax
+                                             |> (=) (Set ["partial"]) @>)
         ]
 
     [<Tests>]
@@ -105,7 +105,7 @@ module RoslynAnalyzer_StructPartial_Tests =
                 (fun sut project () ->
                     let result = sut.Analyze project |> findStruct "PartialType"
                     
-                    test <@ result.Methods |> Seq.map (fun c -> c.Identity.Name)
+                    test <@ result.Methods |> Seq.map (fun c -> c.Name)
                                            |> Set
                                            |> Set.isSubset (Set ["MethodOne"; "MethodTwo"]) @>)
 

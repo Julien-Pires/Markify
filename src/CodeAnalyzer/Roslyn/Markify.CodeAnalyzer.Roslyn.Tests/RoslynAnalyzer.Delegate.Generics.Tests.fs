@@ -21,9 +21,9 @@ module RoslynAnalyzer_DelegateGenerics_Tests =
             yield! testRepeat (withProjects noGeneric)
                 "should return no generic parameters when delegate has none"
                 (fun sut project () ->
-                    let result = sut.Analyze project |> findDelegate "NoGenericDelegate"
+                    let result = sut.Analyze project |> findType "NoGenericDelegate"
 
-                    test <@ result.Identity.Parameters |> Seq.isEmpty @>)
+                    test <@ result.Generics |> Seq.isEmpty @>)
         ]
 
     [<Tests>]
@@ -44,9 +44,9 @@ module RoslynAnalyzer_DelegateGenerics_Tests =
                 (withProjects generic, ("SingleGenericDelegate`1", 1))
                 (withProjects generic, ("MultipleGenericDelegate`2", 2))]
                 (fun sut project (name, expected) () ->
-                    let result = sut.Analyze project |> findDelegate name
+                    let result = sut.Analyze project |> findType name
                         
-                    test <@ result.Identity.Parameters |> Seq.length = expected @>)
+                    test <@ result.Generics |> Seq.length = expected @>)
 
             yield! testRepeatParameterized 
                 "should return valid generic parameter name when delegate has some" [
@@ -54,9 +54,9 @@ module RoslynAnalyzer_DelegateGenerics_Tests =
                 (withProjects generic, ("MultipleGenericDelegate`2", "T"))
                 (withProjects generic, ("MultipleGenericDelegate`2", "Y"))]
                 (fun sut project (name, expected) () ->
-                    let result = sut.Analyze project |> findDelegate name
+                    let result = sut.Analyze project |> findType name
                         
-                    test <@ result.Identity.Parameters |> Seq.exists (fun c -> c.Name = expected) @>)
+                    test <@ result.Generics |> Seq.exists (fun c -> c.Name = expected) @>)
         ]
     
     [<Tests>]
@@ -77,8 +77,8 @@ module RoslynAnalyzer_DelegateGenerics_Tests =
             yield! testRepeat (withProjects genericModifiers) 
                 "should return no modifiers when delegate generic parameter has none"
                 (fun sut project () ->
-                    let object = sut.Analyze project |> findDelegate "SingleGenericDelegate`1"
-                    let result = object.Identity.Parameters |> Seq.find (fun c -> c.Name = "T")
+                    let definition = sut.Analyze project |> findType "SingleGenericDelegate`1"
+                    let result = definition.Generics |> Seq.find (fun c -> c.Name = "T")
 
                     test <@ result.Modifier.IsNone @>)
 
@@ -87,8 +87,8 @@ module RoslynAnalyzer_DelegateGenerics_Tests =
                 (withProjects genericModifiers, ("CovariantGenericDelegate`1", "T", "in"))
                 (withProjects genericModifiers, ("ContravariantGenericDelegate`1", "T", "out"))]
                 (fun sut project (name, parameter, expected) () ->
-                    let object = sut.Analyze project |> findDelegate name
-                    let result = object.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
+                    let definition = sut.Analyze project |> findType name
+                    let result = definition.Generics |> Seq.find (fun c -> c.Name = parameter)
                         
                     test <@ result.Modifier.Value |> normalizeSyntax = expected @>)
         ]
@@ -111,8 +111,8 @@ module RoslynAnalyzer_DelegateGenerics_Tests =
             yield! testRepeat (withProjects genericConstraints)
                 "should return no constraints when delegate generic parameter has none"
                 (fun sut project () ->
-                    let object = sut.Analyze project |> findDelegate "SingleGenericDelegate`1"
-                    let result = object.Identity.Parameters |> Seq.find (fun c -> c.Name = "T")
+                    let definition = sut.Analyze project |> findType "SingleGenericDelegate`1"
+                    let result = definition.Generics |> Seq.find (fun c -> c.Name = "T")
 
                     test <@ result.Constraints |> Seq.isEmpty @>)
 
@@ -121,8 +121,8 @@ module RoslynAnalyzer_DelegateGenerics_Tests =
                 (withProjects genericConstraints, ("T", Set ["struct"]))
                 (withProjects genericConstraints, ("Y", Set ["IEnumerable"; "class"; "new()"]))]
                 (fun sut project (parameter, expected) () ->
-                    let object = sut.Analyze project |> findDelegate "GenericConstrainedDelegate`2"
-                    let result = object.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
+                    let definition = sut.Analyze project |> findType "GenericConstrainedDelegate`2"
+                    let result = definition.Generics |> Seq.find (fun c -> c.Name = parameter)
 
                     test <@ result.Constraints |> Set
                                                |> Set.map normalizeSyntax

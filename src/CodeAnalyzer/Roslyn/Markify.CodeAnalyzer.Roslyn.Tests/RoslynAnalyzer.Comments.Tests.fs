@@ -22,9 +22,9 @@ module RoslynAnalyzer_Comments_Tests =
             yield! testRepeat (withProjects content)
                 "should return no comment when type has none"
                 (fun sut project () ->
-                    let result = sut.Analyze project |> findClass "NoCommentType"
+                    let result = sut.Analyze project |> findType "NoCommentType"
                     
-                    test <@ result.Comments.Comments |> Seq.isEmpty @>)
+                    test <@ result.Comments |> Seq.isEmpty @>)
         ]
 
     [<Tests>]
@@ -59,11 +59,11 @@ module RoslynAnalyzer_Comments_Tests =
                 (withProjects content, ("MultipleComment", Set ["summary"; "remarks"]))
                 (withProjects content, ("SelfClosingComment", Set ["inheritdoc"]))]
                 (fun sut project (name, expected) () ->
-                    let result = sut.Analyze project |> findClass name
+                    let result = sut.Analyze project |> findType name
                     
-                    test <@ result.Comments.Comments |> Seq.map (fun c -> c.Name)
-                                                     |> Set
-                                                     |> Set.isSubset expected @>)
+                    test <@ result.Comments |> Seq.map (fun c -> c.Name)
+                                            |> Set
+                                            |> Set.isSubset expected @>)
         ]
 
     [<Tests>]
@@ -94,7 +94,7 @@ module RoslynAnalyzer_Comments_Tests =
                 (withProjects content, ("SingleComment", 1))
                 (withProjects content, ("MultipleComment", 3))]
                 (fun sut project (name, expected) () ->
-                    let result = sut.Analyze project |> findClass name
+                    let result = sut.Analyze project |> findType name
                     
-                    test <@ result.Comments.Comments |> Seq.length = expected @>)
+                    test <@ result.Comments |> Seq.length = expected @>)
         ]

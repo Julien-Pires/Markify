@@ -55,7 +55,7 @@ module RoslynAnalyzer_Enum_Tests =
                 (fun sut project name () ->
                     let assemblies = sut.Analyze project
                             
-                    test <@ assemblies.Types |> Seq.exists (fun c -> c.Identity.Name = name) @>)
+                    test <@ assemblies.Types |> Seq.exists (fun c -> c.Name = name) @>)
             
             yield! testRepeatParameterized 
                 "should return enum with valid fullname" [

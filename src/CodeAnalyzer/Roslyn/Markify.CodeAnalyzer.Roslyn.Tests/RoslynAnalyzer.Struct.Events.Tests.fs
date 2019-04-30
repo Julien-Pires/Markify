@@ -110,8 +110,8 @@ module RoslynAnalyzer_StructEvents_Tests =
                 (withProjects content, ("InternalEvent", Set ["internal"]))
                 (withProjects content, ("PrivateEvent", Set ["private"]))]
                 (fun sut project (event, expected) () -> 
-                    let object = sut.Analyze project |> findStruct "AccessModifier"
-                    let result = object.Events |> Seq.find (fun c -> c.Name = event)
+                    let info = sut.Analyze project |> findStruct "AccessModifier"
+                    let result = info.Events |> Seq.find (fun c -> c.Name = event)
 
                     test <@ result.AccessModifiers |> Set
                                                    |> Set.map normalizeSyntax 
@@ -139,16 +139,16 @@ module RoslynAnalyzer_StructEvents_Tests =
             yield! testRepeat (withProjects content)
                 "should return no modifier when struct event has none"
                 (fun sut project () -> 
-                    let object = sut.Analyze project |> findStruct "Modifiers"
-                    let result = object.Events |> Seq.find (fun c -> c.Name = "WithoutModifier")
+                    let info = sut.Analyze project |> findStruct "Modifiers"
+                    let result = info.Events |> Seq.find (fun c -> c.Name = "WithoutModifier")
 
                     test <@ result.Modifiers |> Seq.isEmpty @>)
 
             yield! testRepeat (withProjects content)
                 "should return modifier when struct event has one"
                 (fun sut project () -> 
-                    let object = sut.Analyze project |> findStruct "Modifiers"
-                    let result = object.Events |> Seq.find (fun c -> c.Name = "StaticEvent")
+                    let info = sut.Analyze project |> findStruct "Modifiers"
+                    let result = info.Events |> Seq.find (fun c -> c.Name = "StaticEvent")
 
                     test <@ result.Modifiers |> Set
                                              |> Set.map normalizeSyntax

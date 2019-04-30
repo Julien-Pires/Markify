@@ -22,9 +22,9 @@ module RoslynAnalyzer_ClassGenerics_Tests =
             yield! testRepeat (withProjects noGeneric) 
                 "should return no generic parameters when class has none"
                 (fun sut project () ->
-                    let result = sut.Analyze project |> findClass "NoGenericClass"
+                    let result = sut.Analyze project |> findType "NoGenericClass"
 
-                    test <@ result.Identity.Parameters |> Seq.isEmpty @>)
+                    test <@ result.Generics |> Seq.isEmpty @>)
         ]
 
     [<Tests>]
@@ -48,9 +48,9 @@ module RoslynAnalyzer_ClassGenerics_Tests =
                 (withProjects generic, ("SingleGenericClass`1", 1))
                 (withProjects generic, ("MultipleGenericClass`2", 2))]
                 (fun sut project (name, expected) () ->
-                    let result = sut.Analyze project |> findClass name
+                    let result = sut.Analyze project |> findType name
                         
-                    test <@ result.Identity.Parameters |> Seq.length = expected @>)
+                    test <@ result.Generics |> Seq.length = expected @>)
 
             yield! testRepeatParameterized 
                 "should return valid generic parameter name when class has some" [
@@ -58,9 +58,9 @@ module RoslynAnalyzer_ClassGenerics_Tests =
                 (withProjects generic, ("MultipleGenericClass`2", "T"))
                 (withProjects generic, ("MultipleGenericClass`2", "Y"))]
                 (fun sut project (name, expected) () ->
-                    let result = sut.Analyze project |> findClass name
+                    let result = sut.Analyze project |> findType name
                         
-                    test <@ result.Identity.Parameters |> Seq.exists (fun c -> c.Name = expected) @>)
+                    test <@ result.Generics |> Seq.exists (fun c -> c.Name = expected) @>)
         ]
     
     [<Tests>]
@@ -78,8 +78,8 @@ module RoslynAnalyzer_ClassGenerics_Tests =
             yield! testRepeat (withProjects genericModifiers)
                 "should return no modifiers when class generic parameter has none"
                 (fun sut project () ->
-                    let object = sut.Analyze project |> findClass "SingleGenericClass`1"
-                    let result = object.Identity.Parameters |> Seq.find (fun c -> c.Name = "T")
+                    let definition = sut.Analyze project |> findType "SingleGenericClass`1"
+                    let result = definition.Generics |> Seq.find (fun c -> c.Name = "T")
 
                     test <@ result.Modifier.IsNone @>)
         ]
@@ -104,8 +104,8 @@ module RoslynAnalyzer_ClassGenerics_Tests =
             yield! testRepeat (withProjects genericConstraints) 
                 "should return no constraints when class generic parameter has none"
                 (fun sut project () ->
-                    let object = sut.Analyze project |> findClass "SingleGenericClass`1"
-                    let result = object.Identity.Parameters |> Seq.find (fun c -> c.Name = "T")
+                    let definition = sut.Analyze project |> findType "SingleGenericClass`1"
+                    let result = definition.Generics |> Seq.find (fun c -> c.Name = "T")
 
                     test <@ result.Constraints |> Seq.isEmpty @>)
 
@@ -114,8 +114,8 @@ module RoslynAnalyzer_ClassGenerics_Tests =
                 (withProjects genericConstraints, ("T", Set ["struct"]))
                 (withProjects genericConstraints, ("Y", Set ["IEnumerable"; "class"; "new()"]))]
                 (fun sut project (parameter, expected) () ->
-                    let object = sut.Analyze project |> findClass "GenericConstrainedClass`2"
-                    let result = object.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
+                    let definition = sut.Analyze project |> findType "GenericConstrainedClass`2"
+                    let result = definition.Generics |> Seq.find (fun c -> c.Name = parameter)
 
                     test <@ result.Constraints |> Set
                                                |> Set.map normalizeSyntax

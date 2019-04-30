@@ -71,7 +71,7 @@ module RoslynAnalyzer_ClassMethods_Tests =
                 (fun sut project (name, expected) () ->
                     let result = sut.Analyze project |> findClass name
 
-                    test <@ result.Methods |> Seq.exists (fun c -> c.Identity.Name = expected) @>)
+                    test <@ result.Methods |> Seq.exists (fun c -> c.Name = expected) @>)
         ]
 
     [<Tests>]
@@ -115,12 +115,12 @@ module RoslynAnalyzer_ClassMethods_Tests =
                 (withProjects content, ("ProtectedInternalMethod", Set ["protected"; "internal"]))
                 (withProjects content, ("PrivateMethod", Set ["private"]))]
                 (fun sut project (method, expected) () ->
-                    let object = sut.Analyze project |> findClass "AccessModifiers"
-                    let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = method)
+                    let info = sut.Analyze project |> findClass "AccessModifiers"
+                    let result = info.Methods |> Seq.find (fun c -> c.Name = method)
 
-                    test <@ result.Identity.AccessModifiers |> Set
-                                                            |> Set.map normalizeSyntax
-                                                            |> (=) expected @>)
+                    test <@ result.AccessModifiers |> Set
+                                                   |> Set.map normalizeSyntax
+                                                   |> (=) expected @>)
         ]
 
     [<Tests>]
@@ -158,10 +158,10 @@ module RoslynAnalyzer_ClassMethods_Tests =
             yield! testRepeat (withProjects content)
                 "should return no modifiers when class method has none"
                 (fun sut project () ->
-                    let object = sut.Analyze project |> findClass "Modifiers"
-                    let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = "WithoutModifier")
+                    let info = sut.Analyze project |> findClass "Modifiers"
+                    let result = info.Methods |> Seq.find (fun c -> c.Name = "WithoutModifier")
 
-                    test <@ result.Identity.Modifiers |> Seq.isEmpty @>)
+                    test <@ result.Modifiers |> Seq.isEmpty @>)
 
             yield! testRepeatParameterized
                 "should return correct modifier when class method has one" [
@@ -171,12 +171,12 @@ module RoslynAnalyzer_ClassMethods_Tests =
                 (withProjects content, ("OverrideMethod", Set ["override"]))
                 (withProjects content, ("PartialMethod", Set ["partial"]))]
                 (fun sut project (method, expected) () ->
-                    let object = sut.Analyze project |> findClass "Modifiers"
-                    let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = method)
+                    let info = sut.Analyze project |> findClass "Modifiers"
+                    let result = info.Methods |> Seq.find (fun c -> c.Name = method)
 
-                    test <@ result.Identity.Modifiers |> Set
-                                                      |> Set.map normalizeSyntax 
-                                                      |> (=) expected @>)
+                    test <@ result.Modifiers |> Set
+                                             |> Set.map normalizeSyntax 
+                                             |> (=) expected @>)
         ]
 
     [<Tests>]
@@ -208,53 +208,53 @@ module RoslynAnalyzer_ClassMethods_Tests =
             yield! testRepeat (withProjects content)
                 "should return no generic parameters when class method has none"
                 (fun sut project () ->
-                    let object = sut.Analyze project |> findClass "Generics"
-                    let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = "WithoutGenerics")
+                    let info = sut.Analyze project |> findClass "Generics"
+                    let result = info.Methods |> Seq.find (fun c -> c.Name = "WithoutGenerics")
 
-                    test <@ result.Identity.Parameters |> Seq.isEmpty @>)
+                    test <@ result.Generics |> Seq.isEmpty @>)
 
             yield! testRepeatParameterized
                 "should return generic parameters when class method has some" [
                 (withProjects content, ("SingleGeneric", 1))
                 (withProjects content, ("MultipleGeneric", 2))]
                 (fun sut project (method, expected) () ->
-                    let object = sut.Analyze project |> findClass "Generics"
-                    let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = method)
+                    let info = sut.Analyze project |> findClass "Generics"
+                    let result = info.Methods |> Seq.find (fun c -> c.Name = method)
 
-                    test <@ result.Identity.Parameters |> Seq.length = expected @>)
+                    test <@ result.Generics |> Seq.length = expected @>)
 
             yield! testRepeat (withProjects content)
                 "should return no generic constraint when class method generic parameter has none"
                 (fun sut project () ->
-                    let object = sut.Analyze project |> findClass "Generics"
-                    let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = "SingleGeneric")
+                    let info = sut.Analyze project |> findClass "Generics"
+                    let result = info.Methods |> Seq.find (fun c -> c.Name = "SingleGeneric")
 
-                    test <@ result.Identity.Parameters |> Seq.map (fun c -> c.Constraints)
-                                                       |> Seq.forall Seq.isEmpty @>)
+                    test <@ result.Generics |> Seq.map (fun c -> c.Constraints)
+                                            |> Seq.forall Seq.isEmpty @>)
 
             yield! testRepeatParameterized
                 "should return generic constraint when class method generic parameter has some" [
                 (withProjects content, ("MultipleGeneric", "T", 1))
                 (withProjects content, ("MultipleGeneric", "Y", 2))]
                 (fun sut project (method, parameter, expected) () ->
-                    let object = sut.Analyze project |> findClass "Generics"
-                    let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = method)
+                    let info = sut.Analyze project |> findClass "Generics"
+                    let result = info.Methods |> Seq.find (fun c -> c.Name = method)
 
-                    test <@ result.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
-                                                       |> fun c -> c.Constraints |> Seq.length = expected @>)
+                    test <@ result.Generics |> Seq.find (fun c -> c.Name = parameter)
+                                            |> fun c -> c.Constraints |> Seq.length = expected @>)
 
             yield! testRepeatParameterized
                 "should return correct generic constraint name when class method generic parameter has some" [
                 (withProjects content, ("MultipleGeneric", "T", "Int32"))
                 (withProjects content, ("MultipleGeneric", "Y", "class"))]
                 (fun sut project (method, parameter, expected) () ->
-                    let object = sut.Analyze project |> findClass "Generics"
-                    let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = method)
+                    let info = sut.Analyze project |> findClass "Generics"
+                    let result = info.Methods |> Seq.find (fun c -> c.Name = method)
 
-                    test <@ result.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
-                                                       |> fun c -> c.Constraints
-                                                       |> Seq.map normalizeSyntax 
-                                                       |> Seq.contains expected @>)
+                    test <@ result.Generics |> Seq.find (fun c -> c.Name = parameter)
+                                            |> fun c -> c.Constraints
+                                            |> Seq.map normalizeSyntax 
+                                            |> Seq.contains expected @>)
         ]
 
     [<Tests>]
@@ -286,8 +286,8 @@ module RoslynAnalyzer_ClassMethods_Tests =
             yield! testRepeat (withProjects content)
                 "should return no parameters when class method has none"
                 (fun sut project () ->
-                    let object = sut.Analyze project |> findClass "Parameters"
-                    let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = "WithoutParameters")
+                    let info = sut.Analyze project |> findClass "Parameters"
+                    let result = info.Methods |> Seq.find (fun c -> c.Name = "WithoutParameters")
 
                     test <@ result.Parameters |> Seq.isEmpty @>)
 
@@ -296,8 +296,8 @@ module RoslynAnalyzer_ClassMethods_Tests =
                 (withProjects content, ("SingleParameters", 1))
                 (withProjects content, ("MultipleParameters", 2))]
                 (fun sut project (method, expected) () ->
-                    let object = sut.Analyze project |> findClass "Parameters"
-                    let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = method)
+                    let info = sut.Analyze project |> findClass "Parameters"
+                    let result = info.Methods |> Seq.find (fun c -> c.Name = method)
 
                     test <@ result.Parameters |> Seq.length = expected @>)
 
@@ -306,8 +306,8 @@ module RoslynAnalyzer_ClassMethods_Tests =
                 (withProjects content, ("SingleParameters", "A"))
                 (withProjects content, ("MultipleParameters", "B"))]
                 (fun sut project (method, expected) () ->
-                    let object = sut.Analyze project |> findClass "Parameters"
-                    let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = method)
+                    let info = sut.Analyze project |> findClass "Parameters"
+                    let result = info.Methods |> Seq.find (fun c -> c.Name = method)
 
                     test <@ result.Parameters |> Seq.exists (fun c -> c.Name = expected) @>)
 
@@ -317,8 +317,8 @@ module RoslynAnalyzer_ClassMethods_Tests =
                 (withProjects content, ("MultipleParameters", "B", "Single"))
                 (withProjects content, ("GenericParameters", "A", "T"))]
                 (fun sut project (method, parameter, expected) () ->
-                    let object = sut.Analyze project |> findClass "Parameters"
-                    let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = method)
+                    let info = sut.Analyze project |> findClass "Parameters"
+                    let result = info.Methods |> Seq.find (fun c -> c.Name = method)
 
                     test <@ result.Parameters |> Seq.find (fun c -> c.Name = parameter)
                                               |> fun c -> c.Type = expected @>)
@@ -326,8 +326,8 @@ module RoslynAnalyzer_ClassMethods_Tests =
             yield! testRepeat (withProjects content)
                 "should return no modifier when class method parameter has none"
                 (fun sut project () ->
-                    let object = sut.Analyze project |> findClass "Parameters"
-                    let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = "SingleParameters")
+                    let info = sut.Analyze project |> findClass "Parameters"
+                    let result = info.Methods |> Seq.find (fun c -> c.Name = "SingleParameters")
 
                     test <@ result.Parameters |> Seq.find (fun c -> c.Name = "A")
                                               |> fun c -> c.Modifier.IsNone @>)
@@ -337,8 +337,8 @@ module RoslynAnalyzer_ClassMethods_Tests =
                 (withProjects content, ("A", "ref"))
                 (withProjects content, ("B", "out"))]
                 (fun sut project (parameter, expected) () ->
-                    let object = sut.Analyze project |> findClass "Parameters"
-                    let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = "MultipleParameters")
+                    let info = sut.Analyze project |> findClass "Parameters"
+                    let result = info.Methods |> Seq.find (fun c -> c.Name = "MultipleParameters")
 
                     test <@ result.Parameters |> Seq.find (fun c -> c.Name = parameter)
                                               |> fun c -> normalizeSyntax c.Modifier.Value = expected @>)
@@ -346,8 +346,8 @@ module RoslynAnalyzer_ClassMethods_Tests =
             yield! testRepeat (withProjects content)
                 "should return no default value when class method parameter has none"
                 (fun sut project () ->
-                    let object = sut.Analyze project |> findClass "Parameters"
-                    let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = "SingleParameters")
+                    let info = sut.Analyze project |> findClass "Parameters"
+                    let result = info.Methods |> Seq.find (fun c -> c.Name = "SingleParameters")
 
                     test <@ result.Parameters |> Seq.find (fun c -> c.Name = "A")
                                               |> fun c -> c.DefaultValue.IsNone @>)
@@ -357,8 +357,8 @@ module RoslynAnalyzer_ClassMethods_Tests =
                 (withProjects content, ("A", "32"))
                 (withProjects content, ("B", "16"))]
                 (fun sut project (parameter, expected) () ->
-                    let object = sut.Analyze project |> findClass "Parameters"
-                    let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = "MultipleParameters")
+                    let info = sut.Analyze project |> findClass "Parameters"
+                    let result = info.Methods |> Seq.find (fun c -> c.Name = "MultipleParameters")
 
                     test <@ result.Parameters |> Seq.find (fun c -> c.Name = parameter)
                                               |> fun c -> c.DefaultValue = Some expected @>)
@@ -393,8 +393,8 @@ module RoslynAnalyzer_ClassMethods_Tests =
                 (withProjects content, ("Function", "Int32"))
                 (withProjects content, ("GenericFunction", "T"))]
                 (fun sut project (method, expected) () ->
-                    let object = sut.Analyze project |> findClass "ReturnType"
-                    let result = object.Methods |> Seq.find (fun c -> c.Identity.Name = method)
+                    let info = sut.Analyze project |> findClass "ReturnType"
+                    let result = info.Methods |> Seq.find (fun c -> c.Name = method)
 
                     test <@ result.ReturnType |> normalizeSyntax = expected @>)
         ]

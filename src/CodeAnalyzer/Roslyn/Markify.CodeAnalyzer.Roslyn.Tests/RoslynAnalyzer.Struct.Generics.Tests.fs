@@ -22,9 +22,9 @@ module RoslynAnalyzer_StructGenerics_Tests =
             yield! testRepeat (withProjects noGeneric)
                 "should return no generic parameters when struct has none"
                 (fun sut project () ->
-                    let result = sut.Analyze project |> findStruct "NoGenericStruct"
+                    let result = sut.Analyze project |> findType "NoGenericStruct"
 
-                    test <@ result.Identity.Parameters |> Seq.isEmpty @>)
+                    test <@ result.Generics |> Seq.isEmpty @>)
         ]
 
     [<Tests>]
@@ -47,9 +47,9 @@ module RoslynAnalyzer_StructGenerics_Tests =
                 (withProjects generic, ("SingleGenericStruct`1", 1))
                 (withProjects generic, ("MultipleGenericStruct`2", 2))]
                 (fun sut project (name, expected) () ->
-                    let result = sut.Analyze project |> findStruct name 
+                    let result = sut.Analyze project |> findType name 
                         
-                    test <@ result.Identity.Parameters |> Seq.length = expected @>)
+                    test <@ result.Generics |> Seq.length = expected @>)
 
             yield! testRepeatParameterized 
                 "should return valid generic parameter name when struct has some" [
@@ -57,9 +57,9 @@ module RoslynAnalyzer_StructGenerics_Tests =
                 (withProjects generic, ("MultipleGenericStruct`2", "T"))
                 (withProjects generic, ("MultipleGenericStruct`2", "Y"))]
                 (fun sut project (name, expected) () ->
-                    let result = sut.Analyze project |> findStruct name
+                    let result = sut.Analyze project |> findType name
                         
-                    test <@ result.Identity.Parameters |> Seq.exists (fun c -> c.Name = expected) @>)
+                    test <@ result.Generics |> Seq.exists (fun c -> c.Name = expected) @>)
         ]
     
     [<Tests>]
@@ -77,8 +77,8 @@ module RoslynAnalyzer_StructGenerics_Tests =
             yield! testRepeat (withProjects genericModifiers) 
                 "should return no modifiers when struct generic parameter has none"
                 (fun sut project () ->
-                    let object = sut.Analyze project |> findStruct "SingleGenericStruct`1"
-                    let result = object.Identity.Parameters |> Seq.find (fun c -> c.Name = "T")
+                    let definition = sut.Analyze project |> findType "SingleGenericStruct`1"
+                    let result = definition.Generics |> Seq.find (fun c -> c.Name = "T")
 
                     test <@ result.Modifier.IsNone @>)
         ]
@@ -103,8 +103,8 @@ module RoslynAnalyzer_StructGenerics_Tests =
             yield! testRepeat (withProjects genericConstraints)
                 "should return no constraints when struct generic parameter has none"
                 (fun sut project () ->
-                    let object = sut.Analyze project |> findStruct "SingleGenericStruct`1"
-                    let result = object.Identity.Parameters |> Seq.find (fun c -> c.Name = "T")
+                    let definition = sut.Analyze project |> findType "SingleGenericStruct`1"
+                    let result = definition.Generics |> Seq.find (fun c -> c.Name = "T")
 
                     test <@ result.Constraints |> Seq.isEmpty @>)
 
@@ -113,8 +113,8 @@ module RoslynAnalyzer_StructGenerics_Tests =
                 (withProjects genericConstraints, ("T", Set ["struct"]))
                 (withProjects genericConstraints, ("Y", Set ["IEnumerable"; "class"; "new()"]))]
                 (fun sut project (parameter, expected) () ->
-                    let object = sut.Analyze project |> findStruct "GenericConstrainedStruct`2"
-                    let result = object.Identity.Parameters |> Seq.find (fun c -> c.Name = parameter)
+                    let definition = sut.Analyze project |> findType "GenericConstrainedStruct`2"
+                    let result = definition.Generics |> Seq.find (fun c -> c.Name = parameter)
 
                     test <@ result.Constraints |> Set
                                                |> Set.map normalizeSyntax

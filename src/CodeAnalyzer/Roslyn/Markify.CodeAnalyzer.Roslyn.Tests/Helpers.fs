@@ -45,43 +45,48 @@ module TypeHelper =
         "Enum"
         "Delegate"] 
 
-    let getFullname identity =
-        match (identity.Namespace, identity.Parents) with
-        | (Some x, Some y) -> sprintf "%s.%s.%s" x y identity.Name
-        | (Some x, None) | (None, Some x) -> sprintf "%s.%s" x identity.Name
-        | _ -> identity.Name
+    let getFullname definition =
+        match (definition.Namespace, definition.Parents) with
+        | (Some x, Some y) -> sprintf "%s.%s.%s" x y definition.Name
+        | (Some x, None) | (None, Some x) -> sprintf "%s.%s" x definition.Name
+        | _ -> definition.Name
 
-    let doesNameMatch name (definition : TypeDefinition) =
+    let doesNameMatch name (definition : Definition) =
         let typeName =
             match Regex.Match(name, "\w+(\.\w+)+").Success with
-            | true -> getFullname definition.Identity
-            | false -> definition.Identity.Name
+            | true -> getFullname definition
+            | false -> definition.Name
         typeName = name
 
-    let findType assemblies name =
+    let findType name assemblies =
         assemblies.Types |> Seq.find (doesNameMatch name)
 
-    let findClass name assemblies : ClassDefinition = 
-        match findType assemblies name with
+    let findClass name assemblies =
+        let definition = findType name assemblies
+        match definition.Info with
         | Class x -> x
         | _ -> raise (System.InvalidCastException("Found type is not a class"))
 
-    let findStruct name assemblies : ClassDefinition = 
-        match findType assemblies name with
+    let findStruct name assemblies = 
+        let definition = findType name assemblies
+        match definition.Info with
         | Struct x -> x
         | _ -> raise (System.InvalidCastException("Found type is not a struct"))
 
-    let findInterface name assemblies : ClassDefinition = 
-        match findType assemblies name with
+    let findInterface name assemblies = 
+        let definition = findType name assemblies
+        match definition.Info with
         | Interface x -> x
         | _ -> raise (System.InvalidCastException("Found type is not an interface"))
 
-    let findDelegate name assemblies : DelegateDefinition = 
-        match findType assemblies name with
+    let findDelegate name assemblies = 
+        let definition = findType name assemblies
+        match definition.Info with
         | Delegate x -> x
         | _ -> raise (System.InvalidCastException("Found type is not a delegate"))
 
-    let findEnum name assemblies : EnumDefinition = 
-        match findType assemblies name with
+    let findEnum name assemblies = 
+        let definition = findType name assemblies
+        match definition.Info with
         | Enum x -> x
         | _ -> raise (System.InvalidCastException("Found type is not an enum"))

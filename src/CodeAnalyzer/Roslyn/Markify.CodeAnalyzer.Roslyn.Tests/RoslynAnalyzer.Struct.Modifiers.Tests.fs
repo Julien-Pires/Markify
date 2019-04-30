@@ -22,9 +22,9 @@ module RoslynAnalyzer_StructModifiers_Tests =
             yield! testRepeat (withProjects contents)
                 "should return struct with no access modifier when type has none"
                 (fun sut project () ->
-                    let result = sut.Analyze project |> findStruct "NoAccessModifierType"
+                    let result = sut.Analyze project |> findType "NoAccessModifierType"
                         
-                    test <@ result.Identity.AccessModifiers |> Seq.isEmpty @>)
+                    test <@ result.AccessModifiers |> Seq.isEmpty @>)
         ]
 
     [<Tests>]
@@ -68,9 +68,9 @@ module RoslynAnalyzer_StructModifiers_Tests =
                 (withProjects contents, ("ParentType.ProtectedInternalType", Set ["protected"; "internal"]))
                 (withProjects contents, ("ParentType.InternalProtectedType", Set ["protected"; "internal"]))]
                 (fun sut project (name, expected) () ->
-                    let result = sut.Analyze project |> findStruct name
+                    let result = sut.Analyze project |> findType name
                         
-                    test <@ result.Identity.AccessModifiers |> Set
+                    test <@ result.AccessModifiers |> Set
                                                             |> Set.map normalizeSyntax
                                                             |> (=) expected @>)
         ]
@@ -90,9 +90,9 @@ module RoslynAnalyzer_StructModifiers_Tests =
             yield! testRepeat (withProjects contents)
                 "should return struct with no modifier when type has none"
                 (fun sut project () ->
-                    let result = sut.Analyze project |> findStruct "NoModifierType"
+                    let result = sut.Analyze project |> findType "NoModifierType"
                         
-                    test <@ result.Identity.Modifiers |> Seq.isEmpty @>)
+                    test <@ result.Modifiers |> Seq.isEmpty @>)
         ]
 
     [<Tests>]
@@ -131,9 +131,9 @@ module RoslynAnalyzer_StructModifiers_Tests =
                 (withProjects contents, ("AbstractPartialType", Set ["abstract"; "partial"]))
                 (withProjects contents, ("SealedPartialType", Set ["sealed"; "partial"]))]
                 (fun sut project (name, expected) () ->
-                    let result = sut.Analyze project |> findStruct name
+                    let result = sut.Analyze project |> findType name
                         
-                    test <@ result.Identity.Modifiers |> Set
-                                                      |> Set.map normalizeSyntax
-                                                      |> (=) expected @>)
+                    test <@ result.Modifiers |> Set
+                                             |> Set.map normalizeSyntax
+                                             |> (=) expected @>)
         ]

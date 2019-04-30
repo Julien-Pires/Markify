@@ -116,8 +116,8 @@ module RoslynAnalyzer_ClassEvents_Tests =
                 (withProjects content, ("ProtectedInternalEvent", Set ["protected"; "internal"]))
                 (withProjects content, ("PrivateEvent", Set ["private"]))]
                 (fun sut project (event, expected) () -> 
-                    let object = sut.Analyze project |> findClass "AccessModifier"
-                    let result = object.Events |> Seq.find (fun c -> c.Name = event)
+                    let info = sut.Analyze project |> findClass "AccessModifier"
+                    let result = info.Events |> Seq.find (fun c -> c.Name = event)
 
                     test <@ result.AccessModifiers |> Set
                                                    |> Set.map normalizeSyntax
@@ -153,8 +153,8 @@ module RoslynAnalyzer_ClassEvents_Tests =
             yield! testRepeat (withProjects content)
                 "should return no modifier when class event has none"
                 (fun sut project () -> 
-                    let object = sut.Analyze project |> findClass "Modifiers"
-                    let result = object.Events |> Seq.find (fun c -> c.Name = "WithoutModifier")
+                    let info = sut.Analyze project |> findClass "Modifiers"
+                    let result = info.Events |> Seq.find (fun c -> c.Name = "WithoutModifier")
 
                     test <@ result.Modifiers |> Seq.isEmpty @>)
 
@@ -166,8 +166,8 @@ module RoslynAnalyzer_ClassEvents_Tests =
                 (withProjects content, ("OverrideEvent", Set ["override"]))
                 (withProjects content, ("AbstractEvent", Set ["abstract"]))]
                 (fun sut project (event, expected) () -> 
-                    let object = sut.Analyze project |> findClass "Modifiers"
-                    let result = object.Events |> Seq.find (fun c -> c.Name = event)
+                    let info = sut.Analyze project |> findClass "Modifiers"
+                    let result = info.Events |> Seq.find (fun c -> c.Name = event)
 
                     test <@ result.Modifiers |> Set
                                              |> Set.map normalizeSyntax 

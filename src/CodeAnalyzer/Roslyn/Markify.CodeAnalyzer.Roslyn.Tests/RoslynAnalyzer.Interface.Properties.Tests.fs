@@ -75,8 +75,8 @@ module RoslynAnalyzer_InterfaceProperties_Tests =
             yield! testRepeat (withProjects content)
                 "should return correct interface property type"
                 (fun sut project () ->
-                    let object = sut.Analyze project |> findInterface "SingleProperty"
-                    let result = object.Properties |> Seq.find (fun c -> c.Name = "Property")
+                    let info = sut.Analyze project |> findInterface "SingleProperty"
+                    let result = info.Properties |> Seq.find (fun c -> c.Name = "Property")
                     
                     test <@ result.Type = "Int32"  @>)
         ]
@@ -107,16 +107,16 @@ module RoslynAnalyzer_InterfaceProperties_Tests =
             yield! testRepeat (withProjects content)
                 "should return public access modifier when interface property has no specified access modifier"
                 (fun sut project () ->
-                    let object = sut.Analyze project |> findInterface "WithoutAccessModifier"
-                    let result = object.Properties |> Seq.find (fun c -> c.Name = "PublicProperty")
+                    let info = sut.Analyze project |> findInterface "WithoutAccessModifier"
+                    let result = info.Properties |> Seq.find (fun c -> c.Name = "PublicProperty")
 
                     test <@ result.AccessModifiers |> Seq.exists (fun c -> normalizeSyntax c = "public") @>)
 
             yield! testRepeat (withProjects content)
                 "should return correct access modifier when interface property has some"
                 (fun sut project () ->
-                    let object = sut.Analyze project |> findInterface "WithAccessModifiers"
-                    let result = object.Properties |> Seq.find (fun c -> c.Name = "PublicProperty")
+                    let info = sut.Analyze project |> findInterface "WithAccessModifiers"
+                    let result = info.Properties |> Seq.find (fun c -> c.Name = "PublicProperty")
                         
                     test <@ result.AccessModifiers |> Set
                                                    |> Set.map normalizeSyntax  
@@ -142,8 +142,8 @@ module RoslynAnalyzer_InterfaceProperties_Tests =
             yield! testRepeat (withProjects content)
                 "should return property with no modifiers when interface property has none"
                 (fun sut project () ->
-                    let object = sut.Analyze project |> findInterface "WithoutModifiers"
-                    let result = object.Properties |> Seq.find (fun c -> c.Name = "Property")
+                    let info = sut.Analyze project |> findInterface "WithoutModifiers"
+                    let result = info.Properties |> Seq.find (fun c -> c.Name = "Property")
 
                     test <@ result.Modifiers |> Seq.isEmpty @>)
         ]
@@ -201,8 +201,8 @@ module RoslynAnalyzer_InterfaceProperties_Tests =
                 (withProjects content, ("Auto", Set ["public"]))
                 (withProjects content, ("Write", Set ["public"]))]
                 (fun sut project (property, expected) () ->
-                    let object = sut.Analyze project |> findInterface "WithWriteAccessor"
-                    let result = object.Properties |> Seq.find (fun c -> c.Name = property)
+                    let info = sut.Analyze project |> findInterface "WithWriteAccessor"
+                    let result = info.Properties |> Seq.find (fun c -> c.Name = property)
                     
                     test <@ result.IsWrite.Value.AccessModifiers |> Set
                                                                  |> Set.map normalizeSyntax 
@@ -262,8 +262,8 @@ module RoslynAnalyzer_InterfaceProperties_Tests =
                 (withProjects content, ("Auto", Set ["public"]))
                 (withProjects content, ("Read", Set ["public"]))]
                 (fun sut project (property, expected) () ->
-                    let object = sut.Analyze project |> findInterface "WithReadAccessor"
-                    let result = object.Properties |> Seq.find (fun c -> c.Name = property)
+                    let info = sut.Analyze project |> findInterface "WithReadAccessor"
+                    let result = info.Properties |> Seq.find (fun c -> c.Name = property)
                     
                     test <@ result.IsRead.Value.AccessModifiers |> Set
                                                                 |> Set.map normalizeSyntax 

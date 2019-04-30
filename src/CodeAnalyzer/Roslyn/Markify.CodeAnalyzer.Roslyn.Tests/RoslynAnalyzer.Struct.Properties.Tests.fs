@@ -75,8 +75,8 @@ module RoslynAnalyzer_StructProperties_Tests =
             yield! testRepeat (withProjects content)
                 "should return correct struct property type"
                 (fun sut project () ->
-                    let object = sut.Analyze project |> findStruct "SingleProperty"
-                    let result = object.Properties |> Seq.find (fun c -> c.Name = "Property")
+                    let info = sut.Analyze project |> findStruct "SingleProperty"
+                    let result = info.Properties |> Seq.find (fun c -> c.Name = "Property")
                     
                     test <@ result.Type = "Int32"  @>)
         ]
@@ -111,8 +111,8 @@ module RoslynAnalyzer_StructProperties_Tests =
             yield! testRepeat (withProjects content)
                 "should return private access modifier when struct property has no specified access modifier"
                 (fun sut project () ->
-                    let object = sut.Analyze project |> findStruct "WithoutAccessModifier"
-                    let result = object.Properties |> Seq.find (fun c -> c.Name = "PrivateProperty")
+                    let info = sut.Analyze project |> findStruct "WithoutAccessModifier"
+                    let result = info.Properties |> Seq.find (fun c -> c.Name = "PrivateProperty")
 
                     test <@ result.AccessModifiers |> Seq.exists (fun c -> normalizeSyntax c = "private") @>)
 
@@ -122,8 +122,8 @@ module RoslynAnalyzer_StructProperties_Tests =
                 (withProjects content, ("InternalProperty", Set ["internal"]))
                 (withProjects content, ("PrivateProperty", Set ["private"]))]
                 (fun sut project (property, expected) () ->
-                    let object = sut.Analyze project |> findStruct "WithAccessModifiers"
-                    let result = object.Properties |> Seq.find (fun c -> c.Name = property)
+                    let info = sut.Analyze project |> findStruct "WithAccessModifiers"
+                    let result = info.Properties |> Seq.find (fun c -> c.Name = property)
                         
                     test <@ result.AccessModifiers |> Set
                                                    |> Set.map normalizeSyntax 
@@ -156,16 +156,16 @@ module RoslynAnalyzer_StructProperties_Tests =
             yield! testRepeat (withProjects content)
                 "should return property with no modifiers when struct property has none"
                 (fun sut project () ->
-                    let object = sut.Analyze project |> findStruct "WithoutModifiers"
-                    let result = object.Properties |> Seq.find (fun c -> c.Name = "Property")
+                    let info = sut.Analyze project |> findStruct "WithoutModifiers"
+                    let result = info.Properties |> Seq.find (fun c -> c.Name = "Property")
 
                     test <@ result.Modifiers |> Seq.isEmpty @>)
 
             yield! testRepeat (withProjects content)
                 "should return correct modifier when struct property has some"
                 (fun sut project () ->
-                    let object = sut.Analyze project |> findStruct "WithModifiers"
-                    let result = object.Properties |> Seq.find (fun c -> c.Name = "StaticProperty")
+                    let info = sut.Analyze project |> findStruct "WithModifiers"
+                    let result = info.Properties |> Seq.find (fun c -> c.Name = "StaticProperty")
                         
                     test <@ result.Modifiers |> Set
                                              |> Set.map normalizeSyntax
@@ -291,8 +291,8 @@ module RoslynAnalyzer_StructProperties_Tests =
                 (withProjects content, ("InternalProperty", Set ["internal"]))
                 (withProjects content, ("InternalWriteOnly", Set ["internal"]))]
                 (fun sut project (property, expected) () ->
-                    let object = sut.Analyze project |> findStruct "WithWriteAccessor"
-                    let result = object.Properties |> Seq.find (fun c -> c.Name = property)
+                    let info = sut.Analyze project |> findStruct "WithWriteAccessor"
+                    let result = info.Properties |> Seq.find (fun c -> c.Name = property)
                     
                     test <@ result.IsWrite.Value.AccessModifiers |> Set
                                                                  |> Set.map normalizeSyntax
@@ -382,8 +382,8 @@ module RoslynAnalyzer_StructProperties_Tests =
                 (withProjects content, ("InternalProperty", Set ["internal"]))
                 (withProjects content, ("InternalReadOnly", Set ["internal"]))]
                 (fun sut project (property, expected) () ->
-                    let object = sut.Analyze project |> findStruct "WithReadAccessor"
-                    let result = object.Properties |> Seq.find (fun c -> c.Name = property)
+                    let info = sut.Analyze project |> findStruct "WithReadAccessor"
+                    let result = info.Properties |> Seq.find (fun c -> c.Name = property)
                     
                     test <@ result.IsRead.Value.AccessModifiers |> Set
                                                                 |> Set.map normalizeSyntax 
