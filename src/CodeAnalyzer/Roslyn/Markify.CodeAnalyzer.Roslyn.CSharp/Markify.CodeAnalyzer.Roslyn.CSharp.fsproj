@@ -23,6 +23,7 @@
     <ProjectReference Include="..\..\..\Core\Markify.Core.FSharp\Markify.Core.FSharp.fsproj" />
     <ProjectReference Include="..\..\Markify.CodeAnalyzer\Markify.CodeAnalyzer.fsproj" />
     <ProjectReference Include="..\Markify.CodeAnalyzer.Roslyn.Common\Markify.CodeAnalyzer.Roslyn.Common.fsproj" />
+    <ProjectReference Include="..\Markify.CodeAnalyzer.Roslyn\Markify.CodeAnalyzer.Roslyn.fsproj" />
   </ItemGroup>
 
 </Project>

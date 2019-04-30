@@ -2,12 +2,23 @@
 
 open Markify.Core.FSharp
 open Markify.CodeAnalyzer
+open Markify.CodeAnalyzer.Roslyn
 open Microsoft.CodeAnalysis
 open Microsoft.CodeAnalysis.CSharp
 open Microsoft.CodeAnalysis.CSharp.Syntax
 
 module TypeFactory =
     let fieldDefaultAccessModifier = [CSharpKeyword.privateModifier]
+
+    let collectMember extract members =
+        members
+        |> Seq.map (fun c -> { Source = c; Value = extract c })
+        |> Seq.toList
+
+    let collectMembers extract members =
+        members
+        |> Seq.collect (fun c -> extract c |> Seq.map (fun d -> { Source = c; Value = d}))
+        |> Seq.toList
 
     let findDefaultValue (initializer : EqualsValueClauseSyntax) =
         match initializer with
@@ -54,48 +65,40 @@ module TypeFactory =
                 Constraints = constraints |> findConstraints name |> Seq.toList })
         |> Seq.toList
 
-    let extractEnumValues (enum : EnumDeclarationSyntax) : EnumValue seq =
-        enum.Members
-        |> Seq.map (fun c -> {
-            Name = c.Identifier.Text
-            Value = findDefaultValue c.EqualsValue })
+    let extractEnumValue (enumMember : EnumMemberDeclarationSyntax) : EnumValue = {
+        Name = enumMember.Identifier.Text
+        Value = findDefaultValue enumMember.EqualsValue }
 
-    let extractParameters (parametersList : ParameterListSyntax) =
-        parametersList.Parameters
-        |> Seq.map (fun c -> {
-            Name = c.Identifier.Text
-            Type = match c.Type with | null -> c.Identifier.Text | _ -> string c.Type
-            Modifier = findModifiers c.Modifiers |> List.tryHead 
-            DefaultValue = findDefaultValue c.Default })
+    let extractParameter (parameter : ParameterSyntax) = {
+        Name = parameter.Identifier.Text
+        Type = match parameter.Type with | null -> parameter.Identifier.Text | _ -> string parameter.Type
+        Modifier = findModifiers parameter.Modifiers |> List.tryHead 
+        DefaultValue = findDefaultValue parameter.Default }
 
-    let extractFields defaultAccessModifier (fields : FieldDeclarationSyntax seq) =
-        fields
-        |> Seq.collect (fun c -> c.Declaration.Variables |> Seq.map (fun d -> (c, d)))
-        |> Seq.fold (fun acc (field, name) -> {   
-            Name = name.Identifier.Text
+    let extractFields defaultAccessModifier (field : FieldDeclarationSyntax) =
+        field.Declaration.Variables
+        |> Seq.map (fun c -> {   
+            Name = c.Identifier.Text
             Type = string field.Declaration.Type
             AccessModifiers = tryFindAccessModifiers field.Modifiers defaultAccessModifier
             Modifiers = findModifiers field.Modifiers
-            DefaultValue = findDefaultValue name.Initializer }::acc) []
+            DefaultValue = findDefaultValue c.Initializer })
 
-    let extractEvents defaultAccessModifier (events : MemberDeclarationSyntax seq) =
-        events
-        |> Seq.collect (fun c ->
-            match c with
-            | IsEventDeclaration x -> [{  
-                Name = x.Identifier.Text
-                Type = string x.Type
+    let extractEvents defaultAccessModifier (event : MemberDeclarationSyntax) =
+        match event with
+        | IsEventDeclaration x -> [{  
+            Name = x.Identifier.Text
+            Type = string x.Type
+            AccessModifiers = tryFindAccessModifiers x.Modifiers defaultAccessModifier
+            Modifiers = findModifiers x.Modifiers }]
+        | IsEventField x ->
+            x.Declaration.Variables
+            |> Seq.fold (fun acc d -> {
+                EventInfo.Name = d.Identifier.Text
+                Type = string x.Declaration.Type
                 AccessModifiers = tryFindAccessModifiers x.Modifiers defaultAccessModifier
-                Modifiers = findModifiers x.Modifiers }]
-            | IsEventField x ->
-                x.Declaration.Variables
-                |> Seq.fold (fun acc d -> {
-                    EventInfo.Name = d.Identifier.Text
-                    Type = string x.Declaration.Type
-                    AccessModifiers = tryFindAccessModifiers x.Modifiers defaultAccessModifier
-                    Modifiers = findModifiers x.Modifiers }::acc) []
-            | _ -> [])
-        |> Seq.toList
+                Modifiers = findModifiers x.Modifiers }::acc) []
+        | _ -> []
 
     let tryFindAccessor (property : PropertyDeclarationSyntax) accessor defaultAccessModifier : AccessorInfo option =
         match property.AccessorList with
@@ -107,56 +110,50 @@ module TypeFactory =
                 | Some x -> Some { AccessModifiers = tryFindAccessModifiers x.Modifiers defaultAccessModifier }
                 | None -> None
 
-    let extractProperties defaultAccessModifier (properties : PropertyDeclarationSyntax seq)  =
-        properties
-        |> Seq.map (fun c -> {
-            Name = c.Identifier.Text
-            AccessModifiers = tryFindAccessModifiers c.Modifiers defaultAccessModifier
-            Modifiers = findModifiers c.Modifiers
-            Type = string c.Type
-            DefaultValue = findDefaultValue c.Initializer
-            IsWrite = tryFindAccessor c SyntaxKind.SetKeyword defaultAccessModifier
-            IsRead = tryFindAccessor c SyntaxKind.GetKeyword defaultAccessModifier })
-        |> Seq.toList
+    let extractProperty defaultAccessModifier (property : PropertyDeclarationSyntax)  = {
+        Name = property.Identifier.Text
+        AccessModifiers = tryFindAccessModifiers property.Modifiers defaultAccessModifier
+        Modifiers = findModifiers property.Modifiers
+        Type = string property.Type
+        DefaultValue = findDefaultValue property.Initializer
+        IsWrite = tryFindAccessor property SyntaxKind.SetKeyword defaultAccessModifier
+        IsRead = tryFindAccessor property SyntaxKind.GetKeyword defaultAccessModifier }
 
-    let extractMethods defaultAccessModifier (methods : MethodDeclarationSyntax seq) : MethodInfo list =
-        methods
-        |> Seq.map (fun c -> 
-            let genericParameters = TypeSyntaxHelper.getGenericParameters c
-            let genericConstraints = TypeSyntaxHelper.getGenericConstraints c
-            {   Name = c.Identifier.ValueText
-                Generics = extractGenerics genericParameters genericConstraints
-                AccessModifiers = tryFindAccessModifiers c.Modifiers defaultAccessModifier
-                Modifiers = findModifiers c.Modifiers
-                Parameters = extractParameters c.ParameterList 
-                ReturnType = string c.ReturnType })
-        |> Seq.toList
+    let extractMethods defaultAccessModifier (method : MethodDeclarationSyntax) =
+        let genericParameters = TypeSyntaxHelper.getGenericParameters method
+        let genericConstraints = TypeSyntaxHelper.getGenericConstraints method
+        {   Name = method.Identifier.ValueText
+            Generics = extractGenerics genericParameters genericConstraints
+            AccessModifiers = tryFindAccessModifiers method.Modifiers defaultAccessModifier
+            Modifiers = findModifiers method.Modifiers
+            Parameters = method.ParameterList.Parameters |> Seq.map extractParameter |> Seq.toList
+            ReturnType = string method.ReturnType }
 
     let extractBaseTypes baseTypes =
         baseTypes
         |> Seq.map string 
         |> Seq.toList
 
-    let extractEnumInfo enumNode = {
-        Values = extractEnumValues enumNode |> Seq.toList }
+    let extractEnumMembers (enumNode : EnumDeclarationSyntax) : TypeMembers = Enum {
+        Values = collectMember extractEnumValue enumNode.Members }
 
-    let extractDelegateInfo (delegateNode : DelegateDeclarationSyntax) = { 
-        Parameters = extractParameters delegateNode.ParameterList |> Seq.toList
+    let extractDelegateMembers (delegateNode : DelegateDeclarationSyntax) = Delegate { 
+        Parameters = collectMember extractParameter delegateNode.ParameterList.Parameters
         ReturnType = string delegateNode.ReturnType }
 
-    let extractStructureInfo typeNode = {
-        Fields = FieldSyntaxCollector().Visit(typeNode) |> extractFields fieldDefaultAccessModifier
-        Properties = PropertySyntaxCollector().Visit(typeNode) |> extractProperties fieldDefaultAccessModifier
-        Events = EventSyntaxCollector().Visit(typeNode) |> extractEvents fieldDefaultAccessModifier
-        Methods = MethodSyntaxCollector().Visit(typeNode) |> extractMethods fieldDefaultAccessModifier }
+    let extractStructureMembers typeNode = Structure {
+        Fields = FieldSyntaxCollector().Visit(typeNode) |> collectMembers (extractFields fieldDefaultAccessModifier)
+        Properties = PropertySyntaxCollector().Visit(typeNode) |> collectMember (extractProperty fieldDefaultAccessModifier)
+        Events = EventSyntaxCollector().Visit(typeNode) |> collectMembers (extractEvents fieldDefaultAccessModifier)
+        Methods = MethodSyntaxCollector().Visit(typeNode) |> collectMember (extractMethods fieldDefaultAccessModifier) }
 
     let createTypeInfo node =
         match node with
-        | IsClass x -> extractStructureInfo x |> Class |> Success
-        | IsStruct x -> extractStructureInfo x |> Struct |> Success
-        | IsInterface x -> extractStructureInfo x |> Interface |> Success
-        | IsEnum x -> extractEnumInfo x |> Enum |> Success
-        | IsDelegate x -> extractDelegateInfo x |> Delegate |> Success
+        | IsClass x -> extractStructureMembers x |> Success
+        | IsStruct x -> extractStructureMembers x |> Success
+        | IsInterface x -> extractStructureMembers x |> Success
+        | IsEnum x -> extractEnumMembers x |> Success
+        | IsDelegate x -> extractDelegateMembers x |> Success
         | _ -> Failure ""
 
     let createIdentity node =
