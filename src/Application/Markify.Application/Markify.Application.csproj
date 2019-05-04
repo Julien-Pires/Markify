@@ -274,10 +274,6 @@
       <Project>{f9522898-5249-437f-801a-dc45e81313ba}</Project>
       <Name>Markify.CodeAnalyzer.Roslyn.CSharp</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\CodeAnalyzer\Roslyn\Markify.CodeAnalyzer.Roslyn.Tests\Markify.CodeAnalyzer.Roslyn.Tests.fsproj">
-      <Project>{72d26aa4-0a42-4b58-a035-84956ab939b1}</Project>
-      <Name>Markify.CodeAnalyzer.Roslyn.Tests</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\CodeAnalyzer\Roslyn\Markify.CodeAnalyzer.Roslyn.VisualBasic\Markify.CodeAnalyzer.Roslyn.VisualBasic.fsproj">
       <Project>{f1d6634b-43a2-4be6-a49e-9b55298978d6}</Project>
       <Name>Markify.CodeAnalyzer.Roslyn.VisualBasic</Name>
