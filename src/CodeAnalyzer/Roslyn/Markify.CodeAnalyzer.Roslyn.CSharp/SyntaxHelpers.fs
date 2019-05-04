@@ -69,11 +69,15 @@ module TypeSyntaxHelper =
         | _ -> SeparatedSyntaxList()
 
     let getGenericParameters (node : SyntaxNode) =
-        match node with
-        | :? TypeDeclarationSyntax as x -> x.TypeParameterList
-        | :? DelegateDeclarationSyntax as x -> x.TypeParameterList
-        | :? MethodDeclarationSyntax as x -> x.TypeParameterList
-        | _ -> SyntaxFactory.TypeParameterList()
+        let parameters = 
+            match node with
+            | :? TypeDeclarationSyntax as x -> x.TypeParameterList
+            | :? DelegateDeclarationSyntax as x -> x.TypeParameterList
+            | :? MethodDeclarationSyntax as x -> x.TypeParameterList
+            | _ -> SyntaxFactory.TypeParameterList()
+        match parameters with
+        | null -> SyntaxFactory.TypeParameterList()
+        | x -> x
 
     let getGenericConstraints (node : SyntaxNode) =
         match node with

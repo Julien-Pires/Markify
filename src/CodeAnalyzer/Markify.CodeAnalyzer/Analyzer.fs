@@ -24,7 +24,12 @@ type ProjectAnalyzer(analyzers : ISourceAnalyzer seq) =
         |> Map.ofSeq
 
     interface IProjectAnalyzer with
-        member __.Analyze project = {
-            Project = project.Name
-            Namespaces = [] 
-            Types = [] }
+        member __.Analyze project =
+            let results = seq {
+                for i in project.Content do
+                    let analyzer = sourceAnalyzers |> Map.find i.Language
+                    let { Namespaces = _; Definitions = ds} = analyzer.Analyze i 
+                    yield! ds |> Seq.map (fun c -> c.Definition) }
+            {   Project = project.Name
+                Namespaces = [] 
+                Types = results }

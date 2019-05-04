@@ -5,6 +5,7 @@ open Markify.CodeAnalyzer
 open Markify.CodeAnalyzer.Roslyn
 open Microsoft.CodeAnalysis.VisualBasic
 
+[<Language("VisualBasic")>]
 type VisualBasicAnalyzer() =
     interface ISourceAnalyzer with
         member __.Analyze source =
