@@ -5,11 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="VisualBasicHelper.fs" />
+    <Compile Include="LanguageHelpers.fs" />
+    <Compile Include="SyntaxHelpers.fs" />
+    <Compile Include="Collectors.fs" />
+    <Compile Include="TypeFactory.fs" />
+    <Compile Include="Analyzer.fs" />
     <Compile Include="Comments.fs" />
-    <Compile Include="FactoryHelper.fs" />
-    <Compile Include="DefinitionsFactory.fs" />
-    <Compile Include="VisualBasicAnalyzer.fs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -17,8 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Core\Markify.Core.FSharp\Markify.Core.FSharp.fsproj" />
     <ProjectReference Include="..\..\Markify.CodeAnalyzer\Markify.CodeAnalyzer.fsproj" />
-    <ProjectReference Include="..\Markify.CodeAnalyzer.Roslyn.Common\Markify.CodeAnalyzer.Roslyn.Common.fsproj" />
+    <ProjectReference Include="..\Markify.CodeAnalyzer.Roslyn\Markify.CodeAnalyzer.Roslyn.fsproj" />
   </ItemGroup>
 
 </Project>

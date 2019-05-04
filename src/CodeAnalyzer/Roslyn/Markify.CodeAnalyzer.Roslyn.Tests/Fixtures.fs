@@ -1,14 +1,12 @@
 ﻿namespace Markify.CodeAnalyzer.Roslyn.Tests
 
 open Markify.CodeAnalyzer
-open Markify.CodeAnalyzer.Roslyn
-open Markify.CodeAnalyzer.Roslyn.Common
 open Markify.CodeAnalyzer.Roslyn.Csharp
 open Markify.CodeAnalyzer.Roslyn.VisualBasic
 
 module Fixtures =
-    let modules = [
-        CSharpModule() :> ILanguageModule
+    let analyzers = [
+        CSharpAnalyzer() :> ISourceAnalyzer
         VisualBasicModule() :> ILanguageModule ]
     
     let buildProjects contents =
@@ -24,9 +22,9 @@ module Fixtures =
             Name = "Project"
             Content = c |> Seq.toList })
 
-    let withSut f () = f <| (RoslynAnalyzer(modules) :> IProjectAnalyzer)
+    let withSut f () = f <| (ProjectAnalyzer(analyzers) :> IProjectAnalyzer)
     
     let withProjects contents f =
         let projects = buildProjects contents
-        let sut = RoslynAnalyzer(modules) :> IProjectAnalyzer
+        let sut = ProjectAnalyzer(analyzers) :> IProjectAnalyzer
         projects |> Seq.map (fun c -> f sut c)

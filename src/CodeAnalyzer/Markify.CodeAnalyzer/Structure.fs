@@ -19,8 +19,3 @@ type Definition = {
     Hierarchy : Hierarchy
     Info : TypeInfo
     Comments : Comments }
-
-type Assemblyinfo = {
-    Project : Name
-    Namespaces : NamespaceInfo seq
-    Types : Definition seq }

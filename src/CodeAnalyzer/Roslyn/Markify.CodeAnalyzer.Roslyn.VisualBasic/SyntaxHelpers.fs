@@ -1,6 +1,7 @@
 ﻿namespace Markify.CodeAnalyzer.Roslyn.VisualBasic
 
 open Microsoft.CodeAnalysis
+open Microsoft.CodeAnalysis.VisualBasic
 open Microsoft.CodeAnalysis.VisualBasic.Syntax
 
 [<AutoOpen>]
@@ -35,13 +36,6 @@ module VisualBasicSyntaxHelper =
         | :? DelegateStatementSyntax as x -> Some x
         | _ -> None
 
-    let (|IsStructureType|_|) (node : SyntaxNode) =
-        match node with
-        | IsClass x -> Some (x :> TypeBlockSyntax)
-        | IsStruct x -> Some (x :> TypeBlockSyntax)
-        | IsInterface x -> Some (x :> TypeBlockSyntax)
-        | _ -> None
-
     let (|IsPropertyStatement|_|) (node : SyntaxNode) =
         match node with
         | :? PropertyStatementSyntax as x -> Some x
@@ -50,12 +44,6 @@ module VisualBasicSyntaxHelper =
     let (|IsPropertyBlock|_|) (node : SyntaxNode) =
         match node with
         | :? PropertyBlockSyntax as x -> Some x
-        | _ -> None
-
-    let (|IsProperty|_|) (node : SyntaxNode) =
-        match node with
-        | IsPropertyBlock x -> Some (x :> DeclarationStatementSyntax)
-        | IsPropertyStatement x -> Some (x :> DeclarationStatementSyntax)
         | _ -> None
 
     let (|IsField|_|) (node : SyntaxNode) =
@@ -75,15 +63,42 @@ module VisualBasicSyntaxHelper =
         | :? EventStatementSyntax as x -> Some x
         | _ -> None
 
-open Microsoft.CodeAnalysis.VisualBasic
+module SyntaxHelper =
+    let getName (node : SyntaxNode)  =
+        match node with
+        | :? TypeBlockSyntax as x -> Some x.BlockStatement.Identifier
+        | :? EnumBlockSyntax as x -> Some x.EnumStatement.Identifier
+        | :? DelegateStatementSyntax as x -> Some x.Identifier
+        | _ -> None
 
-[<AutoOpen>]
-module VisualBasicKeywordHelper =
-    let publicModifier = [SyntaxFactory.Token(SyntaxKind.PublicKeyword).Text]
-    let privateModifier = [SyntaxFactory.Token(SyntaxKind.PrivateKeyword).Text]
-    let accessModifiersList = 
-        Set [
-            SyntaxKind.PublicKeyword
-            SyntaxKind.FriendKeyword 
-            SyntaxKind.PrivateKeyword
-            SyntaxKind.ProtectedKeyword ]
+module TypeSyntaxHelper =
+    let getModifiers (node : SyntaxNode) =
+        match node with
+        | :? TypeBlockSyntax as x -> x.BlockStatement.Modifiers
+        | :? EnumBlockSyntax as x -> x.EnumStatement.Modifiers
+        | :? DelegateStatementSyntax as x -> x.Modifiers
+        | _ -> SyntaxTokenList()
+    
+    let getBaseTypes (node : SyntaxNode) =
+        match node with
+        | :? TypeBlockSyntax as x -> seq {
+            yield! x.Inherits |> Seq.collect (fun c -> c.Types)
+            yield! x.Implements |> Seq.collect (fun c -> c.Types) } |> Seq.toList
+        | :? EnumBlockSyntax as x ->
+            match x.EnumStatement.UnderlyingType with
+            | null -> []
+            | x -> [x.Type()]
+        | _ -> []
+
+    let getGenericParameters (node : SyntaxNode) =
+        match node with
+        | :? TypeBlockSyntax as x -> x.BlockStatement.TypeParameterList
+        | :? DelegateStatementSyntax as x -> x.TypeParameterList
+        | :? MethodStatementSyntax as x -> x.TypeParameterList
+        | _ -> SyntaxFactory.TypeParameterList()
+
+    let getGenericConstraints (parameter : TypeParameterSyntax) =
+        match parameter.TypeParameterConstraintClause with
+        | :? TypeParameterSingleConstraintClauseSyntax as x -> SeparatedSyntaxList().Add x.Constraint
+        | :? TypeParameterMultipleConstraintClauseSyntax as x -> x.Constraints
+        | null | _ -> SeparatedSyntaxList()

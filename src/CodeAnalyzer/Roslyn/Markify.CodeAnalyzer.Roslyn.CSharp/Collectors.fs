@@ -1,5 +1,6 @@
 ﻿namespace Markify.CodeAnalyzer.Roslyn.Csharp
 
+open Microsoft.CodeAnalysis
 open Microsoft.CodeAnalysis.CSharp
 open Microsoft.CodeAnalysis.CSharp.Syntax
 
@@ -54,7 +55,7 @@ type CSharpSyntaxWalker<'a>(value : 'a) =
 
     let mutable result : 'a = value
 
-    member __.Search(node) = 
+    member __.Visit(node) = 
         base.Visit(node)
         result
 
@@ -67,8 +68,8 @@ type CSharpSyntaxWalker<'a>(value : 'a) =
     abstract member VisitInterfaceDeclaration : InterfaceDeclarationSyntax * 'a -> 'a
     default __.VisitInterfaceDeclaration(_, result) = result
 
-    abstract member VisitMethodDeclaration : MethodDeclarationSyntax * 'a -> 'a
-    default __.VisitMethodDeclaration(_, result) = result
+    abstract member VisitDelegateDeclaration : DelegateDeclarationSyntax * 'a -> 'a
+    default __.VisitDelegateDeclaration(_, result) = result
 
     abstract member VisitEnumDeclaration : EnumDeclarationSyntax * 'a -> 'a
     default __.VisitEnumDeclaration(_, result) = result
@@ -91,9 +92,9 @@ type CSharpSyntaxWalker<'a>(value : 'a) =
         result <- this.VisitInterfaceDeclaration(node, result)
         base.VisitInterfaceDeclaration(node)
 
-    override this.VisitMethodDeclaration node =
-        result <- this.VisitMethodDeclaration(node, result)
-        base.VisitMethodDeclaration(node)
+    override this.VisitDelegateDeclaration node =
+        result <- this.VisitDelegateDeclaration(node, result)
+        base.VisitDelegateDeclaration(node)
 
     override this.VisitEnumDeclaration node =
         result <- this.VisitEnumDeclaration(node, result)
@@ -111,21 +112,13 @@ type NamespaceSyntaxCollector() =
     inherit CSharpSyntaxWalker<NamespaceDeclarationSyntax list>([])
     override __.VisitNamespaceDeclaration (node, result) = node::result
 
-type ClassSyntaxCollector() =
-    inherit CSharpSyntaxWalker<ClassDeclarationSyntax list>([])
-    override __.VisitClassDeclaration (node, result) = node::result
-
-type StructSyntaxCollector() =
-    inherit CSharpSyntaxWalker<StructDeclarationSyntax list>([])   
-    override __.VisitStructDeclaration (node, result) = node::result
-
-type InterfaceSyntaxCollector() =
-    inherit CSharpSyntaxWalker<InterfaceDeclarationSyntax list>([])  
-    override __.VisitInterfaceDeclaration (node, result) = node::result
-
-type EnumSyntaxCollector() =
-    inherit CSharpSyntaxWalker<EnumDeclarationSyntax list>([])   
-    override __.VisitEnumDeclaration (node, result) = node::result
+type TypeCollector() =
+    inherit CSharpSyntaxWalker<SyntaxNode list>([])
+    override __.VisitClassDeclaration (node, result) = (node :> SyntaxNode)::result
+    override __.VisitStructDeclaration (node, result) = (node :> SyntaxNode)::result
+    override __.VisitInterfaceDeclaration (node, result) = (node :> SyntaxNode)::result
+    override __.VisitEnumDeclaration (node, result) = (node :> SyntaxNode)::result
+    override __.VisitDelegateDeclaration (node, result) = (node :> SyntaxNode)::result
 
 type FieldSyntaxCollector() =
     inherit CSharpSyntaxVisitor<FieldDeclarationSyntax list>([])

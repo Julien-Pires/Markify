@@ -142,10 +142,18 @@ module TypeFactory =
         ReturnType = string delegateNode.ReturnType }
 
     let extractStructureMembers typeNode = Structure {
-        Fields = FieldSyntaxCollector().Visit(typeNode) |> collectMembers (extractFields fieldDefaultAccessModifier)
-        Properties = PropertySyntaxCollector().Visit(typeNode) |> collectMember (extractProperty fieldDefaultAccessModifier)
-        Events = EventSyntaxCollector().Visit(typeNode) |> collectMembers (extractEvents fieldDefaultAccessModifier)
-        Methods = MethodSyntaxCollector().Visit(typeNode) |> collectMember (extractMethods fieldDefaultAccessModifier) }
+        Fields = 
+            FieldSyntaxCollector().Visit(typeNode) 
+            |> collectMembers (extractFields fieldDefaultAccessModifier)
+        Properties = 
+            PropertySyntaxCollector().Visit(typeNode) 
+            |> collectMember (extractProperty fieldDefaultAccessModifier)
+        Events = 
+            EventSyntaxCollector().Visit(typeNode) 
+            |> collectMembers (extractEvents fieldDefaultAccessModifier)
+        Methods = 
+            MethodSyntaxCollector().Visit(typeNode) 
+            |> collectMember (extractMethods fieldDefaultAccessModifier) }
 
     let createTypeInfo node =
         match node with
@@ -169,3 +177,14 @@ module TypeFactory =
             Generics = extractGenerics genericParameters genericConstraints
             BaseType = extractBaseTypes baseTypes }
         | None -> Failure ""
+
+    let create node =
+        match createIdentity node with
+        | Success x ->
+            match createTypeInfo node with
+            | Success y -> Success {
+                Source = node
+                Identity = x
+                Members = y }
+            | Failure y -> Failure y
+        | Failure x -> Failure x

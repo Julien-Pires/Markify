@@ -36,28 +36,6 @@ module CSharpSyntaxHelper =
         | :? DelegateDeclarationSyntax as x -> Some x
         | _ -> None
 
-    let (|IsStructureType|_|) (node : SyntaxNode) = 
-        match node with
-        | IsClass x -> Some (x :> TypeDeclarationSyntax)
-        | IsStruct x -> Some (x :> TypeDeclarationSyntax)
-        | IsInterface x -> Some (x :> TypeDeclarationSyntax)
-        | _ -> None
-
-    let (|IsProperty|_|) (node : SyntaxNode) = 
-        match node with
-        | :? PropertyDeclarationSyntax as x -> Some x
-        | _ -> None
-
-    let (|IsField|_|) (node : SyntaxNode) =
-        match node with
-        | :? FieldDeclarationSyntax as x -> Some x
-        | _ -> None
-
-    let (|IsMethod|_|) (node : SyntaxNode) =
-        match node with
-        | :? MethodDeclarationSyntax as x -> Some x
-        | _ -> None
-
     let (|IsEventDeclaration|_|) (node : SyntaxNode) =
         match node with
         | :? EventDeclarationSyntax as x -> Some x
@@ -66,12 +44,6 @@ module CSharpSyntaxHelper =
     let (|IsEventField|_|) (node : SyntaxNode) = 
         match node with
         | :? EventFieldDeclarationSyntax as x -> Some x
-        | _ -> None
-
-    let (|IsEvent|_|) (node : SyntaxNode) = 
-        match node with
-        | IsEventDeclaration x -> Some (x :> MemberDeclarationSyntax)
-        | IsEventField x -> Some (x :> MemberDeclarationSyntax)
         | _ -> None
 
 module SyntaxHelper =
