@@ -5,153 +5,84 @@ open Microsoft.CodeAnalysis.VisualBasic
 open Microsoft.CodeAnalysis.VisualBasic.Syntax
 
 [<AbstractClass>]
-type VisualBasicSyntaxVisitor<'a>(value : 'a) =
-    inherit VisualBasicSyntaxVisitor()
-
-    let mutable result : 'a = value
-
-    member __.Visit(node) =
-        base.Visit(node)
-        result
-
-    abstract member VisitFieldDeclaration : FieldDeclarationSyntax * 'a -> 'a
-    default __.VisitFieldDeclaration (_, result) = result
-
-    abstract member VisitEventBlock : EventBlockSyntax * 'a -> 'a
-    default __.VisitEventBlock (_, result) = result
-
-    abstract member VisitEventStatement : EventStatementSyntax * 'a -> 'a
-    default __.VisitEventStatement (_, result) = result
-
-    abstract member VisitPropertyBlock : PropertyBlockSyntax * 'a -> 'a
-    default __.VisitPropertyBlock (_, result) = result
-
-    abstract member VisitPropertyStatement : PropertyStatementSyntax * 'a -> 'a
-    default __.VisitPropertyStatement (_, result) = result
-
-    abstract member VisitMethodBlock : MethodBlockSyntax * 'a -> 'a
-    default __.VisitMethodBlock (_, result) = result
-
-    abstract member VisitMethodStatement : MethodStatementSyntax * 'a -> 'a
-    default __.VisitMethodStatement (_, result) = result
-
-    override this.VisitFieldDeclaration node =
-        result <- this.VisitFieldDeclaration(node, result)
-        base.VisitFieldDeclaration(node)
-
-    override this.VisitEventBlock node =
-        result <- this.VisitEventBlock(node, result)
-        base.VisitEventBlock(node)
-
-    override this.VisitEventStatement node =
-        result <- this.VisitEventStatement(node, result)
-        base.VisitEventStatement(node)
-
-    override this.VisitPropertyBlock node =
-        result <- this.VisitPropertyBlock(node, result)
-        base.VisitPropertyBlock(node)
-
-    override this.VisitPropertyStatement node =
-        result <- this.VisitPropertyStatement(node, result)
-        base.VisitPropertyStatement(node)
-
-    override this.VisitMethodBlock node =
-        result <- this.VisitMethodBlock(node, result)
-        base.VisitMethodBlock(node)
-
-    override this.VisitMethodStatement node =
-        result <- this.VisitMethodStatement(node, result)
-        base.VisitMethodStatement(node)
-
-[<AbstractClass>]
-type VisualBasicSyntaxWalker<'a>(value : 'a) =
+type TypesCollector<'a>() =
     inherit VisualBasicSyntaxWalker()
 
-    let mutable result : 'a = value
+    let mutable result : 'a list = []
 
-    member __.Visit(node) =
+    member __.Visit(node) = 
         base.Visit(node)
         result
 
-    abstract member VisitClassBlock : ClassBlockSyntax * 'a -> 'a
-    default __.VisitClassBlock(_, result) = result
+    member __.add = function
+        | Some x -> x::result
+        | None -> result
 
-    abstract member VisitStructureBlock : StructureBlockSyntax * 'a -> 'a
-    default __.VisitStructureBlock(_, result) = result
+    abstract member VisitClassBlock : ClassBlockSyntax -> 'a option
 
-    abstract member VisitInterfaceBlock : InterfaceBlockSyntax * 'a -> 'a
-    default __.VisitInterfaceBlock(_, result) = result
+    abstract member VisitStructureBlock : StructureBlockSyntax -> 'a option
 
-    abstract member VisitDelegateStatement : DelegateStatementSyntax * 'a -> 'a
-    default __.VisitDelegateStatement(_, result) = result
+    abstract member VisitInterfaceBlock : InterfaceBlockSyntax -> 'a option
 
-    abstract member VisitEnumBlock : EnumBlockSyntax * 'a -> 'a
-    default __.VisitEnumBlock(_, result) = result
+    abstract member VisitDelegateStatement : DelegateStatementSyntax -> 'a option
 
-    abstract member VisitNamespaceBlock : NamespaceBlockSyntax * 'a -> 'a
-    default __.VisitNamespaceBlock(_, result) = result
-
-    abstract member VisitIdentifierName : IdentifierNameSyntax * 'a -> 'a
-    default __.VisitIdentifierName(_, result) = result
+    abstract member VisitEnumBlock : EnumBlockSyntax -> 'a option
 
     override this.VisitClassBlock node =
-        result <- this.VisitClassBlock(node, result)
+        result <- this.add <| this.VisitClassBlock(node)
         base.VisitClassBlock(node)
 
     override this.VisitStructureBlock node =
-        result <- this.VisitStructureBlock(node, result)
+        result <- this.add <| this.VisitStructureBlock(node)
         base.VisitStructureBlock(node)
 
     override this.VisitInterfaceBlock node =
-        result <- this.VisitInterfaceBlock(node, result)
+        result <- this.add <| this.VisitInterfaceBlock(node)
         base.VisitInterfaceBlock(node)
 
     override this.VisitDelegateStatement node =
-        result <- this.VisitDelegateStatement(node, result)
+        result <- this.add <| this.VisitDelegateStatement(node)
         base.VisitDelegateStatement(node)
 
     override this.VisitEnumBlock node =
-        result <- this.VisitEnumBlock(node, result)
+        result <- this.add <| this.VisitEnumBlock(node)
         base.VisitEnumBlock(node)
 
-    override this.VisitNamespaceBlock node =
-        result <- this.VisitNamespaceBlock(node, result)
-        base.VisitNamespaceBlock(node)
+[<AbstractClass>]
+type MembersCollector<'a>() =
+    inherit VisualBasicSyntaxVisitor<'a option>()
+    
+    member this.Visit(node : TypeBlockSyntax) =
+        node.Members
+        |> Seq.choose this.Visit
+        |> Seq.toList
 
-    override this.VisitIdentifierName node =
-        result <- this.VisitIdentifierName(node, result)
-        base.VisitIdentifierName(node)
-
-type NamespaceSyntaxCollector() =
-    inherit VisualBasicSyntaxWalker<NamespaceBlockSyntax list>([])
-    override __.VisitNamespaceBlock (node, result) = node::result
-
-type TypeCollector() =
-    inherit VisualBasicSyntaxWalker<SyntaxNode list>([])
-    override __.VisitClassBlock (node, result) = (node :> SyntaxNode)::result
-    override __.VisitStructureBlock (node, result) = (node :> SyntaxNode)::result
-    override __.VisitInterfaceBlock (node, result) = (node :> SyntaxNode)::result
-    override __.VisitEnumBlock (node, result) = (node :> SyntaxNode)::result
-    override __.VisitDelegateStatement (node, result) = (node :> SyntaxNode)::result
+type TypesCollector() =
+    inherit TypesCollector<SyntaxNode>()
+    override __.VisitClassBlock (node : ClassBlockSyntax) = Some (node :> SyntaxNode)
+    override __.VisitStructureBlock (node : StructureBlockSyntax) = Some (node :> SyntaxNode)
+    override __.VisitInterfaceBlock (node : InterfaceBlockSyntax) = Some (node :> SyntaxNode)
+    override __.VisitEnumBlock (node : EnumBlockSyntax) = Some (node :> SyntaxNode)
+    override __.VisitDelegateStatement (node : DelegateStatementSyntax) = Some (node :> SyntaxNode)
 
 type FieldSyntaxCollector() =
-    inherit VisualBasicSyntaxVisitor<FieldDeclarationSyntax list>([])
-    override __.VisitFieldDeclaration (node, result) = node::result
+    inherit MembersCollector<FieldDeclarationSyntax>()
+    override __.VisitFieldDeclaration (node) = Some node
 
 type EventSyntaxCollector() =
-    inherit VisualBasicSyntaxVisitor<EventStatementSyntax list>([])
-    override __.VisitEventBlock (node, result) = (node.EventStatement)::result
-    override __.VisitEventStatement(node, result) = node::result
+    inherit MembersCollector<EventStatementSyntax>()
+    override __.VisitEventBlock (node) = Some (node.EventStatement)
+    override __.VisitEventStatement(node) = Some node
 
 type PropertyBlockSyntaxCollector() =
-    inherit VisualBasicSyntaxVisitor<PropertyBlockSyntax list>([])
-    override __.VisitPropertyBlock (node, result) = node::result
+    inherit MembersCollector<PropertyBlockSyntax>()
+    override __.VisitPropertyBlock (node) = Some node
 
 type PropertyStatementSyntaxCollector() =
-    inherit VisualBasicSyntaxVisitor<PropertyStatementSyntax list>([])
-    override __.VisitPropertyStatement (node, result) = node::result
+    inherit MembersCollector<PropertyStatementSyntax>()
+    override __.VisitPropertyStatement (node) = Some node
 
 type MethodSyntaxCollector() =
-    inherit VisualBasicSyntaxVisitor<MethodStatementSyntax list>([])
-    override __.VisitMethodBlock(node, result) = (node.BlockStatement :?> MethodStatementSyntax)::result
-    override __.VisitMethodStatement(node, result) = node::result
+    inherit MembersCollector<MethodStatementSyntax>()
+    override __.VisitMethodBlock(node) = Some (node.BlockStatement :?> MethodStatementSyntax)
+    override __.VisitMethodStatement(node) = Some node

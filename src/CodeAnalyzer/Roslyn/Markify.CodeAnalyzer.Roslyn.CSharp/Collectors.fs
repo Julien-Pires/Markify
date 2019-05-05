@@ -5,134 +5,79 @@ open Microsoft.CodeAnalysis.CSharp
 open Microsoft.CodeAnalysis.CSharp.Syntax
 
 [<AbstractClass>]
-type CSharpSyntaxVisitor<'a>(value : 'a) =
-    inherit CSharpSyntaxVisitor()
+type TypesCollector<'a>() =
+    inherit CSharpSyntaxWalker()
 
-    let mutable result : 'a = value
+    let mutable result : 'a list = []
 
     member __.Visit(node) =
         base.Visit(node)
         result
 
-    abstract member VisitFieldDeclaration : FieldDeclarationSyntax * 'a -> 'a
-    default __.VisitFieldDeclaration (_, result) = result
+    member __.add = function
+        | Some x -> x::result
+        | None -> result
 
-    abstract member VisitEventDeclaration : EventDeclarationSyntax * 'a -> 'a
-    default __.VisitEventDeclaration (_, result) = result
+    abstract member VisitClassDeclaration : ClassDeclarationSyntax -> 'a option
 
-    abstract member VisitEventFieldDeclaration : EventFieldDeclarationSyntax * 'a -> 'a
-    default __.VisitEventFieldDeclaration (_, result) = result
+    abstract member VisitStructDeclaration : StructDeclarationSyntax -> 'a option
 
-    abstract member VisitPropertyDeclaration : PropertyDeclarationSyntax * 'a -> 'a
-    default __.VisitPropertyDeclaration (_, result) = result
+    abstract member VisitInterfaceDeclaration : InterfaceDeclarationSyntax -> 'a option
 
-    abstract member VisitMethodDeclaration : MethodDeclarationSyntax * 'a -> 'a
-    default __.VisitMethodDeclaration (_, result) = result
+    abstract member VisitDelegateDeclaration : DelegateDeclarationSyntax -> 'a option
 
-    override this.VisitFieldDeclaration node =
-        result <- this.VisitFieldDeclaration(node, result)
-        base.VisitFieldDeclaration(node)
-
-    override this.VisitEventDeclaration node =
-        result <- this.VisitEventDeclaration(node, result)
-        base.VisitEventDeclaration(node)
-
-    override this.VisitEventFieldDeclaration node =
-        result <- this.VisitEventFieldDeclaration(node, result)
-        base.VisitEventFieldDeclaration(node)
-
-    override this.VisitPropertyDeclaration node =
-        result <- this.VisitPropertyDeclaration(node, result)
-        base.VisitPropertyDeclaration(node)
-
-    override this.VisitMethodDeclaration node =
-        result <- this.VisitMethodDeclaration(node, result)
-        base.VisitMethodDeclaration(node)
-
-[<AbstractClass>]
-type CSharpSyntaxWalker<'a>(value : 'a) =
-    inherit CSharpSyntaxWalker()
-
-    let mutable result : 'a = value
-
-    member __.Visit(node) = 
-        base.Visit(node)
-        result
-
-    abstract member VisitClassDeclaration : ClassDeclarationSyntax * 'a -> 'a
-    default __.VisitClassDeclaration(_, result) = result
-
-    abstract member VisitStructDeclaration : StructDeclarationSyntax * 'a -> 'a
-    default __.VisitStructDeclaration(_, result) = result
-
-    abstract member VisitInterfaceDeclaration : InterfaceDeclarationSyntax * 'a -> 'a
-    default __.VisitInterfaceDeclaration(_, result) = result
-
-    abstract member VisitDelegateDeclaration : DelegateDeclarationSyntax * 'a -> 'a
-    default __.VisitDelegateDeclaration(_, result) = result
-
-    abstract member VisitEnumDeclaration : EnumDeclarationSyntax * 'a -> 'a
-    default __.VisitEnumDeclaration(_, result) = result
-
-    abstract member VisitNamespaceDeclaration : NamespaceDeclarationSyntax * 'a -> 'a
-    default __.VisitNamespaceDeclaration(_, result) = result
-
-    abstract member VisitIdentifierName : IdentifierNameSyntax * 'a -> 'a
-    default __.VisitIdentifierName(_, result) = result
+    abstract member VisitEnumDeclaration : EnumDeclarationSyntax -> 'a option
 
     override this.VisitClassDeclaration node =
-        result <- this.VisitClassDeclaration(node, result)
+        result <- this.add <| this.VisitClassDeclaration(node)
         base.VisitClassDeclaration(node)
 
     override this.VisitStructDeclaration node =
-        result <- this.VisitStructDeclaration(node, result)
+        result <- this.add <| this.VisitStructDeclaration(node)
         base.VisitStructDeclaration(node)
 
     override this.VisitInterfaceDeclaration node =
-        result <- this.VisitInterfaceDeclaration(node, result)
+        result <- this.add <| this.VisitInterfaceDeclaration(node)
         base.VisitInterfaceDeclaration(node)
 
     override this.VisitDelegateDeclaration node =
-        result <- this.VisitDelegateDeclaration(node, result)
+        result <- this.add <| this.VisitDelegateDeclaration(node)
         base.VisitDelegateDeclaration(node)
 
     override this.VisitEnumDeclaration node =
-        result <- this.VisitEnumDeclaration(node, result)
+        result <- this.add <| this.VisitEnumDeclaration(node)
         base.VisitEnumDeclaration(node)
 
-    override this.VisitNamespaceDeclaration node =
-        result <- this.VisitNamespaceDeclaration(node, result)
-        base.VisitNamespaceDeclaration(node)
+[<AbstractClass>]
+type MembersCollector<'a>() =
+    inherit CSharpSyntaxVisitor<'a option>()
+    
+    member this.Visit(node : TypeDeclarationSyntax) =
+        node.Members
+        |> Seq.choose this.Visit
+        |> Seq.toList
 
-    override this.VisitIdentifierName node =
-        result <- this.VisitIdentifierName(node, result)
-        base.VisitIdentifierName(node)
-
-type NamespaceSyntaxCollector() =
-    inherit CSharpSyntaxWalker<NamespaceDeclarationSyntax list>([])
-    override __.VisitNamespaceDeclaration (node, result) = node::result
-
-type TypeCollector() =
-    inherit CSharpSyntaxWalker<SyntaxNode list>([])
-    override __.VisitClassDeclaration (node, result) = (node :> SyntaxNode)::result
-    override __.VisitStructDeclaration (node, result) = (node :> SyntaxNode)::result
-    override __.VisitInterfaceDeclaration (node, result) = (node :> SyntaxNode)::result
-    override __.VisitEnumDeclaration (node, result) = (node :> SyntaxNode)::result
-    override __.VisitDelegateDeclaration (node, result) = (node :> SyntaxNode)::result
+type TypesCollector() =
+    inherit TypesCollector<SyntaxNode>()
+    override __.VisitClassDeclaration (node : ClassDeclarationSyntax) = Some (node :> SyntaxNode)
+    override __.VisitStructDeclaration (node : StructDeclarationSyntax) = Some (node :> SyntaxNode)
+    override __.VisitInterfaceDeclaration (node : InterfaceDeclarationSyntax) = Some (node :> SyntaxNode)
+    override __.VisitEnumDeclaration (node : EnumDeclarationSyntax) = Some (node :> SyntaxNode)
+    override __.VisitDelegateDeclaration (node : DelegateDeclarationSyntax) = Some (node :> SyntaxNode)
 
 type FieldSyntaxCollector() =
-    inherit CSharpSyntaxVisitor<FieldDeclarationSyntax list>([])
-    override __.VisitFieldDeclaration (node, result) = node::result
+    inherit MembersCollector<FieldDeclarationSyntax>()
+    override __.VisitFieldDeclaration (node) = Some node
 
 type EventSyntaxCollector() =
-    inherit CSharpSyntaxVisitor<MemberDeclarationSyntax list>([])
-    override __.VisitEventDeclaration (node, result) = (node :> MemberDeclarationSyntax)::result
-    override __.VisitEventFieldDeclaration (node, result) = (node :> MemberDeclarationSyntax)::result
+    inherit MembersCollector<MemberDeclarationSyntax>()
+    override __.VisitEventDeclaration (node) = Some (node :> MemberDeclarationSyntax)
+    override __.VisitEventFieldDeclaration (node) = Some (node :> MemberDeclarationSyntax)
 
 type PropertySyntaxCollector() =
-    inherit CSharpSyntaxVisitor<PropertyDeclarationSyntax list>([])
-    override __.VisitPropertyDeclaration (node, result) = node::result
+    inherit MembersCollector<PropertyDeclarationSyntax>()
+    override __.VisitPropertyDeclaration (node) = Some node
 
 type MethodSyntaxCollector() =
-    inherit CSharpSyntaxVisitor<MethodDeclarationSyntax list>([])
-    override __.VisitMethodDeclaration (node, result) = node::result
+    inherit MembersCollector<MethodDeclarationSyntax>()
+    override __.VisitMethodDeclaration (node) = Some node

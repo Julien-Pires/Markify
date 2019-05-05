@@ -12,7 +12,7 @@ type CSharpAnalyzer() =
             let tree = CSharpSyntaxTree.ParseText source.Content
             let root = tree.GetRoot()
             let types =
-                TypeCollector().Visit(root)
+                TypesCollector().Visit(root)
                 |> Seq.map TypeFactory.create
                 |> Seq.choose (function | Success x -> Some x | _ -> None)
                 |> Seq.map (fun c ->
