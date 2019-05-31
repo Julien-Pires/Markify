@@ -12,7 +12,7 @@ type Assemblyinfo = {
 type IProjectAnalyzer =
     abstract member Analyze: Project -> Assemblyinfo
 
-type ProjectAnalyzer(analyzers : ISourceAnalyzer seq) =
+type ProjectAnalyzer(analyzers: ISourceAnalyzer seq) =
     let sourceAnalyzers =
         analyzers
         |> Seq.choose (fun c ->
@@ -26,10 +26,10 @@ type ProjectAnalyzer(analyzers : ISourceAnalyzer seq) =
     interface IProjectAnalyzer with
         member __.Analyze project =
             let results = seq {
-                for i in project.Content do
-                    let analyzer = sourceAnalyzers |> Map.find i.Language
-                    let { Namespaces = _; Definitions = ds} = analyzer.Analyze i 
+                for content in project.Content do
+                    let analyzer = sourceAnalyzers |> Map.find content.Language
+                    let { Namespaces = _; Definitions = ds} = analyzer.Analyze content 
                     yield! ds |> Seq.map (fun c -> c.Definition) }
-            {   Project = project.Name
-                Namespaces = [] 
-                Types = results }
+            { Project = project.Name
+              Namespaces = [] 
+              Types = results }

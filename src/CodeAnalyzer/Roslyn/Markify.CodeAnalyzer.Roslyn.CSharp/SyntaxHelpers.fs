@@ -16,51 +16,51 @@ module CSharpSyntaxHelper =
         | :? ClassDeclarationSyntax as x -> Some x
         | _ -> None
         
-    let (|IsInterface|_|) (node : SyntaxNode) =
+    let (|IsInterface|_|) (node: SyntaxNode) =
         match node with
         | :? InterfaceDeclarationSyntax as x -> Some x
         | _ -> None
 
-    let (|IsStruct|_|) (node : SyntaxNode) =
+    let (|IsStruct|_|) (node: SyntaxNode) =
         match node with
         | :? StructDeclarationSyntax as x -> Some x
         | _ -> None
 
-    let (|IsEnum|_|) (node : SyntaxNode) =
+    let (|IsEnum|_|) (node: SyntaxNode) =
         match node with
         | :? EnumDeclarationSyntax as x -> Some x
         | _ -> None
 
-    let (|IsDelegate|_|) (node : SyntaxNode) =
+    let (|IsDelegate|_|) (node: SyntaxNode) =
         match node with
         | :? DelegateDeclarationSyntax as x -> Some x
         | _ -> None
 
-    let (|IsEventDeclaration|_|) (node : SyntaxNode) =
+    let (|IsEventDeclaration|_|) (node: SyntaxNode) =
         match node with
         | :? EventDeclarationSyntax as x -> Some x
         | _ -> None
 
-    let (|IsEventField|_|) (node : SyntaxNode) = 
+    let (|IsEventField|_|) (node: SyntaxNode) = 
         match node with
         | :? EventFieldDeclarationSyntax as x -> Some x
         | _ -> None
 
 module SyntaxHelper =
-    let getName (node : SyntaxNode)  =
+    let getName (node: SyntaxNode)  =
         match node with
         | :? BaseTypeDeclarationSyntax as x -> Some x.Identifier
         | :? DelegateDeclarationSyntax as x -> Some x.Identifier
         | _ -> None
 
 module TypeSyntaxHelper =
-    let getModifiers (node : SyntaxNode) =
+    let getModifiers (node: SyntaxNode) =
         match node with
         | :? BaseTypeDeclarationSyntax as x -> x.Modifiers
         | :? DelegateDeclarationSyntax as x -> x.Modifiers
         | _ -> SyntaxTokenList()
     
-    let getBaseTypes (node : SyntaxNode) =
+    let getBaseTypes (node: SyntaxNode) =
         match node with
         | :? BaseTypeDeclarationSyntax as x ->
             match x.BaseList with
@@ -68,7 +68,7 @@ module TypeSyntaxHelper =
             | x -> x.Types
         | _ -> SeparatedSyntaxList()
 
-    let getGenericParameters (node : SyntaxNode) =
+    let getGenericParameters (node: SyntaxNode) =
         let parameters = 
             match node with
             | :? TypeDeclarationSyntax as x -> x.TypeParameterList
@@ -79,7 +79,7 @@ module TypeSyntaxHelper =
         | null -> SyntaxFactory.TypeParameterList()
         | x -> x
 
-    let getGenericConstraints (node : SyntaxNode) =
+    let getGenericConstraints (node: SyntaxNode) =
         match node with
         | :? TypeDeclarationSyntax as x -> x.ConstraintClauses
         | :? DelegateDeclarationSyntax as x -> x.ConstraintClauses

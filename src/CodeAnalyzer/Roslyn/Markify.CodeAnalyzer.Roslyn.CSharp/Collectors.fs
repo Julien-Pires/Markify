@@ -10,7 +10,7 @@ type TypesCollector<'a>() =
 
     let mutable result : 'a list = []
 
-    member __.Visit(node) =
+    member __.Visit node =
         base.Visit(node)
         result
 
@@ -18,15 +18,15 @@ type TypesCollector<'a>() =
         | Some x -> x::result
         | None -> result
 
-    abstract member VisitClassDeclaration : ClassDeclarationSyntax -> 'a option
+    abstract member VisitClassDeclaration: ClassDeclarationSyntax -> 'a option
 
-    abstract member VisitStructDeclaration : StructDeclarationSyntax -> 'a option
+    abstract member VisitStructDeclaration: StructDeclarationSyntax -> 'a option
 
-    abstract member VisitInterfaceDeclaration : InterfaceDeclarationSyntax -> 'a option
+    abstract member VisitInterfaceDeclaration: InterfaceDeclarationSyntax -> 'a option
 
-    abstract member VisitDelegateDeclaration : DelegateDeclarationSyntax -> 'a option
+    abstract member VisitDelegateDeclaration: DelegateDeclarationSyntax -> 'a option
 
-    abstract member VisitEnumDeclaration : EnumDeclarationSyntax -> 'a option
+    abstract member VisitEnumDeclaration: EnumDeclarationSyntax -> 'a option
 
     override this.VisitClassDeclaration node =
         result <- this.add <| this.VisitClassDeclaration(node)
@@ -52,18 +52,18 @@ type TypesCollector<'a>() =
 type MembersCollector<'a>() =
     inherit CSharpSyntaxVisitor<'a option>()
     
-    member this.Visit(node : TypeDeclarationSyntax) =
+    member this.Visit (node: TypeDeclarationSyntax) =
         node.Members
         |> Seq.choose this.Visit
         |> Seq.toList
 
 type TypesCollector() =
     inherit TypesCollector<SyntaxNode>()
-    override __.VisitClassDeclaration (node : ClassDeclarationSyntax) = Some (node :> SyntaxNode)
-    override __.VisitStructDeclaration (node : StructDeclarationSyntax) = Some (node :> SyntaxNode)
-    override __.VisitInterfaceDeclaration (node : InterfaceDeclarationSyntax) = Some (node :> SyntaxNode)
-    override __.VisitEnumDeclaration (node : EnumDeclarationSyntax) = Some (node :> SyntaxNode)
-    override __.VisitDelegateDeclaration (node : DelegateDeclarationSyntax) = Some (node :> SyntaxNode)
+    override __.VisitClassDeclaration (node: ClassDeclarationSyntax) = Some (node :> SyntaxNode)
+    override __.VisitStructDeclaration (node: StructDeclarationSyntax) = Some (node :> SyntaxNode)
+    override __.VisitInterfaceDeclaration (node: InterfaceDeclarationSyntax) = Some (node :> SyntaxNode)
+    override __.VisitEnumDeclaration (node: EnumDeclarationSyntax) = Some (node :> SyntaxNode)
+    override __.VisitDelegateDeclaration (node: DelegateDeclarationSyntax) = Some (node :> SyntaxNode)
 
 type FieldSyntaxCollector() =
     inherit MembersCollector<FieldDeclarationSyntax>()
