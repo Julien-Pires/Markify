@@ -89,7 +89,7 @@ module TypeFactory =
                         Modifiers = findModifiers x.Modifiers } ]
         | _ -> []
 
-    let tryFindAccessor (property: PropertyDeclarationSyntax) accessor defaultAccessModifier : AccessorInfo option =
+    let tryFindAccessor (property: PropertyDeclarationSyntax) defaultAccessModifier accessor : AccessorInfo option =
         match property.AccessorList with
         | null -> None
         | x ->
@@ -99,14 +99,15 @@ module TypeFactory =
                 | Some x -> Some { AccessModifiers = tryFindAccessModifiers x.Modifiers defaultAccessModifier }
                 | None -> None
 
-    let extractProperty defaultAccessModifier (property: PropertyDeclarationSyntax)  = 
+    let extractProperty defaultAccessModifier (property: PropertyDeclarationSyntax) =
+        let findAccessor = tryFindAccessor property defaultAccessModifier
         { Name = property.Identifier.Text
           AccessModifiers = tryFindAccessModifiers property.Modifiers defaultAccessModifier
           Modifiers = findModifiers property.Modifiers
           Type = string property.Type
           DefaultValue = findDefaultValue property.Initializer
-          IsWrite = tryFindAccessor property SyntaxKind.SetKeyword defaultAccessModifier
-          IsRead = tryFindAccessor property SyntaxKind.GetKeyword defaultAccessModifier }
+          IsWrite = findAccessor SyntaxKind.SetKeyword
+          IsRead = findAccessor SyntaxKind.GetKeyword }
 
     let extractMethods defaultAccessModifier (method: MethodDeclarationSyntax) =
         let genericParameters = TypeSyntaxHelper.getGenericParameters method
@@ -122,34 +123,34 @@ module TypeFactory =
         [ for baseType in types do
             yield string baseType ]
 
-    let extractEnumMembers (enumNode: EnumDeclarationSyntax) : TypeMembers = 
-        Enum { Values = collectMember extractEnumValue enumNode.Members }
+    let extractEnumMembers (enumNode: EnumDeclarationSyntax) = 
+        { Values = collectMember extractEnumValue enumNode.Members }
 
     let extractDelegateMembers (delegateNode: DelegateDeclarationSyntax) = 
-        Delegate { Parameters = collectMember extractParameter delegateNode.ParameterList.Parameters
-                   ReturnType = string delegateNode.ReturnType }
+        { Parameters = collectMember extractParameter delegateNode.ParameterList.Parameters
+          ReturnType = string delegateNode.ReturnType }
 
     let extractStructureMembers typeNode = 
-        Structure { Fields = 
-                        FieldSyntaxCollector().Visit(typeNode) 
-                        |> collectMembers (extractFields fieldDefaultAccessModifier)
-                    Properties =
-                        PropertySyntaxCollector().Visit(typeNode) 
-                        |> collectMember (extractProperty fieldDefaultAccessModifier)
-                    Events = 
-                        EventSyntaxCollector().Visit(typeNode) 
-                        |> collectMembers (extractEvents fieldDefaultAccessModifier)
-                    Methods = 
-                        MethodSyntaxCollector().Visit(typeNode) 
-                        |> collectMember (extractMethods fieldDefaultAccessModifier) }
+        { Fields = 
+            FieldSyntaxCollector().Visit(typeNode) 
+            |> collectMembers (extractFields fieldDefaultAccessModifier)
+          Properties =
+            PropertySyntaxCollector().Visit(typeNode) 
+            |> collectMember (extractProperty fieldDefaultAccessModifier)
+          Events = 
+            EventSyntaxCollector().Visit(typeNode) 
+            |> collectMembers (extractEvents fieldDefaultAccessModifier)
+          Methods = 
+            MethodSyntaxCollector().Visit(typeNode) 
+            |> collectMember (extractMethods fieldDefaultAccessModifier) }
 
     let createTypeInfo node =
         match node with
-        | IsClass x -> extractStructureMembers x |> Success
-        | IsStruct x -> extractStructureMembers x |> Success
-        | IsInterface x -> extractStructureMembers x |> Success
-        | IsEnum x -> extractEnumMembers x |> Success
-        | IsDelegate x -> extractDelegateMembers x |> Success
+        | IsClass x -> extractStructureMembers x |> Structure |> Success
+        | IsStruct x -> extractStructureMembers x |> Structure |> Success
+        | IsInterface x -> extractStructureMembers x |> Structure |> Success
+        | IsEnum x -> extractEnumMembers x |> Enum |> Success
+        | IsDelegate x -> extractDelegateMembers x |> Delegate |> Success
         | _ -> Failure ""
 
     let createIdentity node =
